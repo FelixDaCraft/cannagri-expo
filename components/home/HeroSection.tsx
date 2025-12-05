@@ -15,21 +15,22 @@ export function HeroSection() {
 
       <div className="container-custom relative z-10">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-          {/* Illustration */}
+          {/* Logo Illustration */}
           <div className="relative order-2 lg:order-1">
-            <div className="relative aspect-square max-w-lg mx-auto">
-              {/* Decorative circles */}
-              <div className="absolute inset-0 bg-sage/20 rounded-full scale-90 animate-pulse" />
-              <div className="absolute inset-4 bg-sage/30 rounded-full" />
+            <div className="relative aspect-square max-w-md lg:max-w-lg mx-auto">
+              {/* Decorative circles with forest theme */}
+              <div className="absolute inset-0 bg-forest/10 rounded-full scale-110 animate-pulse" />
+              <div className="absolute inset-4 bg-sage/20 rounded-full" />
+              <div className="absolute inset-8 bg-cream rounded-full shadow-xl" />
 
-              {/* Main image placeholder */}
-              <div className="relative z-10 w-full h-full flex items-center justify-center">
-                <div className="relative w-4/5 h-4/5">
+              {/* Logo */}
+              <div className="relative z-10 w-full h-full flex items-center justify-center p-8">
+                <div className="relative w-full h-full">
                   <Image
-                    src="/images/hero-illustration.png"
-                    alt="Illustration Cann'Agri Expo 2026"
+                    src="/images/logo.png"
+                    alt={`Logo ${siteConfig.name}`}
                     fill
-                    className="object-contain"
+                    className="object-contain drop-shadow-lg"
                     priority
                   />
                 </div>

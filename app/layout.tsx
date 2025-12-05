@@ -23,6 +23,11 @@ export const metadata: Metadata = {
   description: siteConfig.seo.description,
   keywords: siteConfig.seo.keywords,
   authors: [{ name: siteConfig.name }],
+  icons: {
+    icon: '/images/logo.png',
+    shortcut: '/images/logo.png',
+    apple: '/images/logo.png',
+  },
   openGraph: {
     type: 'website',
     locale: 'fr_FR',
