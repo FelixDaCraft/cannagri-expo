@@ -6,16 +6,30 @@ import { DataTable } from '@/components/admin'
 import { Badge, Button, Card, CardContent, Modal } from '@/components/ui'
 import { formatPrice } from '@/lib/utils'
 
+type StandStatus = 'FREE' | 'RESERVED' | 'SOLD'
+
+interface Stand {
+  id: string
+  code: string
+  surfaceM2: number
+  priceHT: number
+  status: StandStatus
+  row: number
+  col: number
+  hasFurniture: boolean
+  hasElectricity: boolean
+  furniturePrice: number
+  electricityPrice: number
+}
+
 // Mock data
-const mockStands = [
+const mockStands: Stand[] = [
   { id: '1', code: 'A1', surfaceM2: 12, priceHT: 450, status: 'FREE', row: 0, col: 0, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
   { id: '2', code: 'A2', surfaceM2: 12, priceHT: 450, status: 'SOLD', row: 0, col: 1, hasFurniture: true, hasElectricity: true, furniturePrice: 120, electricityPrice: 80 },
   { id: '3', code: 'A3', surfaceM2: 18, priceHT: 650, status: 'FREE', row: 0, col: 2, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
   { id: '4', code: 'B1', surfaceM2: 12, priceHT: 450, status: 'RESERVED', row: 1, col: 0, hasFurniture: false, hasElectricity: true, furniturePrice: 120, electricityPrice: 80 },
   { id: '5', code: 'B2', surfaceM2: 24, priceHT: 850, status: 'SOLD', row: 1, col: 1, hasFurniture: true, hasElectricity: true, furniturePrice: 120, electricityPrice: 80 },
 ]
-
-type Stand = typeof mockStands[0]
 
 const statusConfig: Record<string, { label: string; variant: 'success' | 'warning' | 'error' }> = {
   FREE: { label: 'Libre', variant: 'success' },
@@ -76,7 +90,7 @@ export default function StandsPage() {
     revenue: stands.filter((s) => s.status === 'SOLD').reduce((sum, s) => sum + s.priceHT, 0),
   }
 
-  const handleUpdateStatus = (stand: Stand, newStatus: string) => {
+  const handleUpdateStatus = (stand: Stand, newStatus: StandStatus) => {
     setStands(stands.map((s) => (s.id === stand.id ? { ...s, status: newStatus } : s)))
     setEditingStand(null)
   }
@@ -190,7 +204,7 @@ export default function StandsPage() {
                 Modifier le statut
               </label>
               <div className="flex gap-2">
-                {['FREE', 'RESERVED', 'SOLD'].map((status) => (
+                {(['FREE', 'RESERVED', 'SOLD'] as StandStatus[]).map((status) => (
                   <Button
                     key={status}
                     variant={editingStand.status === status ? 'primary' : 'outline'}
