@@ -25,7 +25,7 @@ echo -e "${NC}"
 # Variables
 REPO_URL="https://github.com/BorisHenne/cannagri"
 BRANCH="claude/cannagri-expo-website-01KPxPrPBdZJDnyNNoaqLipw"
-APP_DIR="$HOME/cannagri-expo"
+APP_DIR="/volume1/docker/cannagri-expo"
 
 # Fonction pour vérifier si une commande existe
 command_exists() {
