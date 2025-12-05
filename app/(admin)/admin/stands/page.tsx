@@ -8,11 +8,11 @@ import { formatPrice } from '@/lib/utils'
 
 // Mock data
 const mockStands: Stand[] = [
-  { id: '1', code: 'A1', surfaceM2: 12, priceHT: 450, status: 'FREE', row: 0, col: 0, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '2', code: 'A2', surfaceM2: 12, priceHT: 450, status: 'SOLD', row: 0, col: 1, hasFurniture: true, hasElectricity: true, furniturePrice: 120, electricityPrice: 80 },
-  { id: '3', code: 'A3', surfaceM2: 18, priceHT: 650, status: 'FREE', row: 0, col: 2, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '4', code: 'B1', surfaceM2: 12, priceHT: 450, status: 'RESERVED', row: 1, col: 0, hasFurniture: false, hasElectricity: true, furniturePrice: 120, electricityPrice: 80 },
-  { id: '5', code: 'B2', surfaceM2: 24, priceHT: 850, status: 'SOLD', row: 1, col: 1, hasFurniture: true, hasElectricity: true, furniturePrice: 120, electricityPrice: 80 },
+  { id: '1', code: 'A1', surfaceM2: 12, priceHT: 450, status: 'FREE' as const, row: 0, col: 0, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '2', code: 'A2', surfaceM2: 12, priceHT: 450, status: 'SOLD' as const, row: 0, col: 1, hasFurniture: true, hasElectricity: true, furniturePrice: 120, electricityPrice: 80 },
+  { id: '3', code: 'A3', surfaceM2: 18, priceHT: 650, status: 'FREE' as const, row: 0, col: 2, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '4', code: 'B1', surfaceM2: 12, priceHT: 450, status: 'RESERVED' as const, row: 1, col: 0, hasFurniture: false, hasElectricity: true, furniturePrice: 120, electricityPrice: 80 },
+  { id: '5', code: 'B2', surfaceM2: 24, priceHT: 850, status: 'SOLD' as const, row: 1, col: 1, hasFurniture: true, hasElectricity: true, furniturePrice: 120, electricityPrice: 80 },
 ]
 
 const statusConfig: Record<string, { label: string; variant: 'success' | 'warning' | 'error' }> = {
