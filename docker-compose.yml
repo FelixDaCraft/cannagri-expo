@@ -1,74 +1,54 @@
 version: '3.8'
 
 services:
-  # PostgreSQL Database
   db:
     image: postgres:15-alpine
     container_name: cannagri-db
-    restart: unless-stopped
+    restart: always
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-cannagri}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
-      POSTGRES_DB: ${POSTGRES_DB:-cannagri}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - cannagri-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-cannagri}"]
-      interval: 10s
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 10
 
-  # Next.js Application
   app:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: cannagri-app
-    restart: unless-stopped
+    restart: always
     ports:
-      - "${APP_PORT:-3000}:3000"
+      - "${APP_PORT}:3000"
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-cannagri}:${POSTGRES_PASSWORD:-changeme}@db:5432/${POSTGRES_DB:-cannagri}?schema=public
-      NEXTAUTH_URL: ${NEXTAUTH_URL:-http://localhost:3000}
-      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-your-secret-key-change-me}
-      NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-http://localhost:3000}
-      VIVA_WALLET_CLIENT_ID: ${VIVA_WALLET_CLIENT_ID:-}
-      VIVA_WALLET_CLIENT_SECRET: ${VIVA_WALLET_CLIENT_SECRET:-}
-      VIVA_WALLET_MERCHANT_ID: ${VIVA_WALLET_MERCHANT_ID:-}
-      VIVA_WALLET_API_KEY: ${VIVA_WALLET_API_KEY:-}
-      VIVA_WALLET_SOURCE_CODE: ${VIVA_WALLET_SOURCE_CODE:-}
-      VIVA_WALLET_DEMO_MODE: ${VIVA_WALLET_DEMO_MODE:-true}
-      SMTP_HOST: ${SMTP_HOST:-}
-      SMTP_PORT: ${SMTP_PORT:-587}
-      SMTP_USER: ${SMTP_USER:-}
-      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
-      EMAIL_FROM: ${EMAIL_FROM:-noreply@cannagri-expo.fr}
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?schema=public
+      - NEXTAUTH_URL=${NEXTAUTH_URL}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
+      - VIVA_WALLET_CLIENT_ID=${VIVA_WALLET_CLIENT_ID}
+      - VIVA_WALLET_CLIENT_SECRET=${VIVA_WALLET_CLIENT_SECRET}
+      - VIVA_WALLET_MERCHANT_ID=${VIVA_WALLET_MERCHANT_ID}
+      - VIVA_WALLET_API_KEY=${VIVA_WALLET_API_KEY}
+      - VIVA_WALLET_SOURCE_CODE=${VIVA_WALLET_SOURCE_CODE}
+      - VIVA_WALLET_DEMO_MODE=${VIVA_WALLET_DEMO_MODE}
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - EMAIL_FROM=${EMAIL_FROM}
     depends_on:
       db:
         condition: service_healthy
     networks:
       - cannagri-network
-
-  # Nginx Reverse Proxy (optional, for production with SSL)
-  nginx:
-    image: nginx:alpine
-    container_name: cannagri-nginx
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./nginx/ssl:/etc/nginx/ssl:ro
-      - ./nginx/certbot:/var/www/certbot:ro
-    depends_on:
-      - app
-    networks:
-      - cannagri-network
-    profiles:
-      - production
 
 volumes:
   postgres_data:
