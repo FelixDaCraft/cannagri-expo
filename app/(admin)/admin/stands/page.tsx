@@ -150,7 +150,7 @@ export default function StandsPage() {
       {/* Content */}
       {viewMode === 'plan' ? (
         <div className="bg-white rounded-xl p-6 shadow-sm">
-          <StandPlan stands={stands} readOnly />
+          <StandPlan stands={stands as Stand[]} readOnly />
           <p className="text-center text-sm text-gray-500 mt-4">
             Cliquez sur &quot;Liste&quot; pour modifier le statut des stands
           </p>
