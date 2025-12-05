@@ -16,6 +16,8 @@ interface Stand {
   status: StandStatus
   row: number
   col: number
+  width?: number
+  height?: number
   hasFurniture: boolean
   hasElectricity: boolean
   furniturePrice: number
