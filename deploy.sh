@@ -147,15 +147,24 @@ fi
 # 5. Build et démarrage des containers
 echo -e "${BLUE}[5/6] Construction et démarrage des containers...${NC}"
 
+# Déterminer si sudo est nécessaire pour docker
+DOCKER_CMD="docker"
+if ! docker info >/dev/null 2>&1; then
+    if sudo docker info >/dev/null 2>&1; then
+        DOCKER_CMD="sudo docker"
+        echo -e "${YELLOW}Utilisation de sudo pour Docker...${NC}"
+    fi
+fi
+
 # Arrêter les containers existants si présents
-docker compose down 2>/dev/null || true
+$DOCKER_CMD compose down 2>/dev/null || true
 
 # Build
 echo -e "${YELLOW}Build en cours (peut prendre quelques minutes)...${NC}"
-docker compose build --no-cache
+$DOCKER_CMD compose build --no-cache
 
 # Démarrer
-docker compose up -d
+$DOCKER_CMD compose up -d
 
 # Attendre que la DB soit prête
 echo -e "${YELLOW}Attente de la base de données...${NC}"
@@ -165,15 +174,15 @@ sleep 15
 echo -e "${BLUE}[6/6] Initialisation de la base de données...${NC}"
 
 # Push du schéma Prisma
-docker compose exec -T app npx prisma db push --accept-data-loss 2>/dev/null || {
+$DOCKER_CMD compose exec -T app npx prisma db push --accept-data-loss 2>/dev/null || {
     echo -e "${YELLOW}Nouvelle tentative dans 10 secondes...${NC}"
     sleep 10
-    docker compose exec -T app npx prisma db push --accept-data-loss
+    $DOCKER_CMD compose exec -T app npx prisma db push --accept-data-loss
 }
 
 # Seeder la base (optionnel mais recommandé)
 echo -e "${YELLOW}Création des données initiales...${NC}"
-docker compose exec -T app npx prisma db seed 2>/dev/null || echo -e "${YELLOW}Seed ignoré (optionnel)${NC}"
+$DOCKER_CMD compose exec -T app npx prisma db seed 2>/dev/null || echo -e "${YELLOW}Seed ignoré (optionnel)${NC}"
 
 # Récupérer les infos
 source .env
