@@ -62,7 +62,7 @@ const columns = [
 ]
 
 export default function StandsPage() {
-  const [stands, setStands] = useState(mockStands)
+  const [stands, setStands] = useState<Stand[]>(mockStands)
   const [viewMode, setViewMode] = useState<'plan' | 'list'>('plan')
   const [editingStand, setEditingStand] = useState<Stand | null>(null)
 
@@ -75,7 +75,7 @@ export default function StandsPage() {
   }
 
   const handleUpdateStatus = (stand: Stand, newStatus: StandStatus) => {
-    setStands(stands.map((s) => (s.id === stand.id ? { ...s, status: newStatus } : s)))
+    setStands(stands.map((s): Stand => (s.id === stand.id ? { ...s, status: newStatus } : s)))
     setEditingStand(null)
   }
 
