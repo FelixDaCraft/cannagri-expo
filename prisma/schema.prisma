@@ -1,0 +1,331 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============ SPONSORS ============
+enum SponsorType {
+  PREMIUM    // Article sur page d'accueil + page dédiée
+  STANDARD   // Logo dans grille partenaires + page dédiée
+}
+
+model Sponsor {
+  id            String       @id @default(cuid())
+  name          String
+  slug          String       @unique
+  type          SponsorType  @default(STANDARD)
+  logoUrl       String?
+  description   String?      @db.Text
+  websiteUrl    String?
+  standNumber   String?
+
+  // Champs spécifiques Premium (article home)
+  articleTitle  String?
+  articleBody   String?      @db.Text
+  articleImage  String?
+
+  // Position d'affichage
+  displayOrder  Int          @default(0)
+  isActive      Boolean      @default(true)
+
+  exhibitors    Exhibitor[]
+
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
+
+// ============ EXPOSANTS ============
+model Exhibitor {
+  id            String    @id @default(cuid())
+  name          String
+  slug          String    @unique
+  description   String?   @db.Text
+  logoUrl       String?
+  standNumber   String?
+  websiteUrl    String?
+  category      String?   // Ex: "Producteur CBD", "Matériel", "Lifestyle"
+
+  // Contact
+  contactName   String?
+  contactEmail  String?
+  contactPhone  String?
+
+  sponsorId     String?
+  sponsor       Sponsor?  @relation(fields: [sponsorId], references: [id])
+
+  isActive      Boolean   @default(true)
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+// ============ STANDS ============
+enum StandStatus {
+  FREE
+  RESERVED
+  SOLD
+}
+
+enum StandSize {
+  SMALL      // 6-9 m²
+  MEDIUM     // 12-18 m²
+  LARGE      // 24+ m²
+}
+
+model Stand {
+  id            String       @id @default(cuid())
+  code          String       @unique  // Ex: A12, B3, C7
+  surfaceM2     Float
+  priceHT       Float
+  status        StandStatus  @default(FREE)
+  size          StandSize    @default(MEDIUM)
+
+  // Options
+  hasFurniture  Boolean      @default(false)
+  hasElectricity Boolean     @default(false)
+  furniturePrice Float       @default(120)
+  electricityPrice Float     @default(80)
+
+  // Position sur le plan
+  row           Int
+  col           Int
+  width         Int          @default(1)
+  height        Int          @default(1)
+
+  orderId       String?
+  order         Order?       @relation(fields: [orderId], references: [id])
+
+  // Réservation temporaire (expire après 15 min)
+  reservedAt    DateTime?
+  reservedUntil DateTime?
+
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
+
+// ============ BILLETTERIE ============
+enum TicketType {
+  VISITEUR      // Entrée simple
+  PASS_PRO      // Accès privilégié
+  VIP           // Accès VIP + avantages
+}
+
+enum TicketStatus {
+  PENDING
+  PAID
+  CANCELLED
+  USED
+  EXPIRED
+}
+
+model Ticket {
+  id            String        @id @default(cuid())
+  customerName  String
+  customerEmail String
+  ticketType    TicketType    @default(VISITEUR)
+  ticketPrice   Float
+  qrCodeData    String        @unique
+  pdfUrl        String?
+  status        TicketStatus  @default(PENDING)
+
+  // Scan info
+  scannedAt     DateTime?
+  scannedBy     String?
+
+  orderId       String?
+  order         Order?        @relation(fields: [orderId], references: [id])
+
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+// ============ COMMANDES ============
+enum OrderType {
+  VISITOR_TICKET
+  STAND_BOOKING
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+  CANCELLED
+}
+
+model Order {
+  id              String       @id @default(cuid())
+  orderNumber     String       @unique @default(cuid())
+  type            OrderType
+  amount          Float        // Montant en euros TTC
+  amountHT        Float?       // Montant HT (pour les stands)
+  tva             Float        @default(20)
+  currency        String       @default("EUR")
+
+  // Viva Wallet
+  vivaWalletRef   String?      @unique
+  vivaPaymentUrl  String?
+
+  status          OrderStatus  @default(PENDING)
+
+  // Infos client
+  customerEmail   String
+  customerName    String
+  customerPhone   String?
+  companyName     String?
+  companySiret    String?
+  companyAddress  String?
+
+  // Notes
+  notes           String?      @db.Text
+
+  tickets         Ticket[]
+  stands          Stand[]
+
+  paidAt          DateTime?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+}
+
+// ============ EVENEMENTS / PROGRAMME ============
+enum EventType {
+  CONFERENCE
+  WORKSHOP
+  CEREMONY
+  BREAK
+  NETWORKING
+}
+
+model Event {
+  id              String     @id @default(cuid())
+  title           String
+  slug            String     @unique
+  description     String?    @db.Text
+  type            EventType
+  startAt         DateTime
+  endAt           DateTime
+  location        String?    // Ex: "Salle A", "Scène principale"
+
+  // Speaker info
+  speakerName     String?
+  speakerTitle    String?
+  speakerCompany  String?
+  speakerPhoto    String?
+  speakerBio      String?    @db.Text
+
+  // Platinum CBD Cup
+  isPlatinumCBDCup Boolean   @default(false)
+
+  // Display
+  isHighlighted   Boolean    @default(false)
+  displayOrder    Int        @default(0)
+
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+}
+
+// ============ MEDIATHEQUE ============
+model Media {
+  id            String    @id @default(cuid())
+  imageUrl      String
+  thumbnailUrl  String?
+  caption       String?
+  altText       String?
+  edition       String    // Ex: "2024", "2025"
+  category      String?   // Ex: "Conférences", "Stands", "Remise des prix"
+
+  displayOrder  Int       @default(0)
+
+  createdAt     DateTime  @default(now())
+}
+
+// ============ UTILISATEURS (Auth) ============
+enum UserRole {
+  ADMIN
+  EDITOR
+  PRO
+}
+
+model User {
+  id              String    @id @default(cuid())
+  email           String    @unique
+  hashedPassword  String
+  name            String?
+  role            UserRole  @default(PRO)
+
+  // Profile
+  companyName     String?
+  phone           String?
+
+  // Security
+  emailVerified   DateTime?
+  resetToken      String?
+  resetTokenExpiry DateTime?
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+// ============ NEWSLETTER ============
+model NewsletterSubscriber {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  isActive      Boolean   @default(true)
+
+  subscribedAt  DateTime  @default(now())
+  unsubscribedAt DateTime?
+}
+
+// ============ CONTACT / DEMANDES ============
+enum ContactType {
+  GENERAL
+  PRESS
+  SPONSOR
+  EXHIBITOR
+}
+
+model ContactRequest {
+  id            String      @id @default(cuid())
+  type          ContactType @default(GENERAL)
+  name          String
+  email         String
+  phone         String?
+  company       String?
+  subject       String
+  message       String      @db.Text
+
+  isRead        Boolean     @default(false)
+  isArchived    Boolean     @default(false)
+
+  createdAt     DateTime    @default(now())
+}
+
+// ============ SITE SETTINGS ============
+model SiteSettings {
+  id                    String    @id @default("site_settings")
+
+  // Event info
+  eventDate             DateTime?
+  eventLocation         String?
+  eventAddress          String?
+
+  // Ticketing
+  ticketingOpenDate     DateTime?
+  ticketingCloseDate    DateTime?
+  visitorTicketPrice    Float     @default(15)
+  proTicketPrice        Float     @default(25)
+  vipTicketPrice        Float     @default(75)
+
+  // Display
+  showTicketingButton   Boolean   @default(false)
+  maintenanceMode       Boolean   @default(false)
+
+  updatedAt             DateTime  @updatedAt
+}
