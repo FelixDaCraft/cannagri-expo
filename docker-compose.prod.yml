@@ -1,0 +1,29 @@
+version: '3.8'
+
+# Production overrides - use with: docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+services:
+  db:
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}  # Required in production
+    # Optionally expose for external backup tools
+    # ports:
+    #   - "127.0.0.1:5432:5432"
+
+  app:
+    # Don't build in production, use pre-built image or build beforehand
+    # image: cannagri-expo:latest
+    environment:
+      NODE_ENV: production
+      VIVA_WALLET_DEMO_MODE: "false"
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+
+  nginx:
+    profiles: []  # Enable nginx in production
