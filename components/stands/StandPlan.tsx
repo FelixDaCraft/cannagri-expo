@@ -31,22 +31,22 @@ interface StandPlanProps {
 
 // Mock stands for development
 const mockStands: Stand[] = [
-  { id: '1', code: 'A1', surfaceM2: 12, priceHT: 450, status: 'FREE', row: 0, col: 0, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '2', code: 'A2', surfaceM2: 12, priceHT: 450, status: 'SOLD', row: 0, col: 1, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '3', code: 'A3', surfaceM2: 18, priceHT: 650, status: 'FREE', row: 0, col: 2, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '4', code: 'A4', surfaceM2: 12, priceHT: 450, status: 'RESERVED', row: 0, col: 3, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '5', code: 'A5', surfaceM2: 12, priceHT: 450, status: 'SOLD', row: 0, col: 4, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '6', code: 'A6', surfaceM2: 24, priceHT: 850, status: 'FREE', row: 0, col: 5, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '7', code: 'B1', surfaceM2: 12, priceHT: 450, status: 'FREE', row: 1, col: 0, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '8', code: 'B2', surfaceM2: 12, priceHT: 450, status: 'FREE', row: 1, col: 1, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '9', code: 'B3', surfaceM2: 18, priceHT: 650, status: 'SOLD', row: 1, col: 2, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '10', code: 'B4', surfaceM2: 12, priceHT: 450, status: 'FREE', row: 1, col: 3, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '11', code: 'B5', surfaceM2: 12, priceHT: 450, status: 'SOLD', row: 1, col: 4, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '12', code: 'B6', surfaceM2: 12, priceHT: 450, status: 'FREE', row: 1, col: 5, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '13', code: 'C1', surfaceM2: 24, priceHT: 850, status: 'FREE', row: 2, col: 0, width: 2, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '14', code: 'C2', surfaceM2: 12, priceHT: 450, status: 'RESERVED', row: 2, col: 2, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '15', code: 'C3', surfaceM2: 12, priceHT: 450, status: 'FREE', row: 2, col: 3, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '16', code: 'C4', surfaceM2: 24, priceHT: 850, status: 'FREE', row: 2, col: 4, width: 2, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '1', code: 'A1', surfaceM2: 12, priceHT: 450, status: 'FREE' as const, row: 0, col: 0, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '2', code: 'A2', surfaceM2: 12, priceHT: 450, status: 'SOLD' as const, row: 0, col: 1, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '3', code: 'A3', surfaceM2: 18, priceHT: 650, status: 'FREE' as const, row: 0, col: 2, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '4', code: 'A4', surfaceM2: 12, priceHT: 450, status: 'RESERVED' as const, row: 0, col: 3, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '5', code: 'A5', surfaceM2: 12, priceHT: 450, status: 'SOLD' as const, row: 0, col: 4, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '6', code: 'A6', surfaceM2: 24, priceHT: 850, status: 'FREE' as const, row: 0, col: 5, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '7', code: 'B1', surfaceM2: 12, priceHT: 450, status: 'FREE' as const, row: 1, col: 0, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '8', code: 'B2', surfaceM2: 12, priceHT: 450, status: 'FREE' as const, row: 1, col: 1, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '9', code: 'B3', surfaceM2: 18, priceHT: 650, status: 'SOLD' as const, row: 1, col: 2, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '10', code: 'B4', surfaceM2: 12, priceHT: 450, status: 'FREE' as const, row: 1, col: 3, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '11', code: 'B5', surfaceM2: 12, priceHT: 450, status: 'SOLD' as const, row: 1, col: 4, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '12', code: 'B6', surfaceM2: 12, priceHT: 450, status: 'FREE' as const, row: 1, col: 5, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '13', code: 'C1', surfaceM2: 24, priceHT: 850, status: 'FREE' as const, row: 2, col: 0, width: 2, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '14', code: 'C2', surfaceM2: 12, priceHT: 450, status: 'RESERVED' as const, row: 2, col: 2, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '15', code: 'C3', surfaceM2: 12, priceHT: 450, status: 'FREE' as const, row: 2, col: 3, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '16', code: 'C4', surfaceM2: 24, priceHT: 850, status: 'FREE' as const, row: 2, col: 4, width: 2, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
 ]
 
 export function StandPlan({ stands = mockStands, onStandSelect, readOnly = false }: StandPlanProps) {
