@@ -1,28 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { StandPlan } from '@/components/stands'
+import { StandPlan, type Stand, type StandStatus } from '@/components/stands'
 import { DataTable } from '@/components/admin'
 import { Badge, Button, Card, CardContent, Modal } from '@/components/ui'
 import { formatPrice } from '@/lib/utils'
-
-type StandStatus = 'FREE' | 'RESERVED' | 'SOLD'
-
-interface Stand {
-  id: string
-  code: string
-  surfaceM2: number
-  priceHT: number
-  status: StandStatus
-  row: number
-  col: number
-  width?: number
-  height?: number
-  hasFurniture: boolean
-  hasElectricity: boolean
-  furniturePrice: number
-  electricityPrice: number
-}
 
 // Mock data
 const mockStands: Stand[] = [

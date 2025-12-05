@@ -5,12 +5,14 @@ import { cn } from '@/lib/utils'
 import { getStandStatusColor, getStandStatusLabel, formatPrice } from '@/lib/utils'
 import { StandBookingModal } from './StandBookingModal'
 
-interface Stand {
+export type StandStatus = 'FREE' | 'RESERVED' | 'SOLD'
+
+export interface Stand {
   id: string
   code: string
   surfaceM2: number
   priceHT: number
-  status: 'FREE' | 'RESERVED' | 'SOLD'
+  status: StandStatus
   row: number
   col: number
   width?: number
