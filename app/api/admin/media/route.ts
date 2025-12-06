@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { writeFile, mkdir, readdir, stat } from 'fs/promises'
+import { writeFile, mkdir, readdir } from 'fs/promises'
 import { existsSync } from 'fs'
 import path from 'path'
 import { prisma } from '@/lib/prisma'
@@ -13,9 +13,91 @@ async function ensureUploadDir() {
   }
 }
 
-// GET - List all media
-export async function GET() {
+// Sync files on disk with database
+async function syncFilesWithDatabase() {
+  await ensureUploadDir()
+
   try {
+    // Get all files on disk
+    const files = await readdir(UPLOAD_DIR)
+    const imageFiles = files.filter(f =>
+      /\.(jpg|jpeg|png|webp)$/i.test(f) && !f.startsWith('.')
+    )
+
+    // Get all media from database
+    const dbMedia = await prisma.media.findMany()
+    const dbUrls = new Set(dbMedia.map(m => m.imageUrl))
+
+    // Find files on disk that are not in database
+    const newFiles: string[] = []
+    for (const file of imageFiles) {
+      const url = `/images/gallery/${file}`
+      if (!dbUrls.has(url)) {
+        newFiles.push(file)
+      }
+    }
+
+    // Add new files to database
+    if (newFiles.length > 0) {
+      const mediaToCreate = newFiles.map(file => {
+        // Try to extract edition from filename (e.g., IMG20240419... -> 2024)
+        const yearMatch = file.match(/(\d{4})/)
+        const edition = yearMatch ? yearMatch[1] : new Date().getFullYear().toString()
+
+        // Clean up filename for caption
+        const caption = file
+          .replace(/\.(jpg|jpeg|png|webp)$/i, '')
+          .replace(/^IMG/, '')
+          .replace(/_/g, ' ')
+          .trim()
+
+        return {
+          imageUrl: `/images/gallery/${file}`,
+          caption: caption || `Photo ${edition}`,
+          edition,
+          category: 'Général',
+          altText: `Photo ${edition}`,
+        }
+      })
+
+      await prisma.media.createMany({
+        data: mediaToCreate,
+        skipDuplicates: true,
+      })
+    }
+
+    // Clean up database entries for files that no longer exist
+    const existingFiles = new Set(imageFiles.map(f => `/images/gallery/${f}`))
+    const orphanedMedia = dbMedia.filter(m => !existingFiles.has(m.imageUrl))
+
+    if (orphanedMedia.length > 0) {
+      await prisma.media.deleteMany({
+        where: {
+          id: {
+            in: orphanedMedia.map(m => m.id)
+          }
+        }
+      })
+    }
+
+    return { synced: newFiles.length, removed: orphanedMedia.length }
+  } catch (error) {
+    console.error('Error syncing files:', error)
+    return { synced: 0, removed: 0 }
+  }
+}
+
+// GET - List all media (with sync)
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const sync = searchParams.get('sync') !== 'false'
+
+    // Sync files with database if requested (default: true)
+    if (sync) {
+      await syncFilesWithDatabase()
+    }
+
     const media = await prisma.media.findMany({
       orderBy: [
         { edition: 'desc' },
@@ -23,6 +105,7 @@ export async function GET() {
         { createdAt: 'desc' },
       ],
     })
+
     return NextResponse.json(media)
   } catch (error) {
     console.error('Error fetching media:', error)
