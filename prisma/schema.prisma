@@ -11,8 +11,12 @@ datasource db {
 
 // ============ SPONSORS ============
 enum SponsorType {
-  PREMIUM    // Article sur page d'accueil + page dédiée
-  STANDARD   // Logo dans grille partenaires + page dédiée
+  PLATINUM   // Partenaire principal - visibilité maximale
+  GOLD       // Partenaire Or - forte visibilité
+  SILVER     // Partenaire Argent - visibilité ciblée
+  BRONZE     // Partenaire Bronze - soutien
+  PREMIUM    // Legacy - à migrer vers PLATINUM
+  STANDARD   // Legacy - à migrer vers BRONZE
 }
 
 model Sponsor {
