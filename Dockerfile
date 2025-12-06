@@ -7,7 +7,8 @@ WORKDIR /app
 COPY package.json package-lock.json* ./
 COPY prisma ./prisma
 
-RUN npm ci --legacy-peer-deps
+# Use npm install instead of npm ci to handle new packages not in lock file
+RUN npm install --legacy-peer-deps
 
 # Stage 2: Builder
 FROM node:20-alpine AS builder
