@@ -1,5 +1,7 @@
 import {
   HeroSection,
+  CountdownTimer,
+  TicketSection,
   PillarsSection,
   ProgramHighlight,
   SponsorsArticlesPlaceholder,
@@ -14,6 +16,8 @@ export default function HomePage() {
   return (
     <>
       <HeroSection />
+      <CountdownTimer />
+      <TicketSection />
       <PillarsSection />
       <SponsorsArticlesPlaceholder />
       <ProgramHighlight />

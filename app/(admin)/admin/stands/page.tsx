@@ -1,41 +1,9 @@
 'use client'
 
-import { useState } from 'react'
-import { StandPlan } from '@/components/stands'
-import { DataTable } from '@/components/admin'
+import { useState, useEffect } from 'react'
+import { StandPlan, Stand, StandStatus, StandSize } from '@/components/stands'
 import { Badge, Button, Card, CardContent, Modal } from '@/components/ui'
 import { formatPrice } from '@/lib/utils'
-
-// Types locaux pour éviter les conflits
-type StandStatus = 'FREE' | 'RESERVED' | 'SOLD'
-
-interface StandData {
-  id: string
-  code: string
-  surfaceM2: number
-  priceHT: number
-  status: StandStatus
-  row: number
-  col: number
-  width?: number
-  height?: number
-  hasFurniture: boolean
-  hasElectricity: boolean
-  furniturePrice: number
-  electricityPrice: number
-}
-
-// Mock data avec typage explicite
-const initialStands: StandData[] = [
-  { id: '1', code: 'A1', surfaceM2: 12, priceHT: 450, status: 'FREE', row: 0, col: 0, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '2', code: 'A2', surfaceM2: 12, priceHT: 450, status: 'SOLD', row: 0, col: 1, hasFurniture: true, hasElectricity: true, furniturePrice: 120, electricityPrice: 80 },
-  { id: '3', code: 'A3', surfaceM2: 18, priceHT: 650, status: 'FREE', row: 0, col: 2, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '4', code: 'A4', surfaceM2: 12, priceHT: 450, status: 'RESERVED', row: 0, col: 3, hasFurniture: false, hasElectricity: true, furniturePrice: 120, electricityPrice: 80 },
-  { id: '5', code: 'B1', surfaceM2: 12, priceHT: 450, status: 'FREE', row: 1, col: 0, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '6', code: 'B2', surfaceM2: 24, priceHT: 850, status: 'SOLD', row: 1, col: 1, hasFurniture: true, hasElectricity: true, furniturePrice: 120, electricityPrice: 80 },
-  { id: '7', code: 'B3', surfaceM2: 18, priceHT: 650, status: 'FREE', row: 1, col: 2, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '8', code: 'B4', surfaceM2: 12, priceHT: 450, status: 'FREE', row: 1, col: 3, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-]
 
 const statusConfig: Record<StandStatus, { label: string; variant: 'success' | 'warning' | 'error' }> = {
   FREE: { label: 'Libre', variant: 'success' },
@@ -43,10 +11,163 @@ const statusConfig: Record<StandStatus, { label: string; variant: 'success' | 'w
   SOLD: { label: 'Vendu', variant: 'error' },
 }
 
+const sizeConfig: Record<StandSize, { label: string; description: string }> = {
+  SMALL: { label: 'Petit', description: '6-9 m²' },
+  MEDIUM: { label: 'Moyen', description: '12-18 m²' },
+  LARGE: { label: 'Grand', description: '24+ m²' },
+}
+
+// Default stands configuration
+const defaultStandsConfig: Partial<Stand>[] = [
+  // Zone A - Entrée (6 stands)
+  { code: 'A1', surfaceM2: 9, priceHT: 350, size: 'SMALL', row: 0, col: 0 },
+  { code: 'A2', surfaceM2: 9, priceHT: 350, size: 'SMALL', row: 0, col: 1 },
+  { code: 'A3', surfaceM2: 12, priceHT: 450, size: 'MEDIUM', row: 0, col: 2 },
+  { code: 'A4', surfaceM2: 12, priceHT: 450, size: 'MEDIUM', row: 0, col: 3 },
+  { code: 'A5', surfaceM2: 9, priceHT: 350, size: 'SMALL', row: 0, col: 4 },
+  { code: 'A6', surfaceM2: 9, priceHT: 350, size: 'SMALL', row: 0, col: 5 },
+  // Zone B
+  { code: 'B1', surfaceM2: 12, priceHT: 450, size: 'MEDIUM', row: 1, col: 0 },
+  { code: 'B2', surfaceM2: 18, priceHT: 650, size: 'MEDIUM', row: 1, col: 1 },
+  { code: 'B3', surfaceM2: 12, priceHT: 450, size: 'MEDIUM', row: 1, col: 2 },
+  { code: 'B4', surfaceM2: 18, priceHT: 650, size: 'MEDIUM', row: 1, col: 3 },
+  { code: 'B5', surfaceM2: 12, priceHT: 450, size: 'MEDIUM', row: 1, col: 4 },
+  { code: 'B6', surfaceM2: 12, priceHT: 450, size: 'MEDIUM', row: 1, col: 5 },
+  // Zone C
+  { code: 'C1', surfaceM2: 24, priceHT: 850, size: 'LARGE', row: 2, col: 0, width: 2 },
+  { code: 'C2', surfaceM2: 12, priceHT: 450, size: 'MEDIUM', row: 2, col: 2 },
+  { code: 'C3', surfaceM2: 12, priceHT: 450, size: 'MEDIUM', row: 2, col: 3 },
+  { code: 'C4', surfaceM2: 24, priceHT: 850, size: 'LARGE', row: 2, col: 4, width: 2 },
+  { code: 'C5', surfaceM2: 18, priceHT: 650, size: 'MEDIUM', row: 3, col: 1 },
+  { code: 'C6', surfaceM2: 18, priceHT: 650, size: 'MEDIUM', row: 3, col: 2 },
+  { code: 'C7', surfaceM2: 18, priceHT: 650, size: 'MEDIUM', row: 3, col: 3 },
+  // Zone D
+  { code: 'D1', surfaceM2: 18, priceHT: 750, size: 'MEDIUM', row: 4, col: 0 },
+  { code: 'D2', surfaceM2: 24, priceHT: 950, size: 'LARGE', row: 4, col: 1, width: 2 },
+  { code: 'D3', surfaceM2: 24, priceHT: 950, size: 'LARGE', row: 4, col: 3, width: 2 },
+  { code: 'D4', surfaceM2: 18, priceHT: 750, size: 'MEDIUM', row: 4, col: 5 },
+  { code: 'D5', surfaceM2: 36, priceHT: 1200, size: 'LARGE', row: 5, col: 1, width: 2 },
+  { code: 'D6', surfaceM2: 36, priceHT: 1200, size: 'LARGE', row: 5, col: 3, width: 2 },
+]
+
 export default function StandsPage() {
-  const [stands, setStands] = useState<StandData[]>(initialStands)
+  const [stands, setStands] = useState<Stand[]>([])
+  const [loading, setLoading] = useState(true)
   const [viewMode, setViewMode] = useState<'plan' | 'list'>('plan')
-  const [editingStand, setEditingStand] = useState<StandData | null>(null)
+  const [editingStand, setEditingStand] = useState<Stand | null>(null)
+  const [saving, setSaving] = useState(false)
+  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+
+  // Form state for editing
+  const [formData, setFormData] = useState({
+    code: '',
+    surfaceM2: '',
+    priceHT: '',
+    status: 'FREE' as StandStatus,
+    size: 'MEDIUM' as StandSize,
+    hasFurniture: false,
+    hasElectricity: false,
+    furniturePrice: '120',
+    electricityPrice: '80',
+  })
+
+  useEffect(() => {
+    fetchStands()
+  }, [])
+
+  const fetchStands = async () => {
+    try {
+      setLoading(true)
+      const res = await fetch('/api/admin/stands')
+      const data = await res.json()
+      if (data.data) {
+        setStands(data.data)
+      }
+    } catch (error) {
+      console.error('Error fetching stands:', error)
+      setMessage({ type: 'error', text: 'Erreur lors du chargement des stands' })
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleEditStand = (stand: Stand) => {
+    setEditingStand(stand)
+    setFormData({
+      code: stand.code,
+      surfaceM2: stand.surfaceM2.toString(),
+      priceHT: stand.priceHT.toString(),
+      status: stand.status,
+      size: stand.size,
+      hasFurniture: stand.hasFurniture,
+      hasElectricity: stand.hasElectricity,
+      furniturePrice: stand.furniturePrice.toString(),
+      electricityPrice: stand.electricityPrice.toString(),
+    })
+  }
+
+  const handleSaveStand = async () => {
+    if (!editingStand) return
+
+    setSaving(true)
+    try {
+      const res = await fetch('/api/admin/stands', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: editingStand.id,
+          ...formData,
+          surfaceM2: parseFloat(formData.surfaceM2),
+          priceHT: parseFloat(formData.priceHT),
+          furniturePrice: parseFloat(formData.furniturePrice),
+          electricityPrice: parseFloat(formData.electricityPrice),
+        })
+      })
+
+      const data = await res.json()
+      if (res.ok) {
+        setMessage({ type: 'success', text: 'Stand mis à jour avec succès' })
+        setEditingStand(null)
+        fetchStands()
+      } else {
+        setMessage({ type: 'error', text: data.error || 'Erreur lors de la mise à jour' })
+      }
+    } catch (error) {
+      setMessage({ type: 'error', text: 'Erreur lors de la mise à jour' })
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleInitializeStands = async () => {
+    if (!confirm('Voulez-vous initialiser les 25 stands par défaut ? Les stands non vendus seront réinitialisés.')) {
+      return
+    }
+
+    setSaving(true)
+    try {
+      const res = await fetch('/api/admin/stands', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'initialize',
+          stands: defaultStandsConfig,
+        })
+      })
+
+      const data = await res.json()
+      if (res.ok) {
+        setMessage({ type: 'success', text: data.message })
+        fetchStands()
+      } else {
+        setMessage({ type: 'error', text: data.error || 'Erreur lors de l\'initialisation' })
+      }
+    } catch (error) {
+      setMessage({ type: 'error', text: 'Erreur lors de l\'initialisation' })
+    } finally {
+      setSaving(false)
+    }
+  }
 
   const stats = {
     total: stands.length,
@@ -56,64 +177,19 @@ export default function StandsPage() {
     revenue: stands.filter((s) => s.status === 'SOLD').reduce((sum, s) => sum + s.priceHT, 0),
   }
 
-  const handleUpdateStatus = (stand: StandData, newStatus: StandStatus) => {
-    setStands(prev => prev.map((s) =>
-      s.id === stand.id ? { ...s, status: newStatus } : s
-    ))
-    setEditingStand(null)
-  }
-
-  const columns = [
-    {
-      key: 'code',
-      label: 'Code',
-      sortable: true,
-      render: (stand: StandData) => (
-        <span className="font-mono font-bold">{stand.code}</span>
-      ),
-    },
-    {
-      key: 'surfaceM2',
-      label: 'Surface',
-      render: (stand: StandData) => `${stand.surfaceM2} m²`,
-    },
-    {
-      key: 'priceHT',
-      label: 'Prix HT',
-      render: (stand: StandData) => formatPrice(stand.priceHT),
-    },
-    {
-      key: 'status',
-      label: 'Statut',
-      render: (stand: StandData) => {
-        const config = statusConfig[stand.status]
-        return <Badge variant={config.variant}>{config.label}</Badge>
-      },
-    },
-    {
-      key: 'options',
-      label: 'Options',
-      render: (stand: StandData) => (
-        <div className="flex gap-2">
-          {stand.hasFurniture && <Badge variant="default" size="sm">Mobilier</Badge>}
-          {stand.hasElectricity && <Badge variant="default" size="sm">Électricité</Badge>}
-          {!stand.hasFurniture && !stand.hasElectricity && <span className="text-gray-400">-</span>}
-        </div>
-      ),
-    },
-  ]
-
   return (
     <div className="space-y-4 sm:space-y-6">
-      {/* Header - Mobile optimized */}
+      {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl font-heading font-bold text-gray-900">
             Gestion des Stands
           </h1>
-          <p className="text-sm sm:text-base text-gray-600">Vue et gestion des emplacements</p>
+          <p className="text-sm sm:text-base text-gray-600">
+            {stands.length} stands configurés
+          </p>
         </div>
-        <div className="flex gap-2 w-full sm:w-auto">
+        <div className="flex flex-wrap gap-2 w-full sm:w-auto">
           <Button
             variant={viewMode === 'plan' ? 'primary' : 'outline'}
             size="sm"
@@ -136,10 +212,35 @@ export default function StandsPage() {
             </svg>
             Liste
           </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleInitializeStands}
+            disabled={saving}
+            className="flex-1 sm:flex-none"
+          >
+            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            Initialiser 25 stands
+          </Button>
         </div>
       </div>
 
-      {/* Stats - Mobile grid */}
+      {/* Message */}
+      {message && (
+        <div className={`p-4 rounded-lg ${message.type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+          {message.text}
+          <button
+            className="float-right font-bold"
+            onClick={() => setMessage(null)}
+          >
+            ×
+          </button>
+        </div>
+      )}
+
+      {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-4">
         <Card variant="default" className="bg-white">
           <CardContent className="text-center p-3 sm:p-4">
@@ -174,21 +275,78 @@ export default function StandsPage() {
       </div>
 
       {/* Content */}
-      {viewMode === 'plan' ? (
+      {loading ? (
+        <div className="flex justify-center py-12">
+          <div className="w-12 h-12 border-4 border-forest/20 border-t-forest rounded-full animate-spin" />
+        </div>
+      ) : viewMode === 'plan' ? (
         <div className="bg-white rounded-xl p-3 sm:p-6 shadow-sm">
-          <StandPlan readOnly />
+          <StandPlan
+            stands={stands}
+            adminMode
+            onStandEdit={handleEditStand}
+            showLegend
+          />
           <p className="text-center text-xs sm:text-sm text-gray-500 mt-3 sm:mt-4">
-            Passez en mode Liste pour modifier le statut des stands
+            Cliquez sur un stand pour modifier ses informations
           </p>
         </div>
       ) : (
-        <div className="overflow-x-auto">
-          <DataTable
-            data={stands}
-            columns={columns}
-            onEdit={(stand) => setEditingStand(stand as StandData)}
-            searchPlaceholder="Rechercher un stand..."
-          />
+        <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Code</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Surface</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prix HT</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Taille</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Options</th>
+                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {stands.map((stand) => (
+                  <tr key={stand.id} className="hover:bg-gray-50">
+                    <td className="px-4 py-3 whitespace-nowrap font-mono font-bold text-forest">
+                      {stand.code}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      {stand.surfaceM2} m²
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap font-medium">
+                      {formatPrice(stand.priceHT)}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <Badge variant="default" size="sm">{sizeConfig[stand.size]?.label || stand.size}</Badge>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <Badge variant={statusConfig[stand.status].variant}>
+                        {statusConfig[stand.status].label}
+                      </Badge>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <div className="flex gap-1">
+                        {stand.hasFurniture && <Badge variant="default" size="sm">Mobilier</Badge>}
+                        {stand.hasElectricity && <Badge variant="default" size="sm">Élec</Badge>}
+                        {!stand.hasFurniture && !stand.hasElectricity && <span className="text-gray-400">-</span>}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-right">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleEditStand(stand)}
+                      >
+                        Modifier
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 
@@ -196,32 +354,61 @@ export default function StandsPage() {
       <Modal
         isOpen={!!editingStand}
         onClose={() => setEditingStand(null)}
-        title={`Stand ${editingStand?.code}`}
+        title={`Modifier le stand ${editingStand?.code}`}
       >
         {editingStand && (
           <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4 text-sm">
+            <div className="grid grid-cols-2 gap-4">
               <div>
-                <span className="text-gray-500">Surface</span>
-                <p className="font-semibold">{editingStand.surfaceM2} m²</p>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Code</label>
+                <input
+                  type="text"
+                  value={formData.code}
+                  onChange={(e) => setFormData({ ...formData, code: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-forest"
+                />
               </div>
               <div>
-                <span className="text-gray-500">Prix HT</span>
-                <p className="font-semibold">{formatPrice(editingStand.priceHT)}</p>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Surface (m²)</label>
+                <input
+                  type="number"
+                  value={formData.surfaceM2}
+                  onChange={(e) => setFormData({ ...formData, surfaceM2: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-forest"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Prix HT (€)</label>
+                <input
+                  type="number"
+                  value={formData.priceHT}
+                  onChange={(e) => setFormData({ ...formData, priceHT: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-forest"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Taille</label>
+                <select
+                  value={formData.size}
+                  onChange={(e) => setFormData({ ...formData, size: e.target.value as StandSize })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-forest"
+                >
+                  {Object.entries(sizeConfig).map(([key, { label, description }]) => (
+                    <option key={key} value={key}>{label} ({description})</option>
+                  ))}
+                </select>
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Modifier le statut
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Statut</label>
               <div className="flex flex-wrap gap-2">
                 {(['FREE', 'RESERVED', 'SOLD'] as const).map((status) => (
                   <Button
                     key={status}
-                    variant={editingStand.status === status ? 'primary' : 'outline'}
+                    variant={formData.status === status ? 'primary' : 'outline'}
                     size="sm"
-                    onClick={() => handleUpdateStatus(editingStand, status)}
+                    onClick={() => setFormData({ ...formData, status })}
                   >
                     {statusConfig[status].label}
                   </Button>
@@ -229,9 +416,45 @@ export default function StandsPage() {
               </div>
             </div>
 
-            <div className="pt-4 border-t">
-              <Button variant="outline" onClick={() => setEditingStand(null)} className="w-full">
-                Fermer
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="flex items-center gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    checked={formData.hasFurniture}
+                    onChange={(e) => setFormData({ ...formData, hasFurniture: e.target.checked })}
+                    className="w-4 h-4 rounded border-gray-300 text-forest focus:ring-forest"
+                  />
+                  <span>Mobilier (+{formData.furniturePrice}€)</span>
+                </label>
+              </div>
+              <div>
+                <label className="flex items-center gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    checked={formData.hasElectricity}
+                    onChange={(e) => setFormData({ ...formData, hasElectricity: e.target.checked })}
+                    className="w-4 h-4 rounded border-gray-300 text-forest focus:ring-forest"
+                  />
+                  <span>Électricité (+{formData.electricityPrice}€)</span>
+                </label>
+              </div>
+            </div>
+
+            <div className="pt-4 border-t flex gap-3">
+              <Button
+                variant="outline"
+                onClick={() => setEditingStand(null)}
+                className="flex-1"
+              >
+                Annuler
+              </Button>
+              <Button
+                onClick={handleSaveStand}
+                disabled={saving}
+                className="flex-1"
+              >
+                {saving ? 'Enregistrement...' : 'Enregistrer'}
               </Button>
             </div>
           </div>

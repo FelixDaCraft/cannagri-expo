@@ -117,30 +117,38 @@ export default function PresentationPage() {
           className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center mb-16"
         >
           <motion.div
-            whileHover={{ scale: 1.02 }}
+            whileHover={{ scale: 1.02, rotate: 1 }}
             transition={{ type: 'spring', stiffness: 300 }}
-            className="relative aspect-video lg:aspect-square rounded-2xl overflow-hidden bg-gradient-to-br from-sage/30 to-forest/20 border border-sage/20 shadow-xl"
+            className="relative"
           >
-            <div className="absolute inset-0 flex items-center justify-center">
-              <motion.div
-                animate={{
-                  scale: [1, 1.05, 1],
-                  opacity: [0.8, 1, 0.8]
-                }}
-                transition={{ duration: 3, repeat: Infinity }}
-              >
-                <Image
-                  src="/images/logo.png"
-                  alt={siteConfig.name}
-                  width={300}
-                  height={300}
-                  className="object-contain"
-                />
-              </motion.div>
+            {/* Glow derrière le poster */}
+            <div className="absolute inset-0 bg-mint/30 rounded-3xl blur-3xl transform scale-95" />
+
+            {/* Ombre portée */}
+            <div className="absolute inset-0 bg-forest/20 rounded-3xl transform translate-x-4 translate-y-4 -z-10" />
+
+            {/* Le poster */}
+            <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl border-4 border-cream/50">
+              <Image
+                src="/images/poster-2026.png"
+                alt="Cann'Agri Expo 2026 - Affiche officielle"
+                fill
+                className="object-cover"
+                priority
+              />
             </div>
-            {/* Decorative elements */}
-            <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-sage/20 rounded-full blur-3xl" />
-            <div className="absolute -top-10 -left-10 w-32 h-32 bg-forest/20 rounded-full blur-3xl" />
+
+            {/* Badge édition */}
+            <motion.div
+              initial={{ scale: 0, rotate: -20 }}
+              animate={{ scale: 1, rotate: -12 }}
+              transition={{ delay: 0.5, type: 'spring', stiffness: 200 }}
+              className="absolute -top-4 -right-4 md:-top-6 md:-right-6"
+            >
+              <div className="bg-terracotta text-cream px-4 py-2 rounded-full font-heading font-bold text-sm md:text-base shadow-lg transform rotate-12">
+                Édition 2026
+              </div>
+            </motion.div>
           </motion.div>
 
           <div>
