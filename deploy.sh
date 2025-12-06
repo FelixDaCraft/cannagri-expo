@@ -80,52 +80,93 @@ fi
 # PAUSE POUR COPIER LES IMAGES
 # ============================================================
 echo ""
-echo -e "${CYAN}╔═══════════════════════════════════════════════════════╗${NC}"
-echo -e "${CYAN}║                   PAUSE - IMAGES                      ║${NC}"
-echo -e "${CYAN}╚═══════════════════════════════════════════════════════╝${NC}"
+echo -e "${CYAN}╔═══════════════════════════════════════════════════════════════════╗${NC}"
+echo -e "${CYAN}║                                                                   ║${NC}"
+echo -e "${CYAN}║                    ⏸  PAUSE - COPIE DES IMAGES                   ║${NC}"
+echo -e "${CYAN}║                                                                   ║${NC}"
+echo -e "${CYAN}╚═══════════════════════════════════════════════════════════════════╝${NC}"
 echo ""
-echo -e "${YELLOW}Copiez maintenant vos images dans les dossiers suivants:${NC}"
+echo -e "${YELLOW}══════════════════════════════════════════════════════════════════════${NC}"
+echo -e "${YELLOW}  Copiez maintenant vos images dans les emplacements suivants :${NC}"
+echo -e "${YELLOW}══════════════════════════════════════════════════════════════════════${NC}"
 echo ""
-echo -e "  ${GREEN}Logo:${NC}"
-echo -e "    $APP_DIR/public/images/logo.png"
+echo -e "  ${GREEN}1. AFFICHE OFFICIELLE 2026 (obligatoire pour la page d'accueil) :${NC}"
+echo -e "     ${BLUE}→${NC} $APP_DIR/public/images/${CYAN}poster-2026.png${NC}"
 echo ""
-echo -e "  ${GREEN}Photos galerie (édition 2024):${NC}"
-echo -e "    $APP_DIR/public/images/gallery/"
+echo -e "  ${GREEN}2. LOGO (header/footer) :${NC}"
+echo -e "     ${BLUE}→${NC} $APP_DIR/public/images/${CYAN}logo.png${NC}"
 echo ""
-echo -e "${CYAN}Exemple de commandes pour copier depuis votre poste:${NC}"
+echo -e "  ${GREEN}3. PHOTOS GALERIE (médiathèque) :${NC}"
+echo -e "     ${BLUE}→${NC} $APP_DIR/public/images/gallery/${CYAN}*.jpg${NC}"
+echo ""
+echo -e "${YELLOW}══════════════════════════════════════════════════════════════════════${NC}"
+echo -e "${CYAN}  Exemples de commandes pour copier depuis votre poste :${NC}"
+echo -e "${YELLOW}══════════════════════════════════════════════════════════════════════${NC}"
+echo ""
+echo -e "  ${BLUE}# Affiche 2026${NC}"
+echo -e "  scp poster-2026.png user@serveur:$APP_DIR/public/images/"
+echo ""
+echo -e "  ${BLUE}# Logo${NC}"
 echo -e "  scp logo.png user@serveur:$APP_DIR/public/images/"
+echo ""
+echo -e "  ${BLUE}# Photos galerie${NC}"
 echo -e "  scp *.jpg user@serveur:$APP_DIR/public/images/gallery/"
 echo ""
+echo -e "${YELLOW}══════════════════════════════════════════════════════════════════════${NC}"
+echo ""
 
-# Vérifier si le logo existe déjà
-if [ -f "$APP_DIR/public/images/logo.png" ]; then
-    echo -e "${GREEN}✓ Logo détecté: logo.png${NC}"
+# Vérifier les fichiers existants
+echo -e "${BLUE}État actuel des fichiers :${NC}"
+echo ""
+
+# Vérifier le poster 2026
+if [ -f "$APP_DIR/public/images/poster-2026.png" ]; then
+    echo -e "  ${GREEN}✓${NC} Affiche 2026 : ${GREEN}poster-2026.png trouvé${NC}"
 else
-    echo -e "${YELLOW}⚠ Logo non trouvé${NC}"
+    echo -e "  ${RED}✗${NC} Affiche 2026 : ${RED}MANQUANT${NC} (requis pour la page d'accueil)"
+fi
+
+# Vérifier le logo
+if [ -f "$APP_DIR/public/images/logo.png" ]; then
+    echo -e "  ${GREEN}✓${NC} Logo : ${GREEN}logo.png trouvé${NC}"
+else
+    echo -e "  ${YELLOW}⚠${NC} Logo : ${YELLOW}non trouvé${NC}"
 fi
 
 # Compter les images dans gallery
 GALLERY_COUNT=$(ls -1 "$APP_DIR/public/images/gallery/"*.jpg 2>/dev/null | wc -l || echo "0")
 if [ "$GALLERY_COUNT" -gt 0 ]; then
-    echo -e "${GREEN}✓ $GALLERY_COUNT image(s) détectée(s) dans gallery/${NC}"
+    echo -e "  ${GREEN}✓${NC} Galerie : ${GREEN}$GALLERY_COUNT image(s) trouvée(s)${NC}"
 else
-    echo -e "${YELLOW}⚠ Aucune image dans gallery/${NC}"
+    echo -e "  ${YELLOW}⚠${NC} Galerie : ${YELLOW}aucune image${NC}"
 fi
 
 echo ""
-echo -e "${YELLOW}Appuyez sur ENTRÉE quand les images sont copiées...${NC}"
+echo -e "${YELLOW}══════════════════════════════════════════════════════════════════════${NC}"
+echo ""
+echo -e "${GREEN}  Appuyez sur ENTRÉE quand toutes les images sont copiées...${NC}"
+echo ""
 read -r
 
 # Vérification finale
-echo -e "${BLUE}Vérification des fichiers...${NC}"
-if [ -f "$APP_DIR/public/images/logo.png" ]; then
-    echo -e "${GREEN}✓ Logo OK${NC}"
+echo ""
+echo -e "${BLUE}Vérification finale des fichiers...${NC}"
+echo ""
+
+if [ -f "$APP_DIR/public/images/poster-2026.png" ]; then
+    echo -e "  ${GREEN}✓${NC} Affiche 2026 : OK"
 else
-    echo -e "${RED}✗ Logo manquant - Le site utilisera un placeholder${NC}"
+    echo -e "  ${RED}✗${NC} Affiche 2026 : MANQUANT - La page d'accueil affichera une erreur d'image"
+fi
+
+if [ -f "$APP_DIR/public/images/logo.png" ]; then
+    echo -e "  ${GREEN}✓${NC} Logo : OK"
+else
+    echo -e "  ${YELLOW}⚠${NC} Logo : manquant - Un placeholder sera utilisé"
 fi
 
 GALLERY_COUNT=$(ls -1 "$APP_DIR/public/images/gallery/"*.jpg 2>/dev/null | wc -l || echo "0")
-echo -e "${GREEN}✓ $GALLERY_COUNT image(s) dans gallery/${NC}"
+echo -e "  ${GREEN}✓${NC} Galerie : $GALLERY_COUNT image(s)"
 
 echo ""
 
