@@ -80,11 +80,16 @@ enum StandSize {
 
 model Stand {
   id            String       @id @default(cuid())
-  code          String       @unique  // Ex: A12, B3, C7
+  number        Int          @unique  // Numéro du stand (1-25)
+  code          String       @unique  // Alias pour compatibilité
   surfaceM2     Float
   priceHT       Float
   status        StandStatus  @default(FREE)
   size          StandSize    @default(MEDIUM)
+
+  // Exposant assigné
+  exhibitorName String?      // Nom de l'exposant
+  exhibitorId   String?      // Référence optionnelle vers Exhibitor
 
   // Options
   hasFurniture  Boolean      @default(false)
@@ -92,11 +97,15 @@ model Stand {
   furniturePrice Float       @default(120)
   electricityPrice Float     @default(80)
 
-  // Position sur le plan
-  row           Int
-  col           Int
-  width         Int          @default(1)
-  height        Int          @default(1)
+  // Position sur le plan SVG
+  x             Int          @default(0)
+  y             Int          @default(0)
+  width         Int          @default(55)
+  height        Int          @default(55)
+
+  // Anciens champs de grille (pour compatibilité)
+  row           Int          @default(0)
+  col           Int          @default(0)
 
   orderId       String?
   order         Order?       @relation(fields: [orderId], references: [id])

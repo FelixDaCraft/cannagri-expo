@@ -1,13 +1,45 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
+// Configuration des 25 stands par défaut
+const defaultStandsConfig = [
+  // Rangée du haut (stands 3-9)
+  { number: 3, surfaceM2: 9, priceHT: 350, size: 'SMALL', x: 200, y: 50, width: 55, height: 55 },
+  { number: 4, surfaceM2: 9, priceHT: 350, size: 'SMALL', x: 265, y: 50, width: 55, height: 55 },
+  { number: 5, surfaceM2: 9, priceHT: 350, size: 'SMALL', x: 330, y: 50, width: 55, height: 55 },
+  { number: 6, surfaceM2: 9, priceHT: 350, size: 'SMALL', x: 395, y: 50, width: 55, height: 55 },
+  { number: 7, surfaceM2: 9, priceHT: 350, size: 'SMALL', x: 460, y: 50, width: 55, height: 55 },
+  { number: 8, surfaceM2: 9, priceHT: 350, size: 'SMALL', x: 525, y: 50, width: 55, height: 55 },
+  { number: 9, surfaceM2: 9, priceHT: 350, size: 'SMALL', x: 590, y: 50, width: 55, height: 55 },
+  // Stands 1-2 (à côté conférence)
+  { number: 2, surfaceM2: 12, priceHT: 450, size: 'MEDIUM', x: 200, y: 130, width: 55, height: 65 },
+  { number: 1, surfaceM2: 12, priceHT: 450, size: 'MEDIUM', x: 200, y: 205, width: 55, height: 65 },
+  // Côté droit (stands 10-18)
+  { number: 10, surfaceM2: 9, priceHT: 350, size: 'SMALL', x: 590, y: 130, width: 55, height: 45 },
+  { number: 11, surfaceM2: 9, priceHT: 350, size: 'SMALL', x: 590, y: 185, width: 55, height: 45 },
+  { number: 12, surfaceM2: 9, priceHT: 350, size: 'SMALL', x: 590, y: 240, width: 55, height: 45 },
+  { number: 13, surfaceM2: 9, priceHT: 350, size: 'SMALL', x: 590, y: 295, width: 55, height: 45 },
+  { number: 14, surfaceM2: 9, priceHT: 350, size: 'SMALL', x: 590, y: 350, width: 55, height: 45 },
+  { number: 15, surfaceM2: 9, priceHT: 350, size: 'SMALL', x: 590, y: 405, width: 55, height: 45 },
+  { number: 16, surfaceM2: 9, priceHT: 350, size: 'SMALL', x: 590, y: 460, width: 55, height: 45 },
+  { number: 17, surfaceM2: 9, priceHT: 350, size: 'SMALL', x: 590, y: 515, width: 55, height: 45 },
+  { number: 18, surfaceM2: 9, priceHT: 350, size: 'SMALL', x: 590, y: 570, width: 55, height: 45 },
+  // Rangée du bas (stands 19-25)
+  { number: 25, surfaceM2: 9, priceHT: 350, size: 'SMALL', x: 200, y: 570, width: 55, height: 55 },
+  { number: 24, surfaceM2: 9, priceHT: 350, size: 'SMALL', x: 265, y: 570, width: 55, height: 55 },
+  { number: 23, surfaceM2: 9, priceHT: 350, size: 'SMALL', x: 330, y: 570, width: 55, height: 55 },
+  { number: 22, surfaceM2: 9, priceHT: 350, size: 'SMALL', x: 395, y: 570, width: 55, height: 55 },
+  { number: 21, surfaceM2: 9, priceHT: 350, size: 'SMALL', x: 460, y: 570, width: 55, height: 55 },
+  { number: 20, surfaceM2: 9, priceHT: 350, size: 'SMALL', x: 525, y: 570, width: 55, height: 55 },
+  { number: 19, surfaceM2: 9, priceHT: 350, size: 'SMALL', x: 590, y: 625, width: 55, height: 55 },
+]
+
 // GET /api/admin/stands - List all stands with full details
 export async function GET(request: NextRequest) {
   try {
     const stands = await prisma.stand.findMany({
       orderBy: [
-        { row: 'asc' },
-        { col: 'asc' },
+        { number: 'asc' },
       ],
       include: {
         order: {
@@ -36,55 +68,60 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const {
-      code,
+      number,
       surfaceM2,
       priceHT,
       status = 'FREE',
       size = 'MEDIUM',
-      row,
-      col,
-      width = 1,
-      height = 1,
+      x = 0,
+      y = 0,
+      width = 55,
+      height = 55,
       hasFurniture = false,
       hasElectricity = false,
       furniturePrice = 120,
       electricityPrice = 80,
+      exhibitorName = null,
     } = body
 
-    if (!code || surfaceM2 === undefined || priceHT === undefined || row === undefined || col === undefined) {
+    if (number === undefined || surfaceM2 === undefined || priceHT === undefined) {
       return NextResponse.json(
-        { error: 'Missing required fields: code, surfaceM2, priceHT, row, col' },
+        { error: 'Missing required fields: number, surfaceM2, priceHT' },
         { status: 400 }
       )
     }
 
-    // Check if code already exists
+    // Check if number already exists
     const existingStand = await prisma.stand.findUnique({
-      where: { code }
+      where: { number: parseInt(number) }
     })
 
     if (existingStand) {
       return NextResponse.json(
-        { error: 'A stand with this code already exists' },
+        { error: 'A stand with this number already exists' },
         { status: 400 }
       )
     }
 
     const stand = await prisma.stand.create({
       data: {
-        code,
+        number: parseInt(number),
+        code: String(number),
         surfaceM2: parseFloat(surfaceM2),
         priceHT: parseFloat(priceHT),
         status,
         size,
-        row: parseInt(row),
-        col: parseInt(col),
+        x: parseInt(x),
+        y: parseInt(y),
         width: parseInt(width),
         height: parseInt(height),
+        row: 0,
+        col: 0,
         hasFurniture,
         hasElectricity,
         furniturePrice: parseFloat(furniturePrice),
         electricityPrice: parseFloat(electricityPrice),
+        exhibitorName,
       }
     })
 
@@ -104,19 +141,20 @@ export async function PUT(request: NextRequest) {
     const body = await request.json()
     const {
       id,
-      code,
+      number,
       surfaceM2,
       priceHT,
       status,
       size,
-      row,
-      col,
+      x,
+      y,
       width,
       height,
       hasFurniture,
       hasElectricity,
       furniturePrice,
       electricityPrice,
+      exhibitorName,
     } = body
 
     if (!id) {
@@ -138,39 +176,44 @@ export async function PUT(request: NextRequest) {
       )
     }
 
-    // If changing code, check it's not already in use
-    if (code && code !== existingStand.code) {
-      const codeExists = await prisma.stand.findUnique({
-        where: { code }
+    // If changing number, check it's not already in use
+    if (number !== undefined && number !== existingStand.number) {
+      const numberExists = await prisma.stand.findUnique({
+        where: { number: parseInt(number) }
       })
-      if (codeExists) {
+      if (numberExists) {
         return NextResponse.json(
-          { error: 'A stand with this code already exists' },
+          { error: 'A stand with this number already exists' },
           { status: 400 }
         )
       }
     }
 
     const updateData: any = {}
-    if (code !== undefined) updateData.code = code
+    if (number !== undefined) {
+      updateData.number = parseInt(number)
+      updateData.code = String(number)
+    }
     if (surfaceM2 !== undefined) updateData.surfaceM2 = parseFloat(surfaceM2)
     if (priceHT !== undefined) updateData.priceHT = parseFloat(priceHT)
     if (status !== undefined) updateData.status = status
     if (size !== undefined) updateData.size = size
-    if (row !== undefined) updateData.row = parseInt(row)
-    if (col !== undefined) updateData.col = parseInt(col)
+    if (x !== undefined) updateData.x = parseInt(x)
+    if (y !== undefined) updateData.y = parseInt(y)
     if (width !== undefined) updateData.width = parseInt(width)
     if (height !== undefined) updateData.height = parseInt(height)
     if (hasFurniture !== undefined) updateData.hasFurniture = hasFurniture
     if (hasElectricity !== undefined) updateData.hasElectricity = hasElectricity
     if (furniturePrice !== undefined) updateData.furniturePrice = parseFloat(furniturePrice)
     if (electricityPrice !== undefined) updateData.electricityPrice = parseFloat(electricityPrice)
+    if (exhibitorName !== undefined) updateData.exhibitorName = exhibitorName || null
 
-    // Handle status change to FREE (clear reservation data)
+    // Handle status change to FREE (clear reservation and exhibitor)
     if (status === 'FREE') {
       updateData.orderId = null
       updateData.reservedAt = null
       updateData.reservedUntil = null
+      updateData.exhibitorName = null
     }
 
     const stand = await prisma.stand.update({
@@ -211,7 +254,6 @@ export async function DELETE(request: NextRequest) {
       )
     }
 
-    // Check if the stand exists
     const existingStand = await prisma.stand.findUnique({
       where: { id }
     })
@@ -223,7 +265,6 @@ export async function DELETE(request: NextRequest) {
       )
     }
 
-    // Don't allow deleting sold stands
     if (existingStand.status === 'SOLD') {
       return NextResponse.json(
         { error: 'Cannot delete a sold stand' },
@@ -249,56 +290,38 @@ export async function DELETE(request: NextRequest) {
 export async function PATCH(request: NextRequest) {
   try {
     const body = await request.json()
-    const { action, stands } = body
+    const { action } = body
 
     if (action === 'initialize') {
-      // Delete all existing stands that are not sold
-      await prisma.stand.deleteMany({
-        where: {
-          status: { not: 'SOLD' }
-        }
-      })
+      // Delete all existing stands
+      await prisma.stand.deleteMany({})
 
-      // Create new stands from provided data
-      if (stands && Array.isArray(stands)) {
-        for (const stand of stands) {
-          await prisma.stand.upsert({
-            where: { code: stand.code },
-            create: {
-              code: stand.code,
-              surfaceM2: parseFloat(stand.surfaceM2),
-              priceHT: parseFloat(stand.priceHT),
-              status: stand.status || 'FREE',
-              size: stand.size || 'MEDIUM',
-              row: parseInt(stand.row),
-              col: parseInt(stand.col),
-              width: parseInt(stand.width || 1),
-              height: parseInt(stand.height || 1),
-              hasFurniture: stand.hasFurniture || false,
-              hasElectricity: stand.hasElectricity || false,
-              furniturePrice: parseFloat(stand.furniturePrice || 120),
-              electricityPrice: parseFloat(stand.electricityPrice || 80),
-            },
-            update: {
-              surfaceM2: parseFloat(stand.surfaceM2),
-              priceHT: parseFloat(stand.priceHT),
-              status: stand.status || 'FREE',
-              size: stand.size || 'MEDIUM',
-              row: parseInt(stand.row),
-              col: parseInt(stand.col),
-              width: parseInt(stand.width || 1),
-              height: parseInt(stand.height || 1),
-              hasFurniture: stand.hasFurniture || false,
-              hasElectricity: stand.hasElectricity || false,
-              furniturePrice: parseFloat(stand.furniturePrice || 120),
-              electricityPrice: parseFloat(stand.electricityPrice || 80),
-            }
-          })
-        }
+      // Create all 25 stands
+      for (const stand of defaultStandsConfig) {
+        await prisma.stand.create({
+          data: {
+            number: stand.number,
+            code: String(stand.number),
+            surfaceM2: stand.surfaceM2,
+            priceHT: stand.priceHT,
+            status: 'FREE',
+            size: stand.size as any,
+            x: stand.x,
+            y: stand.y,
+            width: stand.width,
+            height: stand.height,
+            row: 0,
+            col: 0,
+            hasFurniture: false,
+            hasElectricity: false,
+            furniturePrice: 120,
+            electricityPrice: 80,
+          }
+        })
       }
 
       const allStands = await prisma.stand.findMany({
-        orderBy: [{ row: 'asc' }, { col: 'asc' }]
+        orderBy: [{ number: 'asc' }]
       })
 
       return NextResponse.json({

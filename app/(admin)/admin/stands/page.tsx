@@ -17,39 +17,6 @@ const sizeConfig: Record<StandSize, { label: string; description: string }> = {
   LARGE: { label: 'Grand', description: '24+ m²' },
 }
 
-// Default stands configuration
-const defaultStandsConfig: Partial<Stand>[] = [
-  // Zone A - Entrée (6 stands)
-  { code: 'A1', surfaceM2: 9, priceHT: 350, size: 'SMALL', row: 0, col: 0 },
-  { code: 'A2', surfaceM2: 9, priceHT: 350, size: 'SMALL', row: 0, col: 1 },
-  { code: 'A3', surfaceM2: 12, priceHT: 450, size: 'MEDIUM', row: 0, col: 2 },
-  { code: 'A4', surfaceM2: 12, priceHT: 450, size: 'MEDIUM', row: 0, col: 3 },
-  { code: 'A5', surfaceM2: 9, priceHT: 350, size: 'SMALL', row: 0, col: 4 },
-  { code: 'A6', surfaceM2: 9, priceHT: 350, size: 'SMALL', row: 0, col: 5 },
-  // Zone B
-  { code: 'B1', surfaceM2: 12, priceHT: 450, size: 'MEDIUM', row: 1, col: 0 },
-  { code: 'B2', surfaceM2: 18, priceHT: 650, size: 'MEDIUM', row: 1, col: 1 },
-  { code: 'B3', surfaceM2: 12, priceHT: 450, size: 'MEDIUM', row: 1, col: 2 },
-  { code: 'B4', surfaceM2: 18, priceHT: 650, size: 'MEDIUM', row: 1, col: 3 },
-  { code: 'B5', surfaceM2: 12, priceHT: 450, size: 'MEDIUM', row: 1, col: 4 },
-  { code: 'B6', surfaceM2: 12, priceHT: 450, size: 'MEDIUM', row: 1, col: 5 },
-  // Zone C
-  { code: 'C1', surfaceM2: 24, priceHT: 850, size: 'LARGE', row: 2, col: 0, width: 2 },
-  { code: 'C2', surfaceM2: 12, priceHT: 450, size: 'MEDIUM', row: 2, col: 2 },
-  { code: 'C3', surfaceM2: 12, priceHT: 450, size: 'MEDIUM', row: 2, col: 3 },
-  { code: 'C4', surfaceM2: 24, priceHT: 850, size: 'LARGE', row: 2, col: 4, width: 2 },
-  { code: 'C5', surfaceM2: 18, priceHT: 650, size: 'MEDIUM', row: 3, col: 1 },
-  { code: 'C6', surfaceM2: 18, priceHT: 650, size: 'MEDIUM', row: 3, col: 2 },
-  { code: 'C7', surfaceM2: 18, priceHT: 650, size: 'MEDIUM', row: 3, col: 3 },
-  // Zone D
-  { code: 'D1', surfaceM2: 18, priceHT: 750, size: 'MEDIUM', row: 4, col: 0 },
-  { code: 'D2', surfaceM2: 24, priceHT: 950, size: 'LARGE', row: 4, col: 1, width: 2 },
-  { code: 'D3', surfaceM2: 24, priceHT: 950, size: 'LARGE', row: 4, col: 3, width: 2 },
-  { code: 'D4', surfaceM2: 18, priceHT: 750, size: 'MEDIUM', row: 4, col: 5 },
-  { code: 'D5', surfaceM2: 36, priceHT: 1200, size: 'LARGE', row: 5, col: 1, width: 2 },
-  { code: 'D6', surfaceM2: 36, priceHT: 1200, size: 'LARGE', row: 5, col: 3, width: 2 },
-]
-
 export default function StandsPage() {
   const [stands, setStands] = useState<Stand[]>([])
   const [loading, setLoading] = useState(true)
@@ -60,11 +27,12 @@ export default function StandsPage() {
 
   // Form state for editing
   const [formData, setFormData] = useState({
-    code: '',
+    number: '',
     surfaceM2: '',
     priceHT: '',
     status: 'FREE' as StandStatus,
     size: 'MEDIUM' as StandSize,
+    exhibitorName: '',
     hasFurniture: false,
     hasElectricity: false,
     furniturePrice: '120',
@@ -94,11 +62,12 @@ export default function StandsPage() {
   const handleEditStand = (stand: Stand) => {
     setEditingStand(stand)
     setFormData({
-      code: stand.code,
+      number: (stand.number || stand.code || '').toString(),
       surfaceM2: stand.surfaceM2.toString(),
       priceHT: stand.priceHT.toString(),
       status: stand.status,
       size: stand.size,
+      exhibitorName: stand.exhibitorName || '',
       hasFurniture: stand.hasFurniture,
       hasElectricity: stand.hasElectricity,
       furniturePrice: stand.furniturePrice.toString(),
@@ -116,9 +85,14 @@ export default function StandsPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           id: editingStand.id,
-          ...formData,
+          number: parseInt(formData.number) || editingStand.number,
           surfaceM2: parseFloat(formData.surfaceM2),
           priceHT: parseFloat(formData.priceHT),
+          status: formData.status,
+          size: formData.size,
+          exhibitorName: formData.exhibitorName || null,
+          hasFurniture: formData.hasFurniture,
+          hasElectricity: formData.hasElectricity,
           furniturePrice: parseFloat(formData.furniturePrice),
           electricityPrice: parseFloat(formData.electricityPrice),
         })
@@ -151,7 +125,6 @@ export default function StandsPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           action: 'initialize',
-          stands: defaultStandsConfig,
         })
       })
 
@@ -297,10 +270,10 @@ export default function StandsPage() {
             <table className="w-full">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Code</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">N°</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Exposant</th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Surface</th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prix HT</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Taille</th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Options</th>
                   <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
@@ -310,16 +283,20 @@ export default function StandsPage() {
                 {stands.map((stand) => (
                   <tr key={stand.id} className="hover:bg-gray-50">
                     <td className="px-4 py-3 whitespace-nowrap font-mono font-bold text-forest">
-                      {stand.code}
+                      {stand.number}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      {stand.exhibitorName ? (
+                        <span className="text-gray-900">{stand.exhibitorName}</span>
+                      ) : (
+                        <span className="text-gray-400 italic">Non assigné</span>
+                      )}
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap">
                       {stand.surfaceM2} m²
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap font-medium">
                       {formatPrice(stand.priceHT)}
-                    </td>
-                    <td className="px-4 py-3 whitespace-nowrap">
-                      <Badge variant="default" size="sm">{sizeConfig[stand.size]?.label || stand.size}</Badge>
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap">
                       <Badge variant={statusConfig[stand.status].variant}>
@@ -354,18 +331,20 @@ export default function StandsPage() {
       <Modal
         isOpen={!!editingStand}
         onClose={() => setEditingStand(null)}
-        title={`Modifier le stand ${editingStand?.code}`}
+        title={`Modifier le stand ${editingStand?.number || editingStand?.code}`}
       >
         {editingStand && (
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Code</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Numéro du stand</label>
                 <input
-                  type="text"
-                  value={formData.code}
-                  onChange={(e) => setFormData({ ...formData, code: e.target.value })}
+                  type="number"
+                  value={formData.number}
+                  onChange={(e) => setFormData({ ...formData, number: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-forest"
+                  min="1"
+                  max="99"
                 />
               </div>
               <div>
@@ -398,6 +377,21 @@ export default function StandsPage() {
                   ))}
                 </select>
               </div>
+            </div>
+
+            {/* Exposant */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Exposant assigné
+                <span className="text-gray-400 font-normal ml-1">(optionnel)</span>
+              </label>
+              <input
+                type="text"
+                value={formData.exhibitorName}
+                onChange={(e) => setFormData({ ...formData, exhibitorName: e.target.value })}
+                placeholder="Nom de l'exposant"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-forest"
+              />
             </div>
 
             <div>
