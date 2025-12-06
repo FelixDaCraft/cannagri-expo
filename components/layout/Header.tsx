@@ -40,7 +40,7 @@ export function Header() {
                 <LogoFallback />
               ) : (
                 <Image
-                  src="/images/logo.png"
+                  src="/images/logo.PNG"
                   alt={siteConfig.name}
                   fill
                   className="object-contain p-1"
