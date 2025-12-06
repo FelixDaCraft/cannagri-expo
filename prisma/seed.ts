@@ -43,35 +43,35 @@ async function main() {
 
   // Create sample stands (25 stands matching the floor plan)
   const stands = [
-    // Rangée du haut (stands 3-9)
-    { number: 3, surfaceM2: 9, priceHT: 350, x: 200, y: 50, width: 55, height: 55 },
-    { number: 4, surfaceM2: 9, priceHT: 350, x: 265, y: 50, width: 55, height: 55 },
-    { number: 5, surfaceM2: 9, priceHT: 350, x: 330, y: 50, width: 55, height: 55 },
-    { number: 6, surfaceM2: 9, priceHT: 350, x: 395, y: 50, width: 55, height: 55 },
-    { number: 7, surfaceM2: 9, priceHT: 350, x: 460, y: 50, width: 55, height: 55 },
-    { number: 8, surfaceM2: 9, priceHT: 350, x: 525, y: 50, width: 55, height: 55 },
-    { number: 9, surfaceM2: 9, priceHT: 350, x: 590, y: 50, width: 55, height: 55 },
+    // Rangée du haut (stands 3-8)
+    { number: 3, surfaceM2: 9, priceHT: 350, x: 195, y: 30, width: 50, height: 50 },
+    { number: 4, surfaceM2: 9, priceHT: 350, x: 255, y: 30, width: 50, height: 50 },
+    { number: 5, surfaceM2: 9, priceHT: 350, x: 315, y: 30, width: 50, height: 50 },
+    { number: 6, surfaceM2: 9, priceHT: 350, x: 375, y: 30, width: 50, height: 50 },
+    { number: 7, surfaceM2: 9, priceHT: 350, x: 435, y: 30, width: 50, height: 50 },
+    { number: 8, surfaceM2: 9, priceHT: 350, x: 495, y: 30, width: 50, height: 50 },
     // Stands 1-2 (à côté conférence)
-    { number: 2, surfaceM2: 12, priceHT: 450, x: 200, y: 130, width: 55, height: 65 },
-    { number: 1, surfaceM2: 12, priceHT: 450, x: 200, y: 205, width: 55, height: 65 },
-    // Côté droit (stands 10-18)
-    { number: 10, surfaceM2: 9, priceHT: 350, x: 590, y: 130, width: 55, height: 45 },
-    { number: 11, surfaceM2: 9, priceHT: 350, x: 590, y: 185, width: 55, height: 45 },
-    { number: 12, surfaceM2: 9, priceHT: 350, x: 590, y: 240, width: 55, height: 45 },
-    { number: 13, surfaceM2: 9, priceHT: 350, x: 590, y: 295, width: 55, height: 45 },
-    { number: 14, surfaceM2: 9, priceHT: 350, x: 590, y: 350, width: 55, height: 45 },
-    { number: 15, surfaceM2: 9, priceHT: 350, x: 590, y: 405, width: 55, height: 45 },
-    { number: 16, surfaceM2: 9, priceHT: 350, x: 590, y: 460, width: 55, height: 45 },
-    { number: 17, surfaceM2: 9, priceHT: 350, x: 590, y: 515, width: 55, height: 45 },
-    { number: 18, surfaceM2: 9, priceHT: 350, x: 590, y: 570, width: 55, height: 45 },
-    // Rangée du bas (stands 19-25)
-    { number: 25, surfaceM2: 9, priceHT: 350, x: 200, y: 570, width: 55, height: 55 },
-    { number: 24, surfaceM2: 9, priceHT: 350, x: 265, y: 570, width: 55, height: 55 },
-    { number: 23, surfaceM2: 9, priceHT: 350, x: 330, y: 570, width: 55, height: 55 },
-    { number: 22, surfaceM2: 9, priceHT: 350, x: 395, y: 570, width: 55, height: 55 },
-    { number: 21, surfaceM2: 9, priceHT: 350, x: 460, y: 570, width: 55, height: 55 },
-    { number: 20, surfaceM2: 9, priceHT: 350, x: 525, y: 570, width: 55, height: 55 },
-    { number: 19, surfaceM2: 9, priceHT: 350, x: 655, y: 570, width: 55, height: 55 },
+    { number: 2, surfaceM2: 12, priceHT: 450, x: 195, y: 100, width: 50, height: 50 },
+    { number: 1, surfaceM2: 12, priceHT: 450, x: 195, y: 160, width: 50, height: 50 },
+    // Colonne de droite (stands 9-18)
+    { number: 9, surfaceM2: 9, priceHT: 350, x: 555, y: 30, width: 50, height: 50 },
+    { number: 10, surfaceM2: 9, priceHT: 350, x: 555, y: 90, width: 50, height: 50 },
+    { number: 11, surfaceM2: 9, priceHT: 350, x: 555, y: 150, width: 50, height: 50 },
+    { number: 12, surfaceM2: 9, priceHT: 350, x: 555, y: 210, width: 50, height: 50 },
+    { number: 13, surfaceM2: 9, priceHT: 350, x: 555, y: 270, width: 50, height: 50 },
+    { number: 14, surfaceM2: 9, priceHT: 350, x: 555, y: 330, width: 50, height: 50 },
+    { number: 15, surfaceM2: 9, priceHT: 350, x: 555, y: 390, width: 50, height: 50 },
+    { number: 16, surfaceM2: 9, priceHT: 350, x: 555, y: 450, width: 50, height: 50 },
+    { number: 17, surfaceM2: 9, priceHT: 350, x: 555, y: 510, width: 50, height: 50 },
+    { number: 18, surfaceM2: 9, priceHT: 350, x: 555, y: 570, width: 50, height: 50 },
+    // Rangée du bas (stands 25-19)
+    { number: 25, surfaceM2: 9, priceHT: 350, x: 195, y: 570, width: 50, height: 50 },
+    { number: 24, surfaceM2: 9, priceHT: 350, x: 255, y: 570, width: 50, height: 50 },
+    { number: 23, surfaceM2: 9, priceHT: 350, x: 315, y: 570, width: 50, height: 50 },
+    { number: 22, surfaceM2: 9, priceHT: 350, x: 375, y: 570, width: 50, height: 50 },
+    { number: 21, surfaceM2: 9, priceHT: 350, x: 435, y: 570, width: 50, height: 50 },
+    { number: 20, surfaceM2: 9, priceHT: 350, x: 495, y: 570, width: 50, height: 50 },
+    { number: 19, surfaceM2: 9, priceHT: 350, x: 615, y: 570, width: 50, height: 50 },
   ]
 
   for (const stand of stands) {

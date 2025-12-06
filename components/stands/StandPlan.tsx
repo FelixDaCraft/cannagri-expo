@@ -37,39 +37,40 @@ interface StandPlanProps {
 }
 
 // 25 stands disposés comme sur le vrai plan du salon
+// Espacement uniforme de 60px entre les stands
 const defaultStands: Stand[] = [
-  // Rangée du haut (stands 3-9)
-  { id: '3', code: '3', number: 3, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 200, y: 50, width: 55, height: 55, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '4', code: '4', number: 4, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 265, y: 50, width: 55, height: 55, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '5', code: '5', number: 5, surfaceM2: 9, priceHT: 350, status: 'RESERVED', size: 'SMALL', x: 330, y: 50, width: 55, height: 55, hasFurniture: false, hasElectricity: true, furniturePrice: 120, electricityPrice: 80 },
-  { id: '6', code: '6', number: 6, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 395, y: 50, width: 55, height: 55, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '7', code: '7', number: 7, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 460, y: 50, width: 55, height: 55, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '8', code: '8', number: 8, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 525, y: 50, width: 55, height: 55, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '9', code: '9', number: 9, surfaceM2: 9, priceHT: 350, status: 'SOLD', size: 'SMALL', x: 590, y: 50, width: 55, height: 55, hasFurniture: true, hasElectricity: true, furniturePrice: 120, electricityPrice: 80, exhibitorName: 'CBD Factory' },
+  // Rangée du haut (stands 3-8)
+  { id: '3', code: '3', number: 3, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 195, y: 30, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '4', code: '4', number: 4, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 255, y: 30, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '5', code: '5', number: 5, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 315, y: 30, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '6', code: '6', number: 6, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 375, y: 30, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '7', code: '7', number: 7, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 435, y: 30, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '8', code: '8', number: 8, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 495, y: 30, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
 
   // Stands 1-2 (à côté de la salle conférence)
-  { id: '2', code: '2', number: 2, surfaceM2: 12, priceHT: 450, status: 'RESERVED', size: 'MEDIUM', x: 200, y: 130, width: 55, height: 65, hasFurniture: false, hasElectricity: true, furniturePrice: 120, electricityPrice: 80 },
-  { id: '1', code: '1', number: 1, surfaceM2: 12, priceHT: 450, status: 'FREE', size: 'MEDIUM', x: 200, y: 205, width: 55, height: 65, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '2', code: '2', number: 2, surfaceM2: 12, priceHT: 450, status: 'FREE', size: 'MEDIUM', x: 195, y: 100, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '1', code: '1', number: 1, surfaceM2: 12, priceHT: 450, status: 'FREE', size: 'MEDIUM', x: 195, y: 160, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
 
-  // Côté droit vertical (stands 10-18)
-  { id: '10', code: '10', number: 10, surfaceM2: 9, priceHT: 350, status: 'SOLD', size: 'SMALL', x: 590, y: 130, width: 55, height: 45, hasFurniture: true, hasElectricity: true, furniturePrice: 120, electricityPrice: 80, exhibitorName: 'GreenLeaf' },
-  { id: '11', code: '11', number: 11, surfaceM2: 9, priceHT: 350, status: 'RESERVED', size: 'SMALL', x: 590, y: 185, width: 55, height: 45, hasFurniture: false, hasElectricity: true, furniturePrice: 120, electricityPrice: 80 },
-  { id: '12', code: '12', number: 12, surfaceM2: 9, priceHT: 350, status: 'SOLD', size: 'SMALL', x: 590, y: 240, width: 55, height: 45, hasFurniture: true, hasElectricity: true, furniturePrice: 120, electricityPrice: 80, exhibitorName: 'HempTech' },
-  { id: '13', code: '13', number: 13, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 590, y: 295, width: 55, height: 45, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '14', code: '14', number: 14, surfaceM2: 9, priceHT: 350, status: 'SOLD', size: 'SMALL', x: 590, y: 350, width: 55, height: 45, hasFurniture: true, hasElectricity: true, furniturePrice: 120, electricityPrice: 80, exhibitorName: 'Bio Hemp' },
-  { id: '15', code: '15', number: 15, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 590, y: 405, width: 55, height: 45, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '16', code: '16', number: 16, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 590, y: 460, width: 55, height: 45, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '17', code: '17', number: 17, surfaceM2: 9, priceHT: 350, status: 'RESERVED', size: 'SMALL', x: 590, y: 515, width: 55, height: 45, hasFurniture: false, hasElectricity: true, furniturePrice: 120, electricityPrice: 80 },
-  { id: '18', code: '18', number: 18, surfaceM2: 9, priceHT: 350, status: 'SOLD', size: 'SMALL', x: 590, y: 570, width: 55, height: 45, hasFurniture: true, hasElectricity: true, furniturePrice: 120, electricityPrice: 80, exhibitorName: 'CBD King' },
+  // Colonne de droite (stands 9-18, de haut en bas)
+  { id: '9', code: '9', number: 9, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 555, y: 30, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '10', code: '10', number: 10, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 555, y: 90, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '11', code: '11', number: 11, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 555, y: 150, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '12', code: '12', number: 12, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 555, y: 210, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '13', code: '13', number: 13, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 555, y: 270, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '14', code: '14', number: 14, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 555, y: 330, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '15', code: '15', number: 15, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 555, y: 390, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '16', code: '16', number: 16, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 555, y: 450, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '17', code: '17', number: 17, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 555, y: 510, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '18', code: '18', number: 18, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 555, y: 570, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
 
   // Rangée du bas (stands 25-19, de gauche à droite)
-  { id: '25', code: '25', number: 25, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 200, y: 570, width: 55, height: 55, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '24', code: '24', number: 24, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 265, y: 570, width: 55, height: 55, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '23', code: '23', number: 23, surfaceM2: 9, priceHT: 350, status: 'RESERVED', size: 'SMALL', x: 330, y: 570, width: 55, height: 55, hasFurniture: false, hasElectricity: true, furniturePrice: 120, electricityPrice: 80 },
-  { id: '22', code: '22', number: 22, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 395, y: 570, width: 55, height: 55, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '21', code: '21', number: 21, surfaceM2: 9, priceHT: 350, status: 'SOLD', size: 'SMALL', x: 460, y: 570, width: 55, height: 55, hasFurniture: true, hasElectricity: true, furniturePrice: 120, electricityPrice: 80, exhibitorName: 'Natura' },
-  { id: '20', code: '20', number: 20, surfaceM2: 9, priceHT: 350, status: 'RESERVED', size: 'SMALL', x: 525, y: 570, width: 55, height: 55, hasFurniture: false, hasElectricity: true, furniturePrice: 120, electricityPrice: 80 },
-  { id: '19', code: '19', number: 19, surfaceM2: 9, priceHT: 350, status: 'SOLD', size: 'SMALL', x: 655, y: 570, width: 55, height: 55, hasFurniture: true, hasElectricity: true, furniturePrice: 120, electricityPrice: 80, exhibitorName: 'Hemp+' },
+  { id: '25', code: '25', number: 25, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 195, y: 570, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '24', code: '24', number: 24, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 255, y: 570, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '23', code: '23', number: 23, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 315, y: 570, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '22', code: '22', number: 22, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 375, y: 570, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '21', code: '21', number: 21, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 435, y: 570, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '20', code: '20', number: 20, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 495, y: 570, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '19', code: '19', number: 19, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 615, y: 570, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
 ]
 
 const statusColors = {
@@ -203,62 +204,62 @@ export function StandPlan({
       {/* SVG Plan */}
       <div className="relative bg-white rounded-2xl p-4 overflow-x-auto border border-gray-200">
         <svg
-          viewBox="0 0 730 650"
+          viewBox="0 0 680 650"
           className="w-full h-auto min-w-[500px]"
           style={{ maxHeight: '700px' }}
         >
           {/* Zone Conférences (top left, dashed border) */}
           <rect
-            x="30"
-            y="50"
-            width="150"
-            height="220"
+            x="20"
+            y="20"
+            width="160"
+            height="200"
             fill="#f5f5f4"
             stroke="#a8a29e"
             strokeWidth="2"
             strokeDasharray="8,4"
             rx="4"
           />
-          <text x="105" y="165" textAnchor="middle" fill="#78716c" fontSize="14" fontWeight="600">
+          <text x="100" y="125" textAnchor="middle" fill="#78716c" fontSize="13" fontWeight="600">
             CONFÉRENCES
           </text>
 
           {/* Zone BAR (left side) */}
           <rect
-            x="30"
-            y="300"
-            width="150"
-            height="140"
+            x="20"
+            y="240"
+            width="160"
+            height="150"
             fill="#dcfce7"
             stroke="#86efac"
             strokeWidth="2"
             rx="4"
             opacity="0.5"
           />
-          <text x="105" y="375" textAnchor="middle" fill="#166534" fontSize="18" fontWeight="bold">
+          <text x="100" y="325" textAnchor="middle" fill="#166534" fontSize="18" fontWeight="bold">
             BAR
           </text>
 
           {/* Zone TABLES (center) */}
           <rect
-            x="280"
-            y="280"
-            width="180"
-            height="100"
+            x="270"
+            y="250"
+            width="160"
+            height="90"
             fill="#f5f5f4"
             stroke="#d6d3d1"
             strokeWidth="2"
             rx="4"
           />
-          <text x="370" y="335" textAnchor="middle" fill="#78716c" fontSize="14" fontWeight="600">
+          <text x="350" y="302" textAnchor="middle" fill="#78716c" fontSize="14" fontWeight="600">
             TABLES
           </text>
 
           {/* Entrée (bottom left) */}
-          <g transform="translate(50, 520)">
+          <g transform="translate(50, 470)">
             <rect x="0" y="0" width="50" height="50" fill="white" stroke="#3D5A45" strokeWidth="2" rx="4" />
             <polygon points="25,35 15,20 35,20" fill="#3D5A45" />
-            <text x="25" y="62" textAnchor="middle" fill="#3D5A45" fontSize="11" fontWeight="600">
+            <text x="25" y="65" textAnchor="middle" fill="#3D5A45" fontSize="11" fontWeight="600">
               ENTRÉE
             </text>
           </g>
