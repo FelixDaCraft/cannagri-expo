@@ -45,6 +45,11 @@ echo -e "${GREEN}✓ Docker Compose OK${NC}"
 # 3. Nettoyer et télécharger
 echo -e "${BLUE}[3/8] Téléchargement du projet...${NC}"
 
+# Arrêter les containers existants avant nettoyage
+if [ -d "$APP_DIR" ]; then
+    cd "$APP_DIR" 2>/dev/null && docker compose down 2>/dev/null || true
+fi
+
 # Sauvegarder les images existantes si présentes
 if [ -d "$APP_DIR/public/images" ]; then
     echo -e "${YELLOW}Sauvegarde des images existantes...${NC}"
@@ -52,7 +57,8 @@ if [ -d "$APP_DIR/public/images" ]; then
     cp -r "$APP_DIR/public/images/"* /tmp/cannagri-images-backup/ 2>/dev/null || true
 fi
 
-rm -rf "$APP_DIR"
+# Supprimer l'ancien répertoire (sudo si nécessaire pour les fichiers Docker)
+rm -rf "$APP_DIR" 2>/dev/null || sudo rm -rf "$APP_DIR"
 mkdir -p "$APP_DIR"
 cd "$APP_DIR"
 
@@ -219,25 +225,37 @@ docker compose down 2>/dev/null || true
 docker compose build --no-cache
 docker compose up -d
 
-echo -e "${YELLOW}Attente de la base de données (30s)...${NC}"
-sleep 30
+echo -e "${YELLOW}Attente de la base de données (45s)...${NC}"
+sleep 45
 
 # 8. Initialiser la BDD
 echo -e "${BLUE}[8/8] Initialisation de la base de données...${NC}"
 
-# Use local prisma version to avoid global version conflicts (Prisma 7 vs 5.22)
+# Vérifier que la base est accessible
+echo -e "${YELLOW}Vérification de la connexion à PostgreSQL...${NC}"
+for i in 1 2 3 4 5; do
+    if docker compose exec -T db pg_isready -U cannagri -d cannagri; then
+        echo -e "${GREEN}✓ PostgreSQL accessible${NC}"
+        break
+    fi
+    echo -e "${YELLOW}Tentative $i/5 - Attente 10s...${NC}"
+    sleep 10
+done
+
+# Appliquer le schéma Prisma (sans cacher les erreurs)
+echo -e "${YELLOW}Application du schéma de base de données...${NC}"
 for i in 1 2 3; do
-    if docker compose exec -T app ./node_modules/.bin/prisma db push --accept-data-loss 2>/dev/null; then
+    if docker compose exec -T app ./node_modules/.bin/prisma db push --accept-data-loss; then
         echo -e "${GREEN}✓ Schéma de base de données appliqué${NC}"
         break
     fi
-    echo -e "${YELLOW}Tentative $i/3...${NC}"
-    sleep 10
+    echo -e "${YELLOW}Tentative $i/3 - Attente 15s...${NC}"
+    sleep 15
 done
 
 # Seed the database with initial data
 echo -e "${YELLOW}Insertion des données initiales...${NC}"
-docker compose exec -T app ./node_modules/.bin/prisma db seed 2>/dev/null || echo -e "${YELLOW}⚠ Le seed a échoué (données peut-être déjà présentes)${NC}"
+docker compose exec -T app ./node_modules/.bin/prisma db seed || echo -e "${YELLOW}⚠ Le seed a échoué (données peut-être déjà présentes)${NC}"
 echo -e "${GREEN}✓ Base de données initialisée${NC}"
 
 # Résultat
