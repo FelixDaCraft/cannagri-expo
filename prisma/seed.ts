@@ -41,42 +41,56 @@ async function main() {
   })
   console.log('Site settings created')
 
-  // Create sample stands
+  // Create sample stands (25 stands matching the floor plan)
   const stands = [
-    // Row A
-    { code: 'A1', surfaceM2: 12, priceHT: 450, row: 0, col: 0 },
-    { code: 'A2', surfaceM2: 12, priceHT: 450, row: 0, col: 1 },
-    { code: 'A3', surfaceM2: 18, priceHT: 650, row: 0, col: 2 },
-    { code: 'A4', surfaceM2: 12, priceHT: 450, row: 0, col: 3 },
-    { code: 'A5', surfaceM2: 12, priceHT: 450, row: 0, col: 4 },
-    { code: 'A6', surfaceM2: 24, priceHT: 850, row: 0, col: 5 },
-    // Row B
-    { code: 'B1', surfaceM2: 12, priceHT: 450, row: 1, col: 0 },
-    { code: 'B2', surfaceM2: 12, priceHT: 450, row: 1, col: 1 },
-    { code: 'B3', surfaceM2: 18, priceHT: 650, row: 1, col: 2 },
-    { code: 'B4', surfaceM2: 12, priceHT: 450, row: 1, col: 3 },
-    { code: 'B5', surfaceM2: 12, priceHT: 450, row: 1, col: 4 },
-    { code: 'B6', surfaceM2: 12, priceHT: 450, row: 1, col: 5 },
-    // Row C
-    { code: 'C1', surfaceM2: 24, priceHT: 850, row: 2, col: 0, width: 2 },
-    { code: 'C2', surfaceM2: 12, priceHT: 450, row: 2, col: 2 },
-    { code: 'C3', surfaceM2: 12, priceHT: 450, row: 2, col: 3 },
-    { code: 'C4', surfaceM2: 24, priceHT: 850, row: 2, col: 4, width: 2 },
+    // Rangée du haut (stands 3-9)
+    { number: 3, surfaceM2: 9, priceHT: 350, x: 200, y: 50, width: 55, height: 55 },
+    { number: 4, surfaceM2: 9, priceHT: 350, x: 265, y: 50, width: 55, height: 55 },
+    { number: 5, surfaceM2: 9, priceHT: 350, x: 330, y: 50, width: 55, height: 55 },
+    { number: 6, surfaceM2: 9, priceHT: 350, x: 395, y: 50, width: 55, height: 55 },
+    { number: 7, surfaceM2: 9, priceHT: 350, x: 460, y: 50, width: 55, height: 55 },
+    { number: 8, surfaceM2: 9, priceHT: 350, x: 525, y: 50, width: 55, height: 55 },
+    { number: 9, surfaceM2: 9, priceHT: 350, x: 590, y: 50, width: 55, height: 55 },
+    // Stands 1-2 (à côté conférence)
+    { number: 2, surfaceM2: 12, priceHT: 450, x: 200, y: 130, width: 55, height: 65 },
+    { number: 1, surfaceM2: 12, priceHT: 450, x: 200, y: 205, width: 55, height: 65 },
+    // Côté droit (stands 10-18)
+    { number: 10, surfaceM2: 9, priceHT: 350, x: 590, y: 130, width: 55, height: 45 },
+    { number: 11, surfaceM2: 9, priceHT: 350, x: 590, y: 185, width: 55, height: 45 },
+    { number: 12, surfaceM2: 9, priceHT: 350, x: 590, y: 240, width: 55, height: 45 },
+    { number: 13, surfaceM2: 9, priceHT: 350, x: 590, y: 295, width: 55, height: 45 },
+    { number: 14, surfaceM2: 9, priceHT: 350, x: 590, y: 350, width: 55, height: 45 },
+    { number: 15, surfaceM2: 9, priceHT: 350, x: 590, y: 405, width: 55, height: 45 },
+    { number: 16, surfaceM2: 9, priceHT: 350, x: 590, y: 460, width: 55, height: 45 },
+    { number: 17, surfaceM2: 9, priceHT: 350, x: 590, y: 515, width: 55, height: 45 },
+    { number: 18, surfaceM2: 9, priceHT: 350, x: 590, y: 570, width: 55, height: 45 },
+    // Rangée du bas (stands 19-25)
+    { number: 25, surfaceM2: 9, priceHT: 350, x: 200, y: 570, width: 55, height: 55 },
+    { number: 24, surfaceM2: 9, priceHT: 350, x: 265, y: 570, width: 55, height: 55 },
+    { number: 23, surfaceM2: 9, priceHT: 350, x: 330, y: 570, width: 55, height: 55 },
+    { number: 22, surfaceM2: 9, priceHT: 350, x: 395, y: 570, width: 55, height: 55 },
+    { number: 21, surfaceM2: 9, priceHT: 350, x: 460, y: 570, width: 55, height: 55 },
+    { number: 20, surfaceM2: 9, priceHT: 350, x: 525, y: 570, width: 55, height: 55 },
+    { number: 19, surfaceM2: 9, priceHT: 350, x: 590, y: 625, width: 55, height: 55 },
   ]
 
   for (const stand of stands) {
     await prisma.stand.upsert({
-      where: { code: stand.code },
+      where: { number: stand.number },
       update: {},
       create: {
-        code: stand.code,
+        number: stand.number,
+        code: String(stand.number),
         surfaceM2: stand.surfaceM2,
         priceHT: stand.priceHT,
         status: 'FREE',
-        row: stand.row,
-        col: stand.col,
-        width: stand.width || 1,
-        height: 1,
+        size: stand.surfaceM2 >= 12 ? 'MEDIUM' : 'SMALL',
+        x: stand.x,
+        y: stand.y,
+        width: stand.width,
+        height: stand.height,
+        row: 0,
+        col: 0,
         furniturePrice: 120,
         electricityPrice: 80,
       },
