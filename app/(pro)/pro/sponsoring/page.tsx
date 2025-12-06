@@ -1,41 +1,36 @@
 import { Metadata } from 'next'
-import Link from 'next/link'
 import { Card, CardContent, Button, Badge, Input } from '@/components/ui'
 import { siteConfig } from '@/config/site'
 
 export const metadata: Metadata = {
   title: 'Sponsoring',
-  description: 'Devenez partenaire du salon Cann\'Agri Expo - Offres de sponsoring Premium et Standard',
+  description: 'Devenez partenaire du salon Cann\'Agri Expo - Offres de sponsoring Platinum, Or, Argent et Bronze',
 }
 
 const sponsorPackages = [
   {
-    name: 'Partenaire Standard',
-    price: 'Sur devis',
-    description: 'Visibilité sur le salon et communication digitale',
-    features: [
-      'Logo sur le site web',
-      'Page partenaire dédiée',
-      'Mention sur les réseaux sociaux',
-      '1 badge exposant',
-      'Listing dans le programme',
-    ],
-    highlighted: false,
+    name: 'Platinum',
+    color: 'bg-gradient-to-br from-slate-700 to-slate-900',
+    borderColor: 'ring-slate-600',
+    description: 'Visibilité maximale et partenariat exclusif',
   },
   {
-    name: 'Partenaire Premium',
-    price: 'Sur devis',
-    description: 'Visibilité maximale et contenu éditorial',
-    features: [
-      'Tout le pack Standard +',
-      'Article sur la page d\'accueil',
-      'Stand premium inclus',
-      '4 badges exposants',
-      'Prise de parole en conférence',
-      'Communication prioritaire',
-      'Newsletter dédiée',
-    ],
-    highlighted: true,
+    name: 'Or',
+    color: 'bg-gradient-to-br from-amber-400 to-amber-600',
+    borderColor: 'ring-amber-500',
+    description: 'Partenariat premium avec forte visibilité',
+  },
+  {
+    name: 'Argent',
+    color: 'bg-gradient-to-br from-gray-300 to-gray-400',
+    borderColor: 'ring-gray-400',
+    description: 'Partenariat avec visibilité ciblée',
+  },
+  {
+    name: 'Bronze',
+    color: 'bg-gradient-to-br from-orange-600 to-orange-800',
+    borderColor: 'ring-orange-600',
+    description: 'Partenariat de soutien',
   },
 ]
 
@@ -105,53 +100,41 @@ export default function SponsoringPage() {
 
         {/* Packages */}
         <section className="mb-16">
-          <h2 className="text-3xl font-heading font-bold text-heading text-center mb-8">
+          <h2 className="text-3xl font-heading font-bold text-heading text-center mb-4">
             Nos offres de partenariat
           </h2>
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <p className="text-center text-body/70 mb-10 max-w-2xl mx-auto">
+            Nous proposons 4 niveaux de partenariat adaptés à vos objectifs.
+            Remplissez le formulaire ci-dessous pour recevoir le détail des offres.
+          </p>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
             {sponsorPackages.map((pkg, index) => (
               <Card
                 key={index}
-                variant={pkg.highlighted ? 'bordered' : 'default'}
-                className={pkg.highlighted ? 'ring-2 ring-forest relative' : ''}
+                variant="bordered"
+                className={`ring-2 ${pkg.borderColor} overflow-hidden`}
               >
-                {pkg.highlighted && (
-                  <Badge
-                    variant="forest"
-                    className="absolute -top-3 left-1/2 -translate-x-1/2"
-                  >
-                    Recommandé
-                  </Badge>
-                )}
-                <CardContent className="p-8">
-                  <h3 className="text-2xl font-heading font-bold text-heading mb-2">
+                <div className={`${pkg.color} py-6 px-4 text-center`}>
+                  <h3 className="text-2xl font-heading font-bold text-white drop-shadow-md">
                     {pkg.name}
                   </h3>
-                  <p className="text-body/70 mb-4">{pkg.description}</p>
-                  <p className="text-3xl font-heading font-bold text-forest mb-6">
-                    {pkg.price}
-                  </p>
-                  <ul className="space-y-3 mb-6">
-                    {pkg.features.map((feature, i) => (
-                      <li key={i} className="flex items-start gap-2 text-sm">
-                        <svg className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                        </svg>
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
+                </div>
+                <CardContent className="p-4 text-center">
+                  <p className="text-body/70 text-sm">{pkg.description}</p>
                 </CardContent>
               </Card>
             ))}
           </div>
         </section>
 
-        {/* Contact Form */}
+        {/* Contact Form - without dropdown */}
         <section className="bg-white rounded-2xl p-8 md:p-12 max-w-3xl mx-auto">
-          <h2 className="text-2xl font-heading font-bold text-heading text-center mb-8">
+          <h2 className="text-2xl font-heading font-bold text-heading text-center mb-4">
             Demande de partenariat
           </h2>
+          <p className="text-center text-body/70 mb-8">
+            Remplissez ce formulaire pour recevoir le détail complet de nos offres de partenariat.
+          </p>
           <form className="space-y-6">
             <div className="grid md:grid-cols-2 gap-6">
               <Input
@@ -184,20 +167,6 @@ export default function SponsoringPage() {
             </div>
             <div>
               <label className="block text-sm font-medium text-body mb-1">
-                Pack souhaité
-              </label>
-              <select
-                name="package"
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 bg-white text-body focus:outline-none focus:ring-2 focus:ring-sage focus:border-sage"
-              >
-                <option value="">Sélectionnez un pack</option>
-                <option value="standard">Partenaire Standard</option>
-                <option value="premium">Partenaire Premium</option>
-                <option value="custom">Sur mesure</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-body mb-1">
                 Message (optionnel)
               </label>
               <textarea
@@ -208,11 +177,11 @@ export default function SponsoringPage() {
               />
             </div>
             <Button type="submit" size="lg" className="w-full">
-              Envoyer ma demande
+              Recevoir les offres de partenariat
             </Button>
           </form>
           <p className="text-center text-sm text-body/60 mt-4">
-            Notre équipe vous recontactera sous 48h pour discuter de votre projet.
+            Notre équipe vous recontactera sous 48h avec le détail de nos offres.
           </p>
         </section>
 

@@ -47,33 +47,17 @@ const advantages = [
   },
 ]
 
-const standTypes = [
-  {
-    name: 'Stand Standard',
-    surface: '6-9 m²',
-    price: 'À partir de 350€ HT',
-    features: ['Emplacement sur plan', 'Badge exposant', 'Mention sur le site'],
-  },
-  {
-    name: 'Stand Medium',
-    surface: '12-18 m²',
-    price: 'À partir de 550€ HT',
-    features: ['Emplacement privilégié', '2 badges exposants', 'Mention sur le site', 'Fiche exposant'],
-    popular: true,
-  },
-  {
-    name: 'Stand Premium',
-    surface: '24+ m²',
-    price: 'À partir de 900€ HT',
-    features: [
-      'Emplacement premium',
-      '4 badges exposants',
-      'Mention sur le site',
-      'Fiche exposant détaillée',
-      'Communication sur réseaux',
-    ],
-  },
-]
+const standInfo = {
+  surface: '4 m²',
+  price: '100€ HT',
+  features: [
+    'Emplacement sur plan',
+    'Badge exposant',
+    'Mention sur le site web',
+    'Accès à la zone exposants',
+    'Possibilité de doubler la surface (2 stands côte à côte)',
+  ],
+}
 
 export default function ProPage() {
   return (
@@ -134,49 +118,44 @@ export default function ProPage() {
           </div>
         </section>
 
-        {/* Stand Types */}
+        {/* Stand Offer */}
         <section className="mb-16">
           <h2 className="text-3xl font-heading font-bold text-heading text-center mb-8">
-            Nos offres de stands
+            Notre offre d&apos;emplacement
           </h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            {standTypes.map((stand, index) => (
-              <Card
-                key={index}
-                variant={stand.popular ? 'bordered' : 'default'}
-                className={stand.popular ? 'ring-2 ring-forest relative' : ''}
-              >
-                {stand.popular && (
-                  <Badge
-                    variant="forest"
-                    className="absolute -top-3 left-1/2 -translate-x-1/2"
-                  >
-                    Populaire
-                  </Badge>
-                )}
-                <CardContent className="text-center">
-                  <h3 className="text-xl font-heading font-semibold text-heading mb-2">
-                    {stand.name}
-                  </h3>
-                  <p className="text-sage mb-2">{stand.surface}</p>
-                  <p className="text-2xl font-heading font-bold text-forest mb-4">
-                    {stand.price}
-                  </p>
-                  <ul className="space-y-2 text-sm text-body/70 mb-6">
-                    {stand.features.map((feature, i) => (
-                      <li key={i} className="flex items-center gap-2">
-                        <svg className="w-4 h-4 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                        </svg>
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            ))}
+          <div className="max-w-lg mx-auto">
+            <Card variant="bordered" className="ring-2 ring-forest">
+              <CardContent className="text-center p-8">
+                <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-sage/20 flex items-center justify-center">
+                  <svg className="w-10 h-10 text-forest" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-heading font-semibold text-heading mb-2">
+                  Stand Exposant
+                </h3>
+                <p className="text-sage text-lg mb-2">{standInfo.surface}</p>
+                <p className="text-4xl font-heading font-bold text-forest mb-6">
+                  {standInfo.price}
+                </p>
+                <ul className="space-y-3 text-left text-body/70 mb-8">
+                  {standInfo.features.map((feature, i) => (
+                    <li key={i} className="flex items-start gap-3">
+                      <svg className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+                <p className="text-sm text-body/60 bg-cream/50 rounded-lg p-4">
+                  <strong>Besoin de plus d&apos;espace ?</strong><br />
+                  Réservez deux stands côte à côte pour doubler votre surface (8 m² = 200€ HT)
+                </p>
+              </CardContent>
+            </Card>
           </div>
-          <p className="text-center text-body/60 text-sm mt-4">
+          <p className="text-center text-body/60 text-sm mt-6">
             * Options mobilier et électricité disponibles en supplément
           </p>
         </section>

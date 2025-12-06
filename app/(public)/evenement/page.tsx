@@ -65,10 +65,10 @@ const features = [
 ]
 
 const stats = [
-  { value: '50+', label: 'Exposants' },
-  { value: '1000+', label: 'Visiteurs attendus' },
-  { value: '10+', label: 'Conférences' },
-  { value: '1', label: 'Journée exceptionnelle' },
+  { value: '~30', label: 'Exposants' },
+  { value: '~700', label: 'Visiteurs attendus' },
+  { value: '300', label: 'Entreprises présentes' },
+  { value: '4', label: 'Conférences' },
 ]
 
 export default function PresentationPage() {
@@ -178,7 +178,7 @@ export default function PresentationPage() {
                 innovants dans le domaine du chanvre bien-être.
               </p>
               <p>
-                L&apos;édition {siteConfig.event.year} promet d&apos;être exceptionnelle avec plus de 50 exposants,
+                L&apos;édition {siteConfig.event.year} promet d&apos;être exceptionnelle avec une trentaine d&apos;exposants,
                 des conférences animées par des experts reconnus, et la prestigieuse cérémonie de la
                 <strong> Platinum CBD Cup</strong>.
               </p>

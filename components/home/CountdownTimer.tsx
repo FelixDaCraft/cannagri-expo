@@ -11,6 +11,10 @@ interface TimeLeft {
   seconds: number
 }
 
+interface CountdownTimerProps {
+  variant?: 'default' | 'hero'
+}
+
 function calculateTimeLeft(): TimeLeft {
   const eventDate = new Date(siteConfig.event.dateISO + 'T10:00:00')
   const now = new Date()
@@ -28,7 +32,9 @@ function calculateTimeLeft(): TimeLeft {
   }
 }
 
-function TimeUnit({ value, label }: { value: number; label: string }) {
+function TimeUnit({ value, label, variant = 'default' }: { value: number; label: string; variant?: 'default' | 'hero' }) {
+  const isHero = variant === 'hero'
+
   return (
     <motion.div
       initial={{ scale: 0.8, opacity: 0 }}
@@ -41,22 +47,26 @@ function TimeUnit({ value, label }: { value: number; label: string }) {
         animate={{ y: 0, opacity: 1 }}
         className="relative"
       >
-        <div className="bg-forest text-cream w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-xl flex items-center justify-center shadow-lg border border-forest-600">
-          <span className="font-heading font-bold text-2xl sm:text-3xl md:text-4xl">
+        <div className={`flex items-center justify-center shadow-lg ${
+          isHero
+            ? 'bg-cream/10 backdrop-blur-sm text-cream w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-xl border border-cream/20'
+            : 'bg-forest text-cream w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-xl border border-forest-600'
+        }`}>
+          <span className={`font-heading font-bold ${isHero ? 'text-xl sm:text-2xl md:text-3xl' : 'text-2xl sm:text-3xl md:text-4xl'}`}>
             {String(value).padStart(2, '0')}
           </span>
         </div>
-        {/* Reflection effect */}
-        <div className="absolute inset-x-0 -bottom-1 h-2 bg-gradient-to-b from-forest/20 to-transparent rounded-b-xl" />
       </motion.div>
-      <span className="mt-2 text-xs sm:text-sm font-medium text-forest/70 uppercase tracking-wider">
+      <span className={`mt-2 text-xs font-medium uppercase tracking-wider ${
+        isHero ? 'text-cream/70' : 'text-forest/70 sm:text-sm'
+      }`}>
         {label}
       </span>
     </motion.div>
   )
 }
 
-export function CountdownTimer() {
+export function CountdownTimer({ variant = 'default' }: CountdownTimerProps) {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>(calculateTimeLeft())
   const [mounted, setMounted] = useState(false)
 
@@ -78,9 +88,7 @@ export function CountdownTimer() {
     const startDate = '20260328T100000'
     const endDate = '20260328T190000'
 
-    // Google Calendar URL
     const googleUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${eventTitle}&details=${eventDetails}&location=${eventLocation}&dates=${startDate}/${endDate}`
-
     window.open(googleUrl, '_blank')
   }
 
@@ -108,6 +116,35 @@ END:VCALENDAR`
     URL.revokeObjectURL(url)
   }
 
+  // Hero variant - compact inline display
+  if (variant === 'hero') {
+    if (!mounted) {
+      return (
+        <div className="flex justify-center lg:justify-start gap-2 sm:gap-3">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="flex flex-col items-center">
+              <div className="bg-cream/10 w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-xl animate-pulse" />
+              <div className="mt-2 h-3 w-10 bg-cream/10 rounded animate-pulse" />
+            </div>
+          ))}
+        </div>
+      )
+    }
+
+    return (
+      <div className="flex justify-center lg:justify-start gap-2 sm:gap-3">
+        <TimeUnit value={timeLeft.days} label="Jours" variant="hero" />
+        <div className="flex items-center text-cream/30 text-xl font-bold self-start mt-4 sm:mt-5">:</div>
+        <TimeUnit value={timeLeft.hours} label="Heures" variant="hero" />
+        <div className="flex items-center text-cream/30 text-xl font-bold self-start mt-4 sm:mt-5">:</div>
+        <TimeUnit value={timeLeft.minutes} label="Min" variant="hero" />
+        <div className="flex items-center text-cream/30 text-xl font-bold self-start mt-4 sm:mt-5">:</div>
+        <TimeUnit value={timeLeft.seconds} label="Sec" variant="hero" />
+      </div>
+    )
+  }
+
+  // Default variant - full section
   if (!mounted) {
     return (
       <section className="py-16 bg-cream">

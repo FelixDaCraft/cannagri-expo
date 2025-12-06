@@ -77,7 +77,7 @@ export const navigation: NavItem[] = [
   },
   { label: "Programme", href: "/programme" },
   { label: "Exposants", href: "/exposants" },
-  { label: "Médiathèque", href: "/mediatheque" },
+  { label: "Galerie Photo", href: "/mediatheque" },
   {
     label: "Espace Pro",
     href: "/pro",

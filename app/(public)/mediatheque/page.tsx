@@ -108,7 +108,7 @@ export default function MediathequePage() {
               </svg>
             </motion.div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-cream mb-6">
-              Médiathèque
+              Galerie Photo
             </h1>
             <p className="text-lg md:text-xl text-cream/80 max-w-2xl mx-auto mb-6">
               Revivez les moments forts des éditions précédentes du salon Cann&apos;Agri Expo
