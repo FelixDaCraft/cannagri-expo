@@ -17,8 +17,8 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Generate Prisma Client
-RUN npx prisma generate
+# Generate Prisma Client (use local version from node_modules to avoid global version conflicts)
+RUN ./node_modules/.bin/prisma generate
 
 # Build the application
 ENV NEXT_TELEMETRY_DISABLED 1
@@ -47,9 +47,8 @@ RUN mkdir -p ./public/images && chown -R nextjs:nodejs ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Copy node_modules for Prisma
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
+# Copy full node_modules for Prisma CLI and seed script (includes ts-node, typescript, bcryptjs, etc.)
+COPY --from=builder /app/node_modules ./node_modules
 
 USER nextjs
 

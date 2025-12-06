@@ -225,14 +225,20 @@ sleep 30
 # 8. Initialiser la BDD
 echo -e "${BLUE}[8/8] Initialisation de la base de données...${NC}"
 
+# Use local prisma version to avoid global version conflicts (Prisma 7 vs 5.22)
 for i in 1 2 3; do
-    if docker compose exec -T app npx prisma db push --accept-data-loss 2>/dev/null; then
-        echo -e "${GREEN}✓ Base de données initialisée${NC}"
+    if docker compose exec -T app ./node_modules/.bin/prisma db push --accept-data-loss 2>/dev/null; then
+        echo -e "${GREEN}✓ Schéma de base de données appliqué${NC}"
         break
     fi
     echo -e "${YELLOW}Tentative $i/3...${NC}"
     sleep 10
 done
+
+# Seed the database with initial data
+echo -e "${YELLOW}Insertion des données initiales...${NC}"
+docker compose exec -T app ./node_modules/.bin/prisma db seed 2>/dev/null || echo -e "${YELLOW}⚠ Le seed a échoué (données peut-être déjà présentes)${NC}"
+echo -e "${GREEN}✓ Base de données initialisée${NC}"
 
 # Résultat
 echo ""

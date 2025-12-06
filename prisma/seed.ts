@@ -64,14 +64,14 @@ async function main() {
     { number: 16, surfaceM2: 9, priceHT: 350, x: 555, y: 450, width: 50, height: 50 },
     { number: 17, surfaceM2: 9, priceHT: 350, x: 555, y: 510, width: 50, height: 50 },
     { number: 18, surfaceM2: 9, priceHT: 350, x: 555, y: 570, width: 50, height: 50 },
-    // Rangée du bas (stands 25-19)
-    { number: 25, surfaceM2: 9, priceHT: 350, x: 195, y: 570, width: 50, height: 50 },
-    { number: 24, surfaceM2: 9, priceHT: 350, x: 255, y: 570, width: 50, height: 50 },
-    { number: 23, surfaceM2: 9, priceHT: 350, x: 315, y: 570, width: 50, height: 50 },
-    { number: 22, surfaceM2: 9, priceHT: 350, x: 375, y: 570, width: 50, height: 50 },
-    { number: 21, surfaceM2: 9, priceHT: 350, x: 435, y: 570, width: 50, height: 50 },
-    { number: 20, surfaceM2: 9, priceHT: 350, x: 495, y: 570, width: 50, height: 50 },
-    { number: 19, surfaceM2: 9, priceHT: 350, x: 615, y: 570, width: 50, height: 50 },
+    // Rangée du bas (stands 25-19) - décalés de 60px vers la gauche
+    { number: 25, surfaceM2: 9, priceHT: 350, x: 135, y: 570, width: 50, height: 50 },
+    { number: 24, surfaceM2: 9, priceHT: 350, x: 195, y: 570, width: 50, height: 50 },
+    { number: 23, surfaceM2: 9, priceHT: 350, x: 255, y: 570, width: 50, height: 50 },
+    { number: 22, surfaceM2: 9, priceHT: 350, x: 315, y: 570, width: 50, height: 50 },
+    { number: 21, surfaceM2: 9, priceHT: 350, x: 375, y: 570, width: 50, height: 50 },
+    { number: 20, surfaceM2: 9, priceHT: 350, x: 435, y: 570, width: 50, height: 50 },
+    { number: 19, surfaceM2: 9, priceHT: 350, x: 555, y: 570, width: 50, height: 50 },
   ]
 
   for (const stand of stands) {
