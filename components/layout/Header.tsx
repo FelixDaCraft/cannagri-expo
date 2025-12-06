@@ -8,9 +8,20 @@ import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui'
 import { navigation, siteConfig } from '@/config/site'
 
+// Fallback logo SVG
+function LogoFallback() {
+  return (
+    <svg viewBox="0 0 48 48" className="w-full h-full p-2">
+      <circle cx="24" cy="24" r="22" fill="#3D5A45" />
+      <text x="24" y="30" textAnchor="middle" fill="white" fontSize="16" fontWeight="bold">CA</text>
+    </svg>
+  )
+}
+
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
+  const [logoError, setLogoError] = useState(false)
   const pathname = usePathname()
 
   const isActive = (href: string) => {
@@ -25,13 +36,18 @@ export function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3">
             <div className="relative w-12 h-12 bg-white rounded-full overflow-hidden">
-              <Image
-                src="/images/logo.png"
-                alt={siteConfig.name}
-                fill
-                className="object-contain p-1"
-                priority
-              />
+              {logoError ? (
+                <LogoFallback />
+              ) : (
+                <Image
+                  src="/images/logo.png"
+                  alt={siteConfig.name}
+                  fill
+                  className="object-contain p-1"
+                  priority
+                  onError={() => setLogoError(true)}
+                />
+              )}
             </div>
             <span className="font-heading font-bold text-white text-xl hidden sm:block">
               {siteConfig.name}

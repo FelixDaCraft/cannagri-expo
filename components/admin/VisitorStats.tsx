@@ -25,16 +25,25 @@ interface AnalyticsData {
 export function VisitorStats() {
   const [data, setData] = useState<AnalyticsData | null>(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     fetch('/api/analytics')
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error('API error')
+        return res.json()
+      })
       .then(result => {
         if (result.data) {
           setData(result.data)
+        } else if (result.error) {
+          setError(result.error)
         }
       })
-      .catch(console.error)
+      .catch(err => {
+        console.error('Analytics fetch error:', err)
+        setError('Impossible de charger les statistiques')
+      })
       .finally(() => setLoading(false))
   }, [])
 
@@ -55,8 +64,51 @@ export function VisitorStats() {
     )
   }
 
-  if (!data) {
-    return null
+  // Show empty state if no data or error
+  if (!data || error) {
+    return (
+      <Card variant="default" className="bg-white">
+        <CardContent>
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-lg font-heading font-semibold text-gray-900">
+              Statistiques de visite
+            </h2>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4">
+              <p className="text-xs text-blue-600 font-medium uppercase mb-1">Aujourd&apos;hui</p>
+              <p className="text-2xl font-bold text-blue-700">0</p>
+              <p className="text-xs text-blue-500 mt-1">0 visiteurs uniques</p>
+            </div>
+            <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-4">
+              <p className="text-xs text-green-600 font-medium uppercase mb-1">Cette semaine</p>
+              <p className="text-2xl font-bold text-green-700">0</p>
+              <p className="text-xs text-green-500 mt-1">0 visiteurs uniques</p>
+            </div>
+            <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-4">
+              <p className="text-xs text-purple-600 font-medium uppercase mb-1">Ce mois</p>
+              <p className="text-2xl font-bold text-purple-700">0</p>
+              <p className="text-xs text-purple-500 mt-1">0 visiteurs uniques</p>
+            </div>
+            <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-4">
+              <p className="text-xs text-orange-600 font-medium uppercase mb-1">Moy. / jour</p>
+              <p className="text-2xl font-bold text-orange-700">0</p>
+              <p className="text-xs text-orange-500 mt-1">sur 7 jours</p>
+            </div>
+          </div>
+          {error && (
+            <p className="text-sm text-amber-600 bg-amber-50 rounded-lg p-3">
+              ⚠️ {error} - Exécutez <code className="bg-amber-100 px-1 rounded">npx prisma db push</code> pour initialiser les tables.
+            </p>
+          )}
+          {!error && (
+            <p className="text-sm text-gray-500 text-center py-4">
+              Aucune visite enregistrée pour le moment.
+            </p>
+          )}
+        </CardContent>
+      </Card>
+    )
   }
 
   const maxViews = Math.max(...data.dailyViews.map(d => d.views), 1)
