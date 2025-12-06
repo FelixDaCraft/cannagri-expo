@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { StatsGrid } from '@/components/admin'
+import { StatsGrid, VisitorStats } from '@/components/admin'
 import { Card, CardContent, Badge } from '@/components/ui'
 
 export const metadata: Metadata = {
@@ -44,6 +44,9 @@ export default function AdminDashboard() {
 
       {/* Stats */}
       <StatsGrid stats={mockStats} />
+
+      {/* Visitor Stats */}
+      <VisitorStats />
 
       {/* Quick Actions */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">

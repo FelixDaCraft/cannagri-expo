@@ -316,6 +316,36 @@ model ContactRequest {
   createdAt     DateTime    @default(now())
 }
 
+// ============ ANALYTICS / VISITES ============
+model PageView {
+  id            String    @id @default(cuid())
+  path          String    // URL de la page visitée
+  userAgent     String?
+  referrer      String?
+  ip            String?   // Hash de l'IP pour anonymisation
+  country       String?
+
+  createdAt     DateTime  @default(now())
+
+  @@index([createdAt])
+  @@index([path])
+}
+
+model DailyStats {
+  id            String    @id @default(cuid())
+  date          DateTime  @unique @db.Date
+  totalViews    Int       @default(0)
+  uniqueVisitors Int      @default(0)
+
+  // Pages les plus visitées (JSON)
+  topPages      String?   @db.Text
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([date])
+}
+
 // ============ SITE SETTINGS ============
 model SiteSettings {
   id                    String    @id @default("site_settings")

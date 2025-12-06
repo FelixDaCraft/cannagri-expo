@@ -1,4 +1,5 @@
 import { Header, Footer, InfoBanner } from '@/components/layout'
+import { PageTracker } from '@/components/analytics'
 
 export default function PublicLayout({
   children,
@@ -7,6 +8,7 @@ export default function PublicLayout({
 }) {
   return (
     <>
+      <PageTracker />
       <Header />
       <main className="flex-1 pt-20">
         {children}
