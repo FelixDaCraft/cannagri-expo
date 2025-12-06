@@ -71,7 +71,7 @@ async function main() {
     { number: 22, surfaceM2: 9, priceHT: 350, x: 395, y: 570, width: 55, height: 55 },
     { number: 21, surfaceM2: 9, priceHT: 350, x: 460, y: 570, width: 55, height: 55 },
     { number: 20, surfaceM2: 9, priceHT: 350, x: 525, y: 570, width: 55, height: 55 },
-    { number: 19, surfaceM2: 9, priceHT: 350, x: 590, y: 625, width: 55, height: 55 },
+    { number: 19, surfaceM2: 9, priceHT: 350, x: 655, y: 570, width: 55, height: 55 },
   ]
 
   for (const stand of stands) {

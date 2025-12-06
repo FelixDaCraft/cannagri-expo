@@ -31,7 +31,7 @@ const defaultStandsConfig = [
   { number: 22, surfaceM2: 9, priceHT: 350, size: 'SMALL', x: 395, y: 570, width: 55, height: 55 },
   { number: 21, surfaceM2: 9, priceHT: 350, size: 'SMALL', x: 460, y: 570, width: 55, height: 55 },
   { number: 20, surfaceM2: 9, priceHT: 350, size: 'SMALL', x: 525, y: 570, width: 55, height: 55 },
-  { number: 19, surfaceM2: 9, priceHT: 350, size: 'SMALL', x: 590, y: 625, width: 55, height: 55 },
+  { number: 19, surfaceM2: 9, priceHT: 350, size: 'SMALL', x: 655, y: 570, width: 55, height: 55 },
 ]
 
 // GET /api/admin/stands - List all stands with full details

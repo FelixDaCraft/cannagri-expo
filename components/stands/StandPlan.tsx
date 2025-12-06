@@ -69,7 +69,7 @@ const defaultStands: Stand[] = [
   { id: '22', code: '22', number: 22, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 395, y: 570, width: 55, height: 55, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
   { id: '21', code: '21', number: 21, surfaceM2: 9, priceHT: 350, status: 'SOLD', size: 'SMALL', x: 460, y: 570, width: 55, height: 55, hasFurniture: true, hasElectricity: true, furniturePrice: 120, electricityPrice: 80, exhibitorName: 'Natura' },
   { id: '20', code: '20', number: 20, surfaceM2: 9, priceHT: 350, status: 'RESERVED', size: 'SMALL', x: 525, y: 570, width: 55, height: 55, hasFurniture: false, hasElectricity: true, furniturePrice: 120, electricityPrice: 80 },
-  { id: '19', code: '19', number: 19, surfaceM2: 9, priceHT: 350, status: 'SOLD', size: 'SMALL', x: 590, y: 625, width: 55, height: 55, hasFurniture: true, hasElectricity: true, furniturePrice: 120, electricityPrice: 80, exhibitorName: 'Hemp+' },
+  { id: '19', code: '19', number: 19, surfaceM2: 9, priceHT: 350, status: 'SOLD', size: 'SMALL', x: 655, y: 570, width: 55, height: 55, hasFurniture: true, hasElectricity: true, furniturePrice: 120, electricityPrice: 80, exhibitorName: 'Hemp+' },
 ]
 
 const statusColors = {
@@ -203,7 +203,7 @@ export function StandPlan({
       {/* SVG Plan */}
       <div className="relative bg-white rounded-2xl p-4 overflow-x-auto border border-gray-200">
         <svg
-          viewBox="0 0 700 720"
+          viewBox="0 0 730 650"
           className="w-full h-auto min-w-[500px]"
           style={{ maxHeight: '700px' }}
         >
