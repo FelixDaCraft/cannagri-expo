@@ -94,8 +94,6 @@ export interface TicketPurchaseForm {
 
 export interface StandBookingForm {
   standId: string
-  hasFurniture: boolean
-  hasElectricity: boolean
   customerName: string
   customerEmail: string
   customerPhone?: string

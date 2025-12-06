@@ -60,10 +60,8 @@ export async function POST(request: NextRequest) {
         )
       }
 
-      // Calculate total with options
+      // Calculate total (simple price without options)
       amountHT = stand.priceHT
-      if (items.hasFurniture) amountHT += stand.furniturePrice
-      if (items.hasElectricity) amountHT += stand.electricityPrice
       amount = amountHT * 1.2 // TVA 20%
 
       // Reserve the stand temporarily (15 minutes)
@@ -74,8 +72,6 @@ export async function POST(request: NextRequest) {
           status: 'RESERVED',
           reservedAt: new Date(),
           reservedUntil,
-          hasFurniture: items.hasFurniture || false,
-          hasElectricity: items.hasElectricity || false,
         }
       })
 
