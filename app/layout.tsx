@@ -24,9 +24,9 @@ export const metadata: Metadata = {
   keywords: siteConfig.seo.keywords,
   authors: [{ name: siteConfig.name }],
   icons: {
-    icon: '/images/logo.png',
-    shortcut: '/images/logo.png',
-    apple: '/images/logo.png',
+    icon: '/images/logo.PNG',
+    shortcut: '/images/logo.PNG',
+    apple: '/images/logo.PNG',
   },
   openGraph: {
     type: 'website',

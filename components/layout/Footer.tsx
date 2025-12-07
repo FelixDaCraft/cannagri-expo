@@ -13,7 +13,7 @@ export function Footer() {
             <div className="flex items-center gap-3 mb-4">
               <div className="relative w-10 h-10 bg-white rounded-full overflow-hidden">
                 <Image
-                  src="/images/logo.png"
+                  src="/images/logo.PNG"
                   alt={siteConfig.name}
                   fill
                   className="object-contain p-1"

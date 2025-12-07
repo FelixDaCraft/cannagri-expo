@@ -100,7 +100,7 @@ echo -e "  ${GREEN}1. AFFICHE OFFICIELLE 2026 (obligatoire pour la page d'accuei
 echo -e "     ${BLUE}→${NC} $APP_DIR/public/images/${CYAN}poster-2026.png${NC}"
 echo ""
 echo -e "  ${GREEN}2. LOGO (header/footer) :${NC}"
-echo -e "     ${BLUE}→${NC} $APP_DIR/public/images/${CYAN}logo.png${NC}"
+echo -e "     ${BLUE}→${NC} $APP_DIR/public/images/${CYAN}logo.PNG${NC}"
 echo ""
 echo -e "  ${GREEN}3. PHOTOS GALERIE (médiathèque) :${NC}"
 echo -e "     ${BLUE}→${NC} $APP_DIR/public/images/gallery/${CYAN}*.jpg${NC}"
@@ -113,7 +113,7 @@ echo -e "  ${BLUE}# Affiche 2026${NC}"
 echo -e "  scp poster-2026.png user@serveur:$APP_DIR/public/images/"
 echo ""
 echo -e "  ${BLUE}# Logo${NC}"
-echo -e "  scp logo.png user@serveur:$APP_DIR/public/images/"
+echo -e "  scp logo.PNG user@serveur:$APP_DIR/public/images/"
 echo ""
 echo -e "  ${BLUE}# Photos galerie${NC}"
 echo -e "  scp *.jpg user@serveur:$APP_DIR/public/images/gallery/"
@@ -133,8 +133,8 @@ else
 fi
 
 # Vérifier le logo
-if [ -f "$APP_DIR/public/images/logo.png" ]; then
-    echo -e "  ${GREEN}✓${NC} Logo : ${GREEN}logo.png trouvé${NC}"
+if [ -f "$APP_DIR/public/images/logo.PNG" ]; then
+    echo -e "  ${GREEN}✓${NC} Logo : ${GREEN}logo.PNG trouvé${NC}"
 else
     echo -e "  ${YELLOW}⚠${NC} Logo : ${YELLOW}non trouvé${NC}"
 fi
@@ -165,7 +165,7 @@ else
     echo -e "  ${RED}✗${NC} Affiche 2026 : MANQUANT - La page d'accueil affichera une erreur d'image"
 fi
 
-if [ -f "$APP_DIR/public/images/logo.png" ]; then
+if [ -f "$APP_DIR/public/images/logo.PNG" ]; then
     echo -e "  ${GREEN}✓${NC} Logo : OK"
 else
     echo -e "  ${YELLOW}⚠${NC} Logo : manquant - Un placeholder sera utilisé"
