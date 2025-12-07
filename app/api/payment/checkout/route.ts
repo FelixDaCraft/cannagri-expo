@@ -1,11 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { createVivaWalletOrder } from '@/lib/vivawallet'
 import { generateOrderNumber } from '@/lib/utils'
-import {
-  createTicketCheckoutSession,
-  createStandCheckoutSession,
-  isStripeEnabled,
-} from '@/lib/stripe'
 
 export async function POST(request: NextRequest) {
   try {
@@ -70,8 +66,8 @@ export async function POST(request: NextRequest) {
       amountHT = stand.priceHT
       amount = amountHT * 1.2 // TVA 20%
 
-      // Reserve the stand temporarily (30 minutes for Stripe checkout)
-      const reservedUntil = new Date(Date.now() + 30 * 60 * 1000)
+      // Reserve the stand temporarily (15 minutes)
+      const reservedUntil = new Date(Date.now() + 15 * 60 * 1000)
       await prisma.stand.update({
         where: { id: stand.id },
         data: {
@@ -113,52 +109,35 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    // Create payment session
+    // Create Viva Wallet order
     let checkoutUrl: string
-    const baseUrl = process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
 
-    if (!isStripeEnabled) {
-      // Demo mode - redirect to success simulation page
+    if (process.env.VIVA_WALLET_DEMO_MODE === 'true') {
+      // In demo mode, redirect to a success simulation page
       checkoutUrl = `/billetterie/confirmation?orderId=${order.id}&demo=true`
     } else {
       try {
-        if (type === 'VISITOR_TICKET') {
-          const session = await createTicketCheckoutSession({
-            items,
-            customerEmail: customer.email,
-            customerName: customer.name,
-            orderId: order.id,
-            successUrl: `${baseUrl}/billetterie/confirmation?orderId=${order.id}&session_id={CHECKOUT_SESSION_ID}`,
-            cancelUrl: `${baseUrl}/billetterie?cancelled=true`,
-          })
-          checkoutUrl = session.url!
-        } else {
-          // Stand booking
-          const session = await createStandCheckoutSession({
-            standCode: stand!.code,
-            standSurface: stand!.surfaceM2,
-            priceHT: amountHT,
-            priceTTC: amount,
-            customerEmail: customer.email,
-            customerName: customer.name,
-            companyName: customer.companyName,
-            orderId: order.id,
-            successUrl: `${baseUrl}/pro/confirmation?orderId=${order.id}&session_id={CHECKOUT_SESSION_ID}`,
-            cancelUrl: `${baseUrl}/pro/stands?cancelled=true`,
-          })
-          checkoutUrl = session.url!
-        }
+        const vivaOrder = await createVivaWalletOrder({
+          amount: Math.round(amount * 100), // In cents
+          customerEmail: customer.email,
+          customerFullName: customer.name,
+          customerPhone: customer.phone,
+          merchantTrns: order.id,
+        })
 
-        // Update order with Stripe session ID
+        // Update order with Viva Wallet reference
         await prisma.order.update({
           where: { id: order.id },
           data: {
-            vivaPaymentUrl: checkoutUrl, // Reusing this field for Stripe URL
+            vivaWalletRef: vivaOrder.orderCode,
+            vivaPaymentUrl: vivaOrder.checkoutUrl,
           }
         })
-      } catch (stripeError) {
-        console.error('Stripe error:', stripeError)
-        // Fallback to demo mode if Stripe fails
+
+        checkoutUrl = vivaOrder.checkoutUrl
+      } catch (vivaError) {
+        console.error('Viva Wallet error:', vivaError)
+        // Fallback to demo mode if Viva Wallet fails
         checkoutUrl = `/billetterie/confirmation?orderId=${order.id}&demo=true`
       }
     }
