@@ -27,8 +27,7 @@ export default function CGVPage() {
             <h2>1. Objet</h2>
             <p>
               Les présentes conditions générales de vente (CGV) régissent les ventes de billets d&apos;entrée
-              et de réservations de stands pour le salon <strong>Cann&apos;Agri Expo</strong>, organisé par
-              {' '}{siteConfig.company.name}.
+              et de réservations de stands pour le salon <strong>{siteConfig.name}</strong>.
             </p>
 
             <h2>2. Billetterie</h2>
@@ -126,7 +125,7 @@ export default function CGVPage() {
             <h2>9. Contact</h2>
             <p>
               Pour toute question concernant ces conditions générales de vente :<br />
-              <strong>{siteConfig.company.name}</strong><br />
+              <strong>{siteConfig.name}</strong><br />
               Email :{' '}
               <a href={`mailto:${siteConfig.contact.email}`} className="text-terracotta hover:underline">
                 {siteConfig.contact.email}

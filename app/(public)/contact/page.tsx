@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { motion } from 'motion/react'
 import { useSearchParams } from 'next/navigation'
-import { Button, Input, Textarea, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui'
+import { Button, Input } from '@/components/ui'
 import { siteConfig } from '@/config/site'
 
 const contactTypes = [
@@ -174,18 +174,17 @@ export default function ContactPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-forest mb-2">Type de demande</label>
-                  <Select value={formData.type} onValueChange={(value) => setFormData({ ...formData, type: value })}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {contactTypes.map((type) => (
-                        <SelectItem key={type.value} value={type.value}>
-                          {type.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <select
+                    value={formData.type}
+                    onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                    className="w-full px-4 py-2 border border-forest/20 rounded-lg focus:ring-2 focus:ring-terracotta focus:border-transparent bg-white"
+                  >
+                    {contactTypes.map((type) => (
+                      <option key={type.value} value={type.value}>
+                        {type.label}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-4">
@@ -242,12 +241,13 @@ export default function ContactPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-forest mb-2">Message *</label>
-                  <Textarea
+                  <textarea
                     required
                     rows={5}
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     placeholder="Votre message..."
+                    className="w-full px-4 py-2 border border-forest/20 rounded-lg focus:ring-2 focus:ring-terracotta focus:border-transparent resize-none"
                   />
                 </div>
 
