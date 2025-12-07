@@ -48,3 +48,6 @@ prisma/migrations/
 
 # Generated PDFs
 /tmp
+
+# Backup files with credentials
+*.zip
