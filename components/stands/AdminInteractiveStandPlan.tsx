@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { Button } from '@/components/ui'
+import type { Stand as APIStand } from './StandPlan'
 
 // Types
 interface StandPosition {
@@ -10,21 +11,8 @@ interface StandPosition {
   gridRow: number
 }
 
-interface Stand {
-  id: string
-  number: number
-  code: string
+interface StandWithPosition extends APIStand {
   position: StandPosition
-  location: string
-  surfaceM2: number
-  priceHT: number
-  status: 'FREE' | 'RESERVED' | 'SOLD'
-  size: 'SMALL' | 'MEDIUM' | 'LARGE'
-  exhibitorName: string | null
-  hasFurniture: boolean
-  hasElectricity: boolean
-  furniturePrice: number
-  electricityPrice: number
 }
 
 interface Zone {
@@ -38,8 +26,8 @@ interface Zone {
 }
 
 interface AdminStandPlanProps {
-  stands: Stand[]
-  onStandClick?: (stand: Stand) => void
+  stands: APIStand[]
+  onStandClick?: (stand: APIStand) => void
   onStatusChange?: (standId: string, newStatus: 'FREE' | 'RESERVED' | 'SOLD') => void
   loading?: boolean
 }
@@ -93,12 +81,12 @@ export function AdminInteractiveStandPlan({
   onStatusChange,
   loading = false,
 }: AdminStandPlanProps) {
-  const [selectedStand, setSelectedStand] = useState<Stand | null>(null)
+  const [selectedStand, setSelectedStand] = useState<StandWithPosition | null>(null)
   const [statusFilter, setStatusFilter] = useState<string>('all')
   const [quickEditMode, setQuickEditMode] = useState(false)
 
   // Map stands with positions
-  const standsWithPositions = useMemo(() => {
+  const standsWithPositions = useMemo((): StandWithPosition[] => {
     return stands.map(stand => ({
       ...stand,
       position: defaultStandPositions[stand.number] || { gridColumn: 1, gridRow: 1 }
@@ -120,7 +108,7 @@ export function AdminInteractiveStandPlan({
     return { free, reserved, sold, total: stands.length, revenue }
   }, [stands])
 
-  const handleStandClick = (stand: Stand) => {
+  const handleStandClick = (stand: StandWithPosition) => {
     if (quickEditMode && onStatusChange) {
       // Cycle through statuses: FREE -> RESERVED -> SOLD -> FREE
       const nextStatus = stand.status === 'FREE' ? 'RESERVED' : stand.status === 'RESERVED' ? 'SOLD' : 'FREE'
@@ -138,7 +126,7 @@ export function AdminInteractiveStandPlan({
     }
   }
 
-  const getStandPosition = (stand: Stand) => {
+  const getStandPosition = (stand: StandWithPosition) => {
     return stand.position || defaultStandPositions[stand.number] || { gridColumn: 1, gridRow: 1 }
   }
 
