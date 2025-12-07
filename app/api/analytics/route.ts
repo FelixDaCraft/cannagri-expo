@@ -14,7 +14,12 @@ export async function POST(request: NextRequest) {
     const { path } = body
 
     if (!path) {
-      return NextResponse.json({ error: 'Path required' }, { status: 400 })
+      return NextResponse.json({ success: true, tracked: false })
+    }
+
+    // Don't track admin pages
+    if (path.startsWith('/admin')) {
+      return NextResponse.json({ success: true, tracked: false })
     }
 
     // Get client info
@@ -23,25 +28,25 @@ export async function POST(request: NextRequest) {
     const userAgent = request.headers.get('user-agent') || undefined
     const referrer = request.headers.get('referer') || undefined
 
-    // Don't track admin pages
-    if (path.startsWith('/admin')) {
+    // Create page view - fail silently if DB unavailable
+    try {
+      await prisma.pageView.create({
+        data: {
+          path,
+          ip: hashIP(ip),
+          userAgent,
+          referrer,
+        }
+      })
+    } catch {
+      // Database might not be ready, fail silently
       return NextResponse.json({ success: true, tracked: false })
     }
 
-    // Create page view
-    await prisma.pageView.create({
-      data: {
-        path,
-        ip: hashIP(ip),
-        userAgent,
-        referrer,
-      }
-    })
-
     return NextResponse.json({ success: true, tracked: true })
-  } catch (error) {
-    console.error('Error tracking page view:', error)
-    return NextResponse.json({ error: 'Failed to track' }, { status: 500 })
+  } catch {
+    // Fail silently for analytics - not critical
+    return NextResponse.json({ success: true, tracked: false })
   }
 }
 
