@@ -1,0 +1,590 @@
+{
+  "meta": {
+    "name": "Plan Agronaute",
+    "event": "Cann'Agri Expo 2026",
+    "date": "2026-03-28",
+    "location": "L'Agronaute, Nantes",
+    "version": "1.0.0",
+    "lastUpdated": "2025-12-07"
+  },
+  
+  "grid": {
+    "columns": 10,
+    "rows": 13,
+    "cellSize": 50,
+    "gap": 8,
+    "unit": "px"
+  },
+  
+  "theme": {
+    "colors": {
+      "primary": "#2E4A33",
+      "secondary": "#A4B494",
+      "background": "#F4F1E8",
+      "text": "#333333",
+      "available": "#4CAF50",
+      "reserved": "#FFA726",
+      "sold": "#EF5350",
+      "hover": "#81C784",
+      "selected": "#2E7D32"
+    },
+    "fonts": {
+      "heading": "Roboto Slab",
+      "body": "Open Sans"
+    }
+  },
+  
+  "zones": [
+    {
+      "id": "CONF",
+      "type": "conference",
+      "name": "Conférences",
+      "position": {
+        "gridColumn": "1",
+        "gridRow": "1 / 5"
+      },
+      "style": "dashed",
+      "clickable": false
+    },
+    {
+      "id": "BAR",
+      "type": "bar",
+      "name": "Bar",
+      "position": {
+        "gridColumn": "1",
+        "gridRow": "6 / 9"
+      },
+      "style": "dashed",
+      "clickable": false
+    },
+    {
+      "id": "TABLES",
+      "type": "tables",
+      "name": "Tables",
+      "position": {
+        "gridColumn": "3 / 7",
+        "gridRow": "6 / 9"
+      },
+      "style": "dashed",
+      "clickable": false
+    },
+    {
+      "id": "ENTRY",
+      "type": "entry",
+      "name": "Entrée",
+      "position": {
+        "gridColumn": "1",
+        "gridRow": "11 / 13"
+      },
+      "style": "dashed",
+      "clickable": false,
+      "icon": {
+        "type": "arrow",
+        "direction": "right"
+      }
+    }
+  ],
+  
+  "stands": [
+    {
+      "id": 1,
+      "name": "Stand 1",
+      "position": {
+        "gridColumn": 2,
+        "gridRow": 4
+      },
+      "location": "Côté Conférences",
+      "surface": 9,
+      "price": 450,
+      "currency": "EUR",
+      "status": "available",
+      "category": "standard",
+      "amenities": ["electricity", "wifi"],
+      "reservedBy": null,
+      "reservedAt": null
+    },
+    {
+      "id": 2,
+      "name": "Stand 2",
+      "position": {
+        "gridColumn": 2,
+        "gridRow": 3
+      },
+      "location": "Côté Conférences",
+      "surface": 9,
+      "price": 450,
+      "currency": "EUR",
+      "status": "available",
+      "category": "standard",
+      "amenities": ["electricity", "wifi"],
+      "reservedBy": null,
+      "reservedAt": null
+    },
+    {
+      "id": 3,
+      "name": "Stand 3",
+      "position": {
+        "gridColumn": 2,
+        "gridRow": 2
+      },
+      "location": "Angle Nord-Ouest",
+      "surface": 9,
+      "price": 500,
+      "currency": "EUR",
+      "status": "available",
+      "category": "corner",
+      "amenities": ["electricity", "wifi"],
+      "reservedBy": null,
+      "reservedAt": null
+    },
+    {
+      "id": 4,
+      "name": "Stand 4",
+      "position": {
+        "gridColumn": 3,
+        "gridRow": 1
+      },
+      "location": "Allée Nord",
+      "surface": 9,
+      "price": 500,
+      "currency": "EUR",
+      "status": "available",
+      "category": "premium",
+      "amenities": ["electricity", "wifi"],
+      "reservedBy": null,
+      "reservedAt": null
+    },
+    {
+      "id": 5,
+      "name": "Stand 5",
+      "position": {
+        "gridColumn": 4,
+        "gridRow": 1
+      },
+      "location": "Allée Nord",
+      "surface": 9,
+      "price": 500,
+      "currency": "EUR",
+      "status": "available",
+      "category": "premium",
+      "amenities": ["electricity", "wifi"],
+      "reservedBy": null,
+      "reservedAt": null
+    },
+    {
+      "id": 6,
+      "name": "Stand 6",
+      "position": {
+        "gridColumn": 5,
+        "gridRow": 1
+      },
+      "location": "Allée Nord",
+      "surface": 9,
+      "price": 500,
+      "currency": "EUR",
+      "status": "available",
+      "category": "premium",
+      "amenities": ["electricity", "wifi"],
+      "reservedBy": null,
+      "reservedAt": null
+    },
+    {
+      "id": 7,
+      "name": "Stand 7",
+      "position": {
+        "gridColumn": 6,
+        "gridRow": 1
+      },
+      "location": "Allée Nord",
+      "surface": 9,
+      "price": 500,
+      "currency": "EUR",
+      "status": "available",
+      "category": "premium",
+      "amenities": ["electricity", "wifi"],
+      "reservedBy": null,
+      "reservedAt": null
+    },
+    {
+      "id": 8,
+      "name": "Stand 8",
+      "position": {
+        "gridColumn": 7,
+        "gridRow": 1
+      },
+      "location": "Allée Nord",
+      "surface": 9,
+      "price": 500,
+      "currency": "EUR",
+      "status": "available",
+      "category": "premium",
+      "amenities": ["electricity", "wifi"],
+      "reservedBy": null,
+      "reservedAt": null
+    },
+    {
+      "id": 9,
+      "name": "Stand 9",
+      "position": {
+        "gridColumn": 8,
+        "gridRow": 1
+      },
+      "location": "Angle Nord-Est",
+      "surface": 9,
+      "price": 550,
+      "currency": "EUR",
+      "status": "available",
+      "category": "corner",
+      "amenities": ["electricity", "wifi", "water"],
+      "reservedBy": null,
+      "reservedAt": null
+    },
+    {
+      "id": 10,
+      "name": "Stand 10",
+      "position": {
+        "gridColumn": 10,
+        "gridRow": 2
+      },
+      "location": "Allée Est",
+      "surface": 9,
+      "price": 450,
+      "currency": "EUR",
+      "status": "available",
+      "category": "standard",
+      "amenities": ["electricity", "wifi"],
+      "reservedBy": null,
+      "reservedAt": null
+    },
+    {
+      "id": 11,
+      "name": "Stand 11",
+      "position": {
+        "gridColumn": 10,
+        "gridRow": 3
+      },
+      "location": "Allée Est",
+      "surface": 9,
+      "price": 450,
+      "currency": "EUR",
+      "status": "available",
+      "category": "standard",
+      "amenities": ["electricity", "wifi"],
+      "reservedBy": null,
+      "reservedAt": null
+    },
+    {
+      "id": 12,
+      "name": "Stand 12",
+      "position": {
+        "gridColumn": 10,
+        "gridRow": 4
+      },
+      "location": "Allée Est",
+      "surface": 9,
+      "price": 450,
+      "currency": "EUR",
+      "status": "available",
+      "category": "standard",
+      "amenities": ["electricity", "wifi"],
+      "reservedBy": null,
+      "reservedAt": null
+    },
+    {
+      "id": 13,
+      "name": "Stand 13",
+      "position": {
+        "gridColumn": 10,
+        "gridRow": 5
+      },
+      "location": "Allée Est",
+      "surface": 9,
+      "price": 450,
+      "currency": "EUR",
+      "status": "available",
+      "category": "standard",
+      "amenities": ["electricity", "wifi"],
+      "reservedBy": null,
+      "reservedAt": null
+    },
+    {
+      "id": 14,
+      "name": "Stand 14",
+      "position": {
+        "gridColumn": 10,
+        "gridRow": 6
+      },
+      "location": "Allée Est",
+      "surface": 9,
+      "price": 450,
+      "currency": "EUR",
+      "status": "available",
+      "category": "standard",
+      "amenities": ["electricity", "wifi"],
+      "reservedBy": null,
+      "reservedAt": null
+    },
+    {
+      "id": 15,
+      "name": "Stand 15",
+      "position": {
+        "gridColumn": 10,
+        "gridRow": 7
+      },
+      "location": "Allée Est",
+      "surface": 9,
+      "price": 450,
+      "currency": "EUR",
+      "status": "available",
+      "category": "standard",
+      "amenities": ["electricity", "wifi"],
+      "reservedBy": null,
+      "reservedAt": null
+    },
+    {
+      "id": 16,
+      "name": "Stand 16",
+      "position": {
+        "gridColumn": 10,
+        "gridRow": 8
+      },
+      "location": "Allée Est",
+      "surface": 9,
+      "price": 450,
+      "currency": "EUR",
+      "status": "available",
+      "category": "standard",
+      "amenities": ["electricity", "wifi"],
+      "reservedBy": null,
+      "reservedAt": null
+    },
+    {
+      "id": 17,
+      "name": "Stand 17",
+      "position": {
+        "gridColumn": 10,
+        "gridRow": 9
+      },
+      "location": "Allée Est",
+      "surface": 9,
+      "price": 450,
+      "currency": "EUR",
+      "status": "available",
+      "category": "standard",
+      "amenities": ["electricity", "wifi"],
+      "reservedBy": null,
+      "reservedAt": null
+    },
+    {
+      "id": 18,
+      "name": "Stand 18",
+      "position": {
+        "gridColumn": 10,
+        "gridRow": 10
+      },
+      "location": "Allée Est",
+      "surface": 9,
+      "price": 450,
+      "currency": "EUR",
+      "status": "available",
+      "category": "standard",
+      "amenities": ["electricity", "wifi"],
+      "reservedBy": null,
+      "reservedAt": null
+    },
+    {
+      "id": 19,
+      "name": "Stand 19",
+      "position": {
+        "gridColumn": 10,
+        "gridRow": 11
+      },
+      "location": "Angle Sud-Est",
+      "surface": 9,
+      "price": 550,
+      "currency": "EUR",
+      "status": "available",
+      "category": "corner",
+      "amenities": ["electricity", "wifi", "water"],
+      "reservedBy": null,
+      "reservedAt": null
+    },
+    {
+      "id": 20,
+      "name": "Stand 20",
+      "position": {
+        "gridColumn": 8,
+        "gridRow": 13
+      },
+      "location": "Allée Sud",
+      "surface": 9,
+      "price": 500,
+      "currency": "EUR",
+      "status": "available",
+      "category": "premium",
+      "amenities": ["electricity", "wifi"],
+      "reservedBy": null,
+      "reservedAt": null
+    },
+    {
+      "id": 21,
+      "name": "Stand 21",
+      "position": {
+        "gridColumn": 7,
+        "gridRow": 13
+      },
+      "location": "Allée Sud",
+      "surface": 9,
+      "price": 500,
+      "currency": "EUR",
+      "status": "available",
+      "category": "premium",
+      "amenities": ["electricity", "wifi"],
+      "reservedBy": null,
+      "reservedAt": null
+    },
+    {
+      "id": 22,
+      "name": "Stand 22",
+      "position": {
+        "gridColumn": 6,
+        "gridRow": 13
+      },
+      "location": "Allée Sud",
+      "surface": 9,
+      "price": 500,
+      "currency": "EUR",
+      "status": "available",
+      "category": "premium",
+      "amenities": ["electricity", "wifi"],
+      "reservedBy": null,
+      "reservedAt": null
+    },
+    {
+      "id": 23,
+      "name": "Stand 23",
+      "position": {
+        "gridColumn": 5,
+        "gridRow": 13
+      },
+      "location": "Allée Sud",
+      "surface": 9,
+      "price": 500,
+      "currency": "EUR",
+      "status": "available",
+      "category": "premium",
+      "amenities": ["electricity", "wifi"],
+      "reservedBy": null,
+      "reservedAt": null
+    },
+    {
+      "id": 24,
+      "name": "Stand 24",
+      "position": {
+        "gridColumn": 4,
+        "gridRow": 13
+      },
+      "location": "Allée Sud",
+      "surface": 9,
+      "price": 500,
+      "currency": "EUR",
+      "status": "available",
+      "category": "premium",
+      "amenities": ["electricity", "wifi"],
+      "reservedBy": null,
+      "reservedAt": null
+    },
+    {
+      "id": 25,
+      "name": "Stand 25",
+      "position": {
+        "gridColumn": 3,
+        "gridRow": 13
+      },
+      "location": "Allée Sud (près entrée)",
+      "surface": 9,
+      "price": 500,
+      "currency": "EUR",
+      "status": "available",
+      "category": "premium",
+      "amenities": ["electricity", "wifi"],
+      "reservedBy": null,
+      "reservedAt": null
+    }
+  ],
+  
+  "categories": {
+    "standard": {
+      "name": "Standard",
+      "description": "Emplacement standard le long des allées",
+      "basePrice": 450
+    },
+    "premium": {
+      "name": "Premium",
+      "description": "Emplacement haute visibilité (allées Nord et Sud)",
+      "basePrice": 500
+    },
+    "corner": {
+      "name": "Angle",
+      "description": "Emplacement d'angle avec double exposition",
+      "basePrice": 550
+    }
+  },
+  
+  "statuses": {
+    "available": {
+      "label": "Disponible",
+      "color": "#4CAF50",
+      "canReserve": true
+    },
+    "reserved": {
+      "label": "Réservé",
+      "color": "#FFA726",
+      "canReserve": false
+    },
+    "sold": {
+      "label": "Vendu",
+      "color": "#EF5350",
+      "canReserve": false
+    },
+    "blocked": {
+      "label": "Indisponible",
+      "color": "#9E9E9E",
+      "canReserve": false
+    }
+  },
+  
+  "amenities": {
+    "electricity": {
+      "name": "Électricité",
+      "icon": "⚡",
+      "included": true
+    },
+    "wifi": {
+      "name": "WiFi",
+      "icon": "📶",
+      "included": true
+    },
+    "water": {
+      "name": "Point d'eau",
+      "icon": "💧",
+      "included": false,
+      "price": 50
+    },
+    "furniture": {
+      "name": "Mobilier",
+      "icon": "🪑",
+      "included": false,
+      "price": 100
+    }
+  },
+  
+  "pricing": {
+    "currency": "EUR",
+    "vatRate": 20,
+    "deposit": 30,
+    "depositUnit": "percent",
+    "paymentMethods": ["card", "transfer"],
+    "paymentProvider": "viva_wallet"
+  }
+}
