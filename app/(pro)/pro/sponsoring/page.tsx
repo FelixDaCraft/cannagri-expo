@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import { Card, CardContent, Button, Badge, Input } from '@/components/ui'
+import { Card, CardContent, Badge } from '@/components/ui'
 import { siteConfig } from '@/config/site'
 
 export const metadata: Metadata = {
@@ -105,7 +105,7 @@ export default function SponsoringPage() {
           </h2>
           <p className="text-center text-body/70 mb-10 max-w-2xl mx-auto">
             Nous proposons 4 niveaux de partenariat adaptés à vos objectifs.
-            Remplissez le formulaire ci-dessous pour recevoir le détail des offres.
+            Contactez-nous pour recevoir le détail complet de chaque offre.
           </p>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
             {sponsorPackages.map((pkg, index) => (
@@ -127,74 +127,54 @@ export default function SponsoringPage() {
           </div>
         </section>
 
-        {/* Contact Form - without dropdown */}
-        <section className="bg-white rounded-2xl p-8 md:p-12 max-w-3xl mx-auto">
-          <h2 className="text-2xl font-heading font-bold text-heading text-center mb-4">
-            Demande de partenariat
+        {/* Contact Section - Email & Phone only */}
+        <section className="bg-white rounded-2xl p-8 md:p-12 max-w-3xl mx-auto text-center">
+          <h2 className="text-2xl font-heading font-bold text-heading mb-4">
+            Contactez-nous
           </h2>
-          <p className="text-center text-body/70 mb-8">
-            Remplissez ce formulaire pour recevoir le détail complet de nos offres de partenariat.
+          <p className="text-body/70 mb-8 max-w-xl mx-auto">
+            Pour devenir partenaire et recevoir le détail de nos offres,
+            contactez notre équipe par email ou téléphone.
           </p>
-          <form className="space-y-6">
-            <div className="grid md:grid-cols-2 gap-6">
-              <Input
-                label="Nom"
-                name="name"
-                placeholder="Votre nom"
-                required
-              />
-              <Input
-                label="Entreprise"
-                name="company"
-                placeholder="Raison sociale"
-                required
-              />
-            </div>
-            <div className="grid md:grid-cols-2 gap-6">
-              <Input
-                label="Email"
-                name="email"
-                type="email"
-                placeholder="email@entreprise.com"
-                required
-              />
-              <Input
-                label="Téléphone"
-                name="phone"
-                type="tel"
-                placeholder="06 00 00 00 00"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-body mb-1">
-                Message (optionnel)
-              </label>
-              <textarea
-                name="message"
-                rows={4}
-                placeholder="Décrivez votre projet ou vos besoins spécifiques..."
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 bg-white text-body placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-sage focus:border-sage resize-none"
-              />
-            </div>
-            <Button type="submit" size="lg" className="w-full">
-              Recevoir les offres de partenariat
-            </Button>
-          </form>
-          <p className="text-center text-sm text-body/60 mt-4">
-            Notre équipe vous recontactera sous 48h avec le détail de nos offres.
+
+          <div className="grid md:grid-cols-2 gap-6 mb-8">
+            {/* Email */}
+            <a
+              href={`mailto:${siteConfig.contact.email}?subject=Demande%20de%20partenariat%20-%20Cann'Agri%20Expo`}
+              className="flex flex-col items-center p-6 bg-cream rounded-xl hover:bg-sage/20 transition-colors group"
+            >
+              <div className="w-16 h-16 rounded-full bg-forest/10 flex items-center justify-center mb-4 group-hover:bg-forest/20 transition-colors">
+                <svg className="w-8 h-8 text-forest" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <span className="text-sm text-body/60 mb-1">Email</span>
+              <span className="font-heading font-semibold text-forest text-lg">
+                {siteConfig.contact.email}
+              </span>
+            </a>
+
+            {/* Phone */}
+            <a
+              href="tel:+33600000000"
+              className="flex flex-col items-center p-6 bg-cream rounded-xl hover:bg-sage/20 transition-colors group"
+            >
+              <div className="w-16 h-16 rounded-full bg-forest/10 flex items-center justify-center mb-4 group-hover:bg-forest/20 transition-colors">
+                <svg className="w-8 h-8 text-forest" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+              </div>
+              <span className="text-sm text-body/60 mb-1">Téléphone</span>
+              <span className="font-heading font-semibold text-forest text-lg">
+                06 00 00 00 00
+              </span>
+            </a>
+          </div>
+
+          <p className="text-sm text-body/60">
+            Notre équipe est disponible du lundi au vendredi, de 9h à 18h.
           </p>
         </section>
-
-        {/* Direct Contact */}
-        <div className="text-center mt-12">
-          <p className="text-body/70 mb-2">Vous préférez nous contacter directement ?</p>
-          <a
-            href={`mailto:${siteConfig.contact.email}?subject=Demande%20de%20partenariat`}
-            className="text-forest font-semibold hover:underline"
-          >
-            {siteConfig.contact.email}
-          </a>
-        </div>
       </div>
     </div>
   )
