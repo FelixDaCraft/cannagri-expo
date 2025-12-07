@@ -95,6 +95,10 @@ model Stand {
   exhibitorName String?      // Nom de l'exposant
   exhibitorId   String?      // Référence optionnelle vers Exhibitor
 
+  // Lien vers compte Pro
+  proId         String?
+  pro           User?        @relation(fields: [proId], references: [id])
+
   // Options
   hasFurniture  Boolean      @default(false)
   hasElectricity Boolean     @default(false)
@@ -265,17 +269,27 @@ enum UserRole {
   PRO
 }
 
-model User {
-  id              String    @id @default(cuid())
-  email           String    @unique
-  hashedPassword  String?   // Optional for OAuth users
-  name            String?
-  image           String?
-  role            UserRole  @default(PRO)
+enum BusinessType {
+  PRODUCTEURS
+  MATERIEL
+  LIFESTYLE
+  SERVICE
+}
 
-  // Profile
+model User {
+  id              String        @id @default(cuid())
+  email           String        @unique
+  hashedPassword  String?       // Optional for OAuth users
+  name            String?
+  firstName       String?
+  image           String?
+  role            UserRole      @default(PRO)
+
+  // Profile Pro
   companyName     String?
   phone           String?
+  siret           String?
+  businessType    BusinessType?
 
   // Security
   emailVerified   DateTime?
@@ -286,8 +300,11 @@ model User {
   accounts        Account[]
   sessions        Session[]
 
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  // Stands réservés par ce pro
+  stands          Stand[]
+
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
 }
 
 // NextAuth Account model for OAuth
@@ -361,6 +378,26 @@ model ContactRequest {
   isArchived    Boolean     @default(false)
 
   createdAt     DateTime    @default(now())
+}
+
+// ============ DEMANDES DE PLAQUETTE SPONSORING ============
+enum SponsorRequestStatus {
+  PENDING    // En attente
+  SENT       // Plaquette envoyée
+}
+
+model SponsorRequest {
+  id            String              @id @default(cuid())
+  companyName   String
+  contactName   String
+  email         String
+  phone         String?
+
+  status        SponsorRequestStatus @default(PENDING)
+  sentAt        DateTime?            // Date d'envoi de la plaquette
+
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
 }
 
 // ============ ANALYTICS / VISITES ============

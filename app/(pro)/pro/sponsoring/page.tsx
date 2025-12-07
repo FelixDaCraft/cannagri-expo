@@ -1,11 +1,13 @@
-import { Metadata } from 'next'
-import { Card, CardContent, Badge } from '@/components/ui'
+'use client'
+
+import { useState } from 'react'
+import { Card, CardContent, Badge, Button } from '@/components/ui'
 import { siteConfig } from '@/config/site'
 
-export const metadata: Metadata = {
-  title: 'Sponsoring',
-  description: 'Devenez partenaire du salon Cann\'Agri Expo - Offres de sponsoring Platinum, Or, Argent et Bronze',
-}
+// export const metadata: Metadata = {
+//   title: 'Sponsoring',
+//   description: 'Devenez partenaire du salon Cann\'Agri Expo - Offres de sponsoring Platinum, Or, Argent et Bronze',
+// }
 
 const sponsorPackages = [
   {
@@ -127,55 +129,184 @@ export default function SponsoringPage() {
           </div>
         </section>
 
-        {/* Contact Section - Email & Phone only */}
-        <section className="bg-white rounded-2xl p-8 md:p-12 max-w-3xl mx-auto text-center">
-          <h2 className="text-2xl font-heading font-bold text-heading mb-4">
-            Contactez-nous
-          </h2>
-          <p className="text-body/70 mb-8 max-w-xl mx-auto">
-            Pour devenir partenaire et recevoir le détail de nos offres,
-            contactez notre équipe par email ou téléphone.
-          </p>
-
-          <div className="grid md:grid-cols-2 gap-6 mb-8">
-            {/* Email */}
-            <a
-              href={`mailto:${siteConfig.contact.email}?subject=Demande%20de%20partenariat%20-%20Cann'Agri%20Expo`}
-              className="flex flex-col items-center p-6 bg-cream rounded-xl hover:bg-sage/20 transition-colors group"
-            >
-              <div className="w-16 h-16 rounded-full bg-forest/10 flex items-center justify-center mb-4 group-hover:bg-forest/20 transition-colors">
-                <svg className="w-8 h-8 text-forest" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <span className="text-sm text-body/60 mb-1">Email</span>
-              <span className="font-heading font-semibold text-forest text-lg">
-                {siteConfig.contact.email}
-              </span>
-            </a>
-
-            {/* Phone */}
-            <a
-              href="tel:+33600000000"
-              className="flex flex-col items-center p-6 bg-cream rounded-xl hover:bg-sage/20 transition-colors group"
-            >
-              <div className="w-16 h-16 rounded-full bg-forest/10 flex items-center justify-center mb-4 group-hover:bg-forest/20 transition-colors">
-                <svg className="w-8 h-8 text-forest" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                </svg>
-              </div>
-              <span className="text-sm text-body/60 mb-1">Téléphone</span>
-              <span className="font-heading font-semibold text-forest text-lg">
-                06 00 00 00 00
-              </span>
-            </a>
-          </div>
-
-          <p className="text-sm text-body/60">
-            Notre équipe est disponible du lundi au vendredi, de 9h à 18h.
-          </p>
-        </section>
+        {/* Contact Form Section */}
+        <SponsorRequestForm />
       </div>
     </div>
+  )
+}
+
+function SponsorRequestForm() {
+  const [formData, setFormData] = useState({
+    companyName: '',
+    contactName: '',
+    email: '',
+    phone: '',
+  })
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+  const [message, setMessage] = useState('')
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setStatus('loading')
+
+    try {
+      const res = await fetch('/api/sponsor-request', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      })
+
+      if (res.ok) {
+        setStatus('success')
+        setMessage('Votre demande a bien été envoyée. Vous recevrez nos plaquettes de sponsoring très prochainement.')
+        setFormData({ companyName: '', contactName: '', email: '', phone: '' })
+      } else {
+        const data = await res.json()
+        setStatus('error')
+        setMessage(data.error || 'Une erreur est survenue. Veuillez réessayer.')
+      }
+    } catch {
+      setStatus('error')
+      setMessage('Une erreur est survenue. Veuillez réessayer.')
+    }
+  }
+
+  return (
+    <section className="bg-white rounded-2xl p-8 md:p-12 max-w-2xl mx-auto">
+      <div className="text-center mb-8">
+        <h2 className="text-2xl font-heading font-bold text-heading mb-4">
+          Recevez nos plaquettes de sponsoring
+        </h2>
+        <p className="text-body/70 max-w-xl mx-auto">
+          Remplissez ce formulaire pour recevoir le détail complet de nos offres
+          de partenariat Platinum, Or, Argent et Bronze.
+        </p>
+      </div>
+
+      {status === 'success' ? (
+        <div className="bg-green-50 border border-green-200 rounded-xl p-6 text-center">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-green-100 flex items-center justify-center">
+            <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <p className="text-green-800 font-medium">{message}</p>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid md:grid-cols-2 gap-6">
+            <div>
+              <label htmlFor="companyName" className="block text-sm font-medium text-heading mb-2">
+                Nom de l&apos;entreprise *
+              </label>
+              <input
+                type="text"
+                id="companyName"
+                required
+                value={formData.companyName}
+                onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent transition-all"
+                placeholder="Votre entreprise"
+              />
+            </div>
+            <div>
+              <label htmlFor="contactName" className="block text-sm font-medium text-heading mb-2">
+                Nom et prénom *
+              </label>
+              <input
+                type="text"
+                id="contactName"
+                required
+                value={formData.contactName}
+                onChange={(e) => setFormData({ ...formData, contactName: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent transition-all"
+                placeholder="Jean Dupont"
+              />
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-heading mb-2">
+                Email *
+              </label>
+              <input
+                type="email"
+                id="email"
+                required
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent transition-all"
+                placeholder="contact@entreprise.fr"
+              />
+            </div>
+            <div>
+              <label htmlFor="phone" className="block text-sm font-medium text-heading mb-2">
+                Téléphone *
+              </label>
+              <input
+                type="tel"
+                id="phone"
+                required
+                value={formData.phone}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent transition-all"
+                placeholder="06 XX XX XX XX"
+              />
+            </div>
+          </div>
+
+          {status === 'error' && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-800 text-sm">
+              {message}
+            </div>
+          )}
+
+          <Button
+            type="submit"
+            size="lg"
+            className="w-full"
+            disabled={status === 'loading'}
+          >
+            {status === 'loading' ? (
+              <>
+                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Envoi en cours...
+              </>
+            ) : (
+              'Recevoir les plaquettes'
+            )}
+          </Button>
+
+          <p className="text-xs text-body/60 text-center">
+            En soumettant ce formulaire, vous acceptez d&apos;être recontacté par notre équipe.
+            Vos données sont traitées conformément à notre{' '}
+            <a href="/confidentialite" className="underline hover:text-forest">
+              politique de confidentialité
+            </a>.
+          </p>
+        </form>
+      )}
+
+      {/* Alternative contact */}
+      <div className="mt-8 pt-8 border-t border-gray-200 text-center">
+        <p className="text-sm text-body/60 mb-2">Vous préférez nous contacter directement ?</p>
+        <div className="flex flex-wrap justify-center gap-4 text-sm">
+          <a
+            href={`mailto:${siteConfig.contact.email}`}
+            className="text-forest hover:underline flex items-center gap-2"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            {siteConfig.contact.email}
+          </a>
+        </div>
+      </div>
+    </section>
   )
 }

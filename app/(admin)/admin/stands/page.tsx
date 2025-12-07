@@ -1,27 +1,27 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { AdminInteractiveStandPlan, Stand, StandStatus, StandSize } from '@/components/stands'
+import { AdminInteractiveStandPlan, AdminStand, AdminStandStatus, AdminStandSize } from '@/components/stands'
 import { Badge, Button, Card, CardContent, Modal } from '@/components/ui'
 import { formatPrice } from '@/lib/utils'
 
-const statusConfig: Record<StandStatus, { label: string; variant: 'success' | 'warning' | 'error' }> = {
+const statusConfig: Record<AdminStandStatus, { label: string; variant: 'success' | 'warning' | 'error' }> = {
   FREE: { label: 'Libre', variant: 'success' },
   RESERVED: { label: 'Réservé', variant: 'warning' },
   SOLD: { label: 'Vendu', variant: 'error' },
 }
 
-const sizeConfig: Record<StandSize, { label: string; description: string }> = {
+const sizeConfig: Record<AdminStandSize, { label: string; description: string }> = {
   SMALL: { label: 'Petit', description: '6-9 m²' },
   MEDIUM: { label: 'Moyen', description: '12-18 m²' },
   LARGE: { label: 'Grand', description: '24+ m²' },
 }
 
 export default function StandsPage() {
-  const [stands, setStands] = useState<Stand[]>([])
+  const [stands, setStands] = useState<AdminStand[]>([])
   const [loading, setLoading] = useState(true)
   const [viewMode, setViewMode] = useState<'plan' | 'list'>('plan')
-  const [editingStand, setEditingStand] = useState<Stand | null>(null)
+  const [editingStand, setEditingStand] = useState<AdminStand | null>(null)
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
 
@@ -30,8 +30,8 @@ export default function StandsPage() {
     number: '',
     surfaceM2: '',
     priceHT: '',
-    status: 'FREE' as StandStatus,
-    size: 'MEDIUM' as StandSize,
+    status: 'FREE' as AdminStandStatus,
+    size: 'MEDIUM' as AdminStandSize,
     exhibitorName: '',
     hasFurniture: false,
     hasElectricity: false,
@@ -59,7 +59,7 @@ export default function StandsPage() {
     }
   }
 
-  const handleEditStand = (stand: Stand) => {
+  const handleEditStand = (stand: AdminStand) => {
     setEditingStand(stand)
     setFormData({
       number: (stand.number || stand.code || '').toString(),
@@ -380,7 +380,7 @@ export default function StandsPage() {
                 <label className="block text-sm font-medium text-gray-700 mb-1">Taille</label>
                 <select
                   value={formData.size}
-                  onChange={(e) => setFormData({ ...formData, size: e.target.value as StandSize })}
+                  onChange={(e) => setFormData({ ...formData, size: e.target.value as AdminStandSize })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-forest"
                 >
                   {Object.entries(sizeConfig).map(([key, { label, description }]) => (

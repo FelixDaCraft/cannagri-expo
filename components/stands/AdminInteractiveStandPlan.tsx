@@ -3,15 +3,36 @@
 import { useState, useMemo } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { Button } from '@/components/ui'
-import type { Stand as APIStand } from './StandPlan'
 
-// Types
+// Types matching the API/Prisma Stand model
+export type AdminStandStatus = 'FREE' | 'RESERVED' | 'SOLD'
+export type AdminStandSize = 'SMALL' | 'MEDIUM' | 'LARGE'
+
+export interface AdminStand {
+  id: string
+  code: string
+  number: number
+  surfaceM2: number
+  priceHT: number
+  status: AdminStandStatus
+  size: AdminStandSize
+  x?: number
+  y?: number
+  width?: number
+  height?: number
+  hasFurniture: boolean
+  hasElectricity: boolean
+  furniturePrice: number
+  electricityPrice: number
+  exhibitorName?: string | null
+}
+
 interface StandPosition {
   gridColumn: number
   gridRow: number
 }
 
-interface StandWithPosition extends APIStand {
+interface StandWithPosition extends AdminStand {
   position: StandPosition
 }
 
@@ -26,8 +47,8 @@ interface Zone {
 }
 
 interface AdminStandPlanProps {
-  stands: APIStand[]
-  onStandClick?: (stand: APIStand) => void
+  stands: AdminStand[]
+  onStandClick?: (stand: AdminStand) => void
   onStatusChange?: (standId: string, newStatus: 'FREE' | 'RESERVED' | 'SOLD') => void
   loading?: boolean
 }
