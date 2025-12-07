@@ -10,19 +10,15 @@ import { CountdownTimer } from './CountdownTimer'
 export function HeroSection() {
   return (
     <section className="relative min-h-screen overflow-hidden">
-      {/* Video Background */}
+      {/* Background Image (fallback - video files optional) */}
       <div className="absolute inset-0 z-0">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="w-full h-full object-cover"
-          poster="/images/poster-2026.png"
-        >
-          <source src="/images/hero-video.mp4" type="video/mp4" />
-          <source src="/images/hero-video.webm" type="video/webm" />
-        </video>
+        <Image
+          src="/images/poster-2026.png"
+          alt="Background"
+          fill
+          className="object-cover"
+          priority
+        />
         {/* Overlay sombre pour lisibilité */}
         <div className="absolute inset-0 bg-forest/70" />
       </div>
