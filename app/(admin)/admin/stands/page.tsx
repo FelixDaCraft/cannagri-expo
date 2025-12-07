@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { StandPlan, Stand, StandStatus, StandSize } from '@/components/stands'
+import { AdminInteractiveStandPlan, Stand, StandStatus, StandSize } from '@/components/stands'
 import { Badge, Button, Card, CardContent, Modal } from '@/components/ui'
 import { formatPrice } from '@/lib/utils'
 
@@ -254,15 +254,26 @@ export default function StandsPage() {
         </div>
       ) : viewMode === 'plan' ? (
         <div className="bg-white rounded-xl p-3 sm:p-6 shadow-sm">
-          <StandPlan
+          <AdminInteractiveStandPlan
             stands={stands}
-            adminMode
-            onStandEdit={handleEditStand}
-            showLegend
+            loading={loading}
+            onStandClick={handleEditStand}
+            onStatusChange={async (standId, newStatus) => {
+              try {
+                const res = await fetch('/api/admin/stands', {
+                  method: 'PUT',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ id: standId, status: newStatus })
+                })
+                if (res.ok) {
+                  fetchStands()
+                  setMessage({ type: 'success', text: 'Statut mis à jour' })
+                }
+              } catch {
+                setMessage({ type: 'error', text: 'Erreur de mise à jour' })
+              }
+            }}
           />
-          <p className="text-center text-xs sm:text-sm text-gray-500 mt-3 sm:mt-4">
-            Cliquez sur un stand pour modifier ses informations
-          </p>
         </div>
       ) : (
         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
