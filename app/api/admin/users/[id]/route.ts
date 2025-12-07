@@ -32,7 +32,6 @@ export async function GET(
         accounts: {
           select: {
             provider: true,
-            createdAt: true,
           }
         },
         _count: {
