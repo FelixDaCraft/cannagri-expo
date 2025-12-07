@@ -1,4 +1,5 @@
 export { StandPlan } from './StandPlan'
 export { StandBookingModal } from './StandBookingModal'
 export { StandCard } from './StandCard'
+export { InteractiveStandPlan } from './InteractiveStandPlan'
 export type { Stand, StandStatus, StandSize } from './StandPlan'

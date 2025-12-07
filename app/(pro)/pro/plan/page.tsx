@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { StandPlan } from '@/components/stands'
+import { InteractiveStandPlan } from '@/components/stands'
 import { Button, Badge } from '@/components/ui'
 import { siteConfig } from '@/config/site'
 
@@ -20,13 +20,13 @@ export default function PlanPage() {
             Plan des Stands
           </h1>
           <p className="text-lg text-body/70 max-w-2xl mx-auto">
-            Cliquez sur un stand libre (vert) pour voir les détails et procéder à la réservation.
+            Cliquez sur un stand pour voir les détails. Les stands verts sont disponibles à la réservation.
           </p>
         </div>
 
         {/* Interactive Plan */}
         <div className="mb-12">
-          <StandPlan stands={[]} />
+          <InteractiveStandPlan />
         </div>
 
         {/* Info Cards */}
@@ -51,7 +51,7 @@ export default function PlanPage() {
             </div>
             <h3 className="font-heading font-semibold text-heading mb-2">Paiement sécurisé</h3>
             <p className="text-sm text-body/70">
-              Transactions sécurisées par Viva Wallet avec facture automatique.
+              Transactions sécurisées par Stripe avec facture automatique.
             </p>
           </div>
 
