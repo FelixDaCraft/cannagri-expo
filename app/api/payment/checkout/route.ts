@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
 
     let amount = 0
     let amountHT = 0
-    let stand: { id: string; code: string; surfaceM2: number; priceHT: number } | null = null
+    let stand: { id: string; code: string; surfaceM2: number; priceHT: number; status: string } | null = null
 
     if (type === 'VISITOR_TICKET') {
       // Calculate ticket total
@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
       stand = await prisma.stand.findUnique({
         where: { id: items.standId },
         select: { id: true, code: true, surfaceM2: true, priceHT: true, status: true }
-      }) as { id: string; code: string; surfaceM2: number; priceHT: number; status: string } | null
+      })
 
       if (!stand) {
         return NextResponse.json(
@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
         )
       }
 
-      if ((stand as { status: string }).status !== 'FREE') {
+      if (stand.status !== 'FREE') {
         return NextResponse.json(
           { error: 'Ce stand n\'est plus disponible' },
           { status: 400 }
