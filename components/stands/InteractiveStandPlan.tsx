@@ -63,36 +63,36 @@ const defaultConfig: PlanConfig = {
     { id: 'ENTRY', type: 'entry', name: 'Entrée', position: { gridColumn: '1', gridRow: '11 / 13' }, style: 'dashed', clickable: false, icon: { type: 'arrow', direction: 'right' } },
   ],
   stands: [
-    { id: 1, name: 'Stand 1', position: { gridColumn: 2, gridRow: 4 }, location: 'Côté Conférences', surface: 9, price: 450, currency: 'EUR', status: 'available', category: 'standard', amenities: ['electricity', 'wifi'], reservedBy: null, reservedAt: null },
-    { id: 2, name: 'Stand 2', position: { gridColumn: 2, gridRow: 3 }, location: 'Côté Conférences', surface: 9, price: 450, currency: 'EUR', status: 'reserved', category: 'standard', amenities: ['electricity', 'wifi'], reservedBy: 'CBD France', reservedAt: null },
-    { id: 3, name: 'Stand 3', position: { gridColumn: 2, gridRow: 2 }, location: 'Angle Nord-Ouest', surface: 9, price: 500, currency: 'EUR', status: 'sold', category: 'corner', amenities: ['electricity', 'wifi'], reservedBy: 'HempCo', reservedAt: null },
-    { id: 4, name: 'Stand 4', position: { gridColumn: 3, gridRow: 1 }, location: 'Allée Nord', surface: 9, price: 500, currency: 'EUR', status: 'available', category: 'premium', amenities: ['electricity', 'wifi'], reservedBy: null, reservedAt: null },
-    { id: 5, name: 'Stand 5', position: { gridColumn: 4, gridRow: 1 }, location: 'Allée Nord', surface: 9, price: 500, currency: 'EUR', status: 'available', category: 'premium', amenities: ['electricity', 'wifi'], reservedBy: null, reservedAt: null },
-    { id: 6, name: 'Stand 6', position: { gridColumn: 5, gridRow: 1 }, location: 'Allée Nord', surface: 9, price: 500, currency: 'EUR', status: 'reserved', category: 'premium', amenities: ['electricity', 'wifi'], reservedBy: 'GreenLeaf', reservedAt: null },
-    { id: 7, name: 'Stand 7', position: { gridColumn: 6, gridRow: 1 }, location: 'Allée Nord', surface: 9, price: 500, currency: 'EUR', status: 'available', category: 'premium', amenities: ['electricity', 'wifi'], reservedBy: null, reservedAt: null },
-    { id: 8, name: 'Stand 8', position: { gridColumn: 7, gridRow: 1 }, location: 'Allée Nord', surface: 9, price: 500, currency: 'EUR', status: 'sold', category: 'premium', amenities: ['electricity', 'wifi'], reservedBy: 'BioHemp', reservedAt: null },
-    { id: 9, name: 'Stand 9', position: { gridColumn: 8, gridRow: 1 }, location: 'Angle Nord-Est', surface: 9, price: 550, currency: 'EUR', status: 'available', category: 'corner', amenities: ['electricity', 'wifi', 'water'], reservedBy: null, reservedAt: null },
-    { id: 10, name: 'Stand 10', position: { gridColumn: 10, gridRow: 2 }, location: 'Allée Est', surface: 9, price: 450, currency: 'EUR', status: 'available', category: 'standard', amenities: ['electricity', 'wifi'], reservedBy: null, reservedAt: null },
-    { id: 11, name: 'Stand 11', position: { gridColumn: 10, gridRow: 3 }, location: 'Allée Est', surface: 9, price: 450, currency: 'EUR', status: 'reserved', category: 'standard', amenities: ['electricity', 'wifi'], reservedBy: 'NaturaCBD', reservedAt: null },
-    { id: 12, name: 'Stand 12', position: { gridColumn: 10, gridRow: 4 }, location: 'Allée Est', surface: 9, price: 450, currency: 'EUR', status: 'available', category: 'standard', amenities: ['electricity', 'wifi'], reservedBy: null, reservedAt: null },
-    { id: 13, name: 'Stand 13', position: { gridColumn: 10, gridRow: 5 }, location: 'Allée Est', surface: 9, price: 450, currency: 'EUR', status: 'available', category: 'standard', amenities: ['electricity', 'wifi'], reservedBy: null, reservedAt: null },
-    { id: 14, name: 'Stand 14', position: { gridColumn: 10, gridRow: 6 }, location: 'Allée Est', surface: 9, price: 450, currency: 'EUR', status: 'sold', category: 'standard', amenities: ['electricity', 'wifi'], reservedBy: 'HempTech', reservedAt: null },
-    { id: 15, name: 'Stand 15', position: { gridColumn: 10, gridRow: 7 }, location: 'Allée Est', surface: 9, price: 450, currency: 'EUR', status: 'available', category: 'standard', amenities: ['electricity', 'wifi'], reservedBy: null, reservedAt: null },
-    { id: 16, name: 'Stand 16', position: { gridColumn: 10, gridRow: 8 }, location: 'Allée Est', surface: 9, price: 450, currency: 'EUR', status: 'available', category: 'standard', amenities: ['electricity', 'wifi'], reservedBy: null, reservedAt: null },
-    { id: 17, name: 'Stand 17', position: { gridColumn: 10, gridRow: 9 }, location: 'Allée Est', surface: 9, price: 450, currency: 'EUR', status: 'reserved', category: 'standard', amenities: ['electricity', 'wifi'], reservedBy: 'CannaBio', reservedAt: null },
-    { id: 18, name: 'Stand 18', position: { gridColumn: 10, gridRow: 10 }, location: 'Allée Est', surface: 9, price: 450, currency: 'EUR', status: 'available', category: 'standard', amenities: ['electricity', 'wifi'], reservedBy: null, reservedAt: null },
-    { id: 19, name: 'Stand 19', position: { gridColumn: 10, gridRow: 11 }, location: 'Angle Sud-Est', surface: 9, price: 550, currency: 'EUR', status: 'available', category: 'corner', amenities: ['electricity', 'wifi', 'water'], reservedBy: null, reservedAt: null },
-    { id: 20, name: 'Stand 20', position: { gridColumn: 8, gridRow: 13 }, location: 'Allée Sud', surface: 9, price: 500, currency: 'EUR', status: 'available', category: 'premium', amenities: ['electricity', 'wifi'], reservedBy: null, reservedAt: null },
-    { id: 21, name: 'Stand 21', position: { gridColumn: 7, gridRow: 13 }, location: 'Allée Sud', surface: 9, price: 500, currency: 'EUR', status: 'sold', category: 'premium', amenities: ['electricity', 'wifi'], reservedBy: 'FrenchHemp', reservedAt: null },
-    { id: 22, name: 'Stand 22', position: { gridColumn: 6, gridRow: 13 }, location: 'Allée Sud', surface: 9, price: 500, currency: 'EUR', status: 'available', category: 'premium', amenities: ['electricity', 'wifi'], reservedBy: null, reservedAt: null },
-    { id: 23, name: 'Stand 23', position: { gridColumn: 5, gridRow: 13 }, location: 'Allée Sud', surface: 9, price: 500, currency: 'EUR', status: 'available', category: 'premium', amenities: ['electricity', 'wifi'], reservedBy: null, reservedAt: null },
-    { id: 24, name: 'Stand 24', position: { gridColumn: 4, gridRow: 13 }, location: 'Allée Sud', surface: 9, price: 500, currency: 'EUR', status: 'reserved', category: 'premium', amenities: ['electricity', 'wifi'], reservedBy: 'EcoCBD', reservedAt: null },
-    { id: 25, name: 'Stand 25', position: { gridColumn: 3, gridRow: 13 }, location: 'Allée Sud (près entrée)', surface: 9, price: 500, currency: 'EUR', status: 'available', category: 'premium', amenities: ['electricity', 'wifi'], reservedBy: null, reservedAt: null },
+    { id: 1, name: 'Stand 1', position: { gridColumn: 2, gridRow: 4 }, location: 'Côté Conférences', surface: 4, price: 150, currency: 'EUR', status: 'available', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: null, reservedAt: null },
+    { id: 2, name: 'Stand 2', position: { gridColumn: 2, gridRow: 3 }, location: 'Côté Conférences', surface: 4, price: 150, currency: 'EUR', status: 'reserved', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: 'CBD France', reservedAt: null },
+    { id: 3, name: 'Stand 3', position: { gridColumn: 2, gridRow: 2 }, location: 'Angle Nord-Ouest', surface: 4, price: 150, currency: 'EUR', status: 'sold', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: 'HempCo', reservedAt: null },
+    { id: 4, name: 'Stand 4', position: { gridColumn: 3, gridRow: 1 }, location: 'Allée Nord', surface: 4, price: 150, currency: 'EUR', status: 'available', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: null, reservedAt: null },
+    { id: 5, name: 'Stand 5', position: { gridColumn: 4, gridRow: 1 }, location: 'Allée Nord', surface: 4, price: 150, currency: 'EUR', status: 'available', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: null, reservedAt: null },
+    { id: 6, name: 'Stand 6', position: { gridColumn: 5, gridRow: 1 }, location: 'Allée Nord', surface: 4, price: 150, currency: 'EUR', status: 'reserved', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: 'GreenLeaf', reservedAt: null },
+    { id: 7, name: 'Stand 7', position: { gridColumn: 6, gridRow: 1 }, location: 'Allée Nord', surface: 4, price: 150, currency: 'EUR', status: 'available', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: null, reservedAt: null },
+    { id: 8, name: 'Stand 8', position: { gridColumn: 7, gridRow: 1 }, location: 'Allée Nord', surface: 4, price: 150, currency: 'EUR', status: 'sold', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: 'BioHemp', reservedAt: null },
+    { id: 9, name: 'Stand 9', position: { gridColumn: 8, gridRow: 1 }, location: 'Angle Nord-Est', surface: 4, price: 150, currency: 'EUR', status: 'available', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: null, reservedAt: null },
+    { id: 10, name: 'Stand 10', position: { gridColumn: 10, gridRow: 2 }, location: 'Allée Est', surface: 4, price: 150, currency: 'EUR', status: 'available', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: null, reservedAt: null },
+    { id: 11, name: 'Stand 11', position: { gridColumn: 10, gridRow: 3 }, location: 'Allée Est', surface: 4, price: 150, currency: 'EUR', status: 'reserved', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: 'NaturaCBD', reservedAt: null },
+    { id: 12, name: 'Stand 12', position: { gridColumn: 10, gridRow: 4 }, location: 'Allée Est', surface: 4, price: 150, currency: 'EUR', status: 'available', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: null, reservedAt: null },
+    { id: 13, name: 'Stand 13', position: { gridColumn: 10, gridRow: 5 }, location: 'Allée Est', surface: 4, price: 150, currency: 'EUR', status: 'available', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: null, reservedAt: null },
+    { id: 14, name: 'Stand 14', position: { gridColumn: 10, gridRow: 6 }, location: 'Allée Est', surface: 4, price: 150, currency: 'EUR', status: 'sold', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: 'HempTech', reservedAt: null },
+    { id: 15, name: 'Stand 15', position: { gridColumn: 10, gridRow: 7 }, location: 'Allée Est', surface: 4, price: 150, currency: 'EUR', status: 'available', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: null, reservedAt: null },
+    { id: 16, name: 'Stand 16', position: { gridColumn: 10, gridRow: 8 }, location: 'Allée Est', surface: 4, price: 150, currency: 'EUR', status: 'available', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: null, reservedAt: null },
+    { id: 17, name: 'Stand 17', position: { gridColumn: 10, gridRow: 9 }, location: 'Allée Est', surface: 4, price: 150, currency: 'EUR', status: 'reserved', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: 'CannaBio', reservedAt: null },
+    { id: 18, name: 'Stand 18', position: { gridColumn: 10, gridRow: 10 }, location: 'Allée Est', surface: 4, price: 150, currency: 'EUR', status: 'available', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: null, reservedAt: null },
+    { id: 19, name: 'Stand 19', position: { gridColumn: 10, gridRow: 11 }, location: 'Angle Sud-Est', surface: 4, price: 150, currency: 'EUR', status: 'available', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: null, reservedAt: null },
+    { id: 20, name: 'Stand 20', position: { gridColumn: 8, gridRow: 13 }, location: 'Allée Sud', surface: 4, price: 150, currency: 'EUR', status: 'available', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: null, reservedAt: null },
+    { id: 21, name: 'Stand 21', position: { gridColumn: 7, gridRow: 13 }, location: 'Allée Sud', surface: 4, price: 150, currency: 'EUR', status: 'sold', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: 'FrenchHemp', reservedAt: null },
+    { id: 22, name: 'Stand 22', position: { gridColumn: 6, gridRow: 13 }, location: 'Allée Sud', surface: 4, price: 150, currency: 'EUR', status: 'available', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: null, reservedAt: null },
+    { id: 23, name: 'Stand 23', position: { gridColumn: 5, gridRow: 13 }, location: 'Allée Sud', surface: 4, price: 150, currency: 'EUR', status: 'available', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: null, reservedAt: null },
+    { id: 24, name: 'Stand 24', position: { gridColumn: 4, gridRow: 13 }, location: 'Allée Sud', surface: 4, price: 150, currency: 'EUR', status: 'reserved', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: 'EcoCBD', reservedAt: null },
+    { id: 25, name: 'Stand 25', position: { gridColumn: 3, gridRow: 13 }, location: 'Allée Sud (près entrée)', surface: 4, price: 150, currency: 'EUR', status: 'available', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: null, reservedAt: null },
   ],
   categories: {
-    standard: { name: 'Standard', description: 'Emplacement standard le long des allées' },
-    premium: { name: 'Premium', description: 'Emplacement haute visibilité' },
-    corner: { name: 'Angle', description: 'Double exposition' },
+    standard: { name: 'Stand 4m²', description: 'Mobilier et électricité inclus' },
+    premium: { name: 'Stand 4m²', description: 'Mobilier et électricité inclus' },
+    corner: { name: 'Stand 4m²', description: 'Mobilier et électricité inclus' },
   },
   statuses: {
     available: { label: 'Disponible', color: '#4CAF50', canReserve: true },
@@ -104,7 +104,7 @@ const defaultConfig: PlanConfig = {
     electricity: { name: 'Électricité', icon: '⚡', included: true },
     wifi: { name: 'WiFi', icon: '📶', included: true },
     water: { name: 'Point d\'eau', icon: '💧', included: false, price: 50 },
-    furniture: { name: 'Mobilier', icon: '🪑', included: false, price: 100 },
+    furniture: { name: 'Mobilier', icon: '🪑', included: true },
   },
 }
 
@@ -124,16 +124,14 @@ export function InteractiveStandPlan({
   const config = { ...defaultConfig, ...customConfig }
   const [selectedStand, setSelectedStand] = useState<Stand | null>(null)
   const [statusFilter, setStatusFilter] = useState<string>('all')
-  const [categoryFilter, setCategoryFilter] = useState<string>('all')
 
   // Filter stands
   const filteredStands = useMemo(() => {
     return config.stands.filter((stand) => {
       if (statusFilter !== 'all' && stand.status !== statusFilter) return false
-      if (categoryFilter !== 'all' && stand.category !== categoryFilter) return false
       return true
     })
-  }, [config.stands, statusFilter, categoryFilter])
+  }, [config.stands, statusFilter])
 
   // Stats
   const stats = useMemo(() => {
@@ -195,17 +193,6 @@ export function InteractiveStandPlan({
             <option value="sold">Vendus</option>
           </select>
 
-          {/* Category filter */}
-          <select
-            value={categoryFilter}
-            onChange={(e) => setCategoryFilter(e.target.value)}
-            className="px-3 py-2 border border-forest/20 rounded-lg bg-white text-sm focus:ring-2 focus:ring-sage focus:border-transparent"
-          >
-            <option value="all">Toutes catégories</option>
-            <option value="standard">Standard</option>
-            <option value="premium">Premium</option>
-            <option value="corner">Angle</option>
-          </select>
         </div>
       </div>
 
@@ -229,9 +216,9 @@ export function InteractiveStandPlan({
         </div>
       </div>
 
-      <div className="flex flex-col xl:flex-row gap-6">
+      <div className={`flex flex-col xl:flex-row gap-6 ${!selectedStand ? 'justify-center' : ''}`}>
         {/* Plan Grid */}
-        <div className="flex-1 bg-cream/50 rounded-2xl p-6 overflow-x-auto">
+        <div className={`bg-cream/50 rounded-2xl p-6 overflow-x-auto ${!selectedStand ? 'xl:max-w-4xl mx-auto' : 'flex-1'}`}>
           <div
             className="grid gap-2 min-w-[600px]"
             style={{
@@ -347,7 +334,7 @@ export function InteractiveStandPlan({
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-forest/60">Prix HT</span>
+                  <span className="text-forest/60">Prix</span>
                   <span className="font-bold text-terracotta text-lg">
                     {selectedStand.price} €
                   </span>
@@ -397,32 +384,7 @@ export function InteractiveStandPlan({
                 </p>
               )}
             </motion.div>
-          ) : (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="w-full xl:w-80 bg-cream/50 rounded-2xl p-6 flex items-center justify-center"
-            >
-              <div className="text-center">
-                <svg
-                  className="w-12 h-12 text-forest/20 mx-auto mb-3"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"
-                  />
-                </svg>
-                <p className="text-forest/50 text-sm">
-                  Cliquez sur un stand pour voir ses détails
-                </p>
-              </div>
-            </motion.div>
-          )}
+          ) : null}
         </AnimatePresence>
       </div>
 

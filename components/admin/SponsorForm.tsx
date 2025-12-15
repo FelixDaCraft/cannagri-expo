@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button, Input, Badge } from '@/components/ui'
-import type { Sponsor, SponsorType } from '@/types'
+import type { Sponsor, SponsorType, BusinessType, Stand } from '@/types'
 
 interface SponsorFormProps {
   sponsor?: Sponsor | null
@@ -10,23 +10,63 @@ interface SponsorFormProps {
   onCancel: () => void
 }
 
+const businessTypeLabels: Record<string, string> = {
+  PRODUCTEURS: 'Producteurs & Cultivateurs',
+  MATERIEL: 'Matériel & Équipement',
+  LIFESTYLE: 'Lifestyle & Bien-être',
+  SERVICE: 'Services & Conseil',
+}
+
 export function SponsorForm({ sponsor, onSubmit, onCancel }: SponsorFormProps) {
+  const [stands, setStands] = useState<Stand[]>([])
+  const [loadingStands, setLoadingStands] = useState(true)
+
   const [formData, setFormData] = useState({
     name: sponsor?.name || '',
     slug: sponsor?.slug || '',
-    type: sponsor?.type || 'STANDARD' as SponsorType,
+    type: sponsor?.type || 'BRONZE' as SponsorType,
     logoUrl: sponsor?.logoUrl || '',
     description: sponsor?.description || '',
     websiteUrl: sponsor?.websiteUrl || '',
-    standNumber: sponsor?.standNumber || '',
     articleTitle: sponsor?.articleTitle || '',
     articleBody: sponsor?.articleBody || '',
     articleImage: sponsor?.articleImage || '',
     displayOrder: sponsor?.displayOrder || 0,
     isActive: sponsor?.isActive ?? true,
+    // Champs exposant
+    standId: sponsor?.standId || '',
+    exhibitorDescription: sponsor?.exhibitorDescription || '',
+    exhibitorCategory: sponsor?.exhibitorCategory || '' as BusinessType | '',
+    contactName: sponsor?.contactName || '',
+    contactEmail: sponsor?.contactEmail || '',
+    contactPhone: sponsor?.contactPhone || '',
   })
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
+
+  // Charger les stands disponibles
+  useEffect(() => {
+    async function fetchStands() {
+      try {
+        const response = await fetch('/api/stands')
+        const result = await response.json()
+        if (result.data) {
+          // Filtrer les stands disponibles:
+          // - Status FREE et pas de sponsor assigné
+          // - Ou le stand actuel du sponsor (s'il existe)
+          const availableStands = result.data.filter((stand: Stand & { sponsor?: { id: string } | null }) =>
+            (stand.status === 'FREE' && !stand.sponsor) || stand.id === sponsor?.standId
+          )
+          setStands(availableStands)
+        }
+      } catch (err) {
+        console.error('Error fetching stands:', err)
+      } finally {
+        setLoadingStands(false)
+      }
+    }
+    fetchStands()
+  }, [sponsor?.standId])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -34,7 +74,13 @@ export function SponsorForm({ sponsor, onSubmit, onCancel }: SponsorFormProps) {
     setError('')
 
     try {
-      await onSubmit(formData)
+      // Convertir les valeurs vides en null pour les champs optionnels
+      const dataToSubmit = {
+        ...formData,
+        standId: formData.standId || null,
+        exhibitorCategory: formData.exhibitorCategory || null,
+      }
+      await onSubmit(dataToSubmit)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Une erreur est survenue')
     } finally {
@@ -87,30 +133,58 @@ export function SponsorForm({ sponsor, onSubmit, onCancel }: SponsorFormProps) {
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Type de sponsor
           </label>
-          <div className="flex gap-4">
-            <label className="flex items-center gap-2">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <label className="flex flex-col items-center gap-1 p-3 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors has-[:checked]:border-forest has-[:checked]:bg-forest/5">
               <input
                 type="radio"
                 name="type"
-                value="STANDARD"
-                checked={formData.type === 'STANDARD'}
+                value="PLATINE"
+                checked={formData.type === 'PLATINE'}
                 onChange={(e) => setFormData({ ...formData, type: e.target.value as SponsorType })}
-                className="text-forest focus:ring-sage"
+                className="sr-only"
               />
-              <span>Standard</span>
-              <Badge variant="sage" size="sm">Logo + page</Badge>
+              <span className="font-semibold text-forest">Platine</span>
+              <Badge variant="forest" size="sm">Article 1ère page</Badge>
+              <span className="text-xs text-gray-500 text-center">4 stories, en-tête</span>
             </label>
-            <label className="flex items-center gap-2">
+            <label className="flex flex-col items-center gap-1 p-3 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors has-[:checked]:border-amber-500 has-[:checked]:bg-amber-50">
               <input
                 type="radio"
                 name="type"
-                value="PREMIUM"
-                checked={formData.type === 'PREMIUM'}
+                value="OR"
+                checked={formData.type === 'OR'}
                 onChange={(e) => setFormData({ ...formData, type: e.target.value as SponsorType })}
-                className="text-forest focus:ring-sage"
+                className="sr-only"
               />
-              <span>Premium</span>
-              <Badge variant="forest" size="sm">Article + visibilité</Badge>
+              <span className="font-semibold text-amber-600">Or</span>
+              <Badge variant="terracotta" size="sm">En-tête site</Badge>
+              <span className="text-xs text-gray-500 text-center">3 stories</span>
+            </label>
+            <label className="flex flex-col items-center gap-1 p-3 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors has-[:checked]:border-gray-400 has-[:checked]:bg-gray-50">
+              <input
+                type="radio"
+                name="type"
+                value="ARGENT"
+                checked={formData.type === 'ARGENT'}
+                onChange={(e) => setFormData({ ...formData, type: e.target.value as SponsorType })}
+                className="sr-only"
+              />
+              <span className="font-semibold text-gray-500">Argent</span>
+              <Badge variant="sage" size="sm">Milieu page</Badge>
+              <span className="text-xs text-gray-500 text-center">2 stories</span>
+            </label>
+            <label className="flex flex-col items-center gap-1 p-3 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors has-[:checked]:border-amber-700 has-[:checked]:bg-amber-50">
+              <input
+                type="radio"
+                name="type"
+                value="BRONZE"
+                checked={formData.type === 'BRONZE'}
+                onChange={(e) => setFormData({ ...formData, type: e.target.value as SponsorType })}
+                className="sr-only"
+              />
+              <span className="font-semibold text-amber-800">Bronze</span>
+              <Badge variant="default" size="sm">Bas de page</Badge>
+              <span className="text-xs text-gray-500 text-center">1 story</span>
             </label>
           </div>
         </div>
@@ -133,13 +207,6 @@ export function SponsorForm({ sponsor, onSubmit, onCancel }: SponsorFormProps) {
         </div>
 
         <div className="grid md:grid-cols-2 gap-4 mt-4">
-          <Input
-            label="Numéro de stand"
-            name="standNumber"
-            value={formData.standNumber}
-            onChange={(e) => setFormData({ ...formData, standNumber: e.target.value })}
-            placeholder="A1, B2..."
-          />
           <Input
             label="Ordre d'affichage"
             name="displayOrder"
@@ -176,11 +243,103 @@ export function SponsorForm({ sponsor, onSubmit, onCancel }: SponsorFormProps) {
         </div>
       </div>
 
-      {/* Premium Article (only show if type is PREMIUM) */}
-      {formData.type === 'PREMIUM' && (
+      {/* Informations Exposant */}
+      <div className="bg-white rounded-xl p-6 shadow-sm">
+        <h3 className="text-lg font-heading font-semibold text-gray-900 mb-4">
+          Informations Exposant
+          <Badge variant="sage" className="ml-2">Stand & Contact</Badge>
+        </h3>
+
+        <div className="grid md:grid-cols-2 gap-4">
+          {/* Sélection du stand */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Stand attribué
+            </label>
+            <select
+              value={formData.standId}
+              onChange={(e) => setFormData({ ...formData, standId: e.target.value })}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sage focus:border-sage"
+              disabled={loadingStands}
+            >
+              <option value="">-- Aucun stand --</option>
+              {stands.map((stand) => (
+                <option key={stand.id} value={stand.id}>
+                  Stand {stand.number} - {stand.surfaceM2}m² ({stand.priceHT}€ HT)
+                  {stand.id === sponsor?.standId ? ' (actuel)' : ''}
+                </option>
+              ))}
+            </select>
+            <p className="mt-1 text-xs text-gray-500">
+              {loadingStands ? 'Chargement des stands...' : `${stands.length} stand(s) disponible(s)`}
+            </p>
+          </div>
+
+          {/* Catégorie métier */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Catégorie métier
+            </label>
+            <select
+              value={formData.exhibitorCategory}
+              onChange={(e) => setFormData({ ...formData, exhibitorCategory: e.target.value as BusinessType | '' })}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sage focus:border-sage"
+            >
+              <option value="">-- Sélectionner --</option>
+              {Object.entries(businessTypeLabels).map(([value, label]) => (
+                <option key={value} value={value}>{label}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* Description exposant */}
+        <div className="mt-4">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Description de l&apos;activité
+          </label>
+          <textarea
+            name="exhibitorDescription"
+            value={formData.exhibitorDescription}
+            onChange={(e) => setFormData({ ...formData, exhibitorDescription: e.target.value })}
+            rows={3}
+            className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sage focus:border-sage resize-none"
+            placeholder="Description de l'activité qui sera affichée sur la page exposants..."
+          />
+        </div>
+
+        {/* Informations de contact */}
+        <div className="grid md:grid-cols-3 gap-4 mt-4">
+          <Input
+            label="Nom du contact"
+            name="contactName"
+            value={formData.contactName}
+            onChange={(e) => setFormData({ ...formData, contactName: e.target.value })}
+            placeholder="Jean Dupont"
+          />
+          <Input
+            label="Email de contact"
+            name="contactEmail"
+            type="email"
+            value={formData.contactEmail}
+            onChange={(e) => setFormData({ ...formData, contactEmail: e.target.value })}
+            placeholder="contact@entreprise.fr"
+          />
+          <Input
+            label="Téléphone"
+            name="contactPhone"
+            value={formData.contactPhone}
+            onChange={(e) => setFormData({ ...formData, contactPhone: e.target.value })}
+            placeholder="06 12 34 56 78"
+          />
+        </div>
+      </div>
+
+      {/* Article Platine (only show if type is PLATINE) */}
+      {formData.type === 'PLATINE' && (
         <div className="bg-white rounded-xl p-6 shadow-sm">
           <h3 className="text-lg font-heading font-semibold text-gray-900 mb-4">
-            Article Premium
+            Article Sponsorisé
             <Badge variant="forest" className="ml-2">Visible en page d&apos;accueil</Badge>
           </h3>
 

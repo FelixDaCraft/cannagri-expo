@@ -49,13 +49,14 @@ const advantages = [
 
 const standInfo = {
   surface: '4 m²',
-  price: '100€ HT',
+  price: '150€',
   features: [
     'Emplacement sur plan',
+    'Mobilier inclus (tables & chaises)',
+    'Électricité incluse',
     'Badge exposant',
     'Mention sur le site web',
     'Accès à la zone exposants',
-    'Possibilité de doubler la surface (2 stands côte à côte)',
   ],
 }
 
@@ -150,13 +151,13 @@ export default function ProPage() {
                 </ul>
                 <p className="text-sm text-body/60 bg-cream/50 rounded-lg p-4">
                   <strong>Besoin de plus d&apos;espace ?</strong><br />
-                  Réservez deux stands côte à côte pour doubler votre surface (8 m² = 200€ HT)
+                  Réservez deux stands côte à côte pour doubler votre surface (8 m² = 300€)
                 </p>
               </CardContent>
             </Card>
           </div>
           <p className="text-center text-body/60 text-sm mt-6">
-            * Options mobilier et électricité disponibles en supplément
+            Association non soumise à la TVA - Prix net, services inclus
           </p>
         </section>
 
@@ -166,16 +167,16 @@ export default function ProPage() {
             Prêt à exposer ?
           </h2>
           <p className="text-body/70 mb-8 max-w-xl mx-auto">
-            Consultez le plan des stands disponibles et réservez votre emplacement
+            Choisissez votre emplacement sur le plan interactif et réservez votre stand
             directement en ligne.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/pro/plan">
               <Button size="lg">
-                Voir le plan des stands
+                Réserver un stand
               </Button>
             </Link>
-            <Link href="/pro/sponsoring">
+            <Link href="/sponsoring">
               <Button variant="outline" size="lg">
                 Devenir sponsor
               </Button>

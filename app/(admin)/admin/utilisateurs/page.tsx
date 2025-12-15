@@ -3,36 +3,28 @@
 import { useState, useEffect } from 'react'
 import { DataTable } from '@/components/admin'
 import { Button, Badge, Modal } from '@/components/ui'
-import type { User, UserRole } from '@prisma/client'
 
-interface UserWithoutPassword extends Omit<User, 'hashedPassword' | 'resetToken' | 'resetTokenExpiry'> {
+interface UserParticulier {
+  id: string
+  email: string
+  name: string | null
+  image: string | null
+  phone: string | null
+  emailVerified: Date | null
+  createdAt: string
   _count?: {
     accounts: number
   }
 }
 
-const roleLabels: Record<UserRole, string> = {
-  ADMIN: 'Administrateur',
-  EDITOR: 'Éditeur',
-  PRO: 'Professionnel',
-}
-
-const roleColors: Record<UserRole, 'forest' | 'sage' | 'default'> = {
-  ADMIN: 'forest',
-  EDITOR: 'sage',
-  PRO: 'default',
-}
-
 export default function UsersPage() {
-  const [users, setUsers] = useState<UserWithoutPassword[]>([])
+  const [users, setUsers] = useState<UserParticulier[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [editingUser, setEditingUser] = useState<UserWithoutPassword | null>(null)
+  const [editingUser, setEditingUser] = useState<UserParticulier | null>(null)
   const [showForm, setShowForm] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    role: 'PRO' as UserRole,
-    companyName: '',
     phone: '',
     password: '',
   })
@@ -66,7 +58,10 @@ export default function UsersPage() {
       const res = await fetch('/api/admin/users', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          role: 'EDITOR', // Always create as particulier
+        }),
       })
       const data = await res.json()
 
@@ -97,8 +92,6 @@ export default function UsersPage() {
         body: JSON.stringify({
           name: formData.name,
           email: formData.email,
-          role: formData.role,
-          companyName: formData.companyName,
           phone: formData.phone,
           ...(formData.password ? { password: formData.password } : {}),
         }),
@@ -120,7 +113,7 @@ export default function UsersPage() {
     }
   }
 
-  const handleDelete = async (user: UserWithoutPassword) => {
+  const handleDelete = async (user: UserParticulier) => {
     if (!confirm(`Supprimer l'utilisateur "${user.name || user.email}" ?`)) return
 
     try {
@@ -143,20 +136,16 @@ export default function UsersPage() {
     setFormData({
       name: '',
       email: '',
-      role: 'PRO',
-      companyName: '',
       phone: '',
       password: '',
     })
   }
 
-  const openEditForm = (user: UserWithoutPassword) => {
+  const openEditForm = (user: UserParticulier) => {
     setEditingUser(user)
     setFormData({
       name: user.name || '',
       email: user.email,
-      role: user.role,
-      companyName: user.companyName || '',
       phone: user.phone || '',
       password: '',
     })
@@ -171,13 +160,11 @@ export default function UsersPage() {
 
   const handleExport = () => {
     const csv = [
-      ['Nom', 'Email', 'Rôle', 'Entreprise', 'Téléphone', 'Email vérifié', 'Date création'].join(','),
+      ['Nom', 'Email', 'Téléphone', 'Email vérifié', 'Date inscription'].join(','),
       ...users.map((u) =>
         [
           u.name || '',
           u.email,
-          roleLabels[u.role],
-          u.companyName || '',
           u.phone || '',
           u.emailVerified ? 'Oui' : 'Non',
           new Date(u.createdAt).toLocaleDateString('fr-FR'),
@@ -189,7 +176,7 @@ export default function UsersPage() {
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = 'utilisateurs.csv'
+    a.download = 'utilisateurs-particuliers.csv'
     a.click()
   }
 
@@ -198,7 +185,7 @@ export default function UsersPage() {
       key: 'name',
       label: 'Utilisateur',
       sortable: true,
-      render: (user: UserWithoutPassword) => (
+      render: (user: UserParticulier) => (
         <div className="flex items-center gap-3">
           {user.image ? (
             <img src={user.image} alt="" className="w-8 h-8 rounded-full" />
@@ -215,36 +202,29 @@ export default function UsersPage() {
       ),
     },
     {
-      key: 'role',
-      label: 'Rôle',
-      render: (user: UserWithoutPassword) => (
-        <Badge variant={roleColors[user.role]}>
-          {roleLabels[user.role]}
-        </Badge>
+      key: 'phone',
+      label: 'Téléphone',
+      render: (user: UserParticulier) => (
+        <span className="text-gray-600">{user.phone || '-'}</span>
       ),
-    },
-    {
-      key: 'companyName',
-      label: 'Entreprise',
-      render: (user: UserWithoutPassword) => user.companyName || '-',
     },
     {
       key: 'provider',
       label: 'Connexion',
-      render: (user: UserWithoutPassword) => {
+      render: (user: UserParticulier) => {
         const hasOAuth = user._count && user._count.accounts > 0
         return (
-          <span className="text-sm text-gray-600">
+          <Badge variant={hasOAuth ? 'sage' : 'default'}>
             {hasOAuth ? 'OAuth' : 'Email'}
-          </span>
+          </Badge>
         )
       },
     },
     {
       key: 'emailVerified',
-      label: 'Vérifié',
-      render: (user: UserWithoutPassword) => (
-        <Badge variant={user.emailVerified ? 'success' : 'default'}>
+      label: 'Email vérifié',
+      render: (user: UserParticulier) => (
+        <Badge variant={user.emailVerified ? 'sage' : 'default'}>
           {user.emailVerified ? 'Oui' : 'Non'}
         </Badge>
       ),
@@ -253,7 +233,7 @@ export default function UsersPage() {
       key: 'createdAt',
       label: 'Inscription',
       sortable: true,
-      render: (user: UserWithoutPassword) => (
+      render: (user: UserParticulier) => (
         <span className="text-sm text-gray-600">
           {new Date(user.createdAt).toLocaleDateString('fr-FR')}
         </span>
@@ -267,9 +247,11 @@ export default function UsersPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-heading font-bold text-gray-900">
-            Utilisateurs
+            Utilisateurs Particuliers
           </h1>
-          <p className="text-gray-600">Gérez les comptes utilisateurs</p>
+          <p className="text-gray-600">
+            Gérez les comptes des visiteurs du site (les comptes PRO sont gérés dans &quot;Comptes Pro&quot;)
+          </p>
         </div>
         <Button onClick={openCreateForm}>
           <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -280,27 +262,21 @@ export default function UsersPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-3 gap-4">
         <div className="bg-white rounded-lg p-4 shadow-sm">
-          <p className="text-sm text-gray-600">Total</p>
+          <p className="text-sm text-gray-600">Total particuliers</p>
           <p className="text-2xl font-bold text-gray-900">{users.length}</p>
         </div>
         <div className="bg-white rounded-lg p-4 shadow-sm">
-          <p className="text-sm text-gray-600">Admins</p>
-          <p className="text-2xl font-bold text-forest">
-            {users.filter((u) => u.role === 'ADMIN').length}
+          <p className="text-sm text-gray-600">Emails vérifiés</p>
+          <p className="text-2xl font-bold text-green-600">
+            {users.filter((u) => u.emailVerified).length}
           </p>
         </div>
         <div className="bg-white rounded-lg p-4 shadow-sm">
-          <p className="text-sm text-gray-600">Éditeurs</p>
-          <p className="text-2xl font-bold text-sage-700">
-            {users.filter((u) => u.role === 'EDITOR').length}
-          </p>
-        </div>
-        <div className="bg-white rounded-lg p-4 shadow-sm">
-          <p className="text-sm text-gray-600">Pros</p>
-          <p className="text-2xl font-bold text-gray-600">
-            {users.filter((u) => u.role === 'PRO').length}
+          <p className="text-sm text-gray-600">Via OAuth</p>
+          <p className="text-2xl font-bold text-blue-600">
+            {users.filter((u) => u._count && u._count.accounts > 0).length}
           </p>
         </div>
       </div>
@@ -326,7 +302,7 @@ export default function UsersPage() {
       <Modal
         isOpen={showForm}
         onClose={() => { setShowForm(false); setEditingUser(null); resetForm(); }}
-        title={editingUser ? 'Modifier l\'utilisateur' : 'Nouvel utilisateur'}
+        title={editingUser ? 'Modifier l\'utilisateur' : 'Nouvel utilisateur particulier'}
         size="lg"
       >
         <form onSubmit={editingUser ? handleUpdate : handleCreate} className="space-y-4">
@@ -336,74 +312,43 @@ export default function UsersPage() {
             </div>
           )}
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Nom
-              </label>
-              <input
-                type="text"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent"
-                placeholder="Jean Dupont"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Email *
-              </label>
-              <input
-                type="email"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                required
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent"
-                placeholder="email@exemple.com"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Rôle *
-              </label>
-              <select
-                value={formData.role}
-                onChange={(e) => setFormData({ ...formData, role: e.target.value as UserRole })}
-                required
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent"
-              >
-                <option value="PRO">Professionnel</option>
-                <option value="EDITOR">Éditeur</option>
-                <option value="ADMIN">Administrateur</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Téléphone
-              </label>
-              <input
-                type="tel"
-                value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent"
-                placeholder="06 12 34 56 78"
-              />
-            </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Nom complet
+            </label>
+            <input
+              type="text"
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent"
+              placeholder="Jean Dupont"
+            />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Entreprise
+              Email *
             </label>
             <input
-              type="text"
-              value={formData.companyName}
-              onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
+              type="email"
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              required
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent"
-              placeholder="Nom de l'entreprise"
+              placeholder="email@exemple.com"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Téléphone
+            </label>
+            <input
+              type="tel"
+              value={formData.phone}
+              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent"
+              placeholder="06 12 34 56 78"
             />
           </div>
 

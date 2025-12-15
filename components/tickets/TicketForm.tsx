@@ -6,30 +6,28 @@ import { siteConfig } from '@/config/site'
 import { formatPrice } from '@/lib/utils'
 
 interface TicketOption {
-  type: 'visiteur' | 'pro' | 'vip'
+  type: 'standard' | 'flex'
   name: string
   price: number
   description: string
+  isRecommended?: boolean
+  supportMessage?: string
 }
 
 const ticketOptions: TicketOption[] = [
   {
-    type: 'visiteur',
-    name: siteConfig.tickets.visiteur.name,
-    price: siteConfig.tickets.visiteur.price,
-    description: siteConfig.tickets.visiteur.description,
+    type: 'standard',
+    name: siteConfig.tickets.standard.name,
+    price: siteConfig.tickets.standard.price,
+    description: siteConfig.tickets.standard.description,
   },
   {
-    type: 'pro',
-    name: siteConfig.tickets.pro.name,
-    price: siteConfig.tickets.pro.price,
-    description: siteConfig.tickets.pro.description,
-  },
-  {
-    type: 'vip',
-    name: siteConfig.tickets.vip.name,
-    price: siteConfig.tickets.vip.price,
-    description: siteConfig.tickets.vip.description,
+    type: 'flex',
+    name: siteConfig.tickets.flex.name,
+    price: siteConfig.tickets.flex.price,
+    description: siteConfig.tickets.flex.description,
+    isRecommended: true,
+    supportMessage: 'Votre soutien nous permet d\'organiser de plus beaux événements !',
   },
 ]
 
@@ -99,7 +97,7 @@ export function TicketForm() {
           <h2 className="text-2xl font-heading font-bold text-heading mb-4">
             1. Choisissez votre pass
           </h2>
-          <div className="grid sm:grid-cols-3 gap-4">
+          <div className="grid sm:grid-cols-2 gap-4 max-w-xl">
             {ticketOptions.map((ticket) => (
               <Card
                 key={ticket.type}
@@ -107,13 +105,15 @@ export function TicketForm() {
                 className={`cursor-pointer transition-all ${
                   selectedTicket?.type === ticket.type
                     ? 'ring-2 ring-forest border-forest'
+                    : ticket.isRecommended
+                    ? 'ring-2 ring-terracotta/50 hover:ring-terracotta'
                     : 'hover:shadow-lg'
                 }`}
                 onClick={() => setSelectedTicket(ticket)}
               >
                 <CardContent className="text-center">
-                  {ticket.type === 'vip' && (
-                    <Badge variant="forest" className="mb-2">Premium</Badge>
+                  {ticket.isRecommended && (
+                    <Badge variant="terracotta" className="mb-2">Recommandé</Badge>
                   )}
                   <h3 className="text-lg font-heading font-semibold text-heading mb-1">
                     {ticket.name}
@@ -121,7 +121,17 @@ export function TicketForm() {
                   <p className="text-2xl font-bold text-forest mb-2">
                     {formatPrice(ticket.price)}
                   </p>
-                  <p className="text-sm text-body/70">{ticket.description}</p>
+                  <p className="text-sm text-body/70 mb-2">{ticket.description}</p>
+                  {ticket.supportMessage && (
+                    <div className="mt-3 p-2 bg-terracotta/10 rounded-lg">
+                      <p className="text-xs text-terracotta/90 flex items-center justify-center gap-1">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                        {ticket.supportMessage}
+                      </p>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             ))}

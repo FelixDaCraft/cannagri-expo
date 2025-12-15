@@ -4,11 +4,6 @@ import { useState } from 'react'
 import { Card, CardContent, Badge, Button } from '@/components/ui'
 import { siteConfig } from '@/config/site'
 
-// export const metadata: Metadata = {
-//   title: 'Sponsoring',
-//   description: 'Devenez partenaire du salon Cann\'Agri Expo - Offres de sponsoring Platinum, Or, Argent et Bronze',
-// }
-
 const sponsorPackages = [
   {
     name: 'Platinum',

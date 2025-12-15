@@ -16,7 +16,12 @@ export async function GET(request: NextRequest) {
       )
     }
 
+    // Only return EDITOR users (particuliers/visitors)
+    // PRO users are managed in /admin/pros
     const users = await prisma.user.findMany({
+      where: {
+        role: 'EDITOR',
+      },
       select: {
         id: true,
         email: true,
@@ -25,6 +30,7 @@ export async function GET(request: NextRequest) {
         role: true,
         companyName: true,
         phone: true,
+        isApproved: true,
         emailVerified: true,
         createdAt: true,
         updatedAt: true,
@@ -93,13 +99,13 @@ export async function POST(request: NextRequest) {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 12)
 
-    // Create user
+    // Create user - default to EDITOR (particulier) role
     const user = await prisma.user.create({
       data: {
         name: name || null,
         email: email.toLowerCase(),
         hashedPassword,
-        role: role || 'PRO',
+        role: role || 'EDITOR',
         companyName: companyName || null,
         phone: phone || null,
         emailVerified: new Date(), // Admin-created users are considered verified

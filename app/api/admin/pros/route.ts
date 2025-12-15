@@ -18,6 +18,7 @@ export async function GET() {
         phone: true,
         siret: true,
         businessType: true,
+        isApproved: true,
         createdAt: true,
         _count: {
           select: {

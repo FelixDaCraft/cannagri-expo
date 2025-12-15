@@ -16,14 +16,29 @@ export default function RegisterPage() {
     confirmPassword: '',
     companyName: '',
     phone: '',
+    siret: '',
+    businessType: '' as 'PRODUCTEURS' | 'MATERIEL' | 'LIFESTYLE' | 'SERVICE' | '',
+    wantsPro: false,
     acceptTerms: false,
     acceptNewsletter: false,
   })
+
+  const businessTypeLabels = {
+    PRODUCTEURS: 'Producteurs',
+    MATERIEL: 'Matériel agricole',
+    LIFESTYLE: 'Lifestyle & Bien-être',
+    SERVICE: 'Services',
+  }
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const target = e.target
+    const name = target.name
+    const value = target.value
+    const type = target.type
+    const checked = (target as HTMLInputElement).checked
+
     setFormData(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value
@@ -64,6 +79,9 @@ export default function RegisterPage() {
           password: formData.password,
           companyName: formData.companyName,
           phone: formData.phone,
+          siret: formData.wantsPro ? formData.siret : null,
+          businessType: formData.wantsPro ? formData.businessType : null,
+          wantsPro: formData.wantsPro,
           newsletter: formData.acceptNewsletter,
         }),
       })
@@ -83,10 +101,20 @@ export default function RegisterPage() {
       })
 
       if (result?.ok) {
-        router.push('/pro')
+        // Redirect based on account type
+        if (data.isPro) {
+          // PRO account pending approval - go to account page
+          router.push('/compte?message=pro-pending')
+        } else {
+          // Standard account - go to home
+          router.push('/')
+        }
         router.refresh()
       } else {
-        router.push('/connexion?message=Compte créé avec succès')
+        const message = data.isPro
+          ? 'Compte créé. Votre demande PRO est en attente de validation.'
+          : 'Compte créé avec succès'
+        router.push(`/connexion?message=${encodeURIComponent(message)}`)
       }
     } catch {
       setErrorMessage('Une erreur est survenue')
@@ -241,6 +269,67 @@ export default function RegisterPage() {
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent"
                     placeholder="Nom de votre entreprise"
                   />
+                </div>
+
+                {/* Section demande compte PRO */}
+                <div className="p-4 bg-forest/5 border border-forest/20 rounded-lg space-y-4">
+                  <label className="flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      name="wantsPro"
+                      checked={formData.wantsPro}
+                      onChange={handleChange}
+                      className="rounded border-gray-300 text-forest focus:ring-forest"
+                    />
+                    <span className="ml-2 font-medium text-forest">
+                      Je souhaite devenir exposant professionnel
+                    </span>
+                  </label>
+
+                  {formData.wantsPro && (
+                    <div className="space-y-4 pt-2 border-t border-forest/20">
+                      <p className="text-sm text-gray-600">
+                        Complétez les informations ci-dessous pour demander un compte exposant.
+                        Votre demande sera validée par notre équipe.
+                      </p>
+
+                      <div>
+                        <label htmlFor="siret" className="block text-sm font-medium text-gray-700 mb-1">
+                          SIRET *
+                        </label>
+                        <input
+                          type="text"
+                          id="siret"
+                          name="siret"
+                          value={formData.siret}
+                          onChange={handleChange}
+                          required={formData.wantsPro}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent"
+                          placeholder="123 456 789 00012"
+                          maxLength={17}
+                        />
+                      </div>
+
+                      <div>
+                        <label htmlFor="businessType" className="block text-sm font-medium text-gray-700 mb-1">
+                          Type d&apos;activité *
+                        </label>
+                        <select
+                          id="businessType"
+                          name="businessType"
+                          value={formData.businessType}
+                          onChange={handleChange}
+                          required={formData.wantsPro}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent"
+                        >
+                          <option value="">Sélectionnez votre activité</option>
+                          {Object.entries(businessTypeLabels).map(([key, label]) => (
+                            <option key={key} value={key}>{label}</option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div>

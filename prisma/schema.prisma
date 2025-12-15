@@ -11,63 +11,46 @@ datasource db {
 
 // ============ SPONSORS ============
 enum SponsorType {
-  PLATINUM   // Partenaire principal - visibilité maximale
-  GOLD       // Partenaire Or - forte visibilité
-  SILVER     // Partenaire Argent - visibilité ciblée
-  BRONZE     // Partenaire Bronze - soutien
-  PREMIUM    // Legacy - à migrer vers PLATINUM
-  STANDARD   // Legacy - à migrer vers BRONZE
+  PLATINE    // Partenaire principal - visibilité maximale, article en page d'accueil
+  OR         // Partenaire Or - forte visibilité, en-tête site
+  ARGENT     // Partenaire Argent - visibilité ciblée
+  BRONZE     // Partenaire Bronze - soutien, bas de page
 }
 
 model Sponsor {
   id            String       @id @default(cuid())
   name          String
   slug          String       @unique
-  type          SponsorType  @default(STANDARD)
+  type          SponsorType  @default(BRONZE)
   logoUrl       String?
   description   String?      @db.Text
   websiteUrl    String?
-  standNumber   String?
 
   // Champs spécifiques Premium (article home)
   articleTitle  String?
   articleBody   String?      @db.Text
   articleImage  String?
 
+  // ============ EXPOSANT ============
+  // Relation avec le stand attribué
+  standId       String?      @unique
+  stand         Stand?       @relation(fields: [standId], references: [id])
+
+  // Informations exposant pour la page /exposants
+  exhibitorDescription String?    @db.Text  // Description de l'activité
+  exhibitorCategory    BusinessType?        // Catégorie métier
+  contactName          String?              // Nom du contact
+  contactEmail         String?              // Email de contact
+  contactPhone         String?              // Téléphone de contact
+
   // Position d'affichage
   displayOrder  Int          @default(0)
   isActive      Boolean      @default(true)
-
-  exhibitors    Exhibitor[]
 
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
 }
 
-// ============ EXPOSANTS ============
-model Exhibitor {
-  id            String    @id @default(cuid())
-  name          String
-  slug          String    @unique
-  description   String?   @db.Text
-  logoUrl       String?
-  standNumber   String?
-  websiteUrl    String?
-  category      String?   // Ex: "Producteur CBD", "Matériel", "Lifestyle"
-
-  // Contact
-  contactName   String?
-  contactEmail  String?
-  contactPhone  String?
-
-  sponsorId     String?
-  sponsor       Sponsor?  @relation(fields: [sponsorId], references: [id])
-
-  isActive      Boolean   @default(true)
-
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-}
 
 // ============ STANDS ============
 enum StandStatus {
@@ -91,13 +74,15 @@ model Stand {
   status        StandStatus  @default(FREE)
   size          StandSize    @default(MEDIUM)
 
-  // Exposant assigné
-  exhibitorName String?      // Nom de l'exposant
-  exhibitorId   String?      // Référence optionnelle vers Exhibitor
+  // Nom affiché pour l'exposant (optionnel, sinon utilise companyName du PRO)
+  exhibitorName String?
 
-  // Lien vers compte Pro
+  // Lien vers compte Pro (exposant)
   proId         String?
   pro           User?        @relation(fields: [proId], references: [id])
+
+  // Lien vers Sponsor (un sponsor a automatiquement un stand)
+  sponsor       Sponsor?
 
   // Options
   hasFurniture  Boolean      @default(false)
@@ -229,7 +214,11 @@ model Event {
   endAt           DateTime
   location        String?    // Ex: "Salle A", "Scène principale"
 
-  // Speaker info
+  // Multiple speakers stored as JSON array
+  // Format: [{ name, title, company, photo, bio }]
+  speakers        Json?      @default("[]")
+
+  // Legacy single speaker fields (kept for backwards compatibility)
   speakerName     String?
   speakerTitle    String?
   speakerCompany  String?
@@ -286,10 +275,16 @@ model User {
   role            UserRole      @default(PRO)
 
   // Profile Pro
-  companyName     String?
-  phone           String?
-  siret           String?
-  businessType    BusinessType?
+  companyName        String?
+  companyDescription String?        @db.Text  // Description de l'activité pour la page exposants
+  companyLogo        String?        // URL du logo de l'entreprise
+  companyWebsite     String?        // URL du site web de l'entreprise
+  phone              String?
+  siret              String?
+  businessType       BusinessType?
+
+  // Validation du compte PRO par un admin
+  isApproved         Boolean       @default(false)
 
   // Security
   emailVerified   DateTime?

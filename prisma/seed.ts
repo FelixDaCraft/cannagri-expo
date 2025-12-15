@@ -163,7 +163,7 @@ async function main() {
     {
       name: 'CBD Premium France',
       slug: 'cbd-premium-france',
-      type: 'PREMIUM' as const,
+      type: 'PLATINE' as const,
       description: 'Leader français du CBD premium, engagé pour la qualité et la traçabilité.',
       websiteUrl: 'https://example.com',
       articleTitle: 'Innovation et qualité : notre engagement pour le CBD français',
@@ -173,7 +173,7 @@ async function main() {
     {
       name: 'GreenTech Solutions',
       slug: 'greentech-solutions',
-      type: 'STANDARD' as const,
+      type: 'BRONZE' as const,
       description: 'Solutions innovantes pour la culture de chanvre.',
       websiteUrl: 'https://example.com',
       displayOrder: 2,

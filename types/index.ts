@@ -2,7 +2,6 @@
 
 import type {
   Sponsor,
-  Exhibitor,
   Stand,
   Ticket,
   Order,
@@ -19,12 +18,12 @@ import type {
   EventType,
   UserRole,
   ContactType,
+  BusinessType,
 } from '@prisma/client'
 
 // Re-export Prisma types
 export type {
   Sponsor,
-  Exhibitor,
   Stand,
   Ticket,
   Order,
@@ -41,15 +40,12 @@ export type {
   EventType,
   UserRole,
   ContactType,
+  BusinessType,
 }
 
-// Extended types with relations
-export interface SponsorWithExhibitors extends Sponsor {
-  exhibitors: Exhibitor[]
-}
-
-export interface ExhibitorWithSponsor extends Exhibitor {
-  sponsor: Sponsor | null
+// Sponsor with Stand relation
+export interface SponsorWithStand extends Sponsor {
+  stand: Stand | null
 }
 
 export interface StandWithOrder extends Stand {

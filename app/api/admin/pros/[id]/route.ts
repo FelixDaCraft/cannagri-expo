@@ -55,6 +55,75 @@ export async function DELETE(
   }
 }
 
+// PATCH /api/admin/pros/[id] - Update a Pro account (including isApproved)
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params
+    const body = await request.json()
+    const { isApproved, name, firstName, companyName, phone, siret, businessType } = body
+
+    // Check if user exists
+    const user = await prisma.user.findUnique({
+      where: { id },
+    })
+
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Compte non trouvé' },
+        { status: 404 }
+      )
+    }
+
+    if (user.role !== 'PRO') {
+      return NextResponse.json(
+        { error: 'Ce compte n\'est pas un compte Pro' },
+        { status: 400 }
+      )
+    }
+
+    // Build update data
+    const updateData: Record<string, unknown> = {}
+    if (typeof isApproved === 'boolean') updateData.isApproved = isApproved
+    if (name !== undefined) updateData.name = name
+    if (firstName !== undefined) updateData.firstName = firstName
+    if (companyName !== undefined) updateData.companyName = companyName
+    if (phone !== undefined) updateData.phone = phone
+    if (siret !== undefined) updateData.siret = siret
+    if (businessType !== undefined) updateData.businessType = businessType
+
+    const updatedUser = await prisma.user.update({
+      where: { id },
+      data: updateData,
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        firstName: true,
+        companyName: true,
+        phone: true,
+        siret: true,
+        businessType: true,
+        isApproved: true,
+        createdAt: true,
+      },
+    })
+
+    return NextResponse.json({
+      success: true,
+      data: updatedUser,
+    })
+  } catch (error) {
+    console.error('Error updating pro:', error)
+    return NextResponse.json(
+      { error: 'Erreur lors de la mise à jour du compte' },
+      { status: 500 }
+    )
+  }
+}
+
 // GET /api/admin/pros/[id] - Get a Pro account details
 export async function GET(
   request: NextRequest,

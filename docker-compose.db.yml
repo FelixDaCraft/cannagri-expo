@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: cannagri-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: cannagri
+      POSTGRES_PASSWORD: cannagri123
+      POSTGRES_DB: cannagri
+    ports:
+      - "5432:5432"
+    volumes:
+      - cannagri_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cannagri -d cannagri"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  cannagri_pgdata:
