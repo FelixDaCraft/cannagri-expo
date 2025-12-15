@@ -8,12 +8,12 @@ interface SponsorsArticlesProps {
 }
 
 export function SponsorsArticles({ sponsors }: SponsorsArticlesProps) {
-  // Only show Premium sponsors with articles
-  const premiumSponsors = sponsors.filter(
-    (s) => s.type === 'PREMIUM' && s.articleTitle && s.isActive
+  // Only show Platine sponsors with articles (article sponsorisé en 1ère page)
+  const platineSponsors = sponsors.filter(
+    (s) => s.type === 'PLATINE' && s.articleTitle && s.isActive
   )
 
-  if (premiumSponsors.length === 0) {
+  if (platineSponsors.length === 0) {
     return null
   }
 
@@ -24,13 +24,13 @@ export function SponsorsArticles({ sponsors }: SponsorsArticlesProps) {
         <div className="text-center mb-12">
           <h2 className="section-title">À la Une</h2>
           <p className="section-subtitle">
-            Découvrez nos partenaires Premium et leurs actualités
+            Découvrez nos partenaires Platine et leurs actualités
           </p>
         </div>
 
         {/* Articles Grid */}
         <div className="grid md:grid-cols-2 gap-8">
-          {premiumSponsors.slice(0, 2).map((sponsor) => (
+          {platineSponsors.slice(0, 2).map((sponsor) => (
             <Link key={sponsor.id} href={`/sponsors/${sponsor.slug}`}>
               <Card
                 variant="elevated"
@@ -60,7 +60,7 @@ export function SponsorsArticles({ sponsors }: SponsorsArticlesProps) {
                     </div>
                   )}
                   <Badge variant="forest" className="absolute top-4 left-4">
-                    Sponsor Premium
+                    Sponsor Platine
                   </Badge>
                 </div>
 
@@ -87,7 +87,7 @@ export function SponsorsArticles({ sponsors }: SponsorsArticlesProps) {
         </div>
 
         {/* View All Link */}
-        {premiumSponsors.length > 2 && (
+        {platineSponsors.length > 2 && (
           <div className="text-center mt-8">
             <Link
               href="/sponsors"
@@ -113,7 +113,7 @@ export function SponsorsArticlesPlaceholder() {
         <div className="text-center mb-12">
           <h2 className="section-title">À la Une</h2>
           <p className="section-subtitle">
-            Nos partenaires Premium seront bientôt annoncés
+            Nos partenaires Platine seront bientôt annoncés
           </p>
         </div>
 

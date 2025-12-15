@@ -42,7 +42,6 @@ export function StandCard({ stand, onSelect }: StandCardProps) {
           <span className="text-2xl font-heading font-bold text-forest">
             {formatPrice(stand.priceHT)}
           </span>
-          <span className="text-sm text-body/60 ml-1">HT</span>
         </div>
 
         <div className="space-y-2 text-sm text-body/70 mb-4">

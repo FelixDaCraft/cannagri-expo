@@ -10,7 +10,7 @@ export default function PublicLayout({
     <>
       <PageTracker />
       <Header />
-      <main className="flex-1 pt-20">
+      <main className="flex-1 pt-16">
         {children}
       </main>
       <InfoBanner />

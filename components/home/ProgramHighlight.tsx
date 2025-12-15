@@ -3,11 +3,18 @@ import Link from 'next/link'
 import { Button, Badge } from '@/components/ui'
 import type { Event } from '@/types'
 
-interface ProgramHighlightProps {
-  event?: Event | null
+interface ProgramStats {
+  conferenceCount: number
+  speakerCount: number
+  standCount: number
 }
 
-export function ProgramHighlight({ event }: ProgramHighlightProps) {
+interface ProgramHighlightProps {
+  event?: Event | null
+  stats?: ProgramStats
+}
+
+export function ProgramHighlight({ event, stats }: ProgramHighlightProps) {
   return (
     <section className="py-16 md:py-24 bg-white">
       <div className="container-custom">
@@ -90,19 +97,30 @@ export function ProgramHighlight({ event }: ProgramHighlightProps) {
 
         {/* Quick Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16">
-          {[
-            { number: '10+', label: 'Conférences' },
-            { number: '20+', label: 'Intervenants' },
-            { number: '50+', label: 'Exposants' },
-            { number: '1', label: 'Platinum CBD Cup' },
-          ].map((stat, index) => (
-            <div key={index} className="text-center p-6 rounded-xl bg-cream">
-              <div className="text-3xl md:text-4xl font-heading font-bold text-forest mb-1">
-                {stat.number}
-              </div>
-              <div className="text-body/60 text-sm">{stat.label}</div>
+          <div className="text-center p-6 rounded-xl bg-cream">
+            <div className="text-3xl md:text-4xl font-heading font-bold text-forest mb-1">
+              {stats?.conferenceCount || 0}
             </div>
-          ))}
+            <div className="text-body/60 text-sm">Conférences</div>
+          </div>
+          <div className="text-center p-6 rounded-xl bg-cream">
+            <div className="text-3xl md:text-4xl font-heading font-bold text-forest mb-1">
+              {stats?.speakerCount || 0}
+            </div>
+            <div className="text-body/60 text-sm">Intervenants</div>
+          </div>
+          <div className="text-center p-6 rounded-xl bg-cream">
+            <div className="text-3xl md:text-4xl font-heading font-bold text-forest mb-1">
+              {stats?.standCount || 0}
+            </div>
+            <div className="text-body/60 text-sm">Exposants</div>
+          </div>
+          <div className="text-center p-6 rounded-xl bg-cream">
+            <div className="text-3xl md:text-4xl font-heading font-bold text-forest mb-1">
+              1
+            </div>
+            <div className="text-body/60 text-sm">Award Show Platinum CBD Cup</div>
+          </div>
         </div>
       </div>
     </section>

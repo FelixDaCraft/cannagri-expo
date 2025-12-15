@@ -12,13 +12,14 @@ interface Pro {
   phone: string | null
   siret: string | null
   businessType: 'PRODUCTEURS' | 'MATERIEL' | 'LIFESTYLE' | 'SERVICE' | null
+  isApproved: boolean
   createdAt: string
   _count?: {
     stands: number
   }
 }
 
-const businessTypeLabels = {
+const businessTypeLabels: Record<string, string> = {
   PRODUCTEURS: 'Producteurs',
   MATERIEL: 'Matériel',
   LIFESTYLE: 'Lifestyle',
@@ -29,8 +30,9 @@ export default function ProsPage() {
   const [pros, setPros] = useState<Pro[]>([])
   const [loading, setLoading] = useState(true)
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
-  const [showCreateModal, setShowCreateModal] = useState(false)
-  const [creating, setCreating] = useState(false)
+  const [showModal, setShowModal] = useState(false)
+  const [editingPro, setEditingPro] = useState<Pro | null>(null)
+  const [isSaving, setIsSaving] = useState(false)
   const [formData, setFormData] = useState({
     email: '',
     name: '',
@@ -61,9 +63,41 @@ export default function ProsPage() {
     }
   }
 
+  const resetForm = () => {
+    setFormData({
+      email: '',
+      name: '',
+      firstName: '',
+      companyName: '',
+      phone: '',
+      siret: '',
+      businessType: '',
+    })
+  }
+
+  const openCreateModal = () => {
+    setEditingPro(null)
+    resetForm()
+    setShowModal(true)
+  }
+
+  const openEditModal = (pro: Pro) => {
+    setEditingPro(pro)
+    setFormData({
+      email: pro.email,
+      name: pro.name || '',
+      firstName: pro.firstName || '',
+      companyName: pro.companyName || '',
+      phone: pro.phone || '',
+      siret: pro.siret || '',
+      businessType: pro.businessType || '',
+    })
+    setShowModal(true)
+  }
+
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault()
-    setCreating(true)
+    setIsSaving(true)
 
     try {
       const res = await fetch('/api/admin/pros', {
@@ -77,16 +111,8 @@ export default function ProsPage() {
 
       if (res.ok) {
         setMessage({ type: 'success', text: 'Compte Pro créé avec succès' })
-        setShowCreateModal(false)
-        setFormData({
-          email: '',
-          name: '',
-          firstName: '',
-          companyName: '',
-          phone: '',
-          siret: '',
-          businessType: '',
-        })
+        setShowModal(false)
+        resetForm()
         fetchPros()
       } else {
         const data = await res.json()
@@ -95,12 +121,48 @@ export default function ProsPage() {
     } catch {
       setMessage({ type: 'error', text: 'Erreur lors de la création' })
     } finally {
-      setCreating(false)
+      setIsSaving(false)
+    }
+  }
+
+  const handleUpdate = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!editingPro) return
+    setIsSaving(true)
+
+    try {
+      const res = await fetch(`/api/admin/pros/${editingPro.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name || null,
+          firstName: formData.firstName || null,
+          companyName: formData.companyName || null,
+          phone: formData.phone || null,
+          siret: formData.siret || null,
+          businessType: formData.businessType || null,
+        }),
+      })
+
+      if (res.ok) {
+        setMessage({ type: 'success', text: 'Compte Pro mis à jour avec succès' })
+        setShowModal(false)
+        setEditingPro(null)
+        resetForm()
+        fetchPros()
+      } else {
+        const data = await res.json()
+        setMessage({ type: 'error', text: data.error || 'Erreur lors de la mise à jour' })
+      }
+    } catch {
+      setMessage({ type: 'error', text: 'Erreur lors de la mise à jour' })
+    } finally {
+      setIsSaving(false)
     }
   }
 
   const handleDelete = async (pro: Pro) => {
-    if (!confirm(`Supprimer le compte de ${pro.companyName || pro.email} ?`)) return
+    if (!confirm(`Supprimer le compte de ${pro.companyName || pro.email} ?\n\nCette action est irréversible.`)) return
 
     try {
       const res = await fetch(`/api/admin/pros/${pro.id}`, {
@@ -116,6 +178,36 @@ export default function ProsPage() {
       }
     } catch {
       setMessage({ type: 'error', text: 'Erreur lors de la suppression' })
+    }
+  }
+
+  const handleToggleApproval = async (pro: Pro) => {
+    const newStatus = !pro.isApproved
+    const action = newStatus ? 'valider' : 'retirer la validation de'
+
+    if (!confirm(`Voulez-vous ${action} le compte de ${pro.companyName || pro.email} ?`)) return
+
+    try {
+      const res = await fetch(`/api/admin/pros/${pro.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isApproved: newStatus }),
+      })
+
+      if (res.ok) {
+        setMessage({
+          type: 'success',
+          text: newStatus
+            ? `Compte ${pro.companyName || pro.email} validé avec succès`
+            : `Validation retirée pour ${pro.companyName || pro.email}`
+        })
+        fetchPros()
+      } else {
+        const data = await res.json()
+        setMessage({ type: 'error', text: data.error || 'Erreur lors de la mise à jour' })
+      }
+    } catch {
+      setMessage({ type: 'error', text: 'Erreur lors de la mise à jour' })
     }
   }
 
@@ -139,7 +231,7 @@ export default function ProsPage() {
             Gérez les comptes des exposants inscrits
           </p>
         </div>
-        <Button onClick={() => setShowCreateModal(true)}>
+        <Button onClick={openCreateModal}>
           <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>
@@ -161,17 +253,33 @@ export default function ProsPage() {
             className="float-right font-bold"
             onClick={() => setMessage(null)}
           >
-            x
+            &times;
           </button>
         </div>
       )}
 
       {/* Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
         <Card variant="default" className="bg-white">
           <CardContent className="text-center p-4">
             <p className="text-sm text-gray-600">Total</p>
             <p className="text-2xl font-bold text-gray-900">{pros.length}</p>
+          </CardContent>
+        </Card>
+        <Card variant="default" className="bg-green-50 border-green-200">
+          <CardContent className="text-center p-4">
+            <p className="text-sm text-green-700">Validés</p>
+            <p className="text-2xl font-bold text-green-600">
+              {pros.filter((p) => p.isApproved).length}
+            </p>
+          </CardContent>
+        </Card>
+        <Card variant="default" className="bg-orange-50 border-orange-200">
+          <CardContent className="text-center p-4">
+            <p className="text-sm text-orange-700">En attente</p>
+            <p className="text-2xl font-bold text-orange-600">
+              {pros.filter((p) => !p.isApproved).length}
+            </p>
           </CardContent>
         </Card>
         {Object.entries(businessTypeLabels).map(([key, label]) => (
@@ -232,6 +340,9 @@ export default function ProsPage() {
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Inscription
                   </th>
+                  <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Statut PRO
+                  </th>
                   <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Actions
                   </th>
@@ -282,15 +393,51 @@ export default function ProsPage() {
                     <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                       {formatDate(pro.createdAt)}
                     </td>
+                    <td className="px-4 py-4 whitespace-nowrap text-center">
+                      {pro.isApproved ? (
+                        <div className="flex flex-col items-center gap-1">
+                          <Badge variant="sage" className="bg-green-100 text-green-800">
+                            Validé
+                          </Badge>
+                          <button
+                            onClick={() => handleToggleApproval(pro)}
+                            className="text-xs text-gray-500 hover:text-red-600 underline"
+                          >
+                            Retirer
+                          </button>
+                        </div>
+                      ) : (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleToggleApproval(pro)}
+                          className="text-green-600 hover:text-green-800 hover:border-green-300 hover:bg-green-50"
+                        >
+                          Valider
+                        </Button>
+                      )}
+                    </td>
                     <td className="px-4 py-4 whitespace-nowrap text-right">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleDelete(pro)}
-                        className="text-red-600 hover:text-red-800 hover:border-red-300"
-                      >
-                        Supprimer
-                      </Button>
+                      <div className="flex items-center justify-end gap-2">
+                        <button
+                          onClick={() => openEditModal(pro)}
+                          className="p-2 text-gray-600 hover:text-forest hover:bg-gray-100 rounded-lg transition-colors"
+                          title="Modifier"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() => handleDelete(pro)}
+                          className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                          title="Supprimer"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -300,21 +447,21 @@ export default function ProsPage() {
         </div>
       )}
 
-      {/* Create Modal */}
+      {/* Create/Edit Modal */}
       <Modal
-        isOpen={showCreateModal}
-        onClose={() => setShowCreateModal(false)}
-        title="Créer un compte Pro"
+        isOpen={showModal}
+        onClose={() => { setShowModal(false); setEditingPro(null); resetForm(); }}
+        title={editingPro ? 'Modifier le compte Pro' : 'Créer un compte Pro'}
       >
-        <form onSubmit={handleCreate} className="space-y-4">
+        <form onSubmit={editingPro ? handleUpdate : handleCreate} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Prénom *
+                Prénom {!editingPro && '*'}
               </label>
               <input
                 type="text"
-                required
+                required={!editingPro}
                 value={formData.firstName}
                 onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-forest"
@@ -322,11 +469,11 @@ export default function ProsPage() {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Nom *
+                Nom {!editingPro && '*'}
               </label>
               <input
                 type="text"
-                required
+                required={!editingPro}
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-forest"
@@ -336,24 +483,28 @@ export default function ProsPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email *
+              Email {!editingPro && '*'}
             </label>
             <input
               type="email"
-              required
+              required={!editingPro}
+              disabled={!!editingPro}
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-forest"
+              className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-forest ${editingPro ? 'bg-gray-100 text-gray-500' : ''}`}
             />
+            {editingPro && (
+              <p className="text-xs text-gray-500 mt-1">L&apos;email ne peut pas être modifié</p>
+            )}
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Nom de l&apos;entreprise *
+              Nom de l&apos;entreprise {!editingPro && '*'}
             </label>
             <input
               type="text"
-              required
+              required={!editingPro}
               value={formData.companyName}
               onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-forest"
@@ -405,13 +556,13 @@ export default function ProsPage() {
             <Button
               type="button"
               variant="outline"
-              onClick={() => setShowCreateModal(false)}
+              onClick={() => { setShowModal(false); setEditingPro(null); resetForm(); }}
               className="flex-1"
             >
               Annuler
             </Button>
-            <Button type="submit" disabled={creating} className="flex-1">
-              {creating ? 'Création...' : 'Créer le compte'}
+            <Button type="submit" disabled={isSaving} className="flex-1">
+              {isSaving ? 'Enregistrement...' : (editingPro ? 'Modifier' : 'Créer le compte')}
             </Button>
           </div>
         </form>

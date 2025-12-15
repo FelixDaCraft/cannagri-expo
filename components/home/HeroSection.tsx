@@ -10,14 +10,13 @@ import { CountdownTimer } from './CountdownTimer'
 export function HeroSection() {
   return (
     <section className="relative min-h-screen overflow-hidden">
-      {/* Background Image (fallback - video files optional) */}
+      {/* Background Image */}
       <div className="absolute inset-0 z-0">
-        <Image
-          src="/images/poster-2026.png"
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/images/affiche-2026.svg"
           alt="Background"
-          fill
-          className="object-cover"
-          priority
+          className="w-full h-full object-cover scale-100"
         />
         {/* Overlay sombre pour lisibilité */}
         <div className="absolute inset-0 bg-forest/70" />
@@ -42,13 +41,12 @@ export function HeroSection() {
               transition={{ type: 'spring', stiffness: 300 }}
               className="relative"
             >
-              <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl border-4 border-cream/30">
-                <Image
-                  src="/images/poster-2026.png"
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-cream/30">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/images/affiche-2026.svg"
                   alt="Cann'Agri Expo 2026 - Affiche officielle"
-                  fill
-                  className="object-cover"
-                  priority
+                  className="w-full h-auto"
                 />
               </div>
 
@@ -140,14 +138,14 @@ export function HeroSection() {
                   </Button>
                 </motion.div>
               </Link>
-              <Link href="/pro">
+              <Link href="/infos-pratiques">
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Button
                     variant="outline"
                     size="lg"
                     className="w-full sm:w-auto border-cream text-cream hover:bg-cream hover:text-forest text-lg px-8"
                   >
-                    Devenir Exposant
+                    Infos Pratiques
                   </Button>
                 </motion.div>
               </Link>

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Open_Sans, Roboto_Slab } from 'next/font/google'
 import { siteConfig } from '@/config/site'
+import { Providers } from '@/components/Providers'
 import './globals.css'
 
 const openSans = Open_Sans({
@@ -64,7 +65,9 @@ export default function RootLayout({
   return (
     <html lang="fr" className={`${openSans.variable} ${robotoSlab.variable}`}>
       <body className="min-h-screen flex flex-col">
-        {children}
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   )

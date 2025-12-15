@@ -47,44 +47,38 @@ export const siteConfig = {
 
   // Ticket prices (in EUR)
   tickets: {
-    visiteur: {
-      name: "Visiteur",
+    standard: {
+      name: "Billet Standard",
       price: 15,
       description: "Accès au salon toute la journée",
     },
-    pro: {
-      name: "Pass Pro",
+    flex: {
+      name: "Billet Flex",
       price: 25,
-      description: "Accès privilégié + badge professionnel",
-    },
-    vip: {
-      name: "VIP",
-      price: 75,
-      description: "Accès VIP + cocktail networking + goodies",
+      description: "Soutenez l'association et ses futurs événements",
     },
   },
 }
 
 export const navigation: NavItem[] = [
-  { label: "Accueil", href: "/" },
+  { label: "Notre Vision", href: "/evenement" },
   {
     label: "L'Événement",
-    href: "#",
+    href: "/programme",
     children: [
-      { label: "Présentation", href: "/evenement" },
+      { label: "Programme", href: "/programme" },
+      { label: "Exposants", href: "/exposants" },
+      { label: "Galerie Photo", href: "/mediatheque" },
       { label: "Infos Pratiques", href: "/infos-pratiques" },
     ],
   },
-  { label: "Programme", href: "/programme" },
-  { label: "Exposants", href: "/exposants" },
-  { label: "Galerie Photo", href: "/mediatheque" },
+  { label: "Sponsoring", href: "/sponsoring" },
   {
     label: "Espace Pro",
     href: "/pro",
     children: [
       { label: "Devenir Exposant", href: "/pro" },
-      { label: "Plan des Stands", href: "/pro/plan" },
-      { label: "Sponsoring", href: "/pro/sponsoring" },
+      { label: "Réserver un Stand", href: "/pro/plan" },
     ],
   },
 ]

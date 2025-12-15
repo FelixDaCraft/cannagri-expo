@@ -5,8 +5,8 @@ import { Button, Badge } from '@/components/ui'
 import { siteConfig } from '@/config/site'
 
 export const metadata: Metadata = {
-  title: 'Plan des Stands',
-  description: 'Consultez le plan des stands et réservez votre emplacement au salon Cann\'Agri Expo',
+  title: 'Réserver un Stand',
+  description: 'Réservez votre stand exposant au salon Cann\'Agri Expo - Sélectionnez votre emplacement sur le plan interactif',
 }
 
 export default function PlanPage() {
@@ -15,12 +15,12 @@ export default function PlanPage() {
       <div className="container-custom">
         {/* Header */}
         <div className="text-center mb-12">
-          <Badge variant="sage" className="mb-4">Plan interactif</Badge>
+          <Badge variant="forest" className="mb-4">Espace Exposant</Badge>
           <h1 className="text-4xl md:text-5xl font-heading font-bold text-heading mb-4">
-            Plan des Stands
+            Réserver un Stand
           </h1>
           <p className="text-lg text-body/70 max-w-2xl mx-auto">
-            Cliquez sur un stand pour voir les détails. Les stands verts sont disponibles à la réservation.
+            Sélectionnez votre emplacement sur le plan. Les stands verts sont disponibles à la réservation.
           </p>
         </div>
 
@@ -58,52 +58,60 @@ export default function PlanPage() {
           <div className="bg-white rounded-xl p-6 text-center">
             <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-sage/20 flex items-center justify-center">
               <svg className="w-6 h-6 text-forest" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h3 className="font-heading font-semibold text-heading mb-2">Options flexibles</h3>
+            <h3 className="font-heading font-semibold text-heading mb-2">Tout inclus</h3>
             <p className="text-sm text-body/70">
-              Ajoutez mobilier et électricité selon vos besoins lors de la réservation.
+              Mobilier (tables & chaises) et électricité inclus dans le prix du stand.
             </p>
           </div>
         </div>
 
         {/* Pricing Info */}
         <div className="bg-white rounded-2xl p-8 mb-12">
-          <h2 className="text-2xl font-heading font-bold text-heading mb-6 text-center">
-            Tarifs des stands
-          </h2>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-gray-200">
-                  <th className="py-3 px-4 text-left font-heading font-semibold text-heading">Type</th>
-                  <th className="py-3 px-4 text-left font-heading font-semibold text-heading">Surface</th>
-                  <th className="py-3 px-4 text-left font-heading font-semibold text-heading">Prix HT</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="border-b border-gray-100">
-                  <td className="py-3 px-4">Stand Standard</td>
-                  <td className="py-3 px-4">6-9 m²</td>
-                  <td className="py-3 px-4 font-semibold text-forest">350€ - 400€</td>
-                </tr>
-                <tr className="border-b border-gray-100">
-                  <td className="py-3 px-4">Stand Medium</td>
-                  <td className="py-3 px-4">12-18 m²</td>
-                  <td className="py-3 px-4 font-semibold text-forest">450€ - 650€</td>
-                </tr>
-                <tr className="border-b border-gray-100">
-                  <td className="py-3 px-4">Stand Premium</td>
-                  <td className="py-3 px-4">24+ m²</td>
-                  <td className="py-3 px-4 font-semibold text-forest">850€+</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div className="mt-4 text-sm text-body/60">
-            <p><strong>Options :</strong> Mobilier (+120€ HT) | Électricité (+80€ HT)</p>
-            <p className="mt-1">TVA 20% applicable. Prix définitifs affichés lors de la sélection d&apos;un stand.</p>
+          <div className="max-w-md mx-auto text-center">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-sage/20 flex items-center justify-center">
+              <svg className="w-8 h-8 text-forest" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+            </div>
+            <h2 className="text-2xl font-heading font-bold text-heading mb-2">
+              Stand Exposant
+            </h2>
+            <p className="text-sage text-lg mb-2">4 m²</p>
+            <p className="text-4xl font-heading font-bold text-forest mb-6">150€</p>
+
+            <ul className="space-y-3 text-left text-body/70 mb-6">
+              <li className="flex items-center gap-3">
+                <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                Mobilier inclus (tables & chaises)
+              </li>
+              <li className="flex items-center gap-3">
+                <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                Électricité incluse
+              </li>
+              <li className="flex items-center gap-3">
+                <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                Badge exposant
+              </li>
+              <li className="flex items-center gap-3">
+                <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                Mention sur le site web
+              </li>
+            </ul>
+
+            <p className="text-sm text-body/50 bg-cream/50 rounded-lg p-3">
+              Association non soumise à la TVA - Prix net
+            </p>
           </div>
         </div>
 
@@ -122,7 +130,7 @@ export default function PlanPage() {
                 Nous contacter
               </Button>
             </a>
-            <Link href="/pro/sponsoring">
+            <Link href="/sponsoring">
               <Button variant="outline" className="border-white text-white hover:bg-white hover:text-forest">
                 Découvrir le sponsoring
               </Button>

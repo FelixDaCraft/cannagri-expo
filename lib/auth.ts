@@ -45,6 +45,7 @@ export const authOptions: NextAuthOptions = {
           name: user.name,
           image: user.image,
           role: user.role,
+          isApproved: user.isApproved,
         }
       }
     }),
@@ -81,6 +82,7 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id
         token.role = (user as { role?: string }).role || 'PRO'
+        token.isApproved = (user as { isApproved?: boolean }).isApproved || false
       }
       if (account) {
         token.provider = account.provider
@@ -92,6 +94,7 @@ export const authOptions: NextAuthOptions = {
       if (session.user) {
         session.user.id = token.id as string
         session.user.role = token.role as string
+        session.user.isApproved = token.isApproved as boolean
       }
       return session
     },

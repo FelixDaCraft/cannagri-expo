@@ -87,8 +87,11 @@ export function StandBookingModal({ stand, isOpen, onClose }: StandBookingModalP
               <Badge variant="forest">Stand {stand.code}</Badge>
               <span className="ml-2 text-sm text-body/60">{stand.surfaceM2} m²</span>
             </div>
-            <span className="font-heading font-bold text-forest">{formatPrice(stand.priceHT)} HT</span>
+            <span className="font-heading font-bold text-forest">{formatPrice(stand.priceHT)}</span>
           </div>
+          <p className="text-xs text-forest/70 mt-1">
+            Mobilier (tables & chaises) + Électricité inclus
+          </p>
           <p className="text-sm text-body/60 mt-2">
             Besoin de plus d&apos;espace ? Réservez plusieurs stands côte à côte.
           </p>

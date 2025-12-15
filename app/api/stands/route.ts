@@ -23,6 +23,13 @@ export async function GET(request: NextRequest) {
             companyName: true,
             status: true,
           }
+        },
+        sponsor: {
+          select: {
+            id: true,
+            name: true,
+            type: true,
+          }
         }
       }
     })

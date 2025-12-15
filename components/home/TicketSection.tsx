@@ -13,46 +13,34 @@ interface TicketType {
   description: string
   features: string[]
   popular?: boolean
+  supportMessage?: string
 }
 
 const ticketTypes: TicketType[] = [
   {
-    id: 'visiteur',
-    name: 'Visiteur',
+    id: 'standard',
+    name: 'Billet Standard',
     price: 15,
     description: 'Accès au salon toute la journée',
     features: [
       'Accès aux stands exposants',
-      'Accès aux conférences (selon disponibilité)',
+      'Accès aux conférences',
       'Badge visiteur',
     ],
+    supportMessage: 'On vous en veut pas, merci quand même, c\'est déjà bien de payer sa place !',
   },
   {
-    id: 'pro',
-    name: 'Pass Pro',
+    id: 'flex',
+    name: 'Billet Flex',
     price: 25,
-    description: 'Accès privilégié professionnel',
+    description: 'Soutenez l\'association',
     features: [
-      'Accès prioritaire au salon',
-      'Accès à toutes les conférences',
-      'Badge professionnel',
-      'Accès espace networking',
-      'Documentation professionnelle',
+      'Accès aux stands exposants',
+      'Accès aux conférences',
+      'Badge visiteur',
     ],
     popular: true,
-  },
-  {
-    id: 'vip',
-    name: 'VIP',
-    price: 75,
-    description: 'Expérience VIP complète',
-    features: [
-      'Tous les avantages Pass Pro',
-      'Cocktail networking exclusif',
-      'Goodies premium',
-      'Accès backstage',
-      'Place réservée conférences',
-    ],
+    supportMessage: 'Votre soutien nous permet d\'organiser de plus beaux événements et de développer la filière chanvre CBD en France.',
   },
 ]
 
@@ -67,19 +55,19 @@ function TicketCard({ ticket, quantity, onQuantityChange }: {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       whileHover={{ y: -5 }}
-      className={`relative bg-white rounded-2xl shadow-lg overflow-hidden transition-shadow hover:shadow-xl ${
+      className={`relative bg-white rounded-2xl shadow-lg overflow-hidden transition-shadow hover:shadow-xl h-full ${
         ticket.popular ? 'ring-2 ring-terracotta' : ''
       }`}
     >
       {ticket.popular && (
         <div className="absolute top-0 right-0">
           <div className="bg-terracotta text-cream text-xs font-bold px-4 py-1 rounded-bl-lg">
-            POPULAIRE
+            FULL SUPPORT
           </div>
         </div>
       )}
 
-      <div className="p-6">
+      <div className="p-6 h-full flex flex-col">
         <h3 className="text-xl font-heading font-bold text-forest mb-2">
           {ticket.name}
         </h3>
@@ -92,7 +80,7 @@ function TicketCard({ ticket, quantity, onQuantityChange }: {
           <span className="text-forest/60">EUR</span>
         </div>
 
-        <ul className="space-y-3 mb-6">
+        <ul className="space-y-3 mb-4">
           {ticket.features.map((feature, index) => (
             <li key={index} className="flex items-start gap-2 text-sm text-forest/80">
               <svg className="w-5 h-5 text-mint flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -103,8 +91,28 @@ function TicketCard({ ticket, quantity, onQuantityChange }: {
           ))}
         </ul>
 
+        {ticket.supportMessage && (
+          <div className={`mb-4 p-3 rounded-lg border ${ticket.id === 'standard' ? 'bg-sage/10 border-sage/20' : 'bg-terracotta/10 border-terracotta/20'}`}>
+            <div className="flex items-start gap-2">
+              {ticket.id === 'standard' ? (
+                <svg className="w-5 h-5 text-sage flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              ) : (
+                <svg className="w-5 h-5 text-terracotta flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+              )}
+              <p className={`text-xs ${ticket.id === 'standard' ? 'text-sage' : 'text-terracotta/90'}`}>{ticket.supportMessage}</p>
+            </div>
+          </div>
+        )}
+
+        {/* Spacer to push quantity selector to bottom */}
+        <div className="flex-grow"></div>
+
         {/* Quantity selector */}
-        <div className="flex items-center justify-between bg-cream/50 rounded-xl p-3">
+        <div className="flex items-center justify-between bg-cream/50 rounded-xl p-3 mt-auto">
           <span className="text-sm font-medium text-forest">Quantité</span>
           <div className="flex items-center gap-3">
             <motion.button
@@ -137,9 +145,8 @@ function TicketCard({ ticket, quantity, onQuantityChange }: {
 
 export function TicketSection() {
   const [quantities, setQuantities] = useState<Record<string, number>>({
-    visiteur: 0,
-    pro: 0,
-    vip: 0,
+    standard: 0,
+    flex: 0,
   })
 
   const updateQuantity = (ticketId: string, qty: number) => {
@@ -179,7 +186,7 @@ export function TicketSection() {
         </motion.div>
 
         {/* Ticket cards */}
-        <div className="grid md:grid-cols-3 gap-6 mb-10">
+        <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto mb-10">
           {ticketTypes.map((ticket) => (
             <TicketCard
               key={ticket.id}

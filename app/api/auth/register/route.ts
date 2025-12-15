@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { name, email, password, companyName, phone, newsletter } = body
+    const { name, email, password, companyName, phone, siret, businessType, wantsPro, newsletter } = body
 
     // Validation
     if (!name || !email || !password) {
@@ -31,6 +31,28 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // PRO validation
+    if (wantsPro) {
+      if (!companyName) {
+        return NextResponse.json(
+          { error: 'Le nom de l\'entreprise est requis pour un compte professionnel' },
+          { status: 400 }
+        )
+      }
+      if (!siret) {
+        return NextResponse.json(
+          { error: 'Le SIRET est requis pour un compte professionnel' },
+          { status: 400 }
+        )
+      }
+      if (!businessType) {
+        return NextResponse.json(
+          { error: 'Le type d\'activité est requis pour un compte professionnel' },
+          { status: 400 }
+        )
+      }
+    }
+
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({
       where: { email: email.toLowerCase() }
@@ -46,7 +68,8 @@ export async function POST(request: NextRequest) {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 12)
 
-    // Create user
+    // Create user - role is PRO if requested, otherwise USER (visitor)
+    // If PRO, isApproved starts as false until admin validates
     const user = await prisma.user.create({
       data: {
         name,
@@ -54,7 +77,10 @@ export async function POST(request: NextRequest) {
         hashedPassword,
         companyName: companyName || null,
         phone: phone || null,
-        role: 'PRO',
+        siret: wantsPro ? siret : null,
+        businessType: wantsPro ? businessType : null,
+        role: wantsPro ? 'PRO' : 'EDITOR', // EDITOR = visiteur standard
+        isApproved: false, // PRO accounts need admin approval
       }
     })
 
@@ -77,11 +103,15 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: 'Compte créé avec succès',
+      message: wantsPro
+        ? 'Compte créé avec succès. Votre demande de compte professionnel est en attente de validation.'
+        : 'Compte créé avec succès',
+      isPro: wantsPro,
       user: {
         id: user.id,
         email: user.email,
         name: user.name,
+        role: user.role,
       }
     })
 

@@ -26,6 +26,7 @@ export async function GET(
         role: true,
         companyName: true,
         phone: true,
+        isApproved: true,
         emailVerified: true,
         createdAt: true,
         updatedAt: true,
@@ -68,7 +69,7 @@ export async function PATCH(
 
     const { id } = await params
     const body = await request.json()
-    const { name, email, password, role, companyName, phone } = body
+    const { name, email, password, role, companyName, phone, isApproved } = body
 
     // Check user exists
     const existingUser = await prisma.user.findUnique({ where: { id } })
@@ -96,6 +97,7 @@ export async function PATCH(
     if (role) updateData.role = role
     if (companyName !== undefined) updateData.companyName = companyName || null
     if (phone !== undefined) updateData.phone = phone || null
+    if (isApproved !== undefined) updateData.isApproved = isApproved
 
     // Hash new password if provided
     if (password && password.length >= 8) {
@@ -112,6 +114,7 @@ export async function PATCH(
         role: true,
         companyName: true,
         phone: true,
+        isApproved: true,
         updatedAt: true,
       }
     })

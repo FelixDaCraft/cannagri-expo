@@ -1,34 +1,58 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { motion } from 'motion/react'
 import { Card, CardContent, Badge, Button } from '@/components/ui'
 import { Spotlight, FloatingParticles } from '@/components/ui/aceternity'
 
-const categories = [
-  { slug: 'all', name: 'Tous', count: 41 },
-  { slug: 'producteur', name: 'Producteurs CBD', count: 15 },
-  { slug: 'materiel', name: 'Matériel', count: 8 },
-  { slug: 'lifestyle', name: 'Lifestyle', count: 12 },
-  { slug: 'services', name: 'Services', count: 6 },
-]
+interface Exhibitor {
+  id: string
+  name: string
+  description: string | null
+  logoUrl: string | null
+  websiteUrl: string | null
+  standNumber: string
+  category: string
+  categoryLabel: string
+}
 
-const placeholderExhibitors = [
-  { id: '1', name: 'CBD Farm France', category: 'producteur', categoryLabel: 'Producteurs CBD', standNumber: 'A12', description: 'Producteur français de fleurs CBD premium' },
-  { id: '2', name: 'GreenTech Solutions', category: 'materiel', categoryLabel: 'Matériel de Culture', standNumber: 'B3', description: 'Solutions innovantes pour la culture indoor' },
-  { id: '3', name: 'Hemp Lifestyle', category: 'lifestyle', categoryLabel: 'Lifestyle & Food', standNumber: 'C7', description: 'Produits CBD pour le quotidien' },
-  { id: '4', name: 'Chanvre Bio France', category: 'producteur', categoryLabel: 'Producteurs CBD', standNumber: 'A15', description: 'Agriculture biologique certifiée' },
-  { id: '5', name: 'LED Grow Pro', category: 'materiel', categoryLabel: 'Matériel de Culture', standNumber: 'B8', description: 'Éclairage LED haute performance' },
-  { id: '6', name: 'CBD Cosmetics', category: 'lifestyle', categoryLabel: 'Lifestyle & Food', standNumber: 'C12', description: 'Cosmétiques naturels au CBD' },
-]
+interface Category {
+  slug: string
+  name: string
+  count: number
+}
 
 export default function ExposantsPage() {
   const [selectedCategory, setSelectedCategory] = useState('all')
+  const [exhibitors, setExhibitors] = useState<Exhibitor[]>([])
+  const [categories, setCategories] = useState<Category[]>([
+    { slug: 'all', name: 'Tous', count: 0 },
+  ])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetchExhibitors()
+  }, [])
+
+  const fetchExhibitors = async () => {
+    try {
+      const res = await fetch('/api/exposants')
+      const data = await res.json()
+      if (data.success) {
+        setExhibitors(data.data)
+        setCategories(data.categories)
+      }
+    } catch (error) {
+      console.error('Error fetching exhibitors:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const filteredExhibitors = selectedCategory === 'all'
-    ? placeholderExhibitors
-    : placeholderExhibitors.filter(e => e.category === selectedCategory)
+    ? exhibitors
+    : exhibitors.filter(e => e.category === selectedCategory)
 
   return (
     <div className="min-h-screen bg-cream">
@@ -46,7 +70,7 @@ export default function ExposantsPage() {
           >
             <span className="inline-flex items-center gap-2 px-4 py-2 bg-sage/20 backdrop-blur-sm text-cream font-medium rounded-full text-sm mb-6 border border-sage/30">
               <span className="w-2 h-2 rounded-full bg-sage animate-pulse" />
-              50+ exposants confirmés
+              {exhibitors.length > 0 ? `${exhibitors.length} exposants confirmés` : 'Exposants à venir'}
             </span>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-cream mb-6">
               Nos Exposants
@@ -89,6 +113,15 @@ export default function ExposantsPage() {
         </motion.div>
 
         {/* Exhibitors Grid */}
+        {loading ? (
+          <div className="flex justify-center py-12">
+            <div className="w-12 h-12 border-4 border-forest/20 border-t-forest rounded-full animate-spin" />
+          </div>
+        ) : filteredExhibitors.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-body/60 text-lg">Les exposants seront bientôt annoncés.</p>
+          </div>
+        ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-12">
           {filteredExhibitors.map((exhibitor, index) => (
             <motion.div
@@ -100,16 +133,29 @@ export default function ExposantsPage() {
               <Card variant="elevated" className="group h-full hover:shadow-xl transition-all duration-300">
                 <CardContent>
                   <div className="relative h-32 bg-gradient-to-br from-sage/10 to-forest/5 rounded-xl mb-4 flex items-center justify-center overflow-hidden">
-                    <motion.div
-                      whileHover={{ scale: 1.1, rotate: 5 }}
-                      className="w-16 h-16 rounded-full bg-white shadow-lg flex items-center justify-center"
-                    >
-                      <svg className="w-8 h-8 text-forest" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                      </svg>
-                    </motion.div>
+                    {exhibitor.logoUrl ? (
+                      <motion.div
+                        whileHover={{ scale: 1.05 }}
+                        className="w-full h-full flex items-center justify-center p-4"
+                      >
+                        <img
+                          src={exhibitor.logoUrl}
+                          alt={`Logo ${exhibitor.name}`}
+                          className="max-h-full max-w-full object-contain"
+                        />
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        whileHover={{ scale: 1.1, rotate: 5 }}
+                        className="w-16 h-16 rounded-full bg-white shadow-lg flex items-center justify-center"
+                      >
+                        <svg className="w-8 h-8 text-forest" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                        </svg>
+                      </motion.div>
+                    )}
                     <Badge variant="forest" size="sm" className="absolute top-3 right-3">
-                      {exhibitor.standNumber}
+                      Stand {exhibitor.standNumber}
                     </Badge>
                   </div>
 
@@ -119,44 +165,40 @@ export default function ExposantsPage() {
                   <Badge variant="sage" size="sm" className="mb-2">
                     {exhibitor.categoryLabel}
                   </Badge>
-                  <p className="text-sm text-body/60 mb-4">
-                    {exhibitor.description}
+                  <p className="text-sm text-body/60 mb-4 line-clamp-2">
+                    {exhibitor.description || 'Description à venir'}
                   </p>
 
-                  <Link
-                    href={`/exposants/${exhibitor.id}`}
-                    className="inline-flex items-center gap-1 text-forest text-sm font-medium group-hover:gap-2 transition-all"
-                  >
-                    Voir la fiche
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </Link>
+                  {exhibitor.websiteUrl ? (
+                    <a
+                      href={exhibitor.websiteUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-forest text-white rounded-lg text-sm font-medium hover:bg-forest-600 transition-colors"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                      </svg>
+                      Visiter le site
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                    </a>
+                  ) : (
+                    <span className="inline-flex items-center gap-1 text-body/40 text-sm">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                      </svg>
+                      Site web à venir
+                    </span>
+                  )}
                 </CardContent>
               </Card>
             </motion.div>
           ))}
 
-          {/* Coming Soon Placeholders */}
-          {Array.from({ length: 3 }).map((_, i) => (
-            <motion.div
-              key={`placeholder-${i}`}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.5 }}
-              transition={{ delay: 0.3 + i * 0.1 }}
-            >
-              <Card variant="bordered" className="h-full">
-                <CardContent>
-                  <div className="h-32 bg-sage/5 rounded-xl mb-4 flex items-center justify-center">
-                    <span className="text-sage/50 text-sm font-medium">Bientôt annoncé</span>
-                  </div>
-                  <div className="h-5 bg-sage/10 rounded w-3/4 mb-2" />
-                  <div className="h-4 bg-sage/10 rounded w-1/2" />
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
         </div>
+        )}
 
         {/* CTA Section */}
         <motion.div

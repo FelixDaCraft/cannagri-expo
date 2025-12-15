@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx prisma generate:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npx prisma migrate dev:*)",
+      "Bash(ls:*)",
+      "Bash(docker run:*)",
+      "Bash(docker logs:*)",
+      "Bash(docker exec:*)",
+      "Bash(npx prisma db push)",
+      "Bash(DATABASE_URL=\"postgresql://cannagri:cannagri123@localhost:5432/cannagri?schema=public\" npx prisma migrate dev:*)",
+      "Bash(docker inspect:*)",
+      "Bash(docker stop:*)",
+      "Bash(docker rm:*)",
+      "Bash(postgres:16-alpine)",
+      "Bash(node:*)",
+      "Bash(docker-compose:*)",
+      "Bash(ss:*)",
+      "Bash(winget install:*)",
+      "Bash(taskkill:*)"
+    ]
+  }
+}

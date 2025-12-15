@@ -7,17 +7,45 @@ import type { Sponsor } from '@/types'
 
 // Tailles des logos selon le type de partenaire
 const sponsorSizes = {
-  PLATINUM: { width: 'w-48 md:w-56', height: 'h-28 md:h-32' },
-  GOLD: { width: 'w-40 md:w-48', height: 'h-24 md:h-28' },
-  SILVER: { width: 'w-32 md:w-40', height: 'h-20 md:h-24' },
+  PLATINE: { width: 'w-48 md:w-56', height: 'h-28 md:h-32' },
+  OR: { width: 'w-40 md:w-48', height: 'h-24 md:h-28' },
+  ARGENT: { width: 'w-32 md:w-40', height: 'h-20 md:h-24' },
   BRONZE: { width: 'w-24 md:w-32', height: 'h-16 md:h-20' },
 }
 
 const sponsorLabels = {
-  PLATINUM: 'Partenaires Platinum',
-  GOLD: 'Partenaires Or',
-  SILVER: 'Partenaires Argent',
+  PLATINE: 'Partenaires Platine',
+  OR: 'Partenaires Or',
+  ARGENT: 'Partenaires Argent',
   BRONZE: 'Partenaires Bronze',
+}
+
+// Contreparties par type de sponsor
+const sponsorBenefits = {
+  PLATINE: {
+    publications: 1,
+    stories: 4,
+    position: 'En-tête',
+    articleHomepage: true,
+  },
+  OR: {
+    publications: 1,
+    stories: 3,
+    position: 'En-tête',
+    articleHomepage: false,
+  },
+  ARGENT: {
+    publications: 1,
+    stories: 2,
+    position: 'Milieu',
+    articleHomepage: false,
+  },
+  BRONZE: {
+    publications: 1,
+    stories: 1,
+    position: 'Bas de page',
+    articleHomepage: false,
+  },
 }
 
 interface PartnersGridProps {
@@ -28,9 +56,9 @@ export function PartnersGrid({ sponsors }: PartnersGridProps) {
   const activeSponsors = sponsors.filter((s) => s.isActive)
 
   // Grouper par type
-  const platinumSponsors = activeSponsors.filter((s) => s.type === 'PLATINUM')
-  const goldSponsors = activeSponsors.filter((s) => s.type === 'GOLD')
-  const silverSponsors = activeSponsors.filter((s) => s.type === 'SILVER')
+  const platineSponsors = activeSponsors.filter((s) => s.type === 'PLATINE')
+  const orSponsors = activeSponsors.filter((s) => s.type === 'OR')
+  const argentSponsors = activeSponsors.filter((s) => s.type === 'ARGENT')
   const bronzeSponsors = activeSponsors.filter((s) => s.type === 'BRONZE')
 
   return (
@@ -52,19 +80,19 @@ export function PartnersGrid({ sponsors }: PartnersGridProps) {
         {/* Partners Grid by tier */}
         {activeSponsors.length > 0 ? (
           <div className="space-y-12">
-            {/* Platinum */}
-            {platinumSponsors.length > 0 && (
-              <SponsorTier sponsors={platinumSponsors} type="PLATINUM" />
+            {/* Platine */}
+            {platineSponsors.length > 0 && (
+              <SponsorTier sponsors={platineSponsors} type="PLATINE" />
             )}
 
-            {/* Gold */}
-            {goldSponsors.length > 0 && (
-              <SponsorTier sponsors={goldSponsors} type="GOLD" />
+            {/* Or */}
+            {orSponsors.length > 0 && (
+              <SponsorTier sponsors={orSponsors} type="OR" />
             )}
 
-            {/* Silver */}
-            {silverSponsors.length > 0 && (
-              <SponsorTier sponsors={silverSponsors} type="SILVER" />
+            {/* Argent */}
+            {argentSponsors.length > 0 && (
+              <SponsorTier sponsors={argentSponsors} type="ARGENT" />
             )}
 
             {/* Bronze */}
@@ -91,7 +119,7 @@ export function PartnersGrid({ sponsors }: PartnersGridProps) {
               Associez votre marque au salon de référence du chanvre CBD
             </p>
             <Link
-              href="/pro/sponsoring"
+              href="/sponsoring"
               className="inline-flex items-center gap-2 text-forest font-heading font-semibold hover:text-forest-600 transition-colors"
             >
               Découvrir nos offres
@@ -159,10 +187,10 @@ function SponsorTier({ sponsors, type }: { sponsors: Sponsor[]; type: keyof type
 function PartnersGridPlaceholder() {
   return (
     <div className="space-y-12">
-      {/* Platinum placeholders */}
+      {/* Platine placeholders */}
       <div>
         <h3 className="text-center text-sm font-medium text-forest/60 uppercase tracking-wider mb-6">
-          Partenaires Platinum
+          Partenaires Platine
         </h3>
         <div className="flex justify-center gap-10">
           {[1, 2].map((i) => (
@@ -170,13 +198,13 @@ function PartnersGridPlaceholder() {
               key={i}
               className="w-48 h-28 md:w-56 md:h-32 bg-sage/10 rounded-lg flex items-center justify-center"
             >
-              <span className="text-sage/50 text-sm">Logo Platinum</span>
+              <span className="text-sage/50 text-sm">Logo Platine</span>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Gold placeholders */}
+      {/* Or placeholders */}
       <div>
         <h3 className="text-center text-sm font-medium text-forest/60 uppercase tracking-wider mb-6">
           Partenaires Or
@@ -193,7 +221,7 @@ function PartnersGridPlaceholder() {
         </div>
       </div>
 
-      {/* Silver placeholders */}
+      {/* Argent placeholders */}
       <div>
         <h3 className="text-center text-sm font-medium text-forest/60 uppercase tracking-wider mb-6">
           Partenaires Argent

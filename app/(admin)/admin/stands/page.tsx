@@ -17,8 +17,32 @@ const sizeConfig: Record<AdminStandSize, { label: string; description: string }>
   LARGE: { label: 'Grand', description: '24+ m²' },
 }
 
+interface ProUser {
+  id: string
+  companyName: string | null
+  email: string
+  name: string | null
+}
+
+interface SponsorOption {
+  id: string
+  name: string
+  type: string
+  standId: string | null
+}
+
+// Labels pour les types de sponsors
+const sponsorTypeLabels: Record<string, string> = {
+  PLATINE: 'Platine',
+  OR: 'Or',
+  ARGENT: 'Argent',
+  BRONZE: 'Bronze',
+}
+
 export default function StandsPage() {
   const [stands, setStands] = useState<AdminStand[]>([])
+  const [proUsers, setProUsers] = useState<ProUser[]>([])
+  const [sponsors, setSponsors] = useState<SponsorOption[]>([])
   const [loading, setLoading] = useState(true)
   const [viewMode, setViewMode] = useState<'plan' | 'list'>('plan')
   const [editingStand, setEditingStand] = useState<AdminStand | null>(null)
@@ -33,6 +57,8 @@ export default function StandsPage() {
     status: 'FREE' as AdminStandStatus,
     size: 'MEDIUM' as AdminStandSize,
     exhibitorName: '',
+    proId: '',
+    sponsorId: '',
     hasFurniture: false,
     hasElectricity: false,
     furniturePrice: '120',
@@ -51,6 +77,12 @@ export default function StandsPage() {
       if (data.data) {
         setStands(data.data)
       }
+      if (data.proUsers) {
+        setProUsers(data.proUsers)
+      }
+      if (data.sponsors) {
+        setSponsors(data.sponsors)
+      }
     } catch (error) {
       console.error('Error fetching stands:', error)
       setMessage({ type: 'error', text: 'Erreur lors du chargement des stands' })
@@ -68,6 +100,8 @@ export default function StandsPage() {
       status: stand.status,
       size: stand.size,
       exhibitorName: stand.exhibitorName || '',
+      proId: (stand as any).proId || '',
+      sponsorId: (stand as any).sponsor?.id || '',
       hasFurniture: stand.hasFurniture,
       hasElectricity: stand.hasElectricity,
       furniturePrice: stand.furniturePrice.toString(),
@@ -91,6 +125,8 @@ export default function StandsPage() {
           status: formData.status,
           size: formData.size,
           exhibitorName: formData.exhibitorName || null,
+          proId: formData.proId || null,
+          sponsorId: formData.sponsorId || null,
           hasFurniture: formData.hasFurniture,
           hasElectricity: formData.hasElectricity,
           furniturePrice: parseFloat(formData.furniturePrice),
@@ -284,9 +320,9 @@ export default function StandsPage() {
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">N°</th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Exposant</th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Surface</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prix HT</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prix</th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Options</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Services</th>
                   <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
@@ -298,7 +334,17 @@ export default function StandsPage() {
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap">
                       {stand.exhibitorName ? (
-                        <span className="text-gray-900">{stand.exhibitorName}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-gray-900">{stand.exhibitorName}</span>
+                          {(stand as any).sponsor && (
+                            <Badge variant="terracotta" size="sm">
+                              {sponsorTypeLabels[(stand as any).sponsor.type] || 'Sponsor'}
+                            </Badge>
+                          )}
+                          {(stand as any).pro && !(stand as any).sponsor && (
+                            <Badge variant="sage" size="sm">PRO</Badge>
+                          )}
+                        </div>
                       ) : (
                         <span className="text-gray-400 italic">Non assigné</span>
                       )}
@@ -315,11 +361,7 @@ export default function StandsPage() {
                       </Badge>
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap">
-                      <div className="flex gap-1">
-                        {stand.hasFurniture && <Badge variant="default" size="sm">Mobilier</Badge>}
-                        {stand.hasElectricity && <Badge variant="default" size="sm">Élec</Badge>}
-                        {!stand.hasFurniture && !stand.hasElectricity && <span className="text-gray-400">-</span>}
-                      </div>
+                      <Badge variant="sage" size="sm">Tout inclus</Badge>
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap text-right">
                       <Button
@@ -359,50 +401,119 @@ export default function StandsPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Surface (m²)</label>
-                <input
-                  type="number"
-                  value={formData.surfaceM2}
-                  onChange={(e) => setFormData({ ...formData, surfaceM2: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-forest"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Prix HT (€)</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Prix (€)</label>
                 <input
                   type="number"
                   value={formData.priceHT}
                   onChange={(e) => setFormData({ ...formData, priceHT: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-forest"
                 />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Taille</label>
-                <select
-                  value={formData.size}
-                  onChange={(e) => setFormData({ ...formData, size: e.target.value as AdminStandSize })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-forest"
-                >
-                  {Object.entries(sizeConfig).map(([key, { label, description }]) => (
-                    <option key={key} value={key}>{label} ({description})</option>
-                  ))}
-                </select>
+                <p className="text-xs text-gray-500 mt-1">Association non soumise à TVA</p>
               </div>
             </div>
 
-            {/* Exposant */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Exposant assigné
-                <span className="text-gray-400 font-normal ml-1">(optionnel)</span>
-              </label>
-              <input
-                type="text"
-                value={formData.exhibitorName}
-                onChange={(e) => setFormData({ ...formData, exhibitorName: e.target.value })}
-                placeholder="Nom de l'exposant"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-forest"
-              />
+            {/* Surface fixe */}
+            <div className="p-3 bg-cream/50 rounded-lg">
+              <p className="text-sm text-gray-600">
+                <span className="font-medium">Surface :</span> 4 m² (taille unique)
+              </p>
+            </div>
+
+            {/* Attribution du stand */}
+            <div className="space-y-3 p-4 bg-gray-50 rounded-lg">
+              <h4 className="font-medium text-gray-900">Attribution du stand</h4>
+
+              {/* Sponsor */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Sponsor associé
+                  <Badge variant="terracotta" size="sm" className="ml-2">Partenaire</Badge>
+                </label>
+                <select
+                  value={formData.sponsorId}
+                  onChange={(e) => {
+                    const selectedSponsorId = e.target.value
+                    const selectedSponsor = sponsors.find(s => s.id === selectedSponsorId)
+                    setFormData({
+                      ...formData,
+                      sponsorId: selectedSponsorId,
+                      // Auto-fill exhibitorName with sponsor name when selecting
+                      exhibitorName: selectedSponsor?.name || formData.exhibitorName,
+                      // Clear proId if sponsor is selected
+                      proId: selectedSponsorId ? '' : formData.proId,
+                    })
+                  }}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-forest"
+                >
+                  <option value="">-- Aucun sponsor --</option>
+                  {sponsors
+                    .filter(s => !s.standId || s.standId === editingStand?.id)
+                    .map((sponsor) => (
+                      <option key={sponsor.id} value={sponsor.id}>
+                        {sponsor.name} ({sponsorTypeLabels[sponsor.type] || sponsor.type})
+                        {sponsor.standId === editingStand?.id ? ' (actuel)' : ''}
+                      </option>
+                    ))}
+                </select>
+                <p className="text-xs text-gray-500 mt-1">
+                  {sponsors.filter(s => !s.standId || s.standId === editingStand?.id).length} sponsor(s) disponible(s)
+                </p>
+              </div>
+
+              <div className="text-center text-sm text-gray-500">— ou —</div>
+
+              {/* Compte PRO */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Compte PRO associé
+                  <Badge variant="sage" size="sm" className="ml-2">Exposant</Badge>
+                </label>
+                <select
+                  value={formData.proId}
+                  onChange={(e) => {
+                    const selectedProId = e.target.value
+                    const selectedPro = proUsers.find(p => p.id === selectedProId)
+                    setFormData({
+                      ...formData,
+                      proId: selectedProId,
+                      // Auto-fill exhibitorName with company name when selecting a PRO
+                      exhibitorName: selectedPro?.companyName || formData.exhibitorName,
+                      // Clear sponsorId if pro is selected
+                      sponsorId: selectedProId ? '' : formData.sponsorId,
+                    })
+                  }}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-forest"
+                  disabled={!!formData.sponsorId}
+                >
+                  <option value="">-- Aucun compte PRO --</option>
+                  {proUsers.map((pro) => (
+                    <option key={pro.id} value={pro.id}>
+                      {pro.companyName || pro.name || pro.email}
+                    </option>
+                  ))}
+                </select>
+                {proUsers.length === 0 && (
+                  <p className="text-xs text-gray-500 mt-1">Aucun compte PRO validé disponible</p>
+                )}
+                {formData.sponsorId && (
+                  <p className="text-xs text-amber-600 mt-1">Un sponsor est déjà sélectionné</p>
+                )}
+              </div>
+
+              {/* Nom affiché */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Nom affiché sur le plan
+                </label>
+                <input
+                  type="text"
+                  value={formData.exhibitorName}
+                  onChange={(e) => setFormData({ ...formData, exhibitorName: e.target.value })}
+                  placeholder="Nom de l'exposant"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-forest"
+                />
+                <p className="text-xs text-gray-500 mt-1">Rempli automatiquement si sponsor ou compte PRO sélectionné</p>
+              </div>
             </div>
 
             <div>
@@ -421,28 +532,12 @@ export default function StandsPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="flex items-center gap-2 text-sm">
-                  <input
-                    type="checkbox"
-                    checked={formData.hasFurniture}
-                    onChange={(e) => setFormData({ ...formData, hasFurniture: e.target.checked })}
-                    className="w-4 h-4 rounded border-gray-300 text-forest focus:ring-forest"
-                  />
-                  <span>Mobilier (+{formData.furniturePrice}€)</span>
-                </label>
-              </div>
-              <div>
-                <label className="flex items-center gap-2 text-sm">
-                  <input
-                    type="checkbox"
-                    checked={formData.hasElectricity}
-                    onChange={(e) => setFormData({ ...formData, hasElectricity: e.target.checked })}
-                    className="w-4 h-4 rounded border-gray-300 text-forest focus:ring-forest"
-                  />
-                  <span>Électricité (+{formData.electricityPrice}€)</span>
-                </label>
+            {/* Services inclus */}
+            <div className="p-3 bg-sage/20 rounded-lg">
+              <p className="text-sm font-medium text-forest mb-2">Services inclus dans le prix :</p>
+              <div className="flex flex-wrap gap-3">
+                <Badge variant="sage">Mobilier (tables & chaises)</Badge>
+                <Badge variant="sage">Électricité</Badge>
               </div>
             </div>
 
