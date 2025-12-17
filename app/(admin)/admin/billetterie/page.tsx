@@ -11,8 +11,8 @@ const mockTickets = [
     id: '1',
     customerName: 'Jean Dupont',
     customerEmail: 'jean@example.com',
-    ticketType: 'PASS_PRO',
-    ticketPrice: 25,
+    ticketType: 'STANDARD',
+    ticketPrice: 15,
     status: 'PAID',
     qrCodeData: 'CANNAGRI-123-456',
     createdAt: '2024-12-05T10:30:00Z',
@@ -21,8 +21,8 @@ const mockTickets = [
     id: '2',
     customerName: 'Marie Martin',
     customerEmail: 'marie@example.com',
-    ticketType: 'VIP',
-    ticketPrice: 75,
+    ticketType: 'FLEX',
+    ticketPrice: 20,
     status: 'PAID',
     qrCodeData: 'CANNAGRI-789-012',
     createdAt: '2024-12-04T14:20:00Z',
@@ -31,7 +31,7 @@ const mockTickets = [
     id: '3',
     customerName: 'Pierre Durand',
     customerEmail: 'pierre@example.com',
-    ticketType: 'VISITEUR',
+    ticketType: 'STANDARD',
     ticketPrice: 15,
     status: 'USED',
     qrCodeData: 'CANNAGRI-345-678',
@@ -40,9 +40,8 @@ const mockTickets = [
 ]
 
 const ticketTypeLabels: Record<string, string> = {
-  VISITEUR: 'Visiteur',
-  PASS_PRO: 'Pass Pro',
-  VIP: 'VIP',
+  STANDARD: 'Standard',
+  FLEX: 'Flex',
 }
 
 const statusConfig: Record<string, { label: string; variant: 'success' | 'warning' | 'default' | 'error' }> = {
@@ -69,10 +68,7 @@ const columns = [
     label: 'Type',
     render: (ticket: typeof mockTickets[0]) => (
       <Badge
-        variant={
-          ticket.ticketType === 'VIP' ? 'forest' :
-          ticket.ticketType === 'PASS_PRO' ? 'sage' : 'default'
-        }
+        variant={ticket.ticketType === 'FLEX' ? 'terracotta' : 'sage'}
       >
         {ticketTypeLabels[ticket.ticketType] || ticket.ticketType}
       </Badge>
@@ -160,7 +156,7 @@ export default function BilletteriePage() {
         <Card variant="default" className="bg-white">
           <CardContent>
             <p className="text-sm text-gray-600 mb-1">Billets utilisés</p>
-            <p className="text-2xl font-bold text-sage-700">{stats.used}</p>
+            <p className="text-2xl font-bold text-forest">{stats.used}</p>
           </CardContent>
         </Card>
         <Card variant="default" className="bg-white">

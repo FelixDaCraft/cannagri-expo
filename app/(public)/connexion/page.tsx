@@ -4,13 +4,17 @@ import { useState } from 'react'
 import { signIn, getProviders } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import { Card, CardContent, Badge, Button } from '@/components/ui'
 
 export default function LoginPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get('callbackUrl') || '/pro'
+  const callbackUrl = searchParams.get('callbackUrl') || '/'
   const error = searchParams.get('error')
+
+  const t = useTranslations('auth.login')
+  const tCommon = useTranslations('common')
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -31,13 +35,13 @@ export default function LoginPage() {
       })
 
       if (result?.error) {
-        setErrorMessage('Email ou mot de passe incorrect')
+        setErrorMessage(t('error'))
       } else if (result?.ok) {
         router.push(callbackUrl)
         router.refresh()
       }
     } catch {
-      setErrorMessage('Une erreur est survenue')
+      setErrorMessage(t('errorGeneric'))
     } finally {
       setIsLoading(false)
     }
@@ -83,12 +87,12 @@ export default function LoginPage() {
       <div className="container-custom">
         <div className="max-w-md mx-auto">
           <div className="text-center mb-8">
-            <Badge variant="forest" className="mb-4">Espace Pro</Badge>
+            <Badge variant="forest" className="mb-4">{t('proSpace')}</Badge>
             <h1 className="text-3xl font-heading font-bold text-heading mb-2">
-              Connexion
+              {t('title')}
             </h1>
             <p className="text-body/70">
-              Accédez à votre espace professionnel
+              {t('subtitle')}
             </p>
           </div>
 
@@ -97,7 +101,7 @@ export default function LoginPage() {
               {/* Error messages */}
               {(error || errorMessage) && (
                 <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
-                  {errorMessage || 'Une erreur est survenue lors de la connexion'}
+                  {errorMessage || t('errorGeneric')}
                 </div>
               )}
 
@@ -111,7 +115,7 @@ export default function LoginPage() {
                     className={`w-full flex items-center justify-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors ${provider.bg} ${provider.text} ${provider.border} disabled:opacity-50`}
                   >
                     {provider.icon}
-                    <span>Continuer avec {provider.name}</span>
+                    <span>{tCommon('continueWith', { provider: provider.name })}</span>
                   </button>
                 ))}
               </div>
@@ -122,7 +126,7 @@ export default function LoginPage() {
                   <div className="w-full border-t border-gray-200"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-4 bg-white text-gray-500">ou avec email</span>
+                  <span className="px-4 bg-white text-gray-500">{t('orWithEmail')}</span>
                 </div>
               </div>
 
@@ -130,41 +134,43 @@ export default function LoginPage() {
               <form onSubmit={handleCredentialsLogin} className="space-y-4">
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                    Email
+                    {t('email')}
                   </label>
                   <input
                     type="email"
                     id="email"
+                    autoComplete="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent"
-                    placeholder="votre@email.com"
+                    placeholder={t('emailPlaceholder')}
                   />
                 </div>
 
                 <div>
                   <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-                    Mot de passe
+                    {t('password')}
                   </label>
                   <input
                     type="password"
                     id="password"
+                    autoComplete="current-password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent"
-                    placeholder="Votre mot de passe"
+                    placeholder={t('passwordPlaceholder')}
                   />
                 </div>
 
                 <div className="flex items-center justify-between text-sm">
                   <label className="flex items-center">
                     <input type="checkbox" className="rounded border-gray-300 text-forest focus:ring-forest" />
-                    <span className="ml-2 text-gray-600">Se souvenir de moi</span>
+                    <span className="ml-2 text-gray-600">{t('rememberMe')}</span>
                   </label>
                   <Link href="/mot-de-passe-oublie" className="text-forest hover:underline">
-                    Mot de passe oublié ?
+                    {t('forgotPassword')}
                   </Link>
                 </div>
 
@@ -174,15 +180,15 @@ export default function LoginPage() {
                   className="w-full py-3"
                   disabled={isLoading}
                 >
-                  {isLoading ? 'Connexion...' : 'Se connecter'}
+                  {isLoading ? t('submitting') : t('submit')}
                 </Button>
               </form>
 
               {/* Register link */}
               <p className="mt-6 text-center text-sm text-gray-600">
-                Pas encore de compte ?{' '}
+                {t('noAccount')}{' '}
                 <Link href="/inscription" className="text-forest font-medium hover:underline">
-                  Créer un compte
+                  {t('register')}
                 </Link>
               </p>
             </CardContent>
@@ -190,13 +196,13 @@ export default function LoginPage() {
 
           {/* RGPD Notice */}
           <p className="mt-6 text-center text-xs text-gray-500">
-            En vous connectant, vous acceptez nos{' '}
+            {t('legalNotice')}{' '}
             <Link href="/mentions-legales" className="underline hover:text-forest">
-              mentions légales
+              {t('legalLinks')}
             </Link>{' '}
-            et notre{' '}
+            {t('and')}{' '}
             <Link href="/confidentialite" className="underline hover:text-forest">
-              politique de confidentialité
+              {t('privacyPolicy')}
             </Link>
             .
           </p>

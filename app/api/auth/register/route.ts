@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { name, email, password, companyName, phone, siret, businessType, wantsPro, newsletter } = body
 
-    // Validation
+    // Validation de base
     if (!name || !email || !password) {
       return NextResponse.json(
         { error: 'Nom, email et mot de passe requis' },
@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // PRO validation
+    // Validation PRO - uniquement si wantsPro est true
     if (wantsPro) {
       if (!companyName) {
         return NextResponse.json(
@@ -68,19 +68,24 @@ export async function POST(request: NextRequest) {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 12)
 
-    // Create user - role is PRO if requested, otherwise USER (visitor)
-    // If PRO, isApproved starts as false until admin validates
+    // Create user
+    // - USER role par défaut (visiteurs publics)
+    // - PRO role si wantsPro est true (exposants professionnels)
+    // Les comptes admin/contributor sont créés via invitations
     const user = await prisma.user.create({
       data: {
         name,
         email: email.toLowerCase(),
         hashedPassword,
-        companyName: companyName || null,
         phone: phone || null,
-        siret: wantsPro ? siret : null,
-        businessType: wantsPro ? businessType : null,
-        role: wantsPro ? 'PRO' : 'EDITOR', // EDITOR = visiteur standard
-        isApproved: false, // PRO accounts need admin approval
+        // Infos PRO uniquement si demandé
+        ...(wantsPro && {
+          companyName,
+          siret,
+          businessType,
+        }),
+        role: wantsPro ? 'PRO' : 'USER',
+        isApproved: wantsPro ? false : true, // USER accounts are auto-approved, PRO need admin validation
       }
     })
 
@@ -101,12 +106,14 @@ export async function POST(request: NextRequest) {
       })
     }
 
+    const isPro = wantsPro === true
+
     return NextResponse.json({
       success: true,
-      message: wantsPro
+      message: isPro
         ? 'Compte créé avec succès. Votre demande de compte professionnel est en attente de validation.'
-        : 'Compte créé avec succès',
-      isPro: wantsPro,
+        : 'Compte créé avec succès.',
+      isPro,
       user: {
         id: user.id,
         email: user.email,

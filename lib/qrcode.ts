@@ -69,30 +69,68 @@ export async function generateQRCodeSVG(data: string): Promise<string> {
 }
 
 /**
- * Verify a QR code data format
+ * Extract raw QR code from URL or return as-is if already raw
+ * Handles both formats:
+ * - Raw: CANNAGRI-xxx-xxx-xxx
+ * - URL: https://example.com/ticket/CANNAGRI-xxx-xxx-xxx
  */
-export function verifyQRCodeFormat(data: string): boolean {
-  // Format: CANNAGRI-{orderId}-{ticketId}-{timestamp}
-  const pattern = /^CANNAGRI-[a-zA-Z0-9]+-[a-zA-Z0-9]+-\d+$/
-  return pattern.test(data)
+export function extractQRCodeFromUrl(data: string): string {
+  // If it's a URL, extract the code from the path
+  if (data.startsWith('http://') || data.startsWith('https://')) {
+    try {
+      const url = new URL(data)
+      const pathParts = url.pathname.split('/')
+      // Find the part that looks like a CANNAGRI code
+      for (const part of pathParts) {
+        const decoded = decodeURIComponent(part)
+        if (decoded.startsWith('CANNAGRI-')) {
+          return decoded
+        }
+      }
+    } catch {
+      // If URL parsing fails, try to extract CANNAGRI code directly
+      const match = data.match(/CANNAGRI-[a-zA-Z0-9]+-[a-zA-Z0-9]+-\d+/)
+      if (match) return match[0]
+    }
+  }
+
+  // Return as-is (raw code)
+  return data
 }
 
 /**
- * Parse QR code data
+ * Verify a QR code data format
+ */
+export function verifyQRCodeFormat(data: string): boolean {
+  // Extract raw code if it's a URL
+  const rawData = extractQRCodeFromUrl(data)
+  // Format: CANNAGRI-{orderId}-{ticketId}-{timestamp}
+  const pattern = /^CANNAGRI-[a-zA-Z0-9]+-[a-zA-Z0-9]+-\d+$/
+  return pattern.test(rawData)
+}
+
+/**
+ * Parse QR code data (handles both raw codes and URLs)
  */
 export function parseQRCodeData(data: string): {
   prefix: string
   orderId: string
   ticketId: string
   timestamp: number
+  rawCode: string
 } | null {
-  if (!verifyQRCodeFormat(data)) return null
+  // Extract raw code if it's a URL
+  const rawCode = extractQRCodeFromUrl(data)
 
-  const parts = data.split('-')
+  const pattern = /^CANNAGRI-[a-zA-Z0-9]+-[a-zA-Z0-9]+-\d+$/
+  if (!pattern.test(rawCode)) return null
+
+  const parts = rawCode.split('-')
   return {
     prefix: parts[0],
     orderId: parts[1],
     ticketId: parts[2],
     timestamp: parseInt(parts[3]),
+    rawCode, // Include raw code for database lookup
   }
 }

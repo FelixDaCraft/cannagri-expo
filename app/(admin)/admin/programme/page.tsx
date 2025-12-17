@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { DataTable } from '@/components/admin'
+import { DataTable, EventTranslationEditor } from '@/components/admin'
 import { Button, Badge, Modal, Input } from '@/components/ui'
 
 // Counter for unique IDs
@@ -20,6 +20,13 @@ interface Speaker {
   bio: string
 }
 
+interface Translations {
+  en?: string
+  de?: string
+  es?: string
+  it?: string
+}
+
 interface Event {
   id: string
   title: string
@@ -33,6 +40,8 @@ interface Event {
   isPlatinumCBDCup: boolean
   isHighlighted: boolean
   displayOrder: number
+  titleTranslations: Translations | null
+  descriptionTranslations: Translations | null
   createdAt: string
   updatedAt: string
 }
@@ -69,7 +78,7 @@ function formatDate(dateString: string) {
   })
 }
 
-const columns = [
+const getColumns = (onTranslate: (event: Event) => void) => [
   {
     key: 'time',
     label: 'Horaire',
@@ -116,6 +125,38 @@ const columns = [
       if (speakers.length === 0) return '-'
       if (speakers.length === 1) return speakers[0].name
       return `${speakers.length} intervenants`
+    },
+  },
+  {
+    key: 'translations',
+    label: 'Traductions',
+    render: (event: Event) => {
+      const hasTranslations = event.titleTranslations && Object.keys(event.titleTranslations).length > 0
+      return (
+        <button
+          onClick={(e) => {
+            e.stopPropagation()
+            onTranslate(event)
+          }}
+          className="flex items-center gap-1 text-sm hover:opacity-80 transition-opacity"
+        >
+          {hasTranslations ? (
+            <Badge variant="success">
+              <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+              </svg>
+              Traduit
+            </Badge>
+          ) : (
+            <Badge variant="default">
+              <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+              </svg>
+              Traduire
+            </Badge>
+          )}
+        </button>
+      )
     },
   },
   {
@@ -486,8 +527,11 @@ export default function ProgrammePage() {
   const [events, setEvents] = useState<Event[]>([])
   const [editingEvent, setEditingEvent] = useState<Event | null>(null)
   const [showForm, setShowForm] = useState(false)
+  const [translatingEvent, setTranslatingEvent] = useState<Event | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+
+  const columns = getColumns((event) => setTranslatingEvent(event))
 
   useEffect(() => {
     fetchEvents()
@@ -659,7 +703,7 @@ export default function ProgrammePage() {
         </div>
         <div className="bg-white rounded-lg p-4 shadow-sm">
           <p className="text-sm text-gray-600">🛠️ Ateliers</p>
-          <p className="text-2xl font-bold text-sage">
+          <p className="text-2xl font-bold text-forest">
             {events.filter((e) => e.type === 'WORKSHOP').length}
           </p>
         </div>
@@ -700,6 +744,27 @@ export default function ProgrammePage() {
           onSubmit={editingEvent ? handleUpdate : handleCreate}
           onCancel={() => { setShowForm(false); setEditingEvent(null); }}
         />
+      </Modal>
+
+      {/* Translation Modal */}
+      <Modal
+        isOpen={!!translatingEvent}
+        onClose={() => setTranslatingEvent(null)}
+        title="Gestion des traductions"
+        size="3xl"
+      >
+        {translatingEvent && (
+          <EventTranslationEditor
+            eventId={translatingEvent.id}
+            eventTitle={translatingEvent.title}
+            title={translatingEvent.title}
+            description={translatingEvent.description}
+            titleTranslations={translatingEvent.titleTranslations}
+            descriptionTranslations={translatingEvent.descriptionTranslations}
+            onClose={() => setTranslatingEvent(null)}
+            onSave={() => fetchEvents()}
+          />
+        )}
       </Modal>
     </div>
   )

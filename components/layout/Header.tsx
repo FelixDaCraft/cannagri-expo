@@ -1,13 +1,17 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useSession, signOut } from 'next-auth/react'
+import { useTranslations } from 'next-intl'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui'
-import { navigation, siteConfig } from '@/config/site'
+import { siteConfig } from '@/config/site'
+import { LanguageSwitcher } from './LanguageSwitcher'
+import { locales, type Locale } from '@/i18n/config'
+import { NavItem } from '@/types'
 
 // Fallback logo SVG
 function LogoFallback() {
@@ -27,6 +31,56 @@ export function Header() {
   const pathname = usePathname()
   const { data: session, status } = useSession()
 
+  const t = useTranslations('common')
+  const tNav = useTranslations('nav')
+
+  // Détecter la locale courante depuis le cookie
+  const [currentLocale, setCurrentLocale] = useState<Locale>('fr')
+
+  useEffect(() => {
+    const getLocaleFromCookie = () => {
+      const match = document.cookie.match(/NEXT_LOCALE=([^;]+)/)
+      if (match && locales.includes(match[1] as Locale)) {
+        return match[1] as Locale
+      }
+      return 'fr'
+    }
+    setCurrentLocale(getLocaleFromCookie())
+
+    // Écouter les changements de cookie
+    const interval = setInterval(() => {
+      const newLocale = getLocaleFromCookie()
+      setCurrentLocale(prev => prev !== newLocale ? newLocale : prev)
+    }, 500)
+
+    return () => clearInterval(interval)
+  }, [])
+
+  // Navigation avec traductions
+  const navigation: NavItem[] = useMemo(() => [
+    { label: tNav('ourVision'), href: "/evenement" },
+    {
+      label: tNav('theEvent'),
+      href: "/programme",
+      children: [
+        { label: tNav('program'), href: "/programme" },
+        { label: tNav('exhibitors'), href: "/exposants" },
+        { label: tNav('photoGallery'), href: "/mediatheque" },
+        { label: tNav('practicalInfo'), href: "/infos-pratiques" },
+      ],
+    },
+    { label: tNav('sponsoring'), href: "/sponsoring" },
+    { label: tNav('contact'), href: "/contact" },
+    {
+      label: tNav('proSpace'),
+      href: "/pro",
+      children: [
+        { label: tNav('becomeExhibitor'), href: "/pro" },
+        { label: tNav('bookStand'), href: "/pro/plan" },
+      ],
+    },
+  ], [tNav])
+
   // Vérifier si l'utilisateur est un PRO validé ou un ADMIN
   const canAccessProSpace = useMemo(() => {
     if (!session?.user) return false
@@ -41,12 +95,12 @@ export function Header() {
   // Filtrer la navigation pour masquer "Espace Pro" si non autorisé
   const filteredNavigation = useMemo(() => {
     return navigation.filter(item => {
-      if (item.label === 'Espace Pro') {
+      if (item.href === '/pro') {
         return canAccessProSpace
       }
       return true
     })
-  }, [canAccessProSpace])
+  }, [canAccessProSpace, navigation])
 
   const isActive = (href: string) => {
     if (href === '/') return pathname === '/'
@@ -128,10 +182,10 @@ export function Header() {
           </nav>
 
           {/* CTA Buttons & User Menu - fixe à droite */}
-          <div className="hidden lg:flex items-center gap-2 shrink-0">
+          <div className="hidden lg:flex items-center gap-3 shrink-0">
             <Link href="/billetterie">
               <Button variant="secondary" size="sm">
-                Billetterie
+                {t('tickets')}
               </Button>
             </Link>
 
@@ -168,7 +222,7 @@ export function Header() {
                 {userMenuOpen && (
                   <div className="absolute top-full right-0 mt-1 bg-white rounded-lg shadow-lg py-2 min-w-[200px] z-50">
                     <div className="px-4 py-2 border-b border-gray-100">
-                      <p className="font-medium text-gray-900 truncate">{session.user.name || 'Utilisateur'}</p>
+                      <p className="font-medium text-gray-900 truncate">{session.user.name || t('user')}</p>
                       <p className="text-sm text-gray-500 truncate">{session.user.email}</p>
                     </div>
 
@@ -179,10 +233,22 @@ export function Header() {
                       <svg className="w-4 h-4 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                       </svg>
-                      Mon compte
+                      {t('myAccount')}
                     </Link>
 
-                    {session.user.role === 'ADMIN' && (
+                    {['USER', 'PRO'].includes(session.user.role) && (
+                      <Link
+                        href="/compte/billets"
+                        className="block px-4 py-2 text-gray-700 hover:bg-cream hover:text-forest transition-colors"
+                      >
+                        <svg className="w-4 h-4 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
+                        </svg>
+                        {t('myTickets')}
+                      </Link>
+                    )}
+
+                    {['SUPER_ADMIN', 'ADMIN', 'CONTRIBUTOR'].includes(session.user.role) && (
                       <Link
                         href="/admin"
                         className="block px-4 py-2 text-gray-700 hover:bg-cream hover:text-forest transition-colors"
@@ -191,7 +257,7 @@ export function Header() {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
-                        Administration
+                        {t('admin')}
                       </Link>
                     )}
 
@@ -204,7 +270,7 @@ export function Header() {
                       <svg className="w-4 h-4 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                       </svg>
-                      Déconnexion
+                      {t('logout')}
                     </button>
                   </div>
                 )}
@@ -214,16 +280,22 @@ export function Header() {
               <div className="flex items-center gap-2">
                 <Link href="/connexion">
                   <Button variant="ghost" size="sm" className="text-white hover:bg-white/10">
-                    Connexion
+                    {t('login')}
                   </Button>
                 </Link>
                 <Link href="/inscription">
                   <Button variant="outline" size="sm" className="border-white text-white hover:bg-white hover:text-forest">
-                    Inscription
+                    {t('register')}
                   </Button>
                 </Link>
               </div>
             )}
+
+            {/* Séparateur */}
+            <div className="w-px h-6 bg-white/20" />
+
+            {/* Language Switcher - tout à droite */}
+            <LanguageSwitcher currentLocale={currentLocale} variant="flag-dropdown" />
           </div>
 
           {/* Mobile Menu Button */}
@@ -276,10 +348,16 @@ export function Header() {
                   )}
                 </div>
               ))}
+              {/* Language Switcher Mobile */}
+              <div className="px-4 py-3 border-t border-white/10">
+                <p className="text-white/60 text-xs mb-2 uppercase tracking-wider">{t('language')}</p>
+                <LanguageSwitcher currentLocale={currentLocale} variant="inline" theme="dark" />
+              </div>
+
               <div className="px-4 pt-4 space-y-3">
                 <Link href="/billetterie" onClick={() => setIsMobileMenuOpen(false)}>
                   <Button variant="secondary" className="w-full">
-                    Billetterie
+                    {t('tickets')}
                   </Button>
                 </Link>
 
@@ -294,21 +372,29 @@ export function Header() {
                         </div>
                       )}
                       <div>
-                        <p className="text-white font-medium">{session.user.name || 'Utilisateur'}</p>
+                        <p className="text-white font-medium">{session.user.name || t('user')}</p>
                         <p className="text-white/60 text-sm truncate">{session.user.email}</p>
                       </div>
                     </div>
 
                     <Link href="/compte" onClick={() => setIsMobileMenuOpen(false)}>
                       <Button variant="outline" className="w-full border-white text-white hover:bg-white hover:text-forest">
-                        Mon compte
+                        {t('myAccount')}
                       </Button>
                     </Link>
 
-                    {session.user.role === 'ADMIN' && (
+                    {['USER', 'PRO'].includes(session.user.role) && (
+                      <Link href="/compte/billets" onClick={() => setIsMobileMenuOpen(false)}>
+                        <Button variant="outline" className="w-full border-white text-white hover:bg-white hover:text-forest">
+                          {t('myTickets')}
+                        </Button>
+                      </Link>
+                    )}
+
+                    {['SUPER_ADMIN', 'ADMIN', 'CONTRIBUTOR'].includes(session.user.role) && (
                       <Link href="/admin" onClick={() => setIsMobileMenuOpen(false)}>
                         <Button variant="outline" className="w-full border-white text-white hover:bg-white hover:text-forest">
-                          Administration
+                          {t('admin')}
                         </Button>
                       </Link>
                     )}
@@ -321,19 +407,19 @@ export function Header() {
                         signOut({ callbackUrl: '/' })
                       }}
                     >
-                      Déconnexion
+                      {t('logout')}
                     </Button>
                   </>
                 ) : (
                   <div className="flex gap-2">
                     <Link href="/connexion" className="flex-1" onClick={() => setIsMobileMenuOpen(false)}>
                       <Button variant="ghost" className="w-full text-white hover:bg-white/10">
-                        Connexion
+                        {t('login')}
                       </Button>
                     </Link>
                     <Link href="/inscription" className="flex-1" onClick={() => setIsMobileMenuOpen(false)}>
                       <Button variant="outline" className="w-full border-white text-white hover:bg-white hover:text-forest">
-                        Inscription
+                        {t('register')}
                       </Button>
                     </Link>
                   </div>

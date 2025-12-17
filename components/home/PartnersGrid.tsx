@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from 'motion/react'
+import { useTranslations } from 'next-intl'
 import type { Sponsor } from '@/types'
 
 // Tailles des logos selon le type de partenaire
@@ -13,12 +14,7 @@ const sponsorSizes = {
   BRONZE: { width: 'w-24 md:w-32', height: 'h-16 md:h-20' },
 }
 
-const sponsorLabels = {
-  PLATINE: 'Partenaires Platine',
-  OR: 'Partenaires Or',
-  ARGENT: 'Partenaires Argent',
-  BRONZE: 'Partenaires Bronze',
-}
+// Labels seront chargés via les traductions
 
 // Contreparties par type de sponsor
 const sponsorBenefits = {
@@ -53,6 +49,7 @@ interface PartnersGridProps {
 }
 
 export function PartnersGrid({ sponsors }: PartnersGridProps) {
+  const t = useTranslations('home.sponsors')
   const activeSponsors = sponsors.filter((s) => s.isActive)
 
   // Grouper par type
@@ -71,9 +68,9 @@ export function PartnersGrid({ sponsors }: PartnersGridProps) {
           viewport={{ once: true }}
           className="text-center mb-12"
         >
-          <h2 className="section-title">Nos Partenaires</h2>
+          <h2 className="section-title">{t('title')}</h2>
           <p className="section-subtitle">
-            Merci à nos partenaires qui rendent cet événement possible
+            {t('subtitle')}
           </p>
         </motion.div>
 
@@ -82,22 +79,22 @@ export function PartnersGrid({ sponsors }: PartnersGridProps) {
           <div className="space-y-12">
             {/* Platine */}
             {platineSponsors.length > 0 && (
-              <SponsorTier sponsors={platineSponsors} type="PLATINE" />
+              <SponsorTier sponsors={platineSponsors} type="PLATINE" label={t('tiers.platinum')} />
             )}
 
             {/* Or */}
             {orSponsors.length > 0 && (
-              <SponsorTier sponsors={orSponsors} type="OR" />
+              <SponsorTier sponsors={orSponsors} type="OR" label={t('tiers.gold')} />
             )}
 
             {/* Argent */}
             {argentSponsors.length > 0 && (
-              <SponsorTier sponsors={argentSponsors} type="ARGENT" />
+              <SponsorTier sponsors={argentSponsors} type="ARGENT" label={t('tiers.silver')} />
             )}
 
             {/* Bronze */}
             {bronzeSponsors.length > 0 && (
-              <SponsorTier sponsors={bronzeSponsors} type="BRONZE" />
+              <SponsorTier sponsors={bronzeSponsors} type="BRONZE" label={t('tiers.bronze')} />
             )}
           </div>
         ) : (
@@ -113,16 +110,16 @@ export function PartnersGrid({ sponsors }: PartnersGridProps) {
         >
           <div className="inline-block p-8 bg-cream rounded-2xl">
             <h3 className="text-xl font-heading font-semibold text-heading mb-2">
-              Devenez Partenaire
+              {t('becomePartner')}
             </h3>
             <p className="text-body/70 text-sm mb-4 max-w-md mx-auto">
-              Associez votre marque au salon de référence du chanvre CBD
+              {t('becomePartnerSubtitle')}
             </p>
             <Link
               href="/sponsoring"
               className="inline-flex items-center gap-2 text-forest font-heading font-semibold hover:text-forest-600 transition-colors"
             >
-              Découvrir nos offres
+              {t('discoverOffers')}
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
@@ -134,9 +131,8 @@ export function PartnersGrid({ sponsors }: PartnersGridProps) {
   )
 }
 
-function SponsorTier({ sponsors, type }: { sponsors: Sponsor[]; type: keyof typeof sponsorSizes }) {
+function SponsorTier({ sponsors, type, label }: { sponsors: Sponsor[]; type: keyof typeof sponsorSizes; label: string }) {
   const sizes = sponsorSizes[type]
-  const label = sponsorLabels[type]
 
   return (
     <motion.div
@@ -185,12 +181,14 @@ function SponsorTier({ sponsors, type }: { sponsors: Sponsor[]; type: keyof type
 }
 
 function PartnersGridPlaceholder() {
+  const t = useTranslations('home.sponsors')
+
   return (
     <div className="space-y-12">
       {/* Platine placeholders */}
       <div>
         <h3 className="text-center text-sm font-medium text-forest/60 uppercase tracking-wider mb-6">
-          Partenaires Platine
+          {t('tiers.platinum')}
         </h3>
         <div className="flex justify-center gap-10">
           {[1, 2].map((i) => (
@@ -198,7 +196,7 @@ function PartnersGridPlaceholder() {
               key={i}
               className="w-48 h-28 md:w-56 md:h-32 bg-sage/10 rounded-lg flex items-center justify-center"
             >
-              <span className="text-sage/50 text-sm">Logo Platine</span>
+              <span className="text-sage/50 text-sm">{t('placeholders.platinum')}</span>
             </div>
           ))}
         </div>
@@ -207,7 +205,7 @@ function PartnersGridPlaceholder() {
       {/* Or placeholders */}
       <div>
         <h3 className="text-center text-sm font-medium text-forest/60 uppercase tracking-wider mb-6">
-          Partenaires Or
+          {t('tiers.gold')}
         </h3>
         <div className="flex flex-wrap justify-center gap-8">
           {[1, 2, 3].map((i) => (
@@ -215,7 +213,7 @@ function PartnersGridPlaceholder() {
               key={i}
               className="w-40 h-24 md:w-48 md:h-28 bg-sage/10 rounded-lg flex items-center justify-center"
             >
-              <span className="text-sage/50 text-sm">Logo Or</span>
+              <span className="text-sage/50 text-sm">{t('placeholders.gold')}</span>
             </div>
           ))}
         </div>
@@ -224,7 +222,7 @@ function PartnersGridPlaceholder() {
       {/* Argent placeholders */}
       <div>
         <h3 className="text-center text-sm font-medium text-forest/60 uppercase tracking-wider mb-6">
-          Partenaires Argent
+          {t('tiers.silver')}
         </h3>
         <div className="flex flex-wrap justify-center gap-6">
           {[1, 2, 3, 4].map((i) => (
@@ -232,7 +230,7 @@ function PartnersGridPlaceholder() {
               key={i}
               className="w-32 h-20 md:w-40 md:h-24 bg-sage/10 rounded-lg flex items-center justify-center"
             >
-              <span className="text-sage/50 text-xs">Logo Argent</span>
+              <span className="text-sage/50 text-xs">{t('placeholders.silver')}</span>
             </div>
           ))}
         </div>
@@ -241,7 +239,7 @@ function PartnersGridPlaceholder() {
       {/* Bronze placeholders */}
       <div>
         <h3 className="text-center text-sm font-medium text-forest/60 uppercase tracking-wider mb-6">
-          Partenaires Bronze
+          {t('tiers.bronze')}
         </h3>
         <div className="flex flex-wrap justify-center gap-4">
           {[1, 2, 3, 4, 5].map((i) => (
@@ -249,7 +247,7 @@ function PartnersGridPlaceholder() {
               key={i}
               className="w-24 h-16 md:w-32 md:h-20 bg-sage/10 rounded-lg flex items-center justify-center"
             >
-              <span className="text-sage/50 text-xs">Logo</span>
+              <span className="text-sage/50 text-xs">{t('placeholders.bronze')}</span>
             </div>
           ))}
         </div>

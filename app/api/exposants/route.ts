@@ -1,6 +1,13 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
+interface Translations {
+  en?: string
+  de?: string
+  es?: string
+  it?: string
+}
+
 // GET /api/exposants - Get all exhibitors (from sold stands with linked PRO accounts)
 export async function GET() {
   try {
@@ -20,6 +27,7 @@ export async function GET() {
             id: true,
             companyName: true,
             companyDescription: true,
+            companyDescriptionTranslations: true,
             companyLogo: true,
             companyWebsite: true,
             businessType: true,
@@ -37,6 +45,7 @@ export async function GET() {
         id: stand.pro!.id,
         name: stand.exhibitorName || stand.pro!.companyName || 'Exposant',
         description: stand.pro!.companyDescription,
+        descriptionTranslations: stand.pro!.companyDescriptionTranslations as Translations | null,
         logoUrl: stand.pro!.companyLogo,
         websiteUrl: stand.pro!.companyWebsite,
         standNumber: stand.number.toString(),

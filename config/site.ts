@@ -73,6 +73,7 @@ export const navigation: NavItem[] = [
     ],
   },
   { label: "Sponsoring", href: "/sponsoring" },
+  { label: "Contact", href: "/contact" },
   {
     label: "Espace Pro",
     href: "/pro",
@@ -94,6 +95,7 @@ export const footerLinks = {
       { label: "Accueil", href: "/" },
       { label: "Programme", href: "/programme" },
       { label: "Exposants", href: "/exposants" },
+      { label: "Contact", href: "/contact" },
       { label: "Contact Presse", href: "/contact?type=press" },
     ],
   },

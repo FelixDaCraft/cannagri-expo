@@ -1,0 +1,659 @@
+{
+  "common": {
+    "home": "Home",
+    "tickets": "Tickets",
+    "exhibitors": "Exhibitors",
+    "program": "Program",
+    "contact": "Contact",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "myAccount": "My account",
+    "myTickets": "My tickets",
+    "admin": "Administration",
+    "user": "User",
+    "buyTickets": "Buy tickets",
+    "learnMore": "Learn more",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "required": "Required",
+    "optional": "Optional",
+    "yes": "Yes",
+    "no": "No",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "seeAll": "See all",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "noResults": "No results",
+    "language": "Language",
+    "orWith": "or with",
+    "continueWith": "Continue with {provider}",
+    "registerWith": "Sign up with {provider}",
+    "stayConnected": "Stay Connected",
+    "yourEmail": "Your email",
+    "allRightsReserved": "All rights reserved.",
+    "errorOccurred": "An error occurred",
+    "question": "Have a question?"
+  },
+  "nav": {
+    "ourVision": "Our Vision",
+    "theEvent": "The Event",
+    "event": "The event",
+    "program": "Program",
+    "exhibitors": "Exhibitors",
+    "photoGallery": "Photo Gallery",
+    "practicalInfo": "Practical info",
+    "sponsoring": "Sponsoring",
+    "contact": "Contact",
+    "proSpace": "Pro Space",
+    "becomeExhibitor": "Become Exhibitor",
+    "bookStand": "Book a Stand",
+    "cgv": "Terms"
+  },
+  "home": {
+    "hero": {
+      "title": "CANN'AGRI",
+      "titleHighlight": "EXPO",
+      "subtitle": "The reference CBD hemp exhibition",
+      "edition": "2026 Edition",
+      "buyTicket": "Buy my ticket",
+      "practicalInfo": "Practical Info",
+      "discover": "Discover"
+    },
+    "pillars": {
+      "title": "At the Heart of the Industry",
+      "subtitle": "Discover the key players of the French and European CBD hemp industry gathered for an exceptional day.",
+      "stats": {
+        "exhibitors": "Exhibitors",
+        "visitors": "Expected visitors",
+        "conferences": "Conferences",
+        "uniqueDay": "Unique day"
+      }
+    },
+    "tickets": {
+      "badge": "Tickets",
+      "title": "Book your tickets",
+      "subtitle": "Choose the formula that suits you and join us on {date} at {location}, {city}.",
+      "standard": {
+        "name": "Standard Ticket",
+        "description": "Full day access to the exhibition",
+        "features": {
+          "stands": "Access to exhibitor stands",
+          "conferences": "Access to conferences",
+          "badge": "Visitor badge"
+        },
+        "supportMessage": "No hard feelings, thanks anyway, paying for your ticket is already great!"
+      },
+      "flex": {
+        "name": "Flex Ticket",
+        "description": "Support the association",
+        "features": {
+          "stands": "Access to exhibitor stands",
+          "conferences": "Access to conferences",
+          "badge": "Visitor badge"
+        },
+        "supportMessage": "Your support allows us to organize better events and develop the CBD hemp industry in France.",
+        "badge": "FULL SUPPORT"
+      },
+      "quantity": "Quantity",
+      "yourSelection": "Your selection",
+      "ticket": "ticket",
+      "tickets": "tickets",
+      "proceedPayment": "Proceed to payment",
+      "seeAllOptions": "See all options",
+      "securePayment": "Secure payment",
+      "eTicket": "E-ticket by email",
+      "refundable": "Refundable 48h before"
+    },
+    "sponsors": {
+      "featured": "Featured",
+      "featuredSubtitle": "Discover our Platinum partners and their news",
+      "platineSponsor": "Platinum Sponsor",
+      "readArticle": "Read the article",
+      "viewAllPartners": "View all our partners",
+      "comingSoon": "Our Platinum partners will be announced soon",
+      "articleComingSoon": "Partner article coming soon",
+      "discoverPartner": "Discover our Premium partner.",
+      "title": "Our Partners",
+      "subtitle": "Thanks to our partners who make this event possible",
+      "tiers": {
+        "platinum": "Platinum Partners",
+        "gold": "Gold Partners",
+        "silver": "Silver Partners",
+        "bronze": "Bronze Partners"
+      },
+      "placeholders": {
+        "platinum": "Platinum Logo",
+        "gold": "Gold Logo",
+        "silver": "Silver Logo",
+        "bronze": "Logo"
+      },
+      "becomePartner": "Become a Partner",
+      "becomePartnerSubtitle": "Associate your brand with the reference CBD hemp exhibition",
+      "discoverOffers": "Discover our offers"
+    },
+    "program": {
+      "title": "Highlights & Conferences",
+      "subtitle": "A rich program with quality speakers to understand the challenges of the CBD hemp industry.",
+      "eventTypes": {
+        "conference": "Conference",
+        "workshop": "Workshop",
+        "ceremony": "Ceremony",
+        "opening": "Opening conference"
+      },
+      "defaultTitle": "The Future of European CBD Regulation",
+      "defaultDescription": "What are the prospects for the CBD hemp industry in France and Europe? The latest regulatory developments and their impacts on market players.",
+      "expertToConfirm": "Expert to be confirmed",
+      "specialistSpeaker": "Specialist speaker",
+      "viewFullProgram": "View full program",
+      "stats": {
+        "conferences": "Conferences",
+        "speakers": "Speakers",
+        "exhibitors": "Exhibitors",
+        "award": "Platinum CBD Cup Award Show"
+      }
+    },
+    "newsletter": {
+      "title": "Stay informed",
+      "subtitle": "Subscribe to our newsletter to not miss anything",
+      "placeholder": "Your email address",
+      "subscribe": "Subscribe",
+      "success": "Thank you for subscribing!",
+      "error": "An error occurred"
+    }
+  },
+  "exhibitors": {
+    "title": "Our Exhibitors",
+    "subtitle": "Discover the CBD hemp industry players present at the exhibition",
+    "confirmedCount": "{count} confirmed exhibitors",
+    "comingSoon": "Exhibitors coming soon",
+    "categories": {
+      "all": "All",
+      "PRODUCTEURS": "CBD Producers",
+      "MATERIEL": "Growing Equipment",
+      "LIFESTYLE": "Lifestyle & Food",
+      "SERVICE": "Services",
+      "agriculture": "Agriculture",
+      "industry": "Industry",
+      "wellness": "Wellness",
+      "technology": "Technology"
+    },
+    "stand": "Stand",
+    "descriptionComingSoon": "Description coming soon",
+    "visitWebsite": "Visit website",
+    "websiteComingSoon": "Website coming soon",
+    "noExhibitors": "Exhibitors will be announced soon.",
+    "cta": {
+      "title": "Want to exhibit?",
+      "description": "Join the exhibitors at the reference CBD hemp exhibition. Book your stand now.",
+      "button": "Become an Exhibitor"
+    },
+    "becomeExhibitor": "Become an exhibitor",
+    "contactUs": "Contact us"
+  },
+  "event": {
+    "badge": "The leading CBD hemp trade show",
+    "title": "Presentation",
+    "subtitle": "The must-attend event for CBD hemp professionals",
+    "about": {
+      "title": "What is Cann'Agri Expo?",
+      "p1": "Cann'Agri Expo is the first professional trade show dedicated to the CBD hemp industry in Western France. Held in Nantes, this event brings together producers, distributors, processors and industry experts for a day rich in exchanges and discoveries.",
+      "p2": "Our goal is to create a privileged meeting space for all industry players: farmers, laboratories, specialized shops, and innovative project leaders in the hemp wellness sector.",
+      "p3": "The {year} edition promises to be exceptional with around thirty exhibitors, conferences led by renowned experts, and the prestigious Platinum CBD Cup ceremony."
+    },
+    "stats": {
+      "title": "Cann'Agri Expo in numbers",
+      "exhibitors": "Exhibitors",
+      "visitors": "Expected visitors",
+      "companies": "Companies present",
+      "conferences": "Conferences"
+    },
+    "features": {
+      "title": "What awaits you",
+      "exhibition": {
+        "title": "Exhibition Space",
+        "description": "Discover our exhibitors' stands: CBD producers, cultivation equipment, wellness products, cosmetics, food and more."
+      },
+      "conferences": {
+        "title": "Conferences & Round Tables",
+        "description": "Attend expert presentations on regulations, market trends, technical innovations and industry prospects."
+      },
+      "cup": {
+        "title": "Platinum CBD Cup",
+        "description": "The competition that rewards the best CBD products of the year. A jury of experts evaluates and awards the most innovative creations."
+      },
+      "networking": {
+        "title": "Networking",
+        "description": "Connect with industry professionals, expand your network and discover new partnership opportunities."
+      },
+      "innovations": {
+        "title": "Innovations",
+        "description": "Discover the latest technological advances, new varieties and innovations shaping the future of the hemp industry."
+      },
+      "documentation": {
+        "title": "Documentation",
+        "description": "Leave with valuable resources, guides and contacts to grow your business in the CBD hemp sector."
+      }
+    },
+    "cta": {
+      "title": "Join us on {date}",
+      "description": "Don't miss this unique opportunity to meet key players in the CBD hemp industry and participate in the sector's flagship event.",
+      "bookTicket": "Book my ticket",
+      "practicalInfo": "Practical info"
+    },
+    "edition": "{year} Edition"
+  },
+  "practicalInfo": {
+    "title": "Practical Information",
+    "subtitle": "Everything you need to know to prepare your visit to Cann'Agri Expo",
+    "dateLocation": {
+      "title": "Date & Venue",
+      "date": "Date",
+      "location": "Venue"
+    },
+    "access": {
+      "title": "How to get there?",
+      "transport": "Public transport",
+      "parking": "Parking",
+      "accessibility": "Accessibility"
+    },
+    "tickets": {
+      "title": "Tickets",
+      "buyButton": "Buy my tickets"
+    },
+    "contact": {
+      "title": "Contact"
+    },
+    "social": {
+      "title": "Follow us"
+    },
+    "professional": {
+      "title": "Are you a professional?",
+      "description": "Book your stand and exhibit your products at the exhibition.",
+      "button": "Become an exhibitor"
+    }
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "A question about the exhibition, stands or partnerships? Our team is at your disposal.",
+    "types": {
+      "general": "General question",
+      "press": "Press / Media",
+      "sponsor": "Partnership / Sponsoring",
+      "exhibitor": "Become an exhibitor"
+    },
+    "form": {
+      "type": "Request type",
+      "name": "Name",
+      "namePlaceholder": "Your name",
+      "email": "Email",
+      "emailPlaceholder": "your@email.com",
+      "phone": "Phone",
+      "phonePlaceholder": "06 12 34 56 78",
+      "company": "Company",
+      "companyPlaceholder": "Your company name",
+      "subject": "Subject",
+      "subjectPlaceholder": "Subject of your message",
+      "message": "Message",
+      "messagePlaceholder": "Your message...",
+      "send": "Send message",
+      "sending": "Sending...",
+      "success": "Message sent!",
+      "successMessage": "We have received your message and will respond as soon as possible.",
+      "sendAnother": "Send another message",
+      "error": "Error sending message",
+      "connectionError": "Connection error. Please try again.",
+      "privacyNotice": "By submitting this form, you accept our",
+      "privacyPolicy": "privacy policy"
+    },
+    "info": {
+      "title": "Information",
+      "email": "Email",
+      "phone": "Phone",
+      "address": "Address"
+    },
+    "press": {
+      "title": "Press & Media",
+      "description": "Journalists and media, contact our press service for accreditations and interviews."
+    }
+  },
+  "sponsoring": {
+    "badge": "Partnership",
+    "title": "Become a Partner",
+    "subtitle": "Associate your brand with the reference CBD hemp exhibition and benefit from exceptional visibility.",
+    "intro": "Associate your image with the sector's reference event",
+    "benefits": {
+      "title": "Benefits",
+      "visibility": {
+        "title": "Visibility",
+        "description": "Associate your brand with the CBD sector's reference event."
+      },
+      "notoriety": {
+        "title": "Notoriety",
+        "description": "Strengthen your brand image among industry professionals."
+      },
+      "network": {
+        "title": "Network",
+        "description": "Access a privileged network of decision-makers and influencers."
+      },
+      "stand": "Premium stand",
+      "conference": "Conference slot",
+      "networking": "VIP events access"
+    },
+    "packagesTitle": "Our partnership offers",
+    "packagesSubtitle": "We offer 4 partnership levels adapted to your objectives. Contact us to receive the full details of each offer.",
+    "tiers": {
+      "platinum": {
+        "name": "Platinum",
+        "description": "Maximum visibility and exclusive partnership"
+      },
+      "gold": {
+        "name": "Gold",
+        "description": "Premium partnership with high visibility"
+      },
+      "silver": {
+        "name": "Silver",
+        "description": "Partnership with targeted visibility"
+      },
+      "bronze": {
+        "name": "Bronze",
+        "description": "Support partnership"
+      }
+    },
+    "requestBrochure": "Request brochure",
+    "form": {
+      "title": "Receive our sponsoring brochures",
+      "subtitle": "Fill out this form to receive the full details of our Platinum, Gold, Silver and Bronze partnership offers.",
+      "company": "Company name",
+      "companyPlaceholder": "Your company",
+      "contact": "Full name",
+      "contactPlaceholder": "John Doe",
+      "email": "Email",
+      "emailPlaceholder": "contact@company.com",
+      "phone": "Phone",
+      "phonePlaceholder": "06 XX XX XX XX",
+      "submit": "Receive brochures",
+      "sending": "Sending...",
+      "success": "Request sent! You will receive the brochures by email.",
+      "error": "Error sending request",
+      "privacyNotice": "By submitting this form, you agree to be contacted by our team. Your data is processed in accordance with our",
+      "privacyPolicy": "privacy policy"
+    },
+    "alternativeContact": {
+      "title": "Prefer to contact us directly?"
+    }
+  },
+  "tickets": {
+    "title": "Tickets",
+    "subtitle": "Book your seat for the reference CBD hemp exhibition",
+    "selectTicket": "Choose your ticket",
+    "quantity": "Quantity",
+    "total": "Total",
+    "checkout": "Proceed to payment",
+    "features": {
+      "eTicket": {
+        "title": "Instant e-ticket",
+        "description": "Receive your QR code ticket by email immediately after payment."
+      },
+      "securePayment": {
+        "title": "Secure payment",
+        "description": "100% secure transactions with 3D Secure protocol."
+      },
+      "priorityAccess": {
+        "title": "Priority access",
+        "description": "Skip the queues with your QR code to scan."
+      }
+    },
+    "contactQuestion": "Have a question? Contact us at",
+    "form": {
+      "attendees": "Attendees",
+      "attendee": "Attendee",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email",
+      "addAttendee": "Add attendee",
+      "removeAttendee": "Remove"
+    },
+    "payment": {
+      "title": "Payment",
+      "secure": "Secure payment",
+      "processing": "Processing...",
+      "success": "Payment successful!",
+      "error": "Payment error"
+    },
+    "confirmation": {
+      "title": "Confirmation",
+      "thankYou": "Thank you for your order!",
+      "emailSent": "A confirmation email with your tickets has been sent.",
+      "orderNumber": "Order number",
+      "downloadTickets": "Download tickets"
+    }
+  },
+  "programme": {
+    "title": "Program",
+    "subtitle": "A day full of conferences, workshops and networking",
+    "types": {
+      "all": "All",
+      "CONFERENCE": "Conference",
+      "WORKSHOP": "Workshop",
+      "CEREMONY": "Ceremony",
+      "BREAK": "Break",
+      "NETWORKING": "Networking"
+    },
+    "filters": {
+      "all": "All",
+      "conference": "Conference",
+      "workshop": "Workshop",
+      "ceremony": "Ceremony"
+    },
+    "platinumCup": {
+      "title": "Platinum CBD Cup",
+      "description": "The reference competition that rewards the best CBD varieties of the year. Participate in the tasting and vote for your favorites!"
+    },
+    "emptyState": {
+      "title": "Program coming soon",
+      "description": "The detailed program will be available soon. Come back to see us soon!",
+      "newsletterHint": "Subscribe to our newsletter to be informed when the program is published."
+    },
+    "badges": {
+      "highlighted": "Featured event",
+      "mustSee": "Must see"
+    },
+    "footer": {
+      "disclaimer": "The program may be subject to changes.",
+      "downloadPdf": "Full program (PDF) - Coming soon"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Login",
+      "subtitle": "Access your professional space",
+      "proSpace": "Pro Space",
+      "email": "Email",
+      "emailPlaceholder": "your@email.com",
+      "password": "Password",
+      "passwordPlaceholder": "Your password",
+      "rememberMe": "Remember me",
+      "submit": "Sign in",
+      "submitting": "Signing in...",
+      "forgotPassword": "Forgot password?",
+      "noAccount": "Don't have an account?",
+      "register": "Create an account",
+      "error": "Invalid email or password",
+      "errorGeneric": "An error occurred during login",
+      "orWithEmail": "or with email",
+      "legalNotice": "By signing in, you accept our",
+      "legalLinks": "legal notice",
+      "and": "and our",
+      "privacyPolicy": "privacy policy"
+    },
+    "register": {
+      "title": "Create an account",
+      "subtitle": "Join the Cann'Agri Expo community",
+      "proSpace": "Pro Space",
+      "fullName": "Full name",
+      "namePlaceholder": "John Doe",
+      "phone": "Phone",
+      "phonePlaceholder": "06 12 34 56 78",
+      "email": "Email",
+      "emailPlaceholder": "your@email.com",
+      "password": "Password",
+      "passwordPlaceholder": "Minimum 8 characters",
+      "confirmPassword": "Confirm password",
+      "confirmPasswordPlaceholder": "Confirm your password",
+      "submit": "Create my account",
+      "submitting": "Creating...",
+      "hasAccount": "Already have an account?",
+      "login": "Sign in",
+      "success": "Account created successfully!",
+      "error": "Error creating account",
+      "passwordsNotMatch": "Passwords do not match",
+      "passwordTooShort": "Password must be at least 8 characters",
+      "mustAcceptTerms": "You must accept the terms of use",
+      "orWithEmail": "or with email",
+      "wantProAccount": "I want a Pro account",
+      "proAccountInfo": "Complete the information below to request an exhibitor account. Your request will be validated by our team.",
+      "company": "Company",
+      "companyPlaceholder": "Your company name",
+      "siret": "SIRET",
+      "siretPlaceholder": "123 456 789 00012",
+      "businessType": "Business type",
+      "selectBusinessType": "Select your business",
+      "businessTypes": {
+        "PRODUCTEURS": "Producers",
+        "MATERIEL": "Agricultural equipment",
+        "LIFESTYLE": "Lifestyle & Wellness",
+        "SERVICE": "Services"
+      },
+      "acceptTerms": "I accept the",
+      "legalLinks": "legal notice",
+      "and": "and the",
+      "privacyPolicy": "privacy policy",
+      "newsletter": "I want to receive the newsletter and news about the exhibition",
+      "dataProtection": "Data protection",
+      "dataProtectionText": "In accordance with GDPR, your personal data is processed securely. You can exercise your rights of access, rectification and deletion by contacting us at any time. Your data is never sold to third parties.",
+      "proPending": "Account created. Your PRO request is pending validation.",
+      "accountCreated": "Account created successfully"
+    }
+  },
+  "account": {
+    "title": "My account",
+    "subtitle": "Manage your personal information",
+    "profile": {
+      "title": "Personal information",
+      "edit": "Edit",
+      "fullName": "Full name",
+      "email": "Email",
+      "emailNotEditable": "Email cannot be changed",
+      "phone": "Phone",
+      "company": "Company",
+      "businessType": "Business type",
+      "selectActivity": "Select your activity",
+      "siret": "SIRET",
+      "notProvided": "Not provided",
+      "save": "Save",
+      "saving": "Saving...",
+      "cancel": "Cancel",
+      "updateSuccess": "Profile updated successfully",
+      "updateError": "Error updating profile"
+    },
+    "pro": {
+      "title": "Professional Account",
+      "validated": "Validated",
+      "pending": "Pending",
+      "validatedMessage": "Your account is validated. You have access to the Pro Space.",
+      "pendingMessage": "Your request is being reviewed by our team.",
+      "requestPending": "Your professional account request has been registered. It will be validated by our team shortly.",
+      "requestSent": "Your professional account request has been sent. It will be validated by our team."
+    },
+    "exhibitor": {
+      "title": "Exhibitor Profile",
+      "subtitle": "This information will appear on the Exhibitors page",
+      "description": "Description of your activity",
+      "descriptionPlaceholder": "Describe your activity, products, services...",
+      "maxChars": "Maximum 500 characters",
+      "logo": "Company logo",
+      "currentLogo": "Current logo",
+      "deleteLogo": "Delete logo",
+      "uploadLogo": "Click to choose",
+      "uploadLogoHint": "or drag and drop your logo",
+      "uploadFormats": "PNG, JPG, WebP or GIF - Max 2 MB",
+      "uploading": "Uploading...",
+      "uploadSuccess": "Logo uploaded successfully",
+      "uploadError": "Error uploading logo",
+      "logoDeleted": "Logo deleted",
+      "website": "Company website",
+      "websitePlaceholder": "https://www.my-company.com",
+      "websiteHint": "This link will appear on the Exhibitors page",
+      "noDescription": "No description added",
+      "noWebsite": "No website added",
+      "completeProfile": "Add a description, logo and website to appear on the Exhibitors page.",
+      "updateSuccess": "Company profile updated successfully",
+      "fileTypeError": "File type not allowed. Use JPG, PNG, WebP or GIF.",
+      "fileSizeError": "File is too large. Maximum 2 MB."
+    },
+    "becomeExhibitor": {
+      "title": "Become a professional exhibitor",
+      "description": "Access the Pro Space to book your stand, manage your exhibitor information and enjoy exclusive benefits.",
+      "button": "Make a request",
+      "companyName": "Company name",
+      "allFieldsRequired": "All fields are required for the PRO request",
+      "submit": "Submit request",
+      "submitting": "Submitting..."
+    },
+    "memberSince": "Member since",
+    "tickets": {
+      "title": "My tickets",
+      "noTickets": "No tickets",
+      "download": "Download",
+      "viewQR": "View QR code"
+    },
+    "orders": {
+      "title": "My orders",
+      "noOrders": "No orders",
+      "viewDetails": "View details"
+    },
+    "businessTypes": {
+      "PRODUCTEURS": "Producers",
+      "MATERIEL": "Agricultural equipment",
+      "LIFESTYLE": "Lifestyle & Wellness",
+      "SERVICE": "Services"
+    }
+  },
+  "footer": {
+    "description": "The reference exhibition for hemp and cannabis in France",
+    "quickLinks": "Quick links",
+    "contact": "Contact",
+    "followUs": "Follow us",
+    "legal": {
+      "title": "Legal information",
+      "privacy": "Privacy policy",
+      "terms": "Terms of service",
+      "cgv": "Terms and conditions",
+      "cookies": "Cookie management"
+    },
+    "copyright": "© {year} Cann'Agri Expo. All rights reserved."
+  },
+  "errors": {
+    "404": {
+      "title": "Page not found",
+      "description": "The page you are looking for does not exist.",
+      "backHome": "Back to home"
+    },
+    "500": {
+      "title": "Server error",
+      "description": "An error occurred. Please try again later.",
+      "backHome": "Back to home"
+    }
+  }
+}

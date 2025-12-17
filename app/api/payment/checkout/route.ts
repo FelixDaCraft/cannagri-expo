@@ -1,11 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { getServerSession } from 'next-auth'
 import { prisma } from '@/lib/prisma'
+import { authOptions } from '@/lib/auth'
 import { generateOrderNumber } from '@/lib/utils'
-import {
-  createTicketCheckoutSession,
-  createStandCheckoutSession,
-  isStripeEnabled,
-} from '@/lib/stripe'
+import { createVivaWalletOrder } from '@/lib/vivawallet'
+
+// Check if Viva Wallet is configured
+const isVivaWalletEnabled = !!(
+  process.env.VIVA_WALLET_MERCHANT_ID &&
+  process.env.VIVA_WALLET_API_KEY
+)
+
+
+// Force demo mode for local development
+const isDemoMode = process.env.VIVA_WALLET_DEMO_MODE === 'true' ||
+  process.env.NEXTAUTH_URL?.includes('localhost') ||
+  !process.env.NEXTAUTH_URL
 
 export async function POST(request: NextRequest) {
   try {
@@ -39,6 +49,36 @@ export async function POST(request: NextRequest) {
       amountHT = amount / 1.2 // TVA 20%
 
     } else if (type === 'STAND_BOOKING') {
+      // STAND_BOOKING requires authenticated PRO user with approved status
+      const session = await getServerSession(authOptions)
+
+      if (!session?.user) {
+        return NextResponse.json(
+          { error: 'Vous devez être connecté pour réserver un stand' },
+          { status: 401 }
+        )
+      }
+
+      // Check if user is PRO and approved
+      const user = await prisma.user.findUnique({
+        where: { id: session.user.id },
+        select: { role: true, isApproved: true }
+      })
+
+      if (!user || user.role !== 'PRO') {
+        return NextResponse.json(
+          { error: 'Seuls les comptes professionnels peuvent réserver un stand' },
+          { status: 403 }
+        )
+      }
+
+      if (!user.isApproved) {
+        return NextResponse.json(
+          { error: 'Votre compte professionnel est en attente de validation' },
+          { status: 403 }
+        )
+      }
+
       // Find the stand and calculate price
       if (!items?.standId) {
         return NextResponse.json(
@@ -70,7 +110,7 @@ export async function POST(request: NextRequest) {
       amountHT = stand.priceHT
       amount = amountHT * 1.2 // TVA 20%
 
-      // Reserve the stand temporarily (30 minutes for Stripe checkout)
+      // Reserve the stand temporarily (30 minutes for checkout)
       const reservedUntil = new Date(Date.now() + 30 * 60 * 1000)
       await prisma.stand.update({
         where: { id: stand.id },
@@ -102,6 +142,8 @@ export async function POST(request: NextRequest) {
         companyName: customer.companyName || null,
         companySiret: customer.siret || null,
         companyAddress: customer.address || null,
+        // Store ticket details for webhook processing
+        notes: type === 'VISITOR_TICKET' ? JSON.stringify(items) : null,
       }
     })
 
@@ -113,53 +155,44 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    // Create Stripe checkout session
+    // Create payment checkout URL
     let checkoutUrl: string
     const baseUrl = process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+    const successUrl = `${baseUrl}/paiement/succes?orderId=${order.id}`
+    const failureUrl = `${baseUrl}/paiement/echec?orderId=${order.id}`
 
-    if (!isStripeEnabled) {
-      // Demo mode - redirect to success simulation page
-      checkoutUrl = `/billetterie/confirmation?orderId=${order.id}&demo=true`
+    if (!isVivaWalletEnabled || isDemoMode) {
+      // Demo mode - redirect to payment simulation page
+      const amountCents = Math.round(amount * 100)
+      checkoutUrl = `${baseUrl}/paiement/demo?orderId=${order.id}&amount=${amountCents}`
     } else {
       try {
-        if (type === 'VISITOR_TICKET') {
-          const session = await createTicketCheckoutSession({
-            items,
-            customerEmail: customer.email,
-            customerName: customer.name,
-            orderId: order.id,
-            successUrl: `${baseUrl}/billetterie/confirmation?orderId=${order.id}&session_id={CHECKOUT_SESSION_ID}`,
-            cancelUrl: `${baseUrl}/billetterie?cancelled=true`,
-          })
-          checkoutUrl = session.url!
-        } else {
-          // Stand booking
-          const session = await createStandCheckoutSession({
-            standCode: stand!.code,
-            standSurface: stand!.surfaceM2,
-            priceHT: amountHT,
-            priceTTC: amount,
-            customerEmail: customer.email,
-            customerName: customer.name,
-            companyName: customer.companyName,
-            orderId: order.id,
-            successUrl: `${baseUrl}/pro/confirmation?orderId=${order.id}&session_id={CHECKOUT_SESSION_ID}`,
-            cancelUrl: `${baseUrl}/pro/stands?cancelled=true`,
-          })
-          checkoutUrl = session.url!
-        }
+        // Create Viva Wallet payment order
+        // Amount must be in cents (e.g., 25.00€ = 2500)
+        const vivaOrder = await createVivaWalletOrder({
+          amount: Math.round(amount * 100),
+          customerEmail: customer.email,
+          customerFullName: customer.name,
+          customerPhone: customer.phone || '',
+          merchantTrns: order.id, // Store our order ID for webhook
+        })
 
-        // Update order with Stripe session URL
+        // Viva Wallet checkout URL with success/failure redirects
+        checkoutUrl = `${vivaOrder.checkoutUrl}&color=2E4A33&successUrl=${encodeURIComponent(successUrl)}&failUrl=${encodeURIComponent(failureUrl)}`
+
+        // Update order with Viva Wallet order code
         await prisma.order.update({
           where: { id: order.id },
           data: {
-            vivaPaymentUrl: checkoutUrl, // Reusing field for payment URL
+            vivaWalletRef: vivaOrder.orderCode,
+            vivaPaymentUrl: checkoutUrl,
           }
         })
-      } catch (stripeError) {
-        console.error('Stripe error:', stripeError)
-        // Fallback to demo mode if Stripe fails
-        checkoutUrl = `/billetterie/confirmation?orderId=${order.id}&demo=true`
+      } catch (vivaError) {
+        console.error('Viva Wallet error:', vivaError)
+        // Fallback to demo mode if Viva Wallet fails
+        const amountCents = Math.round(amount * 100)
+        checkoutUrl = `${baseUrl}/paiement/demo?orderId=${order.id}&amount=${amountCents}`
       }
     }
 

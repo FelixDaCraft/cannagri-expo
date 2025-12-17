@@ -1,7 +1,11 @@
 import { Metadata } from 'next'
+import { redirect } from 'next/navigation'
+import { getServerSession } from 'next-auth'
 import Link from 'next/link'
 import { Card, CardContent, Button, Badge } from '@/components/ui'
 import { siteConfig } from '@/config/site'
+import { authOptions } from '@/lib/auth'
+import { prisma } from '@/lib/prisma'
 
 export const metadata: Metadata = {
   title: 'Espace Professionnel',
@@ -60,7 +64,30 @@ const standInfo = {
   ],
 }
 
-export default function ProPage() {
+export default async function ProPage() {
+  // Check if user is authenticated and is an approved PRO
+  const session = await getServerSession(authOptions)
+
+  if (!session?.user) {
+    redirect('/connexion?callbackUrl=/pro&message=' + encodeURIComponent('Connectez-vous pour accéder à l\'espace professionnel'))
+  }
+
+  // Get user details from database
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { role: true, isApproved: true }
+  })
+
+  // Check if user is PRO
+  if (!user || user.role !== 'PRO') {
+    redirect('/compte?message=' + encodeURIComponent('Vous devez avoir un compte professionnel pour accéder à cette page'))
+  }
+
+  // Check if PRO is approved
+  if (!user.isApproved) {
+    redirect('/compte?message=' + encodeURIComponent('Votre compte professionnel est en attente de validation'))
+  }
+
   return (
     <div className="min-h-screen bg-cream py-12">
       <div className="container-custom">
@@ -135,7 +162,7 @@ export default function ProPage() {
                 <h3 className="text-2xl font-heading font-semibold text-heading mb-2">
                   Stand Exposant
                 </h3>
-                <p className="text-sage text-lg mb-2">{standInfo.surface}</p>
+                <p className="text-forest/70 text-lg mb-2">{standInfo.surface}</p>
                 <p className="text-4xl font-heading font-bold text-forest mb-6">
                   {standInfo.price}
                 </p>

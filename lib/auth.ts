@@ -81,8 +81,8 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user, account }) {
       if (user) {
         token.id = user.id
-        token.role = (user as { role?: string }).role || 'PRO'
-        token.isApproved = (user as { isApproved?: boolean }).isApproved || false
+        token.role = (user as { role?: string }).role || 'USER'
+        token.isApproved = (user as { isApproved?: boolean }).isApproved ?? true // USER accounts are auto-approved
       }
       if (account) {
         token.provider = account.provider
@@ -112,14 +112,15 @@ export const authOptions: NextAuthOptions = {
         })
 
         if (!existingUser) {
-          // Create new user for OAuth
+          // Create new user for OAuth - default to USER role (not PRO)
           await prisma.user.create({
             data: {
               email: user.email,
               name: user.name,
               image: user.image,
               emailVerified: new Date(),
-              role: 'PRO',
+              role: 'USER',
+              isApproved: true, // USER accounts are auto-approved
             }
           })
         }

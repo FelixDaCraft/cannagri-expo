@@ -2,6 +2,14 @@
 
 import { useState, useEffect } from 'react'
 import { Button, Badge, Card, CardContent, Modal } from '@/components/ui'
+import { ExhibitorTranslationEditor } from '@/components/admin'
+
+interface Translations {
+  en?: string
+  de?: string
+  es?: string
+  it?: string
+}
 
 interface Pro {
   id: string
@@ -9,6 +17,8 @@ interface Pro {
   name: string | null
   firstName: string | null
   companyName: string | null
+  companyDescription: string | null
+  companyDescriptionTranslations: Translations | null
   phone: string | null
   siret: string | null
   businessType: 'PRODUCTEURS' | 'MATERIEL' | 'LIFESTYLE' | 'SERVICE' | null
@@ -32,6 +42,7 @@ export default function ProsPage() {
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
   const [showModal, setShowModal] = useState(false)
   const [editingPro, setEditingPro] = useState<Pro | null>(null)
+  const [translatingPro, setTranslatingPro] = useState<Pro | null>(null)
   const [isSaving, setIsSaving] = useState(false)
   const [formData, setFormData] = useState({
     email: '',
@@ -338,6 +349,9 @@ export default function ProsPage() {
                     Stands
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Traductions
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Inscription
                   </th>
                   <th className="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -389,6 +403,32 @@ export default function ProsPage() {
                       <span className="text-gray-900">
                         {pro._count?.stands || 0}
                       </span>
+                    </td>
+                    <td className="px-4 py-4 whitespace-nowrap">
+                      {pro.companyDescription ? (
+                        <button
+                          onClick={() => setTranslatingPro(pro)}
+                          className="flex items-center gap-1 text-sm hover:opacity-80 transition-opacity"
+                        >
+                          {pro.companyDescriptionTranslations && Object.keys(pro.companyDescriptionTranslations).length > 0 ? (
+                            <Badge variant="success">
+                              <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+                              </svg>
+                              Traduit
+                            </Badge>
+                          ) : (
+                            <Badge variant="default">
+                              <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+                              </svg>
+                              Traduire
+                            </Badge>
+                          )}
+                        </button>
+                      ) : (
+                        <span className="text-gray-400 text-sm">Pas de description</span>
+                      )}
                     </td>
                     <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                       {formatDate(pro.createdAt)}
@@ -566,6 +606,25 @@ export default function ProsPage() {
             </Button>
           </div>
         </form>
+      </Modal>
+
+      {/* Translation Modal */}
+      <Modal
+        isOpen={!!translatingPro}
+        onClose={() => setTranslatingPro(null)}
+        title="Gestion des traductions"
+        size="3xl"
+      >
+        {translatingPro && (
+          <ExhibitorTranslationEditor
+            proId={translatingPro.id}
+            companyName={translatingPro.companyName || 'Exposant'}
+            companyDescription={translatingPro.companyDescription}
+            companyDescriptionTranslations={translatingPro.companyDescriptionTranslations}
+            onClose={() => setTranslatingPro(null)}
+            onSave={() => fetchPros()}
+          />
+        )}
       </Modal>
     </div>
   )

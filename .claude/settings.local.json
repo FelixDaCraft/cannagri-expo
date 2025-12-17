@@ -18,7 +18,14 @@
       "Bash(docker-compose:*)",
       "Bash(ss:*)",
       "Bash(winget install:*)",
-      "Bash(taskkill:*)"
+      "Bash(taskkill:*)",
+      "Bash(cat:*)",
+      "Bash(npm run build:*)",
+      "Bash(npx next build)",
+      "Bash(npx tsc:*)",
+      "Bash(curl:*)",
+      "Bash(powershell.exe -Command \"Stop-Process -Name node -Force -ErrorAction SilentlyContinue\")",
+      "Bash(npm install:*)"
     ]
   }
 }

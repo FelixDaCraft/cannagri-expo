@@ -1,8 +1,29 @@
+'use client'
+
 import Link from 'next/link'
 import Image from 'next/image'
-import { siteConfig, footerLinks } from '@/config/site'
+import { useTranslations } from 'next-intl'
+import { siteConfig } from '@/config/site'
 
 export function Footer() {
+  const t = useTranslations('common')
+  const tFooter = useTranslations('footer')
+
+  // Navigation links with translations
+  const navigationLinks = [
+    { label: t('home'), href: '/' },
+    { label: t('program'), href: '/programme' },
+    { label: t('exhibitors'), href: '/exposants' },
+    { label: t('contact'), href: '/contact' },
+  ]
+
+  // Legal links with translations
+  const legalLinks = [
+    { label: tFooter('legal.privacy'), href: '/confidentialite' },
+    { label: tFooter('legal.terms'), href: '/mentions-legales' },
+    { label: tFooter('legal.cgv'), href: '/cgv' },
+  ]
+
   return (
     <footer className="bg-forest text-white">
       {/* Main Footer */}
@@ -22,18 +43,18 @@ export function Footer() {
               <span className="font-heading font-bold text-lg">{siteConfig.name}</span>
             </div>
             <p className="text-white/70 text-sm leading-relaxed">
-              {footerLinks.about.content}
+              {tFooter('description')}
             </p>
           </div>
 
           {/* Navigation */}
           <div>
             <h4 className="font-heading font-semibold text-lg mb-4">
-              {footerLinks.navigation.title}
+              {tFooter('quickLinks')}
             </h4>
             <ul className="space-y-2">
-              {footerLinks.navigation.links.map((link) => (
-                <li key={link.label}>
+              {navigationLinks.map((link) => (
+                <li key={link.href}>
                   <Link
                     href={link.href}
                     className="text-white/70 hover:text-white transition-colors text-sm"
@@ -47,7 +68,7 @@ export function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="font-heading font-semibold text-lg mb-4">Contact</h4>
+            <h4 className="font-heading font-semibold text-lg mb-4">{tFooter('contact')}</h4>
             <ul className="space-y-3 text-white/70 text-sm">
               <li className="flex items-center gap-2">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -72,7 +93,7 @@ export function Footer() {
 
           {/* Newsletter & Social */}
           <div>
-            <h4 className="font-heading font-semibold text-lg mb-4">Restons Connectés</h4>
+            <h4 className="font-heading font-semibold text-lg mb-4">{t('stayConnected')}</h4>
 
             {/* Social Links */}
             <div className="flex gap-3 mb-6">
@@ -115,7 +136,8 @@ export function Footer() {
             <form className="flex gap-2">
               <input
                 type="email"
-                placeholder="Votre email"
+                placeholder={t('yourEmail')}
+                autoComplete="email"
                 className="flex-1 px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder:text-white/50 focus:outline-none focus:border-sage text-sm"
               />
               <button
@@ -134,12 +156,12 @@ export function Footer() {
         <div className="container-custom py-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-white/50 text-sm">
-              &copy; {new Date().getFullYear()} {siteConfig.name}. Tous droits réservés.
+              {tFooter('copyright', { year: new Date().getFullYear() })}
             </p>
             <div className="flex gap-4">
-              {footerLinks.legal.map((link) => (
+              {legalLinks.map((link) => (
                 <Link
-                  key={link.label}
+                  key={link.href}
                   href={link.href}
                   className="text-white/50 hover:text-white text-sm transition-colors"
                 >

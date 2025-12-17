@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { readFile, writeFile, mkdir } from 'fs/promises'
 import { existsSync } from 'fs'
 import path from 'path'
+import { checkAdminAuth, unauthorizedResponse } from '@/lib/admin-auth'
 
 const DATA_DIR = path.join(process.cwd(), 'data')
 const INFOS_FILE = path.join(DATA_DIR, 'infos-pratiques.json')
@@ -31,6 +32,12 @@ const defaultInfos = {
 // GET - Read infos pratiques
 export async function GET() {
   try {
+    // Check admin authorization
+    const session = await checkAdminAuth()
+    if (!session) {
+      return unauthorizedResponse()
+    }
+
     await ensureDataDir()
 
     if (!existsSync(INFOS_FILE)) {
@@ -49,6 +56,12 @@ export async function GET() {
 // POST - Save infos pratiques
 export async function POST(request: NextRequest) {
   try {
+    // Check admin authorization
+    const session = await checkAdminAuth()
+    if (!session) {
+      return unauthorizedResponse()
+    }
+
     await ensureDataDir()
 
     const body = await request.json()

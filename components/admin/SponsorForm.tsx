@@ -344,7 +344,7 @@ export function SponsorForm({ sponsor, onSubmit, onCancel }: SponsorFormProps) {
           </h3>
 
           <Input
-            label="Titre de l'article"
+            label="Titre de l'article (Français)"
             name="articleTitle"
             value={formData.articleTitle}
             onChange={(e) => setFormData({ ...formData, articleTitle: e.target.value })}
@@ -353,7 +353,7 @@ export function SponsorForm({ sponsor, onSubmit, onCancel }: SponsorFormProps) {
 
           <div className="mt-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Contenu de l&apos;article
+              Contenu de l&apos;article (Français)
             </label>
             <textarea
               name="articleBody"
@@ -375,6 +375,18 @@ export function SponsorForm({ sponsor, onSubmit, onCancel }: SponsorFormProps) {
               helperText="Image mise en avant de l'article (format paysage recommandé)"
             />
           </div>
+
+          {/* Note sur les traductions */}
+          {sponsor && (
+            <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+              <p className="text-sm text-blue-800">
+                <svg className="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Après avoir enregistré l&apos;article, vous pourrez générer et éditer les traductions automatiques depuis la liste des sponsors.
+              </p>
+            </div>
+          )}
         </div>
       )}
 

@@ -3,13 +3,16 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { motion } from 'motion/react'
+import { useTranslations } from 'next-intl'
 import { Card, CardContent, Badge, Button } from '@/components/ui'
 import { Spotlight, FloatingParticles } from '@/components/ui/aceternity'
+import { getTranslatedText, Translations } from '@/lib/translation'
 
 interface Exhibitor {
   id: string
   name: string
   description: string | null
+  descriptionTranslations: Translations | null
   logoUrl: string | null
   websiteUrl: string | null
   standNumber: string
@@ -24,14 +27,29 @@ interface Category {
 }
 
 export default function ExposantsPage() {
+  const t = useTranslations('exhibitors')
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [exhibitors, setExhibitors] = useState<Exhibitor[]>([])
   const [categories, setCategories] = useState<Category[]>([
-    { slug: 'all', name: 'Tous', count: 0 },
+    { slug: 'all', name: t('categories.all'), count: 0 },
   ])
   const [loading, setLoading] = useState(true)
+  const [locale, setLocale] = useState('fr')
+
+  // Get locale from cookie
+  const getLocaleFromCookie = () => {
+    const cookies = document.cookie.split(';')
+    for (const cookie of cookies) {
+      const [name, value] = cookie.trim().split('=')
+      if (name === 'NEXT_LOCALE') {
+        return value
+      }
+    }
+    return 'fr'
+  }
 
   useEffect(() => {
+    setLocale(getLocaleFromCookie())
     fetchExhibitors()
   }, [])
 
@@ -70,13 +88,13 @@ export default function ExposantsPage() {
           >
             <span className="inline-flex items-center gap-2 px-4 py-2 bg-sage/20 backdrop-blur-sm text-cream font-medium rounded-full text-sm mb-6 border border-sage/30">
               <span className="w-2 h-2 rounded-full bg-sage animate-pulse" />
-              {exhibitors.length > 0 ? `${exhibitors.length} exposants confirmés` : 'Exposants à venir'}
+              {exhibitors.length > 0 ? t('confirmedCount', { count: exhibitors.length }) : t('comingSoon')}
             </span>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-cream mb-6">
-              Nos Exposants
+              {t('title')}
             </h1>
             <p className="text-lg md:text-xl text-cream/80 max-w-2xl mx-auto">
-              Découvrez les acteurs de la filière chanvre CBD présents lors du salon
+              {t('subtitle')}
             </p>
           </motion.div>
         </div>
@@ -119,7 +137,7 @@ export default function ExposantsPage() {
           </div>
         ) : filteredExhibitors.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-body/60 text-lg">Les exposants seront bientôt annoncés.</p>
+            <p className="text-body/60 text-lg">{t('noExhibitors')}</p>
           </div>
         ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-12">
@@ -155,7 +173,7 @@ export default function ExposantsPage() {
                       </motion.div>
                     )}
                     <Badge variant="forest" size="sm" className="absolute top-3 right-3">
-                      Stand {exhibitor.standNumber}
+                      {t('stand')} {exhibitor.standNumber}
                     </Badge>
                   </div>
 
@@ -166,7 +184,9 @@ export default function ExposantsPage() {
                     {exhibitor.categoryLabel}
                   </Badge>
                   <p className="text-sm text-body/60 mb-4 line-clamp-2">
-                    {exhibitor.description || 'Description à venir'}
+                    {exhibitor.description
+                      ? getTranslatedText(exhibitor.description, exhibitor.descriptionTranslations, locale)
+                      : t('descriptionComingSoon')}
                   </p>
 
                   {exhibitor.websiteUrl ? (
@@ -179,7 +199,7 @@ export default function ExposantsPage() {
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
                       </svg>
-                      Visiter le site
+                      {t('visitWebsite')}
                       <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                       </svg>
@@ -189,7 +209,7 @@ export default function ExposantsPage() {
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
                       </svg>
-                      Site web à venir
+                      {t('websiteComingSoon')}
                     </span>
                   )}
                 </CardContent>
@@ -214,16 +234,15 @@ export default function ExposantsPage() {
             }} />
           </div>
           <div className="relative z-10">
-            <h2 className="text-2xl md:text-3xl font-heading font-bold mb-4">
-              Vous souhaitez exposer ?
+            <h2 className="text-2xl md:text-3xl font-heading font-bold text-white mb-4">
+              {t('cta.title')}
             </h2>
             <p className="text-white/80 mb-6 max-w-xl mx-auto">
-              Rejoignez les exposants du salon de référence du chanvre CBD.
-              Réservez votre stand dès maintenant.
+              {t('cta.description')}
             </p>
             <Link href="/pro">
               <Button size="lg" className="bg-sage hover:bg-sage-600 text-forest">
-                Devenir Exposant
+                {t('cta.button')}
               </Button>
             </Link>
           </div>
