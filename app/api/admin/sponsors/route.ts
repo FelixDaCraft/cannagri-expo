@@ -1,15 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
 import { prisma } from '@/lib/prisma'
-import { authOptions } from '@/lib/auth'
+import { checkFullAdminAuth, unauthorizedResponse } from '@/lib/admin-auth'
 
 // GET /api/admin/sponsors - Get all sponsors (admin only)
 export async function GET() {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await checkFullAdminAuth()
 
-    if (!session?.user || (session.user.role !== 'ADMIN' && session.user.role !== 'EDITOR')) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+    if (!session) {
+      return unauthorizedResponse()
     }
 
     const sponsors = await prisma.sponsor.findMany({
@@ -36,10 +35,10 @@ export async function GET() {
 // POST /api/admin/sponsors - Create a new sponsor
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await checkFullAdminAuth()
 
-    if (!session?.user || (session.user.role !== 'ADMIN' && session.user.role !== 'EDITOR')) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+    if (!session) {
+      return unauthorizedResponse()
     }
 
     const body = await request.json()

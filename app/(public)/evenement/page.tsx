@@ -1,77 +1,56 @@
 'use client'
 
-import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from 'motion/react'
+import { useTranslations } from 'next-intl'
 import { Card, CardContent, Button } from '@/components/ui'
 import { Spotlight, FloatingParticles } from '@/components/ui/aceternity'
 import { siteConfig } from '@/config/site'
 
-const features = [
-  {
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-      </svg>
-    ),
-    title: 'Espace Exposition',
-    description: 'Découvrez les stands de nos exposants : producteurs CBD, équipements de culture, produits bien-être, cosmétiques, alimentaire et plus encore.',
-  },
-  {
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-      </svg>
-    ),
-    title: 'Conférences & Tables Rondes',
-    description: "Assistez aux interventions d'experts sur la réglementation, les tendances du marché, les innovations techniques et les perspectives de la filière.",
-  },
-  {
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-      </svg>
-    ),
-    title: 'Platinum CBD Cup',
-    description: "La compétition qui récompense les meilleurs produits CBD de l'année. Un jury d'experts évalue et prime les créations les plus innovantes.",
-  },
-  {
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-      </svg>
-    ),
-    title: 'Networking',
-    description: 'Échangez avec les professionnels du secteur, développez votre réseau et découvrez de nouvelles opportunités de partenariats.',
-  },
-  {
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-      </svg>
-    ),
-    title: 'Innovations',
-    description: "Découvrez les dernières avancées technologiques, les nouvelles variétés et les innovations qui façonnent l'avenir de la filière chanvre.",
-  },
-  {
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-      </svg>
-    ),
-    title: 'Documentation',
-    description: 'Repartez avec des ressources, guides et contacts précieux pour développer votre activité dans le secteur du chanvre CBD.',
-  },
-]
+const featureKeys = ['exhibition', 'conferences', 'cup', 'networking', 'innovations', 'documentation']
 
-const stats = [
-  { value: '~30', label: 'Exposants' },
-  { value: '~700', label: 'Visiteurs attendus' },
-  { value: '300', label: 'Entreprises présentes' },
-  { value: '4', label: 'Conférences' },
-]
+const featureIcons: Record<string, React.ReactNode> = {
+  exhibition: (
+    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+    </svg>
+  ),
+  conferences: (
+    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+    </svg>
+  ),
+  cup: (
+    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+    </svg>
+  ),
+  networking: (
+    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+    </svg>
+  ),
+  innovations: (
+    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+    </svg>
+  ),
+  documentation: (
+    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+    </svg>
+  ),
+}
 
 export default function PresentationPage() {
+  const t = useTranslations('event')
+
+  const stats = [
+    { value: '~30', labelKey: 'exhibitors' },
+    { value: '~700', labelKey: 'visitors' },
+    { value: '300', labelKey: 'companies' },
+    { value: '4', labelKey: 'conferences' },
+  ]
   return (
     <div className="min-h-screen bg-cream">
       {/* Hero Section */}
@@ -94,13 +73,13 @@ export default function PresentationPage() {
               className="inline-flex items-center gap-2 px-4 py-2 bg-sage/20 backdrop-blur-sm text-cream font-medium rounded-full text-sm mb-6 border border-sage/30"
             >
               <span className="w-2 h-2 rounded-full bg-sage animate-pulse" />
-              Le salon de référence du chanvre CBD
+              {t('badge')}
             </motion.span>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-cream mb-6">
-              Présentation
+              {t('title')}
             </h1>
             <p className="text-lg md:text-xl text-cream/80 max-w-2xl mx-auto">
-              Le rendez-vous incontournable des professionnels du chanvre CBD
+              {t('subtitle')}
             </p>
           </motion.div>
         </div>
@@ -128,13 +107,12 @@ export default function PresentationPage() {
             <div className="absolute inset-0 bg-forest/20 rounded-3xl transform translate-x-4 translate-y-4 -z-10" />
 
             {/* Le poster */}
-            <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl border-4 border-cream/50">
-              <Image
-                src="/images/poster-2026.png"
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-cream/50">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/images/affiche-2026.png"
                 alt="Cann'Agri Expo 2026 - Affiche officielle"
-                fill
-                className="object-cover"
-                priority
+                className="w-full h-auto"
               />
             </div>
 
@@ -146,7 +124,7 @@ export default function PresentationPage() {
               className="absolute -top-4 -right-4 md:-top-6 md:-right-6"
             >
               <div className="bg-terracotta text-cream px-4 py-2 rounded-full font-heading font-bold text-sm md:text-base shadow-lg transform rotate-12">
-                Édition 2026
+                {t('edition', { year: siteConfig.event.year })}
               </div>
             </motion.div>
           </motion.div>
@@ -158,7 +136,7 @@ export default function PresentationPage() {
               viewport={{ once: true }}
               className="text-2xl sm:text-3xl font-heading font-bold text-heading mb-6"
             >
-              Cann&apos;Agri Expo, c&apos;est quoi ?
+              {t('about.title')}
             </motion.h2>
             <motion.div
               initial={{ opacity: 0 }}
@@ -168,19 +146,13 @@ export default function PresentationPage() {
               className="space-y-4 text-body/80"
             >
               <p>
-                <strong>Cann&apos;Agri Expo</strong> est le premier salon professionnel dédié à la filière chanvre CBD
-                en région Ouest. Organisé à Nantes, cet événement rassemble producteurs, distributeurs,
-                transformateurs et experts du secteur pour une journée riche en échanges et découvertes.
+                {t('about.p1')}
               </p>
               <p>
-                Notre objectif est de créer un espace de rencontre privilégié entre tous les acteurs
-                de la filière : agriculteurs, laboratoires, boutiques spécialisées, et porteurs de projets
-                innovants dans le domaine du chanvre bien-être.
+                {t('about.p2')}
               </p>
               <p>
-                L&apos;édition {siteConfig.event.year} promet d&apos;être exceptionnelle avec une trentaine d&apos;exposants,
-                des conférences animées par des experts reconnus, et la prestigieuse cérémonie de la
-                <strong> Platinum CBD Cup</strong>.
+                {t('about.p3', { year: siteConfig.event.year })}
               </p>
             </motion.div>
           </div>
@@ -201,13 +173,13 @@ export default function PresentationPage() {
           </div>
           <FloatingParticles quantity={20} colors={['rgba(164, 180, 148, 0.3)', 'rgba(244, 241, 232, 0.2)']} />
 
-          <h2 className="relative z-10 text-2xl sm:text-3xl font-heading font-bold text-center mb-8">
-            Cann&apos;Agri Expo en chiffres
+          <h2 className="relative z-10 text-2xl sm:text-3xl font-heading font-bold text-center text-white mb-8">
+            {t('stats.title')}
           </h2>
           <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             {stats.map((stat, index) => (
               <motion.div
-                key={stat.label}
+                key={stat.labelKey}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -219,11 +191,11 @@ export default function PresentationPage() {
                   whileInView={{ scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 + 0.2, type: 'spring' }}
-                  className="text-4xl sm:text-5xl font-bold text-sage-300 mb-2"
+                  className="text-4xl sm:text-5xl font-bold text-cream mb-2"
                 >
                   {stat.value}
                 </motion.div>
-                <div className="text-white/80">{stat.label}</div>
+                <div className="text-white/80">{t(`stats.${stat.labelKey}`)}</div>
               </motion.div>
             ))}
           </div>
@@ -237,12 +209,12 @@ export default function PresentationPage() {
           className="mb-16"
         >
           <h2 className="text-2xl sm:text-3xl font-heading font-bold text-heading text-center mb-8">
-            Ce qui vous attend
+            {t('features.title')}
           </h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-            {features.map((feature, index) => (
+            {featureKeys.map((key, index) => (
               <motion.div
-                key={feature.title}
+                key={key}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -254,13 +226,13 @@ export default function PresentationPage() {
                       whileHover={{ scale: 1.1, rotate: 5 }}
                       className="w-12 h-12 bg-sage/20 rounded-full flex items-center justify-center mb-4 text-forest group-hover:bg-sage/30 transition-colors"
                     >
-                      {feature.icon}
+                      {featureIcons[key]}
                     </motion.div>
                     <h3 className="text-xl font-heading font-semibold text-heading mb-2 group-hover:text-forest transition-colors">
-                      {feature.title}
+                      {t(`features.${key}.title`)}
                     </h3>
                     <p className="text-body/70">
-                      {feature.description}
+                      {t(`features.${key}.description`)}
                     </p>
                   </CardContent>
                 </Card>
@@ -290,24 +262,23 @@ export default function PresentationPage() {
               </svg>
             </motion.div>
             <h2 className="text-2xl sm:text-3xl font-heading font-bold text-heading mb-4">
-              Rejoignez-nous le {siteConfig.event.date}
+              {t('cta.title', { date: siteConfig.event.date })}
             </h2>
             <p className="text-body/70 max-w-2xl mx-auto mb-8">
-              Ne manquez pas cette occasion unique de rencontrer les acteurs clés de la filière
-              chanvre CBD et de participer à l&apos;événement de référence du secteur.
+              {t('cta.description')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/billetterie">
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Button size="lg">
-                    Réserver mon billet
+                    {t('cta.bookTicket')}
                   </Button>
                 </motion.div>
               </Link>
               <Link href="/infos-pratiques">
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Button variant="outline" size="lg">
-                    Infos pratiques
+                    {t('cta.practicalInfo')}
                   </Button>
                 </motion.div>
               </Link>

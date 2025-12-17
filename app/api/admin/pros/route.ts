@@ -1,10 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
+import { checkAdminAuth, unauthorizedResponse } from '@/lib/admin-auth'
 
 // GET /api/admin/pros - List all Pro accounts
 export async function GET() {
   try {
+    // Check admin authorization
+    const session = await checkAdminAuth()
+    if (!session) {
+      return unauthorizedResponse()
+    }
+
     const pros = await prisma.user.findMany({
       where: {
         role: 'PRO',
@@ -15,6 +22,8 @@ export async function GET() {
         name: true,
         firstName: true,
         companyName: true,
+        companyDescription: true,
+        companyDescriptionTranslations: true,
         phone: true,
         siret: true,
         businessType: true,
@@ -44,6 +53,12 @@ export async function GET() {
 // POST /api/admin/pros - Create a new Pro account
 export async function POST(request: NextRequest) {
   try {
+    // Check admin authorization
+    const session = await checkAdminAuth()
+    if (!session) {
+      return unauthorizedResponse()
+    }
+
     const body = await request.json()
     const { email, name, firstName, companyName, phone, siret, businessType } = body
 

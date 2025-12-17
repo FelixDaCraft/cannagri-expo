@@ -1,6 +1,10 @@
+'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
+import { useTranslations, useLocale } from 'next-intl'
 import { Button, Badge } from '@/components/ui'
+import { getTranslatedText, Translations } from '@/lib/translation'
 import type { Event } from '@/types'
 
 interface ProgramStats {
@@ -15,15 +19,17 @@ interface ProgramHighlightProps {
 }
 
 export function ProgramHighlight({ event, stats }: ProgramHighlightProps) {
+  const t = useTranslations('home.program')
+  const locale = useLocale()
+
   return (
     <section className="py-16 md:py-24 bg-white">
       <div className="container-custom">
         {/* Section Header */}
         <div className="text-center mb-12">
-          <h2 className="section-title">Temps Forts & Conférences</h2>
+          <h2 className="section-title">{t('title')}</h2>
           <p className="section-subtitle">
-            Un programme riche avec des intervenants de qualité pour comprendre
-            les enjeux de la filière chanvre CBD.
+            {t('subtitle')}
           </p>
         </div>
 
@@ -53,19 +59,20 @@ export function ProgramHighlight({ event, stats }: ProgramHighlightProps) {
             {/* Event Info */}
             <div className="md:col-span-3">
               <Badge variant="forest" className="mb-4">
-                {event?.type === 'CONFERENCE' ? 'Conférence' :
-                 event?.type === 'WORKSHOP' ? 'Atelier' :
-                 event?.type === 'CEREMONY' ? 'Cérémonie' :
-                 'Conférence d\'ouverture'}
+                {event?.type === 'CONFERENCE' ? t('eventTypes.conference') :
+                 event?.type === 'WORKSHOP' ? t('eventTypes.workshop') :
+                 event?.type === 'CEREMONY' ? t('eventTypes.ceremony') :
+                 t('eventTypes.opening')}
               </Badge>
 
               <h3 className="text-2xl md:text-3xl font-heading font-bold text-heading mb-4">
-                {event?.title || "L'Avenir de la réglementation européenne du CBD"}
+                {event ? getTranslatedText(event.title, event.titleTranslations as Translations | null, locale) : t('defaultTitle')}
               </h3>
 
               <p className="text-body/70 mb-4 leading-relaxed">
-                {event?.description ||
-                  "Quelles perspectives pour la filière chanvre CBD en France et en Europe ? Les dernières évolutions réglementaires et leurs impacts sur les acteurs du marché."}
+                {event?.description
+                  ? getTranslatedText(event.description, event.descriptionTranslations as Translations | null, locale)
+                  : t('defaultDescription')}
               </p>
 
               {(event?.speakerName || !event) && (
@@ -77,10 +84,10 @@ export function ProgramHighlight({ event, stats }: ProgramHighlightProps) {
                   </div>
                   <div>
                     <p className="font-semibold text-heading">
-                      {event?.speakerName || "Expert à confirmer"}
+                      {event?.speakerName || t('expertToConfirm')}
                     </p>
                     <p className="text-sm text-body/60">
-                      {event?.speakerTitle || event?.speakerCompany || "Intervenant spécialiste"}
+                      {event?.speakerTitle || event?.speakerCompany || t('specialistSpeaker')}
                     </p>
                   </div>
                 </div>
@@ -88,7 +95,7 @@ export function ProgramHighlight({ event, stats }: ProgramHighlightProps) {
 
               <Link href="/programme">
                 <Button>
-                  Voir tout le programme
+                  {t('viewFullProgram')}
                 </Button>
               </Link>
             </div>
@@ -101,25 +108,25 @@ export function ProgramHighlight({ event, stats }: ProgramHighlightProps) {
             <div className="text-3xl md:text-4xl font-heading font-bold text-forest mb-1">
               {stats?.conferenceCount || 0}
             </div>
-            <div className="text-body/60 text-sm">Conférences</div>
+            <div className="text-body/60 text-sm">{t('stats.conferences')}</div>
           </div>
           <div className="text-center p-6 rounded-xl bg-cream">
             <div className="text-3xl md:text-4xl font-heading font-bold text-forest mb-1">
               {stats?.speakerCount || 0}
             </div>
-            <div className="text-body/60 text-sm">Intervenants</div>
+            <div className="text-body/60 text-sm">{t('stats.speakers')}</div>
           </div>
           <div className="text-center p-6 rounded-xl bg-cream">
             <div className="text-3xl md:text-4xl font-heading font-bold text-forest mb-1">
               {stats?.standCount || 0}
             </div>
-            <div className="text-body/60 text-sm">Exposants</div>
+            <div className="text-body/60 text-sm">{t('stats.exhibitors')}</div>
           </div>
           <div className="text-center p-6 rounded-xl bg-cream">
             <div className="text-3xl md:text-4xl font-heading font-bold text-forest mb-1">
               1
             </div>
-            <div className="text-body/60 text-sm">Award Show Platinum CBD Cup</div>
+            <div className="text-body/60 text-sm">{t('stats.award')}</div>
           </div>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { checkAdminAuth, unauthorizedResponse } from '@/lib/admin-auth'
 
 // DELETE /api/admin/pros/[id] - Delete a Pro account
 export async function DELETE(
@@ -7,6 +8,12 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Check admin authorization
+    const session = await checkAdminAuth()
+    if (!session) {
+      return unauthorizedResponse()
+    }
+
     const { id } = await params
 
     // Check if user exists
@@ -61,6 +68,12 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Check admin authorization
+    const session = await checkAdminAuth()
+    if (!session) {
+      return unauthorizedResponse()
+    }
+
     const { id } = await params
     const body = await request.json()
     const { isApproved, name, firstName, companyName, phone, siret, businessType } = body
@@ -130,6 +143,12 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Check admin authorization
+    const session = await checkAdminAuth()
+    if (!session) {
+      return unauthorizedResponse()
+    }
+
     const { id } = await params
 
     const user = await prisma.user.findUnique({

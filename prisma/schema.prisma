@@ -31,6 +31,12 @@ model Sponsor {
   articleBody   String?      @db.Text
   articleImage  String?
 
+  // ============ TRADUCTIONS ============
+  // Stockage JSON: { "en": "...", "de": "...", "es": "...", "it": "..." }
+  articleTitleTranslations  Json?    // Traductions du titre de l'article
+  articleBodyTranslations   Json?    // Traductions du corps de l'article
+  descriptionTranslations   Json?    // Traductions de la description
+
   // ============ EXPOSANT ============
   // Relation avec le stand attribué
   standId       String?      @unique
@@ -42,6 +48,9 @@ model Sponsor {
   contactName          String?              // Nom du contact
   contactEmail         String?              // Email de contact
   contactPhone         String?              // Téléphone de contact
+
+  // Traduction de la description exposant
+  exhibitorDescriptionTranslations Json?   // Traductions de la description exposant
 
   // Position d'affichage
   displayOrder  Int          @default(0)
@@ -113,9 +122,8 @@ model Stand {
 
 // ============ BILLETTERIE ============
 enum TicketType {
-  VISITEUR      // Entrée simple
-  PASS_PRO      // Accès privilégié
-  VIP           // Accès VIP + avantages
+  STANDARD      // Billet Standard - Accès au salon
+  FLEX          // Billet Flex - Soutien à l'association
 }
 
 enum TicketStatus {
@@ -130,7 +138,7 @@ model Ticket {
   id            String        @id @default(cuid())
   customerName  String
   customerEmail String
-  ticketType    TicketType    @default(VISITEUR)
+  ticketType    TicketType    @default(STANDARD)
   ticketPrice   Float
   qrCodeData    String        @unique
   pdfUrl        String?
@@ -232,6 +240,11 @@ model Event {
   isHighlighted   Boolean    @default(false)
   displayOrder    Int        @default(0)
 
+  // ============ TRADUCTIONS ============
+  // Stockage JSON: { "en": "...", "de": "...", "es": "...", "it": "..." }
+  titleTranslations       Json?    // Traductions du titre
+  descriptionTranslations Json?    // Traductions de la description
+
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
 }
@@ -253,9 +266,11 @@ model Media {
 
 // ============ UTILISATEURS (Auth) ============
 enum UserRole {
-  ADMIN
-  EDITOR
-  PRO
+  SUPER_ADMIN   // Accès total + gestion des rôles + invitations
+  ADMIN         // Accès total sauf gestion des rôles
+  CONTRIBUTOR   // Accès limité: Comptes Pro + Stands uniquement
+  PRO           // Compte exposant professionnel
+  USER          // Compte visiteur public (achat billets, pas d'accès admin)
 }
 
 enum BusinessType {
@@ -272,7 +287,7 @@ model User {
   name            String?
   firstName       String?
   image           String?
-  role            UserRole      @default(PRO)
+  role            UserRole      @default(USER)
 
   // Profile Pro
   companyName        String?
@@ -282,6 +297,9 @@ model User {
   phone              String?
   siret              String?
   businessType       BusinessType?
+
+  // Traductions de la description entreprise
+  companyDescriptionTranslations Json?   // { "en": "...", "de": "...", "es": "...", "it": "..." }
 
   // Validation du compte PRO par un admin
   isApproved         Boolean       @default(false)
@@ -297,6 +315,9 @@ model User {
 
   // Stands réservés par ce pro
   stands          Stand[]
+
+  // Invitations envoyées (pour SUPER_ADMIN)
+  invitationsSent TeamInvitation[]
 
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
@@ -423,6 +444,34 @@ model DailyStats {
   updatedAt     DateTime  @updatedAt
 
   @@index([date])
+}
+
+// ============ INVITATIONS EQUIPE ============
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  EXPIRED
+  CANCELLED
+}
+
+model TeamInvitation {
+  id            String           @id @default(cuid())
+  email         String
+  role          UserRole         @default(CONTRIBUTOR)
+  token         String           @unique @default(cuid())
+  status        InvitationStatus @default(PENDING)
+
+  invitedById   String
+  invitedBy     User             @relation(fields: [invitedById], references: [id])
+
+  expiresAt     DateTime
+  acceptedAt    DateTime?
+
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  @@index([email])
+  @@index([token])
 }
 
 // ============ SITE SETTINGS ============

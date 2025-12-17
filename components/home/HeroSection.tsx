@@ -3,18 +3,20 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from 'motion/react'
+import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui'
 import { siteConfig } from '@/config/site'
 import { CountdownTimer } from './CountdownTimer'
 
 export function HeroSection() {
+  const t = useTranslations('home.hero')
   return (
     <section className="relative min-h-screen overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/images/affiche-2026.svg"
+          src="/images/affiche-2026.png"
           alt="Background"
           className="w-full h-full object-cover scale-100"
         />
@@ -44,7 +46,7 @@ export function HeroSection() {
               <div className="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-cream/30">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="/images/affiche-2026.svg"
+                  src="/images/affiche-2026.png"
                   alt="Cann'Agri Expo 2026 - Affiche officielle"
                   className="w-full h-auto"
                 />
@@ -58,7 +60,7 @@ export function HeroSection() {
                 className="absolute -top-4 -right-4 md:-top-6 md:-right-6"
               >
                 <div className="bg-terracotta text-cream px-4 py-2 rounded-full font-heading font-bold text-sm md:text-base shadow-lg transform rotate-12">
-                  Édition 2026
+                  {t('edition')}
                 </div>
               </motion.div>
             </motion.div>
@@ -86,7 +88,7 @@ export function HeroSection() {
               transition={{ duration: 0.6, delay: 0.3 }}
               className="text-lg md:text-xl text-cream/90 mb-8 max-w-xl mx-auto lg:mx-0"
             >
-              Le salon de référence du chanvre CBD
+              {t('subtitle')}
             </motion.p>
 
             {/* Info événement - Date et Lieu */}
@@ -134,7 +136,7 @@ export function HeroSection() {
                     size="lg"
                     className="w-full sm:w-auto bg-terracotta hover:bg-terracotta-600 text-white shadow-lg shadow-terracotta/30 hover:shadow-terracotta/50 transition-all text-lg px-8"
                   >
-                    Acheter mon billet
+                    {t('buyTicket')}
                   </Button>
                 </motion.div>
               </Link>
@@ -145,7 +147,7 @@ export function HeroSection() {
                     size="lg"
                     className="w-full sm:w-auto border-cream text-cream hover:bg-cream hover:text-forest text-lg px-8"
                   >
-                    Infos Pratiques
+                    {t('practicalInfo')}
                   </Button>
                 </motion.div>
               </Link>
@@ -166,7 +168,7 @@ export function HeroSection() {
           transition={{ duration: 1.5, repeat: Infinity }}
           className="flex flex-col items-center gap-2"
         >
-          <span className="text-cream/50 text-xs uppercase tracking-widest">Découvrir</span>
+          <span className="text-cream/50 text-xs uppercase tracking-widest">{t('discover')}</span>
           <svg className="w-5 h-5 text-cream/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
           </svg>

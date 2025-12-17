@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { motion } from 'motion/react'
+import { useTranslations } from 'next-intl'
 import { BentoGrid, BentoGridItem } from '@/components/ui/aceternity'
 import { pillars } from '@/config/site'
 
@@ -72,8 +73,8 @@ const headerBackgrounds = [
           key={i}
           className="absolute w-3 h-3 rounded-full bg-sage/40"
           style={{
-            top: `${50 + 40 * Math.sin((i * Math.PI) / 3)}%`,
-            left: `${50 + 40 * Math.cos((i * Math.PI) / 3)}%`,
+            top: `${Math.round(50 + 40 * Math.sin((i * Math.PI) / 3))}%`,
+            left: `${Math.round(50 + 40 * Math.cos((i * Math.PI) / 3))}%`,
             transform: 'translate(-50%, -50%)',
           }}
         />
@@ -83,6 +84,8 @@ const headerBackgrounds = [
 ]
 
 export function PillarsSection() {
+  const t = useTranslations('home.pillars')
+
   return (
     <section className="py-16 md:py-24 bg-cream relative overflow-hidden">
       {/* Background decoration */}
@@ -99,11 +102,10 @@ export function PillarsSection() {
           className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-4xl font-heading font-bold text-heading mb-4">
-            Au Coeur de la Filière
+            {t('title')}
           </h2>
           <p className="text-lg text-body/70 max-w-2xl mx-auto">
-            Découvrez les acteurs clés de l&apos;industrie du chanvre CBD français et européen
-            réunis pour une journée exceptionnelle.
+            {t('subtitle')}
           </p>
         </motion.div>
 
@@ -139,10 +141,10 @@ export function PillarsSection() {
           className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6"
         >
           {[
-            { number: '50+', label: 'Exposants' },
-            { number: '1000+', label: 'Visiteurs attendus' },
-            { number: '10+', label: 'Conférences' },
-            { number: '1', label: 'Journée unique' },
+            { number: '50+', label: t('stats.exhibitors') },
+            { number: '1000+', label: t('stats.visitors') },
+            { number: '10+', label: t('stats.conferences') },
+            { number: '1', label: t('stats.uniqueDay') },
           ].map((stat, index) => (
             <motion.div
               key={index}

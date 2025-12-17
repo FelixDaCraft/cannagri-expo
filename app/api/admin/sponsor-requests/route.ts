@@ -1,9 +1,16 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { checkAdminAuth, unauthorizedResponse } from '@/lib/admin-auth'
 
 // GET /api/admin/sponsor-requests - List all sponsor requests
 export async function GET() {
   try {
+    // Check admin authorization
+    const session = await checkAdminAuth()
+    if (!session) {
+      return unauthorizedResponse()
+    }
+
     const requests = await prisma.sponsorRequest.findMany({
       orderBy: [
         { status: 'asc' }, // PENDING first

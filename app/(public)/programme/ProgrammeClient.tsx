@@ -2,9 +2,10 @@
 
 import { useState } from 'react'
 import { motion } from 'motion/react'
-import { Card, CardContent, Badge, Button } from '@/components/ui'
+import { Card, CardContent, Badge } from '@/components/ui'
 import { Spotlight, FloatingParticles } from '@/components/ui/aceternity'
 import { siteConfig } from '@/config/site'
+import { getTranslatedText, Translations } from '@/lib/translation'
 
 interface Speaker {
   id: string
@@ -31,6 +32,9 @@ interface Event {
   isPlatinumCBDCup: boolean
   isHighlighted: boolean
   displayOrder: number
+  // Traductions
+  titleTranslations: Translations | null
+  descriptionTranslations: Translations | null
 }
 
 const typeConfig = {
@@ -50,7 +54,12 @@ function formatTime(date: Date | string) {
   })
 }
 
-export default function ProgrammeClient({ events }: { events: Event[] }) {
+interface ProgrammeClientProps {
+  events: Event[]
+  locale: string
+}
+
+export default function ProgrammeClient({ events, locale }: ProgrammeClientProps) {
   const [filter, setFilter] = useState('Tous')
 
   const filteredEvents = filter === 'Tous'
@@ -123,7 +132,9 @@ export default function ProgrammeClient({ events }: { events: Event[] }) {
                   Platinum CBD Cup
                 </h2>
                 <p className="text-white/90">
-                  {platinumEvent.description || "Le concours de référence qui récompense les meilleures variétés CBD de l'année. Participez à la dégustation et votez pour vos favoris !"}
+                  {platinumEvent.description
+                    ? getTranslatedText(platinumEvent.description, platinumEvent.descriptionTranslations, locale)
+                    : "Le concours de référence qui récompense les meilleures variétés CBD de l'année. Participez à la dégustation et votez pour vos favoris !"}
                 </p>
               </div>
               <Badge className="bg-white/20 text-white border-0 text-sm px-4 py-2">
@@ -216,12 +227,12 @@ export default function ProgrammeClient({ events }: { events: Event[] }) {
                           </div>
 
                           <h3 className="font-heading font-semibold text-heading text-lg mb-1">
-                            {event.title}
+                            {getTranslatedText(event.title, event.titleTranslations, locale)}
                           </h3>
 
                           {event.description && (
                             <p className="text-sm text-body/70 mb-3">
-                              {event.description}
+                              {getTranslatedText(event.description, event.descriptionTranslations, locale)}
                             </p>
                           )}
 
@@ -283,17 +294,14 @@ export default function ProgrammeClient({ events }: { events: Event[] }) {
           className="text-center mt-12"
         >
           {events.length === 0 ? (
-            <p className="text-body/70 mb-4">
+            <p className="text-body/70">
               Inscrivez-vous à notre newsletter pour être informé de la publication du programme.
             </p>
           ) : (
-            <p className="text-body/70 mb-4">
+            <p className="text-body/70">
               Le programme peut être sujet à modifications.
             </p>
           )}
-          <Button variant="outline" className="opacity-50" disabled>
-            Programme complet (PDF) - Bientôt
-          </Button>
         </motion.div>
       </div>
     </div>

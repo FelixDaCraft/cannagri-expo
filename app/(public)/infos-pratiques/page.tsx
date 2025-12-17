@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { motion } from 'motion/react'
+import { useTranslations } from 'next-intl'
 import { Card, CardContent, Button } from '@/components/ui'
 import { Spotlight, FloatingParticles } from '@/components/ui/aceternity'
 import { siteConfig } from '@/config/site'
@@ -36,6 +37,7 @@ const defaultInfos: InfosPratiques = {
 }
 
 export default function InfosPratiquesPage() {
+  const t = useTranslations('practicalInfo')
   const [infos, setInfos] = useState<InfosPratiques>(defaultInfos)
 
   useEffect(() => {
@@ -77,10 +79,10 @@ export default function InfosPratiquesPage() {
               </svg>
             </motion.div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-cream mb-6">
-              Infos Pratiques
+              {t('title')}
             </h1>
             <p className="text-lg md:text-xl text-cream/80 max-w-2xl mx-auto">
-              Tout ce que vous devez savoir pour préparer votre visite à Cann&apos;Agri Expo
+              {t('subtitle')}
             </p>
           </motion.div>
         </div>
@@ -109,14 +111,14 @@ export default function InfosPratiquesPage() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
                     </motion.div>
-                    Date & Lieu
+                    {t('dateLocation.title')}
                   </h2>
                   <div className="grid sm:grid-cols-2 gap-6">
                     <motion.div
                       whileHover={{ scale: 1.02 }}
                       className="p-4 bg-sage/5 rounded-xl border border-sage/10"
                     >
-                      <h3 className="font-semibold text-heading mb-2">Date</h3>
+                      <h3 className="font-semibold text-heading mb-2">{t('dateLocation.date')}</h3>
                       <p className="text-2xl font-bold text-forest mb-1">{infos.eventDate}</p>
                       <p className="text-body/70">{infos.eventTime}</p>
                     </motion.div>
@@ -124,7 +126,7 @@ export default function InfosPratiquesPage() {
                       whileHover={{ scale: 1.02 }}
                       className="p-4 bg-sage/5 rounded-xl border border-sage/10"
                     >
-                      <h3 className="font-semibold text-heading mb-2">Lieu</h3>
+                      <h3 className="font-semibold text-heading mb-2">{t('dateLocation.location')}</h3>
                       <p className="text-lg font-semibold text-heading">{infos.eventLocation}</p>
                       <p className="text-body/70">{infos.eventAddress}</p>
                       <p className="text-body/70">{infos.eventCity}</p>
@@ -152,12 +154,12 @@ export default function InfosPratiquesPage() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
                     </motion.div>
-                    Comment venir ?
+                    {t('access.title')}
                   </h2>
                   <div className="space-y-4">
                     {[
                       {
-                        title: 'Transports en commun',
+                        key: 'transport',
                         content: infos.accessTransport,
                         icon: (
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -166,7 +168,7 @@ export default function InfosPratiquesPage() {
                         ),
                       },
                       {
-                        title: 'Parking',
+                        key: 'parking',
                         content: infos.accessParking,
                         icon: (
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -175,7 +177,7 @@ export default function InfosPratiquesPage() {
                         ),
                       },
                       {
-                        title: 'Accessibilité',
+                        key: 'accessibility',
                         content: infos.accessInfo,
                         icon: (
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -185,7 +187,7 @@ export default function InfosPratiquesPage() {
                       },
                     ].map((item, index) => (
                       <motion.div
-                        key={item.title}
+                        key={item.key}
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.3 + index * 0.1 }}
@@ -194,7 +196,7 @@ export default function InfosPratiquesPage() {
                       >
                         <h3 className="font-semibold text-heading mb-2 flex items-center gap-2">
                           <span className="text-sage">{item.icon}</span>
-                          {item.title}
+                          {t(`access.${item.key}`)}
                         </h3>
                         <p className="text-body/70">{item.content}</p>
                       </motion.div>
@@ -255,8 +257,8 @@ export default function InfosPratiquesPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
                     </svg>
                   </motion.div>
-                  <h2 className="text-xl font-heading font-bold mb-4">
-                    Billetterie
+                  <h2 className="text-xl font-heading font-bold text-cream mb-4">
+                    {t('tickets.title')}
                   </h2>
                   <p className="text-white/80 mb-6">
                     {infos.ticketInfo}
@@ -264,7 +266,7 @@ export default function InfosPratiquesPage() {
                   <Link href="/billetterie">
                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                       <Button variant="secondary" className="w-full">
-                        Acheter mes billets
+                        {t('tickets.buyButton')}
                       </Button>
                     </motion.div>
                   </Link>
@@ -281,7 +283,7 @@ export default function InfosPratiquesPage() {
               <Card variant="elevated" className="group hover:shadow-xl transition-all duration-300">
                 <CardContent>
                   <h2 className="text-xl font-heading font-bold text-heading mb-4">
-                    Contact
+                    {t('contact.title')}
                   </h2>
                   <div className="space-y-3">
                     <motion.a
@@ -322,7 +324,7 @@ export default function InfosPratiquesPage() {
               <Card variant="elevated" className="group hover:shadow-xl transition-all duration-300">
                 <CardContent>
                   <h2 className="text-xl font-heading font-bold text-heading mb-4">
-                    Suivez-nous
+                    {t('social.title')}
                   </h2>
                   <div className="flex gap-3">
                     {[
@@ -358,15 +360,15 @@ export default function InfosPratiquesPage() {
               <Card variant="elevated" className="bg-gradient-to-br from-sage/30 to-sage/10 border border-sage/20">
                 <CardContent>
                   <h2 className="text-xl font-heading font-bold text-heading mb-2">
-                    Vous êtes professionnel ?
+                    {t('professional.title')}
                   </h2>
                   <p className="text-body/70 mb-4">
-                    Réservez votre stand et exposez vos produits lors du salon.
+                    {t('professional.description')}
                   </p>
                   <Link href="/pro">
                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                       <Button variant="outline" className="w-full">
-                        Devenir exposant
+                        {t('professional.button')}
                       </Button>
                     </motion.div>
                   </Link>

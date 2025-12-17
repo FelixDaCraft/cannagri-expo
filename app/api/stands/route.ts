@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { checkAdminAuth, unauthorizedResponse } from '@/lib/admin-auth'
 
 // GET /api/stands - List all stands
 export async function GET(request: NextRequest) {
@@ -77,9 +78,15 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// PATCH /api/stands/:id - Update a stand (admin)
+// PATCH /api/stands/:id - Update a stand (admin only)
 export async function PATCH(request: NextRequest) {
   try {
+    // Check admin authorization
+    const session = await checkAdminAuth()
+    if (!session) {
+      return unauthorizedResponse()
+    }
+
     const body = await request.json()
     const { id, status, priceHT, hasFurniture, hasElectricity } = body
 

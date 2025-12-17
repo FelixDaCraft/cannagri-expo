@@ -3,6 +3,7 @@ import { writeFile, mkdir, readdir } from 'fs/promises'
 import { existsSync } from 'fs'
 import path from 'path'
 import { prisma } from '@/lib/prisma'
+import { checkAdminAuth, unauthorizedResponse } from '@/lib/admin-auth'
 
 const UPLOAD_DIR = path.join(process.cwd(), 'public', 'images', 'gallery')
 
@@ -90,6 +91,12 @@ async function syncFilesWithDatabase() {
 // GET - List all media (with sync)
 export async function GET(request: NextRequest) {
   try {
+    // Check admin authorization
+    const session = await checkAdminAuth()
+    if (!session) {
+      return unauthorizedResponse()
+    }
+
     const { searchParams } = new URL(request.url)
     const sync = searchParams.get('sync') !== 'false'
 
@@ -116,6 +123,12 @@ export async function GET(request: NextRequest) {
 // POST - Upload new media
 export async function POST(request: NextRequest) {
   try {
+    // Check admin authorization
+    const session = await checkAdminAuth()
+    if (!session) {
+      return unauthorizedResponse()
+    }
+
     await ensureUploadDir()
 
     const formData = await request.formData()

@@ -33,17 +33,16 @@ export default function CGVPage() {
             <h2>2. Billetterie</h2>
 
             <h3>2.1 Types de billets</h3>
-            <p>Plusieurs types de billets sont proposés :</p>
+            <p>Deux types de billets sont proposés :</p>
             <ul>
-              <li><strong>Billet Visiteur</strong> : Accès au salon pendant les heures d&apos;ouverture au public</li>
-              <li><strong>Pass Pro</strong> : Accès prioritaire et avantages professionnels</li>
-              <li><strong>Pass VIP</strong> : Accès privilégié, espace lounge et cadeaux</li>
+              <li><strong>Billet Standard</strong> : Accès au salon pendant les heures d&apos;ouverture au public</li>
+              <li><strong>Billet Flex</strong> : Billet de soutien à l&apos;association avec accès au salon</li>
             </ul>
 
             <h3>2.2 Prix et paiement</h3>
             <p>
               Les prix sont indiqués en euros TTC. Le paiement s&apos;effectue en ligne par carte bancaire
-              via notre plateforme de paiement sécurisée Stripe.
+              via notre plateforme de paiement sécurisée Viva Wallet.
             </p>
 
             <h3>2.3 Confirmation et billets</h3>

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { checkAdminAuth, unauthorizedResponse } from '@/lib/admin-auth'
 
 // Configuration des 25 stands par défaut
 // Association non soumise à la TVA - Prix net
@@ -39,6 +40,12 @@ const defaultStandsConfig = [
 // GET /api/admin/stands - List all stands with full details
 export async function GET(request: NextRequest) {
   try {
+    // Check admin authorization
+    const session = await checkAdminAuth()
+    if (!session) {
+      return unauthorizedResponse()
+    }
+
     const stands = await prisma.stand.findMany({
       orderBy: [
         { number: 'asc' },
@@ -115,6 +122,12 @@ export async function GET(request: NextRequest) {
 // POST /api/admin/stands - Create a new stand
 export async function POST(request: NextRequest) {
   try {
+    // Check admin authorization
+    const session = await checkAdminAuth()
+    if (!session) {
+      return unauthorizedResponse()
+    }
+
     const body = await request.json()
     const {
       number,
@@ -187,6 +200,12 @@ export async function POST(request: NextRequest) {
 // PUT /api/admin/stands - Update a stand
 export async function PUT(request: NextRequest) {
   try {
+    // Check admin authorization
+    const session = await checkAdminAuth()
+    if (!session) {
+      return unauthorizedResponse()
+    }
+
     const body = await request.json()
     const {
       id,
@@ -360,6 +379,12 @@ export async function PUT(request: NextRequest) {
 // DELETE /api/admin/stands - Delete a stand
 export async function DELETE(request: NextRequest) {
   try {
+    // Check admin authorization
+    const session = await checkAdminAuth()
+    if (!session) {
+      return unauthorizedResponse()
+    }
+
     const { searchParams } = new URL(request.url)
     const id = searchParams.get('id')
 
@@ -405,6 +430,12 @@ export async function DELETE(request: NextRequest) {
 // PATCH /api/admin/stands - Bulk operations (initialize default stands)
 export async function PATCH(request: NextRequest) {
   try {
+    // Check admin authorization
+    const session = await checkAdminAuth()
+    if (!session) {
+      return unauthorizedResponse()
+    }
+
     const body = await request.json()
     const { action } = body
 

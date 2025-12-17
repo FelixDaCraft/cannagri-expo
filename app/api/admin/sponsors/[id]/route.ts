@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
 import { prisma } from '@/lib/prisma'
-import { authOptions } from '@/lib/auth'
+import { checkFullAdminAuth, unauthorizedResponse } from '@/lib/admin-auth'
 
 // GET /api/admin/sponsors/[id] - Get a specific sponsor
 export async function GET(
@@ -9,10 +8,10 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await checkFullAdminAuth()
 
-    if (!session?.user || (session.user.role !== 'ADMIN' && session.user.role !== 'EDITOR')) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+    if (!session) {
+      return unauthorizedResponse()
     }
 
     const sponsor = await prisma.sponsor.findUnique({
@@ -42,10 +41,10 @@ export async function PATCH(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await checkFullAdminAuth()
 
-    if (!session?.user || (session.user.role !== 'ADMIN' && session.user.role !== 'EDITOR')) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+    if (!session) {
+      return unauthorizedResponse()
     }
 
     const body = await request.json()
@@ -183,10 +182,10 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await checkFullAdminAuth()
 
-    if (!session?.user || session.user.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+    if (!session) {
+      return unauthorizedResponse()
     }
 
     // Check if sponsor exists

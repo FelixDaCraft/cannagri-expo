@@ -4,10 +4,13 @@ import { useState } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import { Card, CardContent, Badge, Button } from '@/components/ui'
 
 export default function RegisterPage() {
   const router = useRouter()
+  const t = useTranslations('auth.register')
+  const tCommon = useTranslations('common')
 
   const [formData, setFormData] = useState({
     name: '',
@@ -24,10 +27,10 @@ export default function RegisterPage() {
   })
 
   const businessTypeLabels = {
-    PRODUCTEURS: 'Producteurs',
-    MATERIEL: 'Matériel agricole',
-    LIFESTYLE: 'Lifestyle & Bien-être',
-    SERVICE: 'Services',
+    PRODUCTEURS: t('businessTypes.PRODUCTEURS'),
+    MATERIEL: t('businessTypes.MATERIEL'),
+    LIFESTYLE: t('businessTypes.LIFESTYLE'),
+    SERVICE: t('businessTypes.SERVICE'),
   }
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
@@ -52,19 +55,19 @@ export default function RegisterPage() {
 
     // Validation
     if (formData.password !== formData.confirmPassword) {
-      setErrorMessage('Les mots de passe ne correspondent pas')
+      setErrorMessage(t('passwordsNotMatch'))
       setIsLoading(false)
       return
     }
 
     if (formData.password.length < 8) {
-      setErrorMessage('Le mot de passe doit contenir au moins 8 caractères')
+      setErrorMessage(t('passwordTooShort'))
       setIsLoading(false)
       return
     }
 
     if (!formData.acceptTerms) {
-      setErrorMessage('Vous devez accepter les conditions d\'utilisation')
+      setErrorMessage(t('mustAcceptTerms'))
       setIsLoading(false)
       return
     }
@@ -89,7 +92,7 @@ export default function RegisterPage() {
       const data = await response.json()
 
       if (!response.ok) {
-        setErrorMessage(data.error || 'Une erreur est survenue')
+        setErrorMessage(data.error || t('error'))
         return
       }
 
@@ -112,12 +115,12 @@ export default function RegisterPage() {
         router.refresh()
       } else {
         const message = data.isPro
-          ? 'Compte créé. Votre demande PRO est en attente de validation.'
-          : 'Compte créé avec succès'
+          ? t('proPending')
+          : t('accountCreated')
         router.push(`/connexion?message=${encodeURIComponent(message)}`)
       }
     } catch {
-      setErrorMessage('Une erreur est survenue')
+      setErrorMessage(t('error'))
     } finally {
       setIsLoading(false)
     }
@@ -163,12 +166,12 @@ export default function RegisterPage() {
       <div className="container-custom">
         <div className="max-w-md mx-auto">
           <div className="text-center mb-8">
-            <Badge variant="forest" className="mb-4">Espace Pro</Badge>
+            <Badge variant="forest" className="mb-4">{t('proSpace')}</Badge>
             <h1 className="text-3xl font-heading font-bold text-heading mb-2">
-              Créer un compte
+              {t('title')}
             </h1>
             <p className="text-body/70">
-              Rejoignez la communauté Cann&apos;Agri Expo
+              {t('subtitle')}
             </p>
           </div>
 
@@ -191,7 +194,7 @@ export default function RegisterPage() {
                     className={`w-full flex items-center justify-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors ${provider.bg} ${provider.text} ${provider.border} disabled:opacity-50`}
                   >
                     {provider.icon}
-                    <span>S&apos;inscrire avec {provider.name}</span>
+                    <span>{tCommon('registerWith', { provider: provider.name })}</span>
                   </button>
                 ))}
               </div>
@@ -202,7 +205,7 @@ export default function RegisterPage() {
                   <div className="w-full border-t border-gray-200"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-4 bg-white text-gray-500">ou avec email</span>
+                  <span className="px-4 bg-white text-gray-500">{t('orWithEmail')}</span>
                 </div>
               </div>
 
@@ -211,63 +214,51 @@ export default function RegisterPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                      Nom complet *
+                      {t('fullName')} *
                     </label>
                     <input
                       type="text"
                       id="name"
                       name="name"
+                      autoComplete="name"
                       value={formData.name}
                       onChange={handleChange}
                       required
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent"
-                      placeholder="Jean Dupont"
+                      placeholder={t('namePlaceholder')}
                     />
                   </div>
                   <div>
                     <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-                      Téléphone
+                      {t('phone')}
                     </label>
                     <input
                       type="tel"
                       id="phone"
                       name="phone"
+                      autoComplete="tel"
                       value={formData.phone}
                       onChange={handleChange}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent"
-                      placeholder="06 12 34 56 78"
+                      placeholder={t('phonePlaceholder')}
                     />
                   </div>
                 </div>
 
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                    Email *
+                    {t('email')} *
                   </label>
                   <input
                     type="email"
                     id="email"
                     name="email"
+                    autoComplete="email"
                     value={formData.email}
                     onChange={handleChange}
                     required
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent"
-                    placeholder="votre@email.com"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="companyName" className="block text-sm font-medium text-gray-700 mb-1">
-                    Entreprise
-                  </label>
-                  <input
-                    type="text"
-                    id="companyName"
-                    name="companyName"
-                    value={formData.companyName}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent"
-                    placeholder="Nom de votre entreprise"
+                    placeholder={t('emailPlaceholder')}
                   />
                 </div>
 
@@ -282,37 +273,54 @@ export default function RegisterPage() {
                       className="rounded border-gray-300 text-forest focus:ring-forest"
                     />
                     <span className="ml-2 font-medium text-forest">
-                      Je souhaite devenir exposant professionnel
+                      {t('wantProAccount')}
                     </span>
                   </label>
 
                   {formData.wantsPro && (
                     <div className="space-y-4 pt-2 border-t border-forest/20">
                       <p className="text-sm text-gray-600">
-                        Complétez les informations ci-dessous pour demander un compte exposant.
-                        Votre demande sera validée par notre équipe.
+                        {t('proAccountInfo')}
                       </p>
 
                       <div>
+                        <label htmlFor="companyName" className="block text-sm font-medium text-gray-700 mb-1">
+                          {t('company')} *
+                        </label>
+                        <input
+                          type="text"
+                          id="companyName"
+                          name="companyName"
+                          autoComplete="organization"
+                          value={formData.companyName}
+                          onChange={handleChange}
+                          required={formData.wantsPro}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent"
+                          placeholder={t('companyPlaceholder')}
+                        />
+                      </div>
+
+                      <div>
                         <label htmlFor="siret" className="block text-sm font-medium text-gray-700 mb-1">
-                          SIRET *
+                          {t('siret')} *
                         </label>
                         <input
                           type="text"
                           id="siret"
                           name="siret"
+                          autoComplete="off"
                           value={formData.siret}
                           onChange={handleChange}
                           required={formData.wantsPro}
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent"
-                          placeholder="123 456 789 00012"
+                          placeholder={t('siretPlaceholder')}
                           maxLength={17}
                         />
                       </div>
 
                       <div>
                         <label htmlFor="businessType" className="block text-sm font-medium text-gray-700 mb-1">
-                          Type d&apos;activité *
+                          {t('businessType')} *
                         </label>
                         <select
                           id="businessType"
@@ -322,7 +330,7 @@ export default function RegisterPage() {
                           required={formData.wantsPro}
                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent"
                         >
-                          <option value="">Sélectionnez votre activité</option>
+                          <option value="">{t('selectBusinessType')}</option>
                           {Object.entries(businessTypeLabels).map(([key, label]) => (
                             <option key={key} value={key}>{label}</option>
                           ))}
@@ -334,34 +342,36 @@ export default function RegisterPage() {
 
                 <div>
                   <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-                    Mot de passe *
+                    {t('password')} *
                   </label>
                   <input
                     type="password"
                     id="password"
                     name="password"
+                    autoComplete="new-password"
                     value={formData.password}
                     onChange={handleChange}
                     required
                     minLength={8}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent"
-                    placeholder="Minimum 8 caractères"
+                    placeholder={t('passwordPlaceholder')}
                   />
                 </div>
 
                 <div>
                   <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
-                    Confirmer le mot de passe *
+                    {t('confirmPassword')} *
                   </label>
                   <input
                     type="password"
                     id="confirmPassword"
                     name="confirmPassword"
+                    autoComplete="new-password"
                     value={formData.confirmPassword}
                     onChange={handleChange}
                     required
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent"
-                    placeholder="Confirmez votre mot de passe"
+                    placeholder={t('confirmPasswordPlaceholder')}
                   />
                 </div>
 
@@ -376,13 +386,13 @@ export default function RegisterPage() {
                       className="mt-1 rounded border-gray-300 text-forest focus:ring-forest"
                     />
                     <span className="ml-2 text-sm text-gray-600">
-                      J&apos;accepte les{' '}
+                      {t('acceptTerms')}{' '}
                       <Link href="/mentions-legales" className="text-forest hover:underline">
-                        mentions légales
+                        {t('legalLinks')}
                       </Link>{' '}
-                      et la{' '}
+                      {t('and')}{' '}
                       <Link href="/confidentialite" className="text-forest hover:underline">
-                        politique de confidentialité
+                        {t('privacyPolicy')}
                       </Link>{' '}
                       *
                     </span>
@@ -397,7 +407,7 @@ export default function RegisterPage() {
                       className="mt-1 rounded border-gray-300 text-forest focus:ring-forest"
                     />
                     <span className="ml-2 text-sm text-gray-600">
-                      Je souhaite recevoir la newsletter et les actualités du salon
+                      {t('newsletter')}
                     </span>
                   </label>
                 </div>
@@ -408,15 +418,15 @@ export default function RegisterPage() {
                   className="w-full py-3"
                   disabled={isLoading}
                 >
-                  {isLoading ? 'Création...' : 'Créer mon compte'}
+                  {isLoading ? t('submitting') : t('submit')}
                 </Button>
               </form>
 
               {/* Login link */}
               <p className="mt-6 text-center text-sm text-gray-600">
-                Déjà un compte ?{' '}
+                {t('hasAccount')}{' '}
                 <Link href="/connexion" className="text-forest font-medium hover:underline">
-                  Se connecter
+                  {t('login')}
                 </Link>
               </p>
             </CardContent>
@@ -424,11 +434,9 @@ export default function RegisterPage() {
 
           {/* RGPD Info */}
           <div className="mt-6 p-4 bg-white/50 rounded-lg">
-            <h3 className="text-sm font-semibold text-gray-700 mb-2">Protection de vos données</h3>
+            <h3 className="text-sm font-semibold text-gray-700 mb-2">{t('dataProtection')}</h3>
             <p className="text-xs text-gray-500">
-              Conformément au RGPD, vos données personnelles sont traitées de manière sécurisée.
-              Vous pouvez exercer vos droits d&apos;accès, de rectification et de suppression en nous
-              contactant à tout moment. Vos données ne sont jamais vendues à des tiers.
+              {t('dataProtectionText')}
             </p>
           </div>
         </div>

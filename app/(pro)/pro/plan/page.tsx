@@ -1,15 +1,42 @@
 import { Metadata } from 'next'
+import { redirect } from 'next/navigation'
+import { getServerSession } from 'next-auth'
 import Link from 'next/link'
 import { InteractiveStandPlan } from '@/components/stands'
 import { Button, Badge } from '@/components/ui'
 import { siteConfig } from '@/config/site'
+import { authOptions } from '@/lib/auth'
+import { prisma } from '@/lib/prisma'
 
 export const metadata: Metadata = {
   title: 'Réserver un Stand',
   description: 'Réservez votre stand exposant au salon Cann\'Agri Expo - Sélectionnez votre emplacement sur le plan interactif',
 }
 
-export default function PlanPage() {
+export default async function PlanPage() {
+  // Check if user is authenticated and is an approved PRO
+  const session = await getServerSession(authOptions)
+
+  if (!session?.user) {
+    redirect('/connexion?callbackUrl=/pro/plan&message=' + encodeURIComponent('Connectez-vous pour accéder au plan des stands'))
+  }
+
+  // Get user details from database
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { role: true, isApproved: true }
+  })
+
+  // Check if user is PRO
+  if (!user || user.role !== 'PRO') {
+    redirect('/compte?message=' + encodeURIComponent('Vous devez avoir un compte professionnel pour accéder à cette page'))
+  }
+
+  // Check if PRO is approved
+  if (!user.isApproved) {
+    redirect('/compte?message=' + encodeURIComponent('Votre compte professionnel est en attente de validation'))
+  }
+
   return (
     <div className="min-h-screen bg-cream py-12">
       <div className="container-custom">
@@ -79,7 +106,7 @@ export default function PlanPage() {
             <h2 className="text-2xl font-heading font-bold text-heading mb-2">
               Stand Exposant
             </h2>
-            <p className="text-sage text-lg mb-2">4 m²</p>
+            <p className="text-forest/70 text-lg mb-2">4 m²</p>
             <p className="text-4xl font-heading font-bold text-forest mb-6">150€</p>
 
             <ul className="space-y-3 text-left text-body/70 mb-6">

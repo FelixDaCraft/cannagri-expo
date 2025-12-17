@@ -1,0 +1,653 @@
+{
+  "common": {
+    "home": "Home",
+    "tickets": "Biglietti",
+    "exhibitors": "Espositori",
+    "program": "Programma",
+    "contact": "Contatto",
+    "login": "Accedi",
+    "register": "Registrati",
+    "logout": "Esci",
+    "myAccount": "Il mio account",
+    "myTickets": "I miei biglietti",
+    "admin": "Amministrazione",
+    "user": "Utente",
+    "buyTickets": "Acquista biglietti",
+    "learnMore": "Scopri di più",
+    "submit": "Invia",
+    "cancel": "Annulla",
+    "save": "Salva",
+    "delete": "Elimina",
+    "edit": "Modifica",
+    "close": "Chiudi",
+    "loading": "Caricamento...",
+    "error": "Errore",
+    "success": "Successo",
+    "required": "Obbligatorio",
+    "optional": "Opzionale",
+    "yes": "Sì",
+    "no": "No",
+    "back": "Indietro",
+    "next": "Avanti",
+    "previous": "Precedente",
+    "seeAll": "Vedi tutto",
+    "search": "Cerca",
+    "filter": "Filtra",
+    "sort": "Ordina",
+    "noResults": "Nessun risultato",
+    "language": "Lingua",
+    "orWith": "o con",
+    "continueWith": "Continua con {provider}",
+    "registerWith": "Registrati con {provider}",
+    "stayConnected": "Resta Connesso",
+    "yourEmail": "La tua email",
+    "allRightsReserved": "Tutti i diritti riservati.",
+    "errorOccurred": "Si è verificato un errore",
+    "question": "Hai una domanda?"
+  },
+  "nav": {
+    "ourVision": "La Nostra Visione",
+    "theEvent": "L'Evento",
+    "event": "L'evento",
+    "program": "Programma",
+    "exhibitors": "Espositori",
+    "photoGallery": "Galleria Foto",
+    "practicalInfo": "Info pratiche",
+    "sponsoring": "Sponsoring",
+    "contact": "Contatto",
+    "proSpace": "Area Pro",
+    "becomeExhibitor": "Diventa Espositore",
+    "bookStand": "Prenota uno Stand",
+    "cgv": "Termini"
+  },
+  "home": {
+    "hero": {
+      "title": "CANN'AGRI",
+      "titleHighlight": "EXPO",
+      "subtitle": "La fiera di riferimento della canapa CBD",
+      "edition": "Edizione 2026",
+      "buyTicket": "Acquista il mio biglietto",
+      "practicalInfo": "Info Pratiche",
+      "discover": "Scopri"
+    },
+    "pillars": {
+      "title": "Nel Cuore del Settore",
+      "subtitle": "Scopri i principali attori dell'industria della canapa CBD francese ed europea riuniti per una giornata eccezionale.",
+      "stats": {
+        "exhibitors": "Espositori",
+        "visitors": "Visitatori previsti",
+        "conferences": "Conferenze",
+        "uniqueDay": "Giornata unica"
+      }
+    },
+    "tickets": {
+      "badge": "Biglietti",
+      "title": "Prenota i tuoi biglietti",
+      "subtitle": "Scegli la formula che preferisci e unisciti a noi il {date} a {location}, {city}.",
+      "standard": {
+        "name": "Biglietto Standard",
+        "description": "Accesso tutto il giorno alla fiera",
+        "features": {
+          "stands": "Accesso agli stand degli espositori",
+          "conferences": "Accesso alle conferenze",
+          "badge": "Badge visitatore"
+        },
+        "supportMessage": "Non ce l'abbiamo con te, grazie comunque, pagare il biglietto è già ottimo!"
+      },
+      "flex": {
+        "name": "Biglietto Flex",
+        "description": "Sostieni l'associazione",
+        "features": {
+          "stands": "Accesso agli stand degli espositori",
+          "conferences": "Accesso alle conferenze",
+          "badge": "Badge visitatore"
+        },
+        "supportMessage": "Il tuo supporto ci permette di organizzare eventi migliori e sviluppare il settore della canapa CBD in Francia.",
+        "badge": "FULL SUPPORT"
+      },
+      "quantity": "Quantità",
+      "yourSelection": "La tua selezione",
+      "ticket": "biglietto",
+      "tickets": "biglietti",
+      "proceedPayment": "Procedi al pagamento",
+      "seeAllOptions": "Vedi tutte le opzioni",
+      "securePayment": "Pagamento sicuro",
+      "eTicket": "E-ticket via email",
+      "refundable": "Rimborsabile 48h prima"
+    },
+    "sponsors": {
+      "featured": "In Evidenza",
+      "featuredSubtitle": "Scopri i nostri partner Platino e le loro novità",
+      "platineSponsor": "Sponsor Platino",
+      "readArticle": "Leggi l'articolo",
+      "viewAllPartners": "Vedi tutti i nostri partner",
+      "comingSoon": "I nostri partner Platino saranno annunciati presto",
+      "articleComingSoon": "Articolo partner in arrivo",
+      "discoverPartner": "Scopri il nostro partner Premium.",
+      "title": "I Nostri Partner",
+      "subtitle": "Grazie ai nostri partner che rendono possibile questo evento",
+      "tiers": {
+        "platinum": "Partner Platino",
+        "gold": "Partner Oro",
+        "silver": "Partner Argento",
+        "bronze": "Partner Bronzo"
+      },
+      "placeholders": {
+        "platinum": "Logo Platino",
+        "gold": "Logo Oro",
+        "silver": "Logo Argento",
+        "bronze": "Logo"
+      },
+      "becomePartner": "Diventa Partner",
+      "becomePartnerSubtitle": "Associa il tuo marchio alla fiera di riferimento della canapa CBD",
+      "discoverOffers": "Scopri le nostre offerte"
+    },
+    "program": {
+      "title": "Momenti Salienti e Conferenze",
+      "subtitle": "Un programma ricco con relatori di qualità per comprendere le sfide del settore della canapa CBD.",
+      "eventTypes": {
+        "conference": "Conferenza",
+        "workshop": "Workshop",
+        "ceremony": "Cerimonia",
+        "opening": "Conferenza di apertura"
+      },
+      "defaultTitle": "Il Futuro della Regolamentazione Europea del CBD",
+      "defaultDescription": "Quali prospettive per il settore della canapa CBD in Francia e in Europa? Gli ultimi sviluppi normativi e i loro impatti sugli attori del mercato.",
+      "expertToConfirm": "Esperto da confermare",
+      "specialistSpeaker": "Relatore specialista",
+      "viewFullProgram": "Vedi programma completo",
+      "stats": {
+        "conferences": "Conferenze",
+        "speakers": "Relatori",
+        "exhibitors": "Espositori",
+        "award": "Award Show Platinum CBD Cup"
+      }
+    },
+    "newsletter": {
+      "title": "Resta informato",
+      "subtitle": "Iscriviti alla nostra newsletter per non perderti nulla",
+      "placeholder": "Il tuo indirizzo email",
+      "subscribe": "Iscriviti",
+      "success": "Grazie per l'iscrizione!",
+      "error": "Si è verificato un errore"
+    }
+  },
+  "exhibitors": {
+    "title": "I Nostri Espositori",
+    "subtitle": "Scopri gli attori del settore della canapa CBD presenti alla fiera",
+    "confirmedCount": "{count} espositori confermati",
+    "comingSoon": "Espositori in arrivo",
+    "categories": {
+      "all": "Tutti",
+      "PRODUCTEURS": "Produttori CBD",
+      "MATERIEL": "Attrezzature di Coltivazione",
+      "LIFESTYLE": "Lifestyle & Food",
+      "SERVICE": "Servizi",
+      "agriculture": "Agricoltura",
+      "industry": "Industria",
+      "wellness": "Benessere",
+      "technology": "Tecnologia"
+    },
+    "stand": "Stand",
+    "descriptionComingSoon": "Descrizione in arrivo",
+    "visitWebsite": "Visita il sito",
+    "websiteComingSoon": "Sito web in arrivo",
+    "noExhibitors": "Gli espositori saranno annunciati presto.",
+    "cta": {
+      "title": "Vuoi esporre?",
+      "description": "Unisciti agli espositori della fiera di riferimento della canapa CBD. Prenota ora il tuo stand.",
+      "button": "Diventa Espositore"
+    },
+    "becomeExhibitor": "Diventa espositore",
+    "contactUs": "Contattaci"
+  },
+  "event": {
+    "badge": "La fiera leader della canapa CBD",
+    "title": "Presentazione",
+    "subtitle": "L'appuntamento imperdibile per i professionisti della canapa CBD",
+    "about": {
+      "title": "Cos'è Cann'Agri Expo?",
+      "p1": "Cann'Agri Expo è la prima fiera professionale dedicata all'industria della canapa CBD nella Francia occidentale. Organizzato a Nantes, questo evento riunisce produttori, distributori, trasformatori ed esperti del settore per una giornata ricca di scambi e scoperte.",
+      "p2": "Il nostro obiettivo è creare uno spazio d'incontro privilegiato per tutti gli attori del settore: agricoltori, laboratori, negozi specializzati e leader di progetti innovativi nel settore del benessere della canapa.",
+      "p3": "L'edizione {year} promette di essere eccezionale con una trentina di espositori, conferenze guidate da esperti rinomati e la prestigiosa cerimonia della Platinum CBD Cup."
+    },
+    "stats": {
+      "title": "Cann'Agri Expo in numeri",
+      "exhibitors": "Espositori",
+      "visitors": "Visitatori attesi",
+      "companies": "Aziende presenti",
+      "conferences": "Conferenze"
+    },
+    "features": {
+      "title": "Cosa ti aspetta",
+      "exhibition": {
+        "title": "Area Espositiva",
+        "description": "Scopri gli stand dei nostri espositori: produttori CBD, attrezzature di coltivazione, prodotti benessere, cosmetici, alimentari e altro."
+      },
+      "conferences": {
+        "title": "Conferenze e Tavole Rotonde",
+        "description": "Partecipa alle presentazioni di esperti su normative, tendenze di mercato, innovazioni tecniche e prospettive del settore."
+      },
+      "cup": {
+        "title": "Platinum CBD Cup",
+        "description": "La competizione che premia i migliori prodotti CBD dell'anno. Una giuria di esperti valuta e premia le creazioni più innovative."
+      },
+      "networking": {
+        "title": "Networking",
+        "description": "Connettiti con i professionisti del settore, espandi la tua rete e scopri nuove opportunità di partnership."
+      },
+      "innovations": {
+        "title": "Innovazioni",
+        "description": "Scopri gli ultimi progressi tecnologici, le nuove varietà e le innovazioni che plasmano il futuro dell'industria della canapa."
+      },
+      "documentation": {
+        "title": "Documentazione",
+        "description": "Porta con te risorse preziose, guide e contatti per far crescere la tua attività nel settore della canapa CBD."
+      }
+    },
+    "cta": {
+      "title": "Unisciti a noi il {date}",
+      "description": "Non perdere questa opportunità unica di incontrare i protagonisti dell'industria della canapa CBD e partecipare all'evento di riferimento del settore.",
+      "bookTicket": "Prenota il mio biglietto",
+      "practicalInfo": "Info pratiche"
+    },
+    "edition": "Edizione {year}"
+  },
+  "practicalInfo": {
+    "title": "Informazioni Pratiche",
+    "subtitle": "Tutto quello che devi sapere per preparare la tua visita a Cann'Agri Expo",
+    "dateLocation": {
+      "title": "Data & Luogo",
+      "date": "Data",
+      "location": "Luogo"
+    },
+    "access": {
+      "title": "Come arrivare?",
+      "transport": "Trasporti pubblici",
+      "parking": "Parcheggio",
+      "accessibility": "Accessibilità"
+    },
+    "tickets": {
+      "title": "Biglietteria",
+      "buyButton": "Acquista i miei biglietti"
+    },
+    "contact": {
+      "title": "Contatto"
+    },
+    "social": {
+      "title": "Seguici"
+    },
+    "professional": {
+      "title": "Sei un professionista?",
+      "description": "Prenota il tuo stand ed esponi i tuoi prodotti alla fiera.",
+      "button": "Diventa espositore"
+    }
+  },
+  "contact": {
+    "title": "Contattaci",
+    "subtitle": "Una domanda sulla fiera, sugli stand o sulle partnership? Il nostro team è a vostra disposizione.",
+    "types": {
+      "general": "Domanda generale",
+      "press": "Stampa / Media",
+      "sponsor": "Partnership / Sponsoring",
+      "exhibitor": "Diventare espositore"
+    },
+    "form": {
+      "type": "Tipo di richiesta",
+      "name": "Nome",
+      "namePlaceholder": "Il vostro nome",
+      "email": "Email",
+      "emailPlaceholder": "vostra@email.com",
+      "phone": "Telefono",
+      "phonePlaceholder": "06 12 34 56 78",
+      "company": "Azienda",
+      "companyPlaceholder": "Nome della vostra azienda",
+      "subject": "Oggetto",
+      "subjectPlaceholder": "Oggetto del vostro messaggio",
+      "message": "Messaggio",
+      "messagePlaceholder": "Il vostro messaggio...",
+      "send": "Invia messaggio",
+      "sending": "Invio in corso...",
+      "success": "Messaggio inviato!",
+      "successMessage": "Abbiamo ricevuto il vostro messaggio e risponderemo il prima possibile.",
+      "sendAnother": "Invia un altro messaggio",
+      "error": "Errore nell'invio del messaggio",
+      "connectionError": "Errore di connessione. Si prega di riprovare.",
+      "privacyNotice": "Inviando questo modulo, accetti la nostra",
+      "privacyPolicy": "politica sulla privacy"
+    },
+    "info": {
+      "title": "Informazioni",
+      "email": "Email",
+      "phone": "Telefono",
+      "address": "Indirizzo"
+    },
+    "press": {
+      "title": "Stampa e Media",
+      "description": "Giornalisti e media, contattate il nostro servizio stampa per accrediti e interviste."
+    }
+  },
+  "sponsoring": {
+    "badge": "Partnership",
+    "title": "Diventa Partner",
+    "subtitle": "Associa il tuo marchio alla fiera di riferimento della canapa CBD e raggiungi un pubblico qualificato di professionisti del settore.",
+    "benefits": {
+      "visibility": {
+        "title": "Visibilità Massima",
+        "description": "Il tuo marchio messo in evidenza sul nostro sito web, social media, materiali stampati e segnaletica in loco."
+      },
+      "notoriety": {
+        "title": "Notorietà Rafforzata",
+        "description": "Posiziona la tua azienda come attore chiave del settore della canapa CBD in Francia e in Europa."
+      },
+      "network": {
+        "title": "Network Qualificato",
+        "description": "Incontra professionisti, decision-maker e appassionati durante questo evento imperdibile."
+      }
+    },
+    "packagesTitle": "I Nostri Pacchetti Partner",
+    "packagesSubtitle": "Scopri le nostre diverse formule di partnership adatte alle tue esigenze e al tuo budget.",
+    "tiers": {
+      "platinum": {
+        "name": "Platino",
+        "description": "Visibilità massima e vantaggi esclusivi"
+      },
+      "gold": {
+        "name": "Oro",
+        "description": "Alta visibilità e posizionamento privilegiato"
+      },
+      "silver": {
+        "name": "Argento",
+        "description": "Presenza rinforzata e visibilità mirata"
+      },
+      "bronze": {
+        "name": "Bronzo",
+        "description": "Presenza partner e supporto al settore"
+      }
+    },
+    "form": {
+      "title": "Richiedi la Brochure Gratuita",
+      "subtitle": "Compila questo modulo per ricevere la nostra brochure dettagliata con tutti i vantaggi e le tariffe dei nostri pacchetti partnership.",
+      "company": "Nome Azienda",
+      "companyPlaceholder": "La tua azienda",
+      "contact": "Nome del Contatto",
+      "contactPlaceholder": "Nome e cognome",
+      "email": "Email",
+      "emailPlaceholder": "tua@email.it",
+      "phone": "Telefono",
+      "phonePlaceholder": "+39 123 456 7890",
+      "submit": "Ricevi la brochure gratuita",
+      "sending": "Invio in corso...",
+      "success": "Richiesta inviata con successo! Riceverai presto la brochure via email.",
+      "error": "Errore nell'invio della richiesta. Riprova.",
+      "privacyNotice": "Inviando questo modulo, accetti la nostra",
+      "privacyPolicy": "politica sulla privacy"
+    },
+    "alternativeContact": {
+      "title": "Preferisci contattarci direttamente?"
+    }
+  },
+  "tickets": {
+    "title": "Biglietteria",
+    "subtitle": "Prenota il tuo posto per la fiera di riferimento della canapa CBD",
+    "selectTicket": "Scegli il tuo biglietto",
+    "quantity": "Quantità",
+    "total": "Totale",
+    "checkout": "Procedi al pagamento",
+    "features": {
+      "eTicket": {
+        "title": "E-ticket istantaneo",
+        "description": "Ricevi il tuo biglietto con codice QR via email immediatamente dopo il pagamento."
+      },
+      "securePayment": {
+        "title": "Pagamento sicuro",
+        "description": "Transazioni 100% sicure con protocollo 3D Secure."
+      },
+      "priorityAccess": {
+        "title": "Accesso prioritario",
+        "description": "Salta le code con il tuo codice QR da scansionare."
+      }
+    },
+    "contactQuestion": "Hai una domanda? Contattaci a",
+    "form": {
+      "attendees": "Partecipanti",
+      "attendee": "Partecipante",
+      "firstName": "Nome",
+      "lastName": "Cognome",
+      "email": "Email",
+      "addAttendee": "Aggiungi partecipante",
+      "removeAttendee": "Rimuovi"
+    },
+    "payment": {
+      "title": "Pagamento",
+      "secure": "Pagamento sicuro",
+      "processing": "Elaborazione in corso...",
+      "success": "Pagamento riuscito!",
+      "error": "Errore di pagamento"
+    },
+    "confirmation": {
+      "title": "Conferma",
+      "thankYou": "Grazie per il tuo ordine!",
+      "emailSent": "Un'email di conferma con i tuoi biglietti è stata inviata.",
+      "orderNumber": "Numero ordine",
+      "downloadTickets": "Scarica i biglietti"
+    }
+  },
+  "programme": {
+    "title": "Programma",
+    "subtitle": "Una giornata ricca di conferenze, workshop e networking",
+    "types": {
+      "all": "Tutti",
+      "CONFERENCE": "Conferenza",
+      "WORKSHOP": "Workshop",
+      "CEREMONY": "Cerimonia",
+      "BREAK": "Pausa",
+      "NETWORKING": "Networking"
+    },
+    "filters": {
+      "all": "Tutti",
+      "conference": "Conferenza",
+      "workshop": "Workshop",
+      "ceremony": "Cerimonia"
+    },
+    "platinumCup": {
+      "title": "Platinum CBD Cup",
+      "description": "Il concorso di riferimento che premia le migliori varietà di CBD dell'anno. Partecipa alla degustazione e vota per i tuoi preferiti!"
+    },
+    "emptyState": {
+      "title": "Programma in arrivo",
+      "description": "Il programma dettagliato sarà disponibile presto. Torna a trovarci presto!",
+      "newsletterHint": "Iscriviti alla nostra newsletter per essere informato quando il programma sarà pubblicato."
+    },
+    "badges": {
+      "highlighted": "Evento in evidenza",
+      "mustSee": "Da non perdere"
+    },
+    "footer": {
+      "disclaimer": "Il programma potrebbe essere soggetto a modifiche.",
+      "downloadPdf": "Programma completo (PDF) - Presto"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Accedi",
+      "subtitle": "Accedi al tuo spazio professionale",
+      "proSpace": "Area Pro",
+      "email": "Email",
+      "emailPlaceholder": "tua@email.it",
+      "password": "Password",
+      "passwordPlaceholder": "La tua password",
+      "rememberMe": "Ricordami",
+      "submit": "Accedi",
+      "submitting": "Accesso in corso...",
+      "forgotPassword": "Password dimenticata?",
+      "noAccount": "Non hai un account?",
+      "register": "Crea un account",
+      "error": "Email o password non validi",
+      "errorGeneric": "Si è verificato un errore durante l'accesso",
+      "orWithEmail": "o con email",
+      "legalNotice": "Accedendo, accetti le nostre",
+      "legalLinks": "note legali",
+      "and": "e la nostra",
+      "privacyPolicy": "privacy policy"
+    },
+    "register": {
+      "title": "Crea un account",
+      "subtitle": "Unisciti alla community Cann'Agri Expo",
+      "proSpace": "Area Pro",
+      "fullName": "Nome completo",
+      "namePlaceholder": "Mario Rossi",
+      "phone": "Telefono",
+      "phonePlaceholder": "06 12 34 56 78",
+      "email": "Email",
+      "emailPlaceholder": "tua@email.it",
+      "password": "Password",
+      "passwordPlaceholder": "Minimo 8 caratteri",
+      "confirmPassword": "Conferma password",
+      "confirmPasswordPlaceholder": "Conferma la tua password",
+      "submit": "Crea il mio account",
+      "submitting": "Creazione...",
+      "hasAccount": "Hai già un account?",
+      "login": "Accedi",
+      "success": "Account creato con successo!",
+      "error": "Errore nella creazione dell'account",
+      "passwordsNotMatch": "Le password non corrispondono",
+      "passwordTooShort": "La password deve avere almeno 8 caratteri",
+      "mustAcceptTerms": "Devi accettare i termini di utilizzo",
+      "orWithEmail": "o con email",
+      "wantProAccount": "Voglio un account Pro",
+      "proAccountInfo": "Completa le informazioni qui sotto per richiedere un account espositore. La tua richiesta sarà validata dal nostro team.",
+      "company": "Azienda",
+      "companyPlaceholder": "Nome della tua azienda",
+      "siret": "SIRET",
+      "siretPlaceholder": "123 456 789 00012",
+      "businessType": "Tipo di attività",
+      "selectBusinessType": "Seleziona la tua attività",
+      "businessTypes": {
+        "PRODUCTEURS": "Produttori",
+        "MATERIEL": "Attrezzature agricole",
+        "LIFESTYLE": "Lifestyle e Benessere",
+        "SERVICE": "Servizi"
+      },
+      "acceptTerms": "Accetto le",
+      "legalLinks": "note legali",
+      "and": "e la",
+      "privacyPolicy": "privacy policy",
+      "newsletter": "Voglio ricevere la newsletter e le novità sulla fiera",
+      "dataProtection": "Protezione dei dati",
+      "dataProtectionText": "In conformità con il GDPR, i tuoi dati personali vengono trattati in modo sicuro. Puoi esercitare i tuoi diritti di accesso, rettifica e cancellazione contattandoci in qualsiasi momento. I tuoi dati non vengono mai venduti a terzi.",
+      "proPending": "Account creato. La tua richiesta PRO è in attesa di validazione.",
+      "accountCreated": "Account creato con successo"
+    }
+  },
+  "account": {
+    "title": "Il mio account",
+    "subtitle": "Gestisci le tue informazioni personali",
+    "profile": {
+      "title": "Informazioni personali",
+      "edit": "Modifica",
+      "fullName": "Nome completo",
+      "email": "Email",
+      "emailNotEditable": "L'email non può essere modificata",
+      "phone": "Telefono",
+      "company": "Azienda",
+      "businessType": "Tipo di attività",
+      "selectActivity": "Seleziona la tua attività",
+      "siret": "SIRET",
+      "notProvided": "Non fornito",
+      "save": "Salva",
+      "saving": "Salvataggio...",
+      "cancel": "Annulla",
+      "updateSuccess": "Profilo aggiornato con successo",
+      "updateError": "Errore durante l'aggiornamento del profilo"
+    },
+    "pro": {
+      "title": "Account Professionale",
+      "validated": "Validato",
+      "pending": "In attesa",
+      "validatedMessage": "Il tuo account è validato. Hai accesso allo Spazio Pro.",
+      "pendingMessage": "La tua richiesta è in corso di revisione dal nostro team.",
+      "requestPending": "La tua richiesta di account professionale è stata registrata. Sarà validata dal nostro team a breve.",
+      "requestSent": "La tua richiesta di account professionale è stata inviata. Sarà validata dal nostro team."
+    },
+    "exhibitor": {
+      "title": "Profilo Espositore",
+      "subtitle": "Queste informazioni appariranno sulla pagina Espositori",
+      "description": "Descrizione della tua attività",
+      "descriptionPlaceholder": "Descrivi la tua attività, prodotti, servizi...",
+      "maxChars": "Massimo 500 caratteri",
+      "logo": "Logo aziendale",
+      "currentLogo": "Logo attuale",
+      "deleteLogo": "Elimina logo",
+      "uploadLogo": "Clicca per scegliere",
+      "uploadLogoHint": "o trascina il tuo logo qui",
+      "uploadFormats": "PNG, JPG, WebP o GIF - Max 2 MB",
+      "uploading": "Caricamento...",
+      "uploadSuccess": "Logo caricato con successo",
+      "uploadError": "Errore durante il caricamento del logo",
+      "logoDeleted": "Logo eliminato",
+      "website": "Sito web aziendale",
+      "websitePlaceholder": "https://www.mia-azienda.it",
+      "websiteHint": "Questo link apparirà sulla pagina Espositori",
+      "noDescription": "Nessuna descrizione aggiunta",
+      "noWebsite": "Nessun sito web aggiunto",
+      "completeProfile": "Aggiungi una descrizione, un logo e un sito web per apparire sulla pagina Espositori.",
+      "updateSuccess": "Profilo aziendale aggiornato con successo",
+      "fileTypeError": "Tipo di file non consentito. Usa JPG, PNG, WebP o GIF.",
+      "fileSizeError": "Il file è troppo grande. Massimo 2 MB."
+    },
+    "becomeExhibitor": {
+      "title": "Diventa espositore professionale",
+      "description": "Accedi allo Spazio Pro per prenotare il tuo stand, gestire le informazioni espositore e godere di vantaggi esclusivi.",
+      "button": "Fai una richiesta",
+      "companyName": "Nome dell'azienda",
+      "allFieldsRequired": "Tutti i campi sono obbligatori per la richiesta PRO",
+      "submit": "Invia richiesta",
+      "submitting": "Invio..."
+    },
+    "memberSince": "Membro dal",
+    "tickets": {
+      "title": "I miei biglietti",
+      "noTickets": "Nessun biglietto",
+      "download": "Scarica",
+      "viewQR": "Vedi codice QR"
+    },
+    "orders": {
+      "title": "I miei ordini",
+      "noOrders": "Nessun ordine",
+      "viewDetails": "Vedi dettagli"
+    },
+    "businessTypes": {
+      "PRODUCTEURS": "Produttori",
+      "MATERIEL": "Attrezzature agricole",
+      "LIFESTYLE": "Lifestyle e Benessere",
+      "SERVICE": "Servizi"
+    }
+  },
+  "footer": {
+    "description": "La fiera di riferimento per canapa e cannabis in Francia",
+    "quickLinks": "Link rapidi",
+    "contact": "Contatto",
+    "followUs": "Seguici",
+    "legal": {
+      "title": "Informazioni legali",
+      "privacy": "Privacy policy",
+      "terms": "Termini di servizio",
+      "cgv": "Condizioni generali",
+      "cookies": "Gestione cookie"
+    },
+    "copyright": "© {year} Cann'Agri Expo. Tutti i diritti riservati."
+  },
+  "errors": {
+    "404": {
+      "title": "Pagina non trovata",
+      "description": "La pagina che stai cercando non esiste.",
+      "backHome": "Torna alla home"
+    },
+    "500": {
+      "title": "Errore del server",
+      "description": "Si è verificato un errore. Riprova più tardi.",
+      "backHome": "Torna alla home"
+    }
+  }
+}
