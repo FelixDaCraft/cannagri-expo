@@ -8,17 +8,26 @@ interface Translations {
   it?: string
 }
 
-// GET /api/exposants - Get all exhibitors (from sold stands with linked PRO accounts)
+interface Exhibitor {
+  id: string
+  name: string
+  description: string | null
+  descriptionTranslations: Translations | null
+  logoUrl: string | null
+  websiteUrl: string | null
+  standNumber: string
+  category: string
+  categoryLabel: string
+}
+
+// GET /api/exposants - Get all exhibitors (from sold stands with linked PRO accounts or Sponsors)
 export async function GET() {
   try {
-    // Fetch all sold/reserved stands with linked PRO accounts
+    // Fetch all sold/reserved stands with linked PRO accounts or Sponsors
     const stands = await prisma.stand.findMany({
       where: {
         status: {
           in: ['SOLD', 'RESERVED'],
-        },
-        proId: {
-          not: null,
         },
       },
       include: {
@@ -34,24 +43,54 @@ export async function GET() {
             isApproved: true,
           },
         },
+        sponsor: {
+          select: {
+            id: true,
+            name: true,
+            exhibitorDescription: true,
+            exhibitorDescriptionTranslations: true,
+            logoUrl: true,
+            websiteUrl: true,
+            exhibitorCategory: true,
+            isActive: true,
+          },
+        },
       },
       orderBy: { number: 'asc' },
     })
 
-    // Filter only approved PRO accounts and transform data
-    const exposants = stands
-      .filter((stand) => stand.pro?.isApproved)
-      .map((stand) => ({
-        id: stand.pro!.id,
-        name: stand.exhibitorName || stand.pro!.companyName || 'Exposant',
-        description: stand.pro!.companyDescription,
-        descriptionTranslations: stand.pro!.companyDescriptionTranslations as Translations | null,
-        logoUrl: stand.pro!.companyLogo,
-        websiteUrl: stand.pro!.companyWebsite,
-        standNumber: stand.number.toString(),
-        category: stand.pro!.businessType || 'SERVICE',
-        categoryLabel: getCategoryLabel(stand.pro!.businessType),
-      }))
+    const exposants: Exhibitor[] = []
+
+    for (const stand of stands) {
+      // If stand has an approved PRO account
+      if (stand.pro?.isApproved) {
+        exposants.push({
+          id: stand.pro.id,
+          name: stand.exhibitorName || stand.pro.companyName || 'Exposant',
+          description: stand.pro.companyDescription,
+          descriptionTranslations: stand.pro.companyDescriptionTranslations as Translations | null,
+          logoUrl: stand.pro.companyLogo,
+          websiteUrl: stand.pro.companyWebsite,
+          standNumber: stand.number.toString(),
+          category: stand.pro.businessType || 'SERVICE',
+          categoryLabel: getCategoryLabel(stand.pro.businessType),
+        })
+      }
+      // If stand has an active Sponsor (and no PRO to avoid duplicates)
+      else if (stand.sponsor?.isActive && !stand.proId) {
+        exposants.push({
+          id: stand.sponsor.id,
+          name: stand.exhibitorName || stand.sponsor.name,
+          description: stand.sponsor.exhibitorDescription,
+          descriptionTranslations: stand.sponsor.exhibitorDescriptionTranslations as Translations | null,
+          logoUrl: stand.sponsor.logoUrl,
+          websiteUrl: stand.sponsor.websiteUrl,
+          standNumber: stand.number.toString(),
+          category: stand.sponsor.exhibitorCategory || 'SERVICE',
+          categoryLabel: getCategoryLabel(stand.sponsor.exhibitorCategory),
+        })
+      }
+    }
 
     // Get category counts
     const categoryCounts = exposants.reduce(

@@ -32,12 +32,12 @@ export function Footer() {
           {/* About */}
           <div className="lg:col-span-1">
             <div className="flex items-center gap-3 mb-4">
-              <div className="relative w-10 h-10 bg-white rounded-full overflow-hidden">
+              <div className="relative w-10 h-10">
                 <Image
                   src="/images/logo.PNG"
                   alt={siteConfig.name}
                   fill
-                  className="object-contain p-1"
+                  className="object-contain"
                 />
               </div>
               <span className="font-heading font-bold text-lg">{siteConfig.name}</span>

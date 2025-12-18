@@ -20,6 +20,76 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+  const [demoLoading, setDemoLoading] = useState<string | null>(null)
+
+  // Demo accounts configuration
+  const demoAccounts = [
+    {
+      role: 'SUPER_ADMIN',
+      email: 'demo-superadmin@cannagri-expo.fr',
+      label: 'Super Admin',
+      description: 'Accès total + gestion des rôles',
+      color: 'bg-purple-600 hover:bg-purple-700',
+      icon: '👑',
+    },
+    {
+      role: 'ADMIN',
+      email: 'demo-admin@cannagri-expo.fr',
+      label: 'Admin',
+      description: 'Accès total sauf rôles',
+      color: 'bg-red-600 hover:bg-red-700',
+      icon: '🔐',
+    },
+    {
+      role: 'CONTRIBUTOR',
+      email: 'demo-contributor@cannagri-expo.fr',
+      label: 'Contributeur',
+      description: 'Comptes Pro + Stands',
+      color: 'bg-blue-600 hover:bg-blue-700',
+      icon: '✍️',
+    },
+    {
+      role: 'PRO',
+      email: 'demo-pro@cannagri-expo.fr',
+      label: 'Exposant Pro',
+      description: 'Espace exposant',
+      color: 'bg-forest hover:bg-forest/90',
+      icon: '🏢',
+    },
+    {
+      role: 'USER',
+      email: 'demo-user@cannagri-expo.fr',
+      label: 'Visiteur',
+      description: 'Compte public',
+      color: 'bg-gray-600 hover:bg-gray-700',
+      icon: '👤',
+    },
+  ]
+
+  const handleDemoLogin = async (demoEmail: string, role: string) => {
+    setDemoLoading(role)
+    setErrorMessage('')
+
+    try {
+      const result = await signIn('credentials', {
+        email: demoEmail,
+        password: 'demo123',
+        redirect: false,
+        callbackUrl,
+      })
+
+      if (result?.error) {
+        setErrorMessage('Erreur de connexion démo. Exécutez le seed pour créer les comptes.')
+      } else if (result?.ok) {
+        router.push(callbackUrl)
+        router.refresh()
+      }
+    } catch {
+      setErrorMessage('Erreur de connexion démo')
+    } finally {
+      setDemoLoading(null)
+    }
+  }
 
   const handleCredentialsLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -190,6 +260,50 @@ export default function LoginPage() {
                 <Link href="/inscription" className="text-forest font-medium hover:underline">
                   {t('register')}
                 </Link>
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* Demo Accounts Section */}
+          <Card className="mt-6 shadow-lg border-2 border-dashed border-amber-300 bg-amber-50/50">
+            <CardContent className="p-6">
+              <div className="text-center mb-4">
+                <Badge variant="warning" className="mb-2 bg-amber-100 text-amber-800 border-amber-300">
+                  Mode Démo
+                </Badge>
+                <h3 className="text-lg font-semibold text-gray-800">
+                  Connexion rapide
+                </h3>
+                <p className="text-sm text-gray-600 mt-1">
+                  Testez les différents rôles utilisateur
+                </p>
+              </div>
+
+              <div className="grid gap-2">
+                {demoAccounts.map((account) => (
+                  <button
+                    key={account.role}
+                    onClick={() => handleDemoLogin(account.email, account.role)}
+                    disabled={demoLoading !== null}
+                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-white font-medium transition-all ${account.color} disabled:opacity-50 disabled:cursor-not-allowed`}
+                  >
+                    <span className="text-xl">{account.icon}</span>
+                    <div className="flex-1 text-left">
+                      <div className="font-semibold">{account.label}</div>
+                      <div className="text-xs opacity-80">{account.description}</div>
+                    </div>
+                    {demoLoading === account.role && (
+                      <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                    )}
+                  </button>
+                ))}
+              </div>
+
+              <p className="text-xs text-center text-amber-700 mt-4">
+                Ces comptes sont uniquement pour les tests de développement
               </p>
             </CardContent>
           </Card>

@@ -8,6 +8,7 @@ async function main() {
 
   // Create admin user
   const hashedPassword = await bcrypt.hash('CannAgri2026!', 12)
+  const demoPassword = await bcrypt.hash('demo123', 12)
 
   const admin = await prisma.user.upsert({
     where: { email: 'admin@cannagri-expo.fr' },
@@ -22,6 +23,57 @@ async function main() {
     },
   })
   console.log('Admin user created:', admin.email)
+
+  // Create demo accounts for each role
+  const demoAccounts = [
+    {
+      email: 'demo-superadmin@cannagri-expo.fr',
+      name: 'Demo Super Admin',
+      role: 'SUPER_ADMIN' as const,
+      isApproved: true,
+    },
+    {
+      email: 'demo-admin@cannagri-expo.fr',
+      name: 'Demo Admin',
+      role: 'ADMIN' as const,
+      isApproved: true,
+    },
+    {
+      email: 'demo-contributor@cannagri-expo.fr',
+      name: 'Demo Contributeur',
+      role: 'CONTRIBUTOR' as const,
+      isApproved: true,
+    },
+    {
+      email: 'demo-pro@cannagri-expo.fr',
+      name: 'Demo Exposant Pro',
+      role: 'PRO' as const,
+      companyName: 'Demo Company',
+      isApproved: true,
+    },
+    {
+      email: 'demo-user@cannagri-expo.fr',
+      name: 'Demo Visiteur',
+      role: 'USER' as const,
+      isApproved: true,
+    },
+  ]
+
+  for (const account of demoAccounts) {
+    await prisma.user.upsert({
+      where: { email: account.email },
+      update: { role: account.role },
+      create: {
+        email: account.email,
+        name: account.name,
+        hashedPassword: demoPassword,
+        role: account.role,
+        companyName: account.companyName,
+        isApproved: account.isApproved,
+      },
+    })
+  }
+  console.log('Demo accounts created:', demoAccounts.length)
 
   // Create site settings
   await prisma.siteSettings.upsert({

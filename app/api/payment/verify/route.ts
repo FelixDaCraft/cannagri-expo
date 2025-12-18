@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getVivaWalletOrder } from '@/lib/vivawallet'
-import { generateQRCodeData, generateTicketVerificationUrl } from '@/lib/utils'
+import { generateQRCodeData } from '@/lib/utils'
 import { generateTicketPDF } from '@/lib/pdf'
 import { sendTicketEmail } from '@/lib/email'
 import { generateQRCode } from '@/lib/qrcode'
@@ -60,12 +60,11 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    // Check demo mode - simulate success
-    if (process.env.VIVA_WALLET_DEMO_MODE === 'true') {
-      // In demo mode, directly process the payment
+    // Local simulation mode only (completely bypasses Viva Wallet)
+    // This is for local testing without any Viva Wallet interaction
+    if (process.env.VIVA_WALLET_LOCAL_SIMULATION === 'true') {
       await processSuccessfulPayment(order.id)
 
-      // Refresh order data
       order = await prisma.order.findUnique({
         where: { id: order.id },
         include: { stands: true, tickets: true }
@@ -86,7 +85,7 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    // Production: Query Viva Wallet API for payment status
+    // Query Viva Wallet API for payment status (works for both demo and production)
     const vivaRef = vivaOrderCode || order.vivaWalletRef
     if (!vivaRef) {
       return NextResponse.json({
@@ -100,8 +99,15 @@ export async function POST(request: NextRequest) {
       const vivaOrder = await getVivaWalletOrder(vivaRef)
 
       // Check Viva Wallet order state
-      // StateId: 0 = Pending, 1 = Authorized, 2 = Captured/Paid, etc.
-      if (vivaOrder.StateId === 2 || vivaOrder.StateId === 'F') {
+      // StateId: 0 = Pending, 1 = Expired, 2 = Canceled, 3 = Paid, 4 = Awaiting, 5 = Refunded
+      // For Smart Checkout: StateId 'F' or 'E' means completed
+      const stateId = vivaOrder.StateId
+      console.log(`[Verify] Viva Wallet StateId: ${stateId}, Type: ${typeof stateId}`)
+
+      // Check for paid status (StateId 3 or 'F' for completed transactions)
+      const isPaid = stateId === 3 || stateId === '3' || stateId === 'F' || stateId === 'E'
+
+      if (isPaid) {
         // Payment successful
         await processSuccessfulPayment(order.id, vivaRef)
 
@@ -122,15 +128,16 @@ export async function POST(request: NextRequest) {
             customerEmail: order!.customerEmail,
           }
         })
-      } else if (vivaOrder.StateId === 0 || vivaOrder.StateId === 1) {
-        // Still pending
+      } else if (stateId === 0 || stateId === '0' || stateId === 4 || stateId === '4') {
+        // Pending or Awaiting
         return NextResponse.json({
           success: false,
           status: 'PENDING',
           message: 'Paiement en cours de traitement'
         })
       } else {
-        // Failed or cancelled
+        // Failed, cancelled, expired, or refunded (1, 2, 5)
+        console.log(`[Verify] Payment not successful. StateId: ${stateId}`)
         await prisma.order.update({
           where: { id: order.id },
           data: { status: 'FAILED' }
@@ -139,7 +146,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({
           success: false,
           status: 'FAILED',
-          message: 'Le paiement a échoué'
+          message: 'Le paiement a échoué ou a été annulé'
         })
       }
     } catch (vivaError) {
@@ -218,9 +225,7 @@ async function processSuccessfulPayment(orderId: string, transactionId?: string)
 
       for (let i = 0; i < quantity; i++) {
         const qrData = generateQRCodeData(order.id, Date.now().toString())
-        // Generate QR code with verification URL so scanning opens the verification page
-        const verificationUrl = generateTicketVerificationUrl(qrData)
-        const qrCodeImage = await generateQRCode(verificationUrl)
+        const qrCodeImage = await generateQRCode(qrData)
 
         const ticket = await prisma.ticket.create({
           data: {

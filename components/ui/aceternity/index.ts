@@ -1,5 +1,4 @@
 export { Spotlight } from './spotlight'
-export { WavyBackground } from './wavy-background'
 export { FloatingParticles } from './floating-particles'
 export { TextGenerateEffect } from './text-generate-effect'
 export { MovingBorder } from './moving-border'

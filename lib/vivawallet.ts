@@ -23,9 +23,11 @@ function getBasicAuthHeader(): string {
  * Create a payment order in Viva Wallet
  */
 export async function createVivaWalletOrder(
-  orderData: VivaWalletOrderRequest
+  orderData: VivaWalletOrderRequest & { successUrl?: string; failureUrl?: string }
 ): Promise<VivaWalletOrderResponse> {
   const authHeader = getBasicAuthHeader()
+  const sourceCode = process.env.VIVA_WALLET_SOURCE_CODE || 'Default'
+  const baseUrl = process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
 
   // Create order using the REST API
   const response = await fetch(`${VIVA_API_BASE}/api/orders`, {
@@ -37,32 +39,53 @@ export async function createVivaWalletOrder(
     body: JSON.stringify({
       Amount: orderData.amount, // Amount in cents
       CustomerTrns: `Commande Cann'Agri Expo`,
-      SourceCode: 'Default', // Use default payment source
+      SourceCode: sourceCode,
       MerchantTrns: orderData.merchantTrns,
       Tags: ['cannagri-expo'],
+      // Customer info for better tracking
+      ...(orderData.customerEmail && { Email: orderData.customerEmail }),
+      ...(orderData.customerFullName && { FullName: orderData.customerFullName }),
+      ...(orderData.customerPhone && { Phone: orderData.customerPhone }),
     }),
   })
 
   if (!response.ok) {
     const error = await response.text()
     console.error('Viva Wallet order error:', error)
-    throw new Error('Failed to create Viva Wallet order')
+    throw new Error(`Failed to create Viva Wallet order: ${error}`)
   }
 
   const data = await response.json()
   const orderCode = data.OrderCode || data.orderCode
 
+  // Build checkout URL with redirect parameters
+  const successUrl = `${baseUrl}/paiement/succes?orderId=${orderData.merchantTrns}&s=${orderCode}`
+  const failureUrl = `${baseUrl}/paiement/echec?orderId=${orderData.merchantTrns}`
+
+  // Use Redirect Checkout URL format with success/failure URLs
+  let checkoutUrl = `${VIVA_API_BASE}/web/checkout?ref=${orderCode}`
+  checkoutUrl += '&color=2E4A33'
+  checkoutUrl += `&successUrl=${encodeURIComponent(successUrl)}`
+  checkoutUrl += `&failUrl=${encodeURIComponent(failureUrl)}`
+
+  console.log('[Viva Wallet] Checkout URL with redirects:', checkoutUrl)
+
   return {
     orderCode: orderCode.toString(),
-    checkoutUrl: `${VIVA_API_BASE}/web/checkout?ref=${orderCode}`,
+    checkoutUrl,
   }
 }
 
 /**
  * Get order details from Viva Wallet
+ * StateId values: 0=Pending, 1=Expired, 2=Canceled, 3=Paid, 4=Awaiting, 5=Refunded
+ * For smart checkout: StateId 'F' means completed/paid
  */
 export async function getVivaWalletOrder(orderCode: string) {
   const authHeader = getBasicAuthHeader()
+
+  console.log(`[Viva Wallet] Checking order status for: ${orderCode}`)
+  console.log(`[Viva Wallet] API URL: ${VIVA_API_BASE}/api/orders/${orderCode}`)
 
   const response = await fetch(`${VIVA_API_BASE}/api/orders/${orderCode}`, {
     method: 'GET',
@@ -73,11 +96,14 @@ export async function getVivaWalletOrder(orderCode: string) {
 
   if (!response.ok) {
     const error = await response.text()
-    console.error('Viva Wallet get order error:', error)
+    console.error('[Viva Wallet] Get order error:', error)
     throw new Error('Failed to get Viva Wallet order')
   }
 
-  return response.json()
+  const data = await response.json()
+  console.log('[Viva Wallet] Order response:', JSON.stringify(data, null, 2))
+
+  return data
 }
 
 /**
