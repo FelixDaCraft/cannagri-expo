@@ -11,6 +11,11 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { qrData, markAsUsed = true } = body
 
+    console.log('=== SCAN API DEBUG ===')
+    console.log('Received qrData:', qrData)
+    console.log('qrData type:', typeof qrData)
+    console.log('qrData length:', qrData?.length)
+
     if (!qrData) {
       return NextResponse.json(
         { valid: false, error: 'Code QR manquant' },
@@ -20,8 +25,10 @@ export async function POST(request: NextRequest) {
 
     // Parse QR code data (handles both raw codes and URLs)
     const parsed = parseQRCodeData(qrData)
+    console.log('Parsed result:', parsed)
 
     if (!parsed) {
+      console.log('Parse failed for qrData:', qrData)
       return NextResponse.json({
         valid: false,
         error: 'Code QR invalide',
@@ -31,6 +38,7 @@ export async function POST(request: NextRequest) {
 
     // Use the raw code for database lookup (extracted from URL if needed)
     const rawCode = parsed.rawCode
+    console.log('Looking up ticket with rawCode:', rawCode)
 
     // Find ticket by QR code data
     const ticket = await prisma.ticket.findUnique({
@@ -48,7 +56,14 @@ export async function POST(request: NextRequest) {
       }
     })
 
+    console.log('Ticket found:', ticket ? 'YES' : 'NO')
+    if (ticket) {
+      console.log('Ticket status:', ticket.status)
+      console.log('Order status:', ticket.order?.status)
+    }
+
     if (!ticket) {
+      console.log('No ticket found for rawCode:', rawCode)
       return NextResponse.json({
         valid: false,
         error: 'Billet introuvable',

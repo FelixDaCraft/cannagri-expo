@@ -44,8 +44,7 @@ Cann'Agri Expo est une application web Next.js 14 permettant de gérer tous les 
 
 | Technologie | Version | Description |
 |-------------|---------|-------------|
-| **Viva Wallet** | - | Paiement principal (OAuth2) |
-| **Stripe** | 14.14.0 | Paiement secondaire |
+| **Viva Wallet** | - | Paiement (OAuth2) |
 
 ### Services
 
@@ -54,7 +53,18 @@ Cann'Agri Expo est une application web Next.js 14 permettant de gérer tous les 
 | **Nodemailer** | 6.9.7 | Envoi d'emails SMTP |
 | **bcryptjs** | 2.4.3 | Hashage des mots de passe |
 | **qrcode** | 1.5.3 | Génération QR codes |
+| **html5-qrcode** | 2.3.8 | Scan QR codes (contrôle billets) |
 | **pdf-lib** | 1.17.1 | Génération de PDF |
+| **next-intl** | 4.6.1 | Internationalisation (FR/EN) |
+| **yet-another-react-lightbox** | 3.26.0 | Galerie photo lightbox |
+
+### Tests
+
+| Technologie | Version | Description |
+|-------------|---------|-------------|
+| **Jest** | 30.2.0 | Framework de tests |
+| **Testing Library** | 16.3.1 | Tests React |
+| **ts-jest** | 29.4.6 | Support TypeScript |
 
 ### DevOps & Déploiement
 
@@ -95,6 +105,7 @@ cannagri-expo/
 │   │   ├── confidentialite/      # Politique confidentialité
 │   │   ├── connexion/            # Page de connexion
 │   │   ├── contact/              # Formulaire de contact
+│   │   ├── controle/             # Scan QR codes billets
 │   │   ├── evenement/            # Notre Vision
 │   │   ├── exposants/            # Liste des exposants
 │   │   ├── infos-pratiques/      # Informations pratiques
@@ -141,7 +152,6 @@ cannagri-expo/
 │   ├── pdf.ts                    # Génération PDF billets
 │   ├── prisma.ts                 # Client Prisma singleton
 │   ├── qrcode.ts                 # Génération QR codes
-│   ├── stripe.ts                 # Intégration Stripe
 │   ├── vivawallet.ts             # Intégration Viva Wallet
 │   └── utils.ts                  # Fonctions utilitaires
 │
@@ -155,6 +165,10 @@ cannagri-expo/
 ├── types/                        # Types TypeScript
 │   ├── index.ts                  # Types principaux
 │   └── next-auth.d.ts            # Extension types auth
+│
+├── __tests__/                    # Tests unitaires & intégration
+│   ├── components/               # Tests composants UI
+│   └── lib/                      # Tests utilitaires
 │
 ├── nginx/                        # Configuration Nginx
 ├── scripts/                      # Scripts déploiement
@@ -179,8 +193,9 @@ cannagri-expo/
 
 - Génération de QR codes uniques
 - Génération de billets PDF
-- Intégration paiement Viva Wallet / Stripe
+- Intégration paiement Viva Wallet
 - E-billet envoyé par email
+- Contrôle des billets par scan QR
 
 ### Gestion des Stands
 
@@ -300,9 +315,12 @@ docker-compose -f docker-compose.prod.yml up -d
 | Commande | Description |
 |----------|-------------|
 | `npm run dev` | Serveur de développement (http://localhost:3000) |
-| `npm run build` | Build de production |
+| `npm run build` | Build de production (lance les tests avant) |
 | `npm start` | Démarrer en production |
 | `npm run lint` | Lancer ESLint |
+| `npm test` | Lancer les tests Jest |
+| `npm run test:watch` | Tests en mode watch |
+| `npm run test:coverage` | Tests avec couverture |
 | `npm run db:push` | Synchroniser schéma Prisma |
 | `npm run db:seed` | Peupler la base de données |
 | `npm run db:studio` | Ouvrir Prisma Studio |
@@ -330,10 +348,6 @@ VIVA_WALLET_CLIENT_ID=""
 VIVA_WALLET_CLIENT_SECRET=""
 VIVA_WALLET_MERCHANT_ID=""
 VIVA_WALLET_SOURCE_CODE=""
-
-# Paiement Stripe (backup)
-STRIPE_SECRET_KEY=""
-STRIPE_WEBHOOK_SECRET=""
 
 # Email SMTP
 SMTP_HOST="smtp.example.com"

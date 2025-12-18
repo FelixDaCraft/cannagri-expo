@@ -74,7 +74,7 @@ export const authOptions: NextAuthOptions = {
     signIn: '/connexion',
     signOut: '/connexion',
     error: '/connexion',
-    newUser: '/inscription',
+    newUser: '/compte',
   },
 
   callbacks: {

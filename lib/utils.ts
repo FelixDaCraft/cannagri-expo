@@ -92,10 +92,3 @@ export function isValidSiret(siret: string): boolean {
   return /^\d{14}$/.test(cleanSiret)
 }
 
-/**
- * Generate a verification URL for a ticket QR code
- */
-export function generateTicketVerificationUrl(qrCodeData: string, baseUrl?: string): string {
-  const url = baseUrl || process.env.NEXT_PUBLIC_APP_URL || 'https://cannagri-expo.fr'
-  return `${url}/ticket/${encodeURIComponent(qrCodeData)}`
-}

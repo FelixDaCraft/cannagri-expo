@@ -11,11 +11,9 @@ const isVivaWalletEnabled = !!(
   process.env.VIVA_WALLET_API_KEY
 )
 
-
-// Force demo mode for local development
-const isDemoMode = process.env.VIVA_WALLET_DEMO_MODE === 'true' ||
-  process.env.NEXTAUTH_URL?.includes('localhost') ||
-  !process.env.NEXTAUTH_URL
+// Local simulation mode (completely bypasses Viva Wallet)
+// Set VIVA_WALLET_LOCAL_SIMULATION="true" to enable local payment simulation
+const isLocalSimulation = process.env.VIVA_WALLET_LOCAL_SIMULATION === 'true'
 
 export async function POST(request: NextRequest) {
   try {
@@ -161,8 +159,8 @@ export async function POST(request: NextRequest) {
     const successUrl = `${baseUrl}/paiement/succes?orderId=${order.id}`
     const failureUrl = `${baseUrl}/paiement/echec?orderId=${order.id}`
 
-    if (!isVivaWalletEnabled || isDemoMode) {
-      // Demo mode - redirect to payment simulation page
+    if (!isVivaWalletEnabled || isLocalSimulation) {
+      // Local simulation mode - redirect to payment simulation page
       const amountCents = Math.round(amount * 100)
       checkoutUrl = `${baseUrl}/paiement/demo?orderId=${order.id}&amount=${amountCents}`
     } else {
@@ -177,16 +175,24 @@ export async function POST(request: NextRequest) {
           merchantTrns: order.id, // Store our order ID for webhook
         })
 
-        // Viva Wallet checkout URL with success/failure redirects
-        checkoutUrl = `${vivaOrder.checkoutUrl}&color=2E4A33&successUrl=${encodeURIComponent(successUrl)}&failUrl=${encodeURIComponent(failureUrl)}`
-
-        // Update order with Viva Wallet order code
+        // Update order with Viva Wallet order code BEFORE building URL
         await prisma.order.update({
           where: { id: order.id },
           data: {
             vivaWalletRef: vivaOrder.orderCode,
-            vivaPaymentUrl: checkoutUrl,
+            vivaPaymentUrl: vivaOrder.checkoutUrl,
           }
+        })
+
+        // Build checkout URL - Viva Wallet redirects to the URL configured in the Source
+        // We add our orderId so the success page can find the order
+        // The success page will use polling to verify payment status
+        checkoutUrl = vivaOrder.checkoutUrl
+
+        console.log('Viva Wallet order created:', {
+          orderCode: vivaOrder.orderCode,
+          orderId: order.id,
+          checkoutUrl,
         })
       } catch (vivaError) {
         console.error('Viva Wallet error:', vivaError)

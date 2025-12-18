@@ -68,7 +68,7 @@ export async function GET(
       ],
     })
 
-    // Generate QR code image
+    // Generate QR code image with raw code
     const qrCodeImage = await generateQRCode(ticket.qrCodeData)
 
     // Generate the PDF

@@ -70,17 +70,25 @@ export async function generateQRCodeSVG(data: string): Promise<string> {
 
 /**
  * Extract raw QR code from URL or return as-is if already raw
- * Handles both formats:
+ * Handles multiple formats:
  * - Raw: CANNAGRI-xxx-xxx-xxx
- * - URL: https://example.com/ticket/CANNAGRI-xxx-xxx-xxx
+ * - URL path: https://example.com/ticket/CANNAGRI-xxx-xxx-xxx
+ * - URL query: https://example.com/controle?code=CANNAGRI-xxx-xxx-xxx
  */
 export function extractQRCodeFromUrl(data: string): string {
-  // If it's a URL, extract the code from the path
+  // If it's a URL, extract the code from path or query params
   if (data.startsWith('http://') || data.startsWith('https://')) {
     try {
       const url = new URL(data)
+
+      // First check query parameters (e.g., ?code=CANNAGRI-xxx)
+      const codeParam = url.searchParams.get('code')
+      if (codeParam && codeParam.startsWith('CANNAGRI-')) {
+        return codeParam
+      }
+
+      // Then check URL path
       const pathParts = url.pathname.split('/')
-      // Find the part that looks like a CANNAGRI code
       for (const part of pathParts) {
         const decoded = decodeURIComponent(part)
         if (decoded.startsWith('CANNAGRI-')) {
@@ -88,10 +96,12 @@ export function extractQRCodeFromUrl(data: string): string {
         }
       }
     } catch {
-      // If URL parsing fails, try to extract CANNAGRI code directly
-      const match = data.match(/CANNAGRI-[a-zA-Z0-9]+-[a-zA-Z0-9]+-\d+/)
-      if (match) return match[0]
+      // If URL parsing fails, try to extract CANNAGRI code directly via regex
     }
+
+    // Fallback: try to extract CANNAGRI code directly from the string
+    const match = data.match(/CANNAGRI-[a-zA-Z0-9]+-[a-zA-Z0-9]+-\d+/)
+    if (match) return match[0]
   }
 
   // Return as-is (raw code)
