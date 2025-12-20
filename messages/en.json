@@ -145,17 +145,10 @@
     "program": {
       "title": "Highlights & Conferences",
       "subtitle": "A rich program with quality speakers to understand the challenges of the CBD hemp industry.",
-      "eventTypes": {
-        "conference": "Conference",
-        "workshop": "Workshop",
-        "ceremony": "Ceremony",
-        "opening": "Opening conference"
-      },
-      "defaultTitle": "The Future of European CBD Regulation",
-      "defaultDescription": "What are the prospects for the CBD hemp industry in France and Europe? The latest regulatory developments and their impacts on market players.",
-      "expertToConfirm": "Expert to be confirmed",
-      "specialistSpeaker": "Specialist speaker",
-      "viewFullProgram": "View full program",
+      "comingSoon": "Coming Soon",
+      "programComingSoonTitle": "Program Coming Soon",
+      "programComingSoonDescription": "The detailed program for the 2026 edition will be available soon. Conferences, round tables and workshops will be led by recognized experts in the CBD hemp industry.",
+      "viewFullProgram": "View program",
       "stats": {
         "conferences": "Conferences",
         "speakers": "Speakers",

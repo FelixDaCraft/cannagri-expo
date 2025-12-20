@@ -85,7 +85,7 @@ export default async function HomePage() {
         <SponsorsArticlesPlaceholder />
       )}
       <TicketSection />
-      <PillarsSection />
+      <PillarsSection stats={stats} />
       <ProgramHighlight stats={stats} />
       <PartnersGrid sponsors={sponsors} />
     </>
