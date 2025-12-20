@@ -1,7 +1,5 @@
-version: '3.8'
-
 # =============================================================================
-# Docker Compose for Hetzner Production
+# Docker Compose for Hetzner - Production + Development
 # Includes Traefik for automatic SSL certificates via Let's Encrypt
 # =============================================================================
 
@@ -10,11 +8,11 @@ services:
   # Traefik - Reverse Proxy with automatic SSL
   # ---------------------------------------------------------------------------
   traefik:
-    image: traefik:v3.0
+    image: traefik:v2.11
     container_name: traefik
     restart: always
     command:
-      - "--api.dashboard=true"
+      - "--api.dashboard=false"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
@@ -22,7 +20,7 @@ services:
       - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
       - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
       - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
-      - "--certificatesresolvers.letsencrypt.acme.email=${ACME_EMAIL:-admin@cannagri-expo.eu}"
+      - "--certificatesresolvers.letsencrypt.acme.email=yann.maillot@platinumcbdcup.eu"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
     ports:
       - "80:80"
@@ -32,75 +30,49 @@ services:
       - letsencrypt:/letsencrypt
     networks:
       - cannagri-network
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.dashboard.rule=Host(`traefik.cannagri-expo.eu`)"
-      - "traefik.http.routers.dashboard.service=api@internal"
-      - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.dashboard.middlewares=auth"
-      - "traefik.http.middlewares.auth.basicauth.users=${TRAEFIK_AUTH:-admin:$$apr1$$xyz$$hash}"
 
   # ---------------------------------------------------------------------------
-  # Next.js Application
+  # Production - cannagri-expo.eu
   # ---------------------------------------------------------------------------
   app:
     image: ghcr.io/felixdacraft/cannagri-expo:latest
     container_name: cannagri-app
     restart: always
-    environment:
-      - NODE_ENV=production
-      - DATABASE_URL=${DATABASE_URL}
-      - NEXTAUTH_URL=${NEXTAUTH_URL}
-      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
-      - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
-      - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
-      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
-      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
-      - VIVA_WALLET_MERCHANT_ID=${VIVA_WALLET_MERCHANT_ID}
-      - VIVA_WALLET_API_KEY=${VIVA_WALLET_API_KEY}
-      - VIVA_WALLET_SOURCE_CODE=${VIVA_WALLET_SOURCE_CODE}
-      - VIVA_WALLET_DEMO_MODE=${VIVA_WALLET_DEMO_MODE:-false}
-      - SMTP_HOST=${SMTP_HOST}
-      - SMTP_PORT=${SMTP_PORT}
-      - SMTP_USER=${SMTP_USER}
-      - SMTP_PASSWORD=${SMTP_PASSWORD}
-      - EMAIL_FROM=${EMAIL_FROM}
-      - NEXT_PUBLIC_TICKETING_ENABLED=${NEXT_PUBLIC_TICKETING_ENABLED:-false}
-      - NEXT_PUBLIC_DEMO_MODE=${NEXT_PUBLIC_DEMO_MODE:-false}
+    env_file:
+      - .env
     volumes:
-      - uploads:/app/public/uploads
+      - /opt/cannagri-expo/images/gallery:/app/public/images/gallery:ro
     networks:
       - cannagri-network
     labels:
       - "traefik.enable=true"
-      # Main domain
       - "traefik.http.routers.app.rule=Host(`cannagri-expo.eu`) || Host(`www.cannagri-expo.eu`)"
       - "traefik.http.routers.app.entrypoints=websecure"
       - "traefik.http.routers.app.tls.certresolver=letsencrypt"
       - "traefik.http.services.app.loadbalancer.server.port=3000"
-      # Redirect www to non-www
-      - "traefik.http.middlewares.www-redirect.redirectregex.regex=^https://www\\.(.+)"
-      - "traefik.http.middlewares.www-redirect.redirectregex.replacement=https://$${1}"
-      - "traefik.http.middlewares.www-redirect.redirectregex.permanent=true"
-      - "traefik.http.routers.app.middlewares=www-redirect"
-    deploy:
-      resources:
-        limits:
-          cpus: '2'
-          memory: 1G
-        reservations:
-          cpus: '0.5'
-          memory: 256M
-    healthcheck:
-      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/api/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
+
+  # ---------------------------------------------------------------------------
+  # Development - dev.cannagri-expo.eu
+  # ---------------------------------------------------------------------------
+  app-dev:
+    image: ghcr.io/felixdacraft/cannagri-expo:dev
+    container_name: cannagri-app-dev
+    restart: always
+    env_file:
+      - .env.dev
+    volumes:
+      - /opt/cannagri-expo/images/gallery:/app/public/images/gallery:ro
+    networks:
+      - cannagri-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.app-dev.rule=Host(`dev.cannagri-expo.eu`)"
+      - "traefik.http.routers.app-dev.entrypoints=websecure"
+      - "traefik.http.routers.app-dev.tls.certresolver=letsencrypt"
+      - "traefik.http.services.app-dev.loadbalancer.server.port=3000"
 
 volumes:
   letsencrypt:
-  uploads:
 
 networks:
   cannagri-network:
