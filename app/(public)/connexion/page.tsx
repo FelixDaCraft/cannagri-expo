@@ -1,11 +1,14 @@
 'use client'
 
 import { useState } from 'react'
-import { signIn, getProviders } from 'next-auth/react'
+import { signIn } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import { Card, CardContent, Badge, Button } from '@/components/ui'
+
+// Check if demo mode is enabled (only in development)
+const DEMO_MODE_ENABLED = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -22,13 +25,13 @@ export default function LoginPage() {
   const [errorMessage, setErrorMessage] = useState('')
   const [demoLoading, setDemoLoading] = useState<string | null>(null)
 
-  // Demo accounts configuration
-  const demoAccounts = [
+  // Demo accounts configuration (only used if DEMO_MODE_ENABLED)
+  const demoAccounts = DEMO_MODE_ENABLED ? [
     {
       role: 'SUPER_ADMIN',
       email: 'demo-superadmin@cannagri-expo.fr',
       label: 'Super Admin',
-      description: 'Accès total + gestion des rôles',
+      description: 'Acces total + gestion des roles',
       color: 'bg-purple-600 hover:bg-purple-700',
       icon: '👑',
     },
@@ -36,7 +39,7 @@ export default function LoginPage() {
       role: 'ADMIN',
       email: 'demo-admin@cannagri-expo.fr',
       label: 'Admin',
-      description: 'Accès total sauf rôles',
+      description: 'Acces total sauf roles',
       color: 'bg-red-600 hover:bg-red-700',
       icon: '🔐',
     },
@@ -64,9 +67,11 @@ export default function LoginPage() {
       color: 'bg-gray-600 hover:bg-gray-700',
       icon: '👤',
     },
-  ]
+  ] : []
 
   const handleDemoLogin = async (demoEmail: string, role: string) => {
+    if (!DEMO_MODE_ENABLED) return
+
     setDemoLoading(role)
     setErrorMessage('')
 
@@ -79,13 +84,13 @@ export default function LoginPage() {
       })
 
       if (result?.error) {
-        setErrorMessage('Erreur de connexion démo. Exécutez le seed pour créer les comptes.')
+        setErrorMessage('Erreur de connexion demo. Executez le seed pour creer les comptes.')
       } else if (result?.ok) {
         router.push(callbackUrl)
         router.refresh()
       }
     } catch {
-      setErrorMessage('Erreur de connexion démo')
+      setErrorMessage('Erreur de connexion demo')
     } finally {
       setDemoLoading(null)
     }
@@ -264,49 +269,51 @@ export default function LoginPage() {
             </CardContent>
           </Card>
 
-          {/* Demo Accounts Section */}
-          <Card className="mt-6 shadow-lg border-2 border-dashed border-amber-300 bg-amber-50/50">
-            <CardContent className="p-6">
-              <div className="text-center mb-4">
-                <Badge variant="warning" className="mb-2 bg-amber-100 text-amber-800 border-amber-300">
-                  Mode Démo
-                </Badge>
-                <h3 className="text-lg font-semibold text-gray-800">
-                  Connexion rapide
-                </h3>
-                <p className="text-sm text-gray-600 mt-1">
-                  Testez les différents rôles utilisateur
+          {/* Demo Accounts Section - Only shown in development */}
+          {DEMO_MODE_ENABLED && demoAccounts.length > 0 && (
+            <Card className="mt-6 shadow-lg border-2 border-dashed border-amber-300 bg-amber-50/50">
+              <CardContent className="p-6">
+                <div className="text-center mb-4">
+                  <Badge variant="warning" className="mb-2 bg-amber-100 text-amber-800 border-amber-300">
+                    Mode Demo
+                  </Badge>
+                  <h3 className="text-lg font-semibold text-gray-800">
+                    Connexion rapide
+                  </h3>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Testez les differents roles utilisateur
+                  </p>
+                </div>
+
+                <div className="grid gap-2">
+                  {demoAccounts.map((account) => (
+                    <button
+                      key={account.role}
+                      onClick={() => handleDemoLogin(account.email, account.role)}
+                      disabled={demoLoading !== null}
+                      className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-white font-medium transition-all ${account.color} disabled:opacity-50 disabled:cursor-not-allowed`}
+                    >
+                      <span className="text-xl">{account.icon}</span>
+                      <div className="flex-1 text-left">
+                        <div className="font-semibold">{account.label}</div>
+                        <div className="text-xs opacity-80">{account.description}</div>
+                      </div>
+                      {demoLoading === account.role && (
+                        <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                      )}
+                    </button>
+                  ))}
+                </div>
+
+                <p className="text-xs text-center text-amber-700 mt-4">
+                  Ces comptes sont uniquement pour les tests de developpement
                 </p>
-              </div>
-
-              <div className="grid gap-2">
-                {demoAccounts.map((account) => (
-                  <button
-                    key={account.role}
-                    onClick={() => handleDemoLogin(account.email, account.role)}
-                    disabled={demoLoading !== null}
-                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-white font-medium transition-all ${account.color} disabled:opacity-50 disabled:cursor-not-allowed`}
-                  >
-                    <span className="text-xl">{account.icon}</span>
-                    <div className="flex-1 text-left">
-                      <div className="font-semibold">{account.label}</div>
-                      <div className="text-xs opacity-80">{account.description}</div>
-                    </div>
-                    {demoLoading === account.role && (
-                      <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                    )}
-                  </button>
-                ))}
-              </div>
-
-              <p className="text-xs text-center text-amber-700 mt-4">
-                Ces comptes sont uniquement pour les tests de développement
-              </p>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          )}
 
           {/* RGPD Notice */}
           <p className="mt-6 text-center text-xs text-gray-500">

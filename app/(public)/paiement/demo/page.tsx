@@ -1,8 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { Button, Card, CardContent } from '@/components/ui'
+
+// Only allow this page in demo mode
+const DEMO_MODE_ENABLED = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
 
 export default function DemoPaymentPage() {
   const searchParams = useSearchParams()
@@ -10,6 +13,18 @@ export default function DemoPaymentPage() {
 
   const orderId = searchParams.get('orderId')
   const amount = searchParams.get('amount')
+
+  // Redirect to home if demo mode is disabled
+  useEffect(() => {
+    if (!DEMO_MODE_ENABLED) {
+      router.replace('/')
+    }
+  }, [router])
+
+  // Don't render anything if demo mode is disabled
+  if (!DEMO_MODE_ENABLED) {
+    return null
+  }
 
   const [processing, setProcessing] = useState(false)
   const [cardNumber, setCardNumber] = useState('4111 1111 1111 1111')

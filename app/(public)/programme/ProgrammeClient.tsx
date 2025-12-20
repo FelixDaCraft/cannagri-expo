@@ -146,16 +146,75 @@ export default function ProgrammeClient({ events, locale }: ProgrammeClientProps
 
         {/* Empty state */}
         {events.length === 0 ? (
-          <div className="text-center py-16">
-            <div className="text-6xl mb-4">📅</div>
-            <h2 className="text-2xl font-heading font-bold text-heading mb-2">
-              Programme à venir
-            </h2>
-            <p className="text-body/70 max-w-md mx-auto">
-              Le programme détaillé de l&apos;événement sera bientôt disponible.
-              Revenez nous voir prochainement !
-            </p>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="max-w-2xl mx-auto text-center"
+          >
+            <div className="bg-white rounded-2xl shadow-lg border border-sage/10 p-8 md:p-12">
+              <motion.div
+                animate={{ scale: [1, 1.05, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="w-20 h-20 mx-auto mb-6 rounded-full bg-sage/10 flex items-center justify-center"
+              >
+                <svg className="w-10 h-10 text-forest" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </motion.div>
+              <h2 className="text-2xl md:text-3xl font-heading font-bold text-heading mb-4">
+                Programme bientot disponible
+              </h2>
+              <p className="text-body/70 mb-6">
+                Nous preparons un programme riche en conferences, ateliers et rencontres pour l edition 2026 de Cann Agri Expo.
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+                <div className="bg-sage/5 rounded-xl p-4">
+                  <div className="text-2xl mb-2">🎤</div>
+                  <div className="font-medium text-heading">Conferences</div>
+                  <div className="text-sm text-body/60">Experts du secteur</div>
+                </div>
+                <div className="bg-sage/5 rounded-xl p-4">
+                  <div className="text-2xl mb-2">🛠️</div>
+                  <div className="font-medium text-heading">Ateliers</div>
+                  <div className="text-sm text-body/60">Sessions pratiques</div>
+                </div>
+                <div className="bg-sage/5 rounded-xl p-4">
+                  <div className="text-2xl mb-2">🏆</div>
+                  <div className="font-medium text-heading">Platinum CBD Cup</div>
+                  <div className="text-sm text-body/60">Ceremonie de remise</div>
+                </div>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <a
+                  href="/contact"
+                  className="inline-flex items-center justify-center px-6 py-3 bg-forest text-white font-medium rounded-lg hover:bg-forest/90 transition-colors"
+                >
+                  Nous contacter
+                </a>
+                <a
+                  href="/"
+                  className="inline-flex items-center justify-center px-6 py-3 bg-white text-forest font-medium rounded-lg border-2 border-forest hover:bg-forest/5 transition-colors"
+                >
+                  Retour a l accueil
+                </a>
+              </div>
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              className="mt-8 p-6 bg-sage/10 rounded-xl"
+            >
+              <h3 className="font-heading font-semibold text-heading mb-3">
+                Restez informé
+              </h3>
+              <p className="text-body/70 text-sm">
+                Inscrivez-vous à notre newsletter pour être informé de la publication du programme complet.
+              </p>
+            </motion.div>
+          </motion.div>
         ) : (
           <>
             {/* Filter - Mobile Scroll */}
@@ -286,23 +345,19 @@ export default function ProgrammeClient({ events, locale }: ProgrammeClientProps
           </>
         )}
 
-        {/* CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mt-12"
-        >
-          {events.length === 0 ? (
-            <p className="text-body/70">
-              Inscrivez-vous à notre newsletter pour être informé de la publication du programme.
-            </p>
-          ) : (
+        {/* CTA - Only show when events exist */}
+        {events.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mt-12"
+          >
             <p className="text-body/70">
               Le programme peut être sujet à modifications.
             </p>
-          )}
-        </motion.div>
+          </motion.div>
+        )}
       </div>
     </div>
   )

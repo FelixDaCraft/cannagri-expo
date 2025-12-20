@@ -18,7 +18,7 @@ export default function CGVPage() {
               Conditions Générales de Vente
             </h1>
             <p className="text-forest/70">
-              Dernière mise à jour : Janvier 2025
+              Dernière mise à jour : Décembre 2025
             </p>
           </div>
 
@@ -118,18 +118,26 @@ export default function CGVPage() {
             <h2>8. Droit applicable</h2>
             <p>
               Les présentes CGV sont soumises au droit français. En cas de litige, les tribunaux
-              de Marseille seront seuls compétents.
+              de Nantes seront seuls compétents.
             </p>
 
-            <h2>9. Contact</h2>
+            <h2>9. Vendeur</h2>
+            <p>
+              <strong>PLATINUM CBD</strong><br />
+              Association déclarée (loi 1901)<br />
+              N° RNA : W442 027 639<br />
+              SIRET : 921 098 497 00016<br />
+              Siège social : 9 rue de Beaulieu, 44340 Bouguenais, France
+            </p>
+
+            <h2>10. Contact</h2>
             <p>
               Pour toute question concernant ces conditions générales de vente :<br />
               <strong>{siteConfig.name}</strong><br />
               Email :{' '}
               <a href={`mailto:${siteConfig.contact.email}`} className="text-terracotta hover:underline">
                 {siteConfig.contact.email}
-              </a><br />
-              Téléphone : {siteConfig.contact.phone}
+              </a>
             </p>
 
             <div className="mt-12 pt-8 border-t border-forest/10">

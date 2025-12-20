@@ -1,22 +1,4 @@
 services:
-  db:
-    image: postgres:15-alpine
-    container_name: cannagri-db
-    restart: always
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - cannagri-network
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-
   app:
     build:
       context: .
@@ -24,17 +6,18 @@ services:
     container_name: cannagri-app
     restart: always
     ports:
-      - "${APP_PORT}:3000"
+      - "${APP_PORT:-3000}:3000"
     volumes:
       - ./public/images:/app/public/images:ro
     environment:
       - NODE_ENV=production
-      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?schema=public
+      - DATABASE_URL=${DATABASE_URL}
       - NEXTAUTH_URL=${NEXTAUTH_URL}
       - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
       - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
-      - VIVA_WALLET_CLIENT_ID=${VIVA_WALLET_CLIENT_ID}
-      - VIVA_WALLET_CLIENT_SECRET=${VIVA_WALLET_CLIENT_SECRET}
+      - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
       - VIVA_WALLET_MERCHANT_ID=${VIVA_WALLET_MERCHANT_ID}
       - VIVA_WALLET_API_KEY=${VIVA_WALLET_API_KEY}
       - VIVA_WALLET_SOURCE_CODE=${VIVA_WALLET_SOURCE_CODE}
@@ -44,14 +27,16 @@ services:
       - SMTP_USER=${SMTP_USER}
       - SMTP_PASSWORD=${SMTP_PASSWORD}
       - EMAIL_FROM=${EMAIL_FROM}
-    depends_on:
-      db:
-        condition: service_healthy
+      - NEXT_PUBLIC_TICKETING_ENABLED=${NEXT_PUBLIC_TICKETING_ENABLED:-false}
+      - NEXT_PUBLIC_DEMO_MODE=${NEXT_PUBLIC_DEMO_MODE:-false}
     networks:
       - cannagri-network
-
-volumes:
-  postgres_data:
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
 networks:
   cannagri-network:
