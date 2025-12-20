@@ -7,8 +7,8 @@ import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import { Card, CardContent, Badge, Button } from '@/components/ui'
 
-// Check if demo mode is enabled (only in development)
-const DEMO_MODE_ENABLED = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
+// Demo mode disabled in production
+const DEMO_MODE_ENABLED = false
 
 export default function LoginPage() {
   const router = useRouter()

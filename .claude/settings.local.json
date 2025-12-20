@@ -38,7 +38,8 @@
       "Bash(git fetch:*)",
       "Bash(npx shadcn@latest mcp init:*)",
       "Bash(npm test:*)",
-      "Bash(ssh:*)"
+      "Bash(ssh:*)",
+      "Bash(scp:*)"
     ]
   }
 }
