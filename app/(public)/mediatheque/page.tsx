@@ -37,8 +37,8 @@ export default function GalleryPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Essayer de charger depuis l'API, sinon utiliser les photos statiques
-    fetch('/api/admin/media')
+    // Charger les photos depuis l'API publique
+    fetch('/api/gallery')
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {
