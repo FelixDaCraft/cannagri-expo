@@ -19,14 +19,10 @@ interface GalleryImage {
 
 // Photos de l'édition 2024
 const photos2024: GalleryImage[] = [
-  { id: '1', src: '/images/gallery/IMG20240419105642.jpg', caption: 'Stand Exchange - Échanges entre professionnels', edition: '2024', width: 1920, height: 1080 },
-  { id: '2', src: '/images/gallery/IMG20240419110140.jpg', caption: 'Conférence - Vue d\'ensemble de la salle', edition: '2024', width: 1920, height: 1080 },
-  { id: '3', src: '/images/gallery/IMG20240419110918.jpg', caption: 'Conférence - Intervenants sur scène', edition: '2024', width: 1920, height: 1080 },
-  { id: '4', src: '/images/gallery/IMG20240419111326.jpg', caption: 'Table ronde - Discussion entre experts', edition: '2024', width: 1920, height: 1080 },
-  { id: '5', src: '/images/gallery/IMG20240419111416.jpg', caption: 'Networking - Échanges informels', edition: '2024', width: 1920, height: 1080 },
-  { id: '6', src: '/images/gallery/IMG20240419111931.jpg', caption: 'Remise des prix - Platinum CBD Cup', edition: '2024', width: 1920, height: 1080 },
-  { id: '7', src: '/images/gallery/IMG20240419114423.jpg', caption: 'Cérémonie - Les lauréats sur scène', edition: '2024', width: 1920, height: 1080 },
-  { id: '8', src: '/images/gallery/IMG20240419194621.jpg', caption: 'Échantillons CBD - Dégustation et évaluation', edition: '2024', width: 1920, height: 1080 },
+  { id: '1', src: '/images/gallery/2024_1766113359810_oljax3.jpg', caption: 'Salon Cann\'Agri Expo 2024', edition: '2024', width: 1920, height: 1080 },
+  { id: '2', src: '/images/gallery/2024_1766113363622_fdd64p.jpg', caption: 'Échanges entre professionnels', edition: '2024', width: 1920, height: 1080 },
+  { id: '3', src: '/images/gallery/2024_1766113365274_ohh5kc.jpg', caption: 'Conférences et tables rondes', edition: '2024', width: 1920, height: 1080 },
+  { id: '4', src: '/images/gallery/2024_1766113376843_b3wkv2.jpg', caption: 'Networking et découvertes', edition: '2024', width: 1920, height: 1080 },
 ]
 
 export default function GalleryPage() {
@@ -37,8 +33,8 @@ export default function GalleryPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Essayer de charger depuis l'API, sinon utiliser les photos statiques
-    fetch('/api/admin/media')
+    // Charger les photos depuis l'API publique
+    fetch('/api/gallery')
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {
