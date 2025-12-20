@@ -30,6 +30,16 @@ const iconMap: Record<string, React.ReactNode> = {
   ),
 }
 
+interface PillarsStats {
+  conferenceCount: number
+  speakerCount: number
+  standCount: number
+}
+
+interface PillarsSectionProps {
+  stats?: PillarsStats
+}
+
 const headerBackgrounds = [
   <div key="1" className="absolute inset-0 flex items-center justify-center">
     <motion.div
@@ -83,7 +93,7 @@ const headerBackgrounds = [
   </div>,
 ]
 
-export function PillarsSection() {
+export function PillarsSection({ stats }: PillarsSectionProps) {
   const t = useTranslations('home.pillars')
 
   return (
@@ -138,13 +148,12 @@ export function PillarsSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6"
+          className="mt-16 grid grid-cols-3 gap-6"
         >
           {[
-            { number: '50+', label: t('stats.exhibitors') },
-            { number: '1000+', label: t('stats.visitors') },
-            { number: '10+', label: t('stats.conferences') },
-            { number: '1', label: t('stats.uniqueDay') },
+            { number: stats?.standCount || 0, label: t('stats.exhibitors') },
+            { number: '700-800', label: t('stats.visitors') },
+            { number: 3, label: t('stats.conferences') },
           ].map((stat, index) => (
             <motion.div
               key={index}
