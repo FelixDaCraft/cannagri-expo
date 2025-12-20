@@ -199,6 +199,12 @@ async function main() {
   // ============================================================================
   console.log('🏆 Creating sponsors...')
 
+  // Utilisation de logos placeholder via UI Avatars (génère des avatars avec initiales)
+  const getPlaceholderLogo = (name: string) => {
+    const initials = name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase()
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(initials)}&background=2d5a3d&color=fff&size=200&font-size=0.4&bold=true`
+  }
+
   const sponsors = [
     {
       name: 'CBD Premium France',
@@ -216,7 +222,7 @@ Notre engagement pour la qualité française:
 - Laboratoires partenaires pour des analyses rigoureuses
 
 Découvrez nos innovations exclusives lors du salon, notamment notre nouvelle gamme d'huiles full-spectrum et nos fleurs premium sélectionnées par nos experts.`,
-      logoUrl: '/images/sponsors/cbd-premium-france.png',
+      logoUrl: getPlaceholderLogo('CBD Premium France'),
       displayOrder: 1,
       isActive: true,
       exhibitorDescription: 'Stand de dégustation et présentation de notre gamme complète de produits CBD premium.',
@@ -231,7 +237,7 @@ Découvrez nos innovations exclusives lors du salon, notamment notre nouvelle ga
       type: 'OR' as SponsorType,
       description: 'Solutions innovantes pour la culture de chanvre industriel et CBD.',
       websiteUrl: 'https://greentech-solutions.example.com',
-      logoUrl: '/images/sponsors/greentech-solutions.png',
+      logoUrl: getPlaceholderLogo('GreenTech Solutions'),
       displayOrder: 2,
       isActive: true,
       exhibitorDescription: 'Démonstration de nos systèmes hydroponiques et LED horticoles dernière génération.',
@@ -245,7 +251,7 @@ Découvrez nos innovations exclusives lors du salon, notamment notre nouvelle ga
       type: 'OR' as SponsorType,
       description: 'Cosmétiques naturels à base de chanvre, fabrication française.',
       websiteUrl: 'https://hemp-and-co.example.com',
-      logoUrl: '/images/sponsors/hemp-and-co.png',
+      logoUrl: getPlaceholderLogo('Hemp Co'),
       displayOrder: 3,
       isActive: true,
     },
@@ -255,6 +261,7 @@ Découvrez nos innovations exclusives lors du salon, notamment notre nouvelle ga
       type: 'ARGENT' as SponsorType,
       description: 'Laboratoire spécialisé dans l\'analyse et la certification des produits CBD.',
       websiteUrl: 'https://biohemp-labs.example.com',
+      logoUrl: getPlaceholderLogo('BioHemp Labs'),
       displayOrder: 4,
       isActive: true,
     },
@@ -264,6 +271,7 @@ Découvrez nos innovations exclusives lors du salon, notamment notre nouvelle ga
       type: 'ARGENT' as SponsorType,
       description: 'Solutions d\'emballage éco-responsables pour l\'industrie du CBD.',
       websiteUrl: 'https://cannapack.example.com',
+      logoUrl: getPlaceholderLogo('CannaPack'),
       displayOrder: 5,
       isActive: true,
     },
@@ -273,6 +281,7 @@ Découvrez nos innovations exclusives lors du salon, notamment notre nouvelle ga
       type: 'BRONZE' as SponsorType,
       description: 'Magazine en ligne dédié à l\'actualité du chanvre et du CBD.',
       websiteUrl: 'https://chanvre-info.example.com',
+      logoUrl: getPlaceholderLogo('Chanvre Info'),
       displayOrder: 6,
       isActive: true,
     },
@@ -281,6 +290,7 @@ Découvrez nos innovations exclusives lors du salon, notamment notre nouvelle ga
       slug: 'hemp-store-pro',
       type: 'BRONZE' as SponsorType,
       description: 'Grossiste B2B en produits CBD pour professionnels.',
+      logoUrl: getPlaceholderLogo('Hemp Store Pro'),
       displayOrder: 7,
       isActive: true,
     },
