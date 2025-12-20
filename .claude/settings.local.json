@@ -32,7 +32,13 @@
       "Bash(cloudflared tunnel list:*)",
       "Bash(npx prisma studio)",
       "Bash(git checkout:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git fetch:*)",
+      "Bash(npx shadcn@latest mcp init:*)",
+      "Bash(npm test:*)",
+      "Bash(ssh:*)"
     ]
   }
 }

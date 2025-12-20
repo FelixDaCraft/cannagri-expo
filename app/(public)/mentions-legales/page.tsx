@@ -18,7 +18,7 @@ export default function MentionsLegalesPage() {
               Mentions Légales
             </h1>
             <p className="text-body/70">
-              Dernière mise à jour : Décembre 2024
+              Dernière mise à jour : Décembre 2025
             </p>
           </div>
 
@@ -32,15 +32,15 @@ export default function MentionsLegalesPage() {
                   Le site <strong>Cann&apos;Agri Expo</strong> ({siteConfig.url}) est édité par :
                 </p>
                 <ul className="text-body/80 space-y-2">
-                  <li><strong>Raison sociale :</strong> Cann&apos;Agri Expo</li>
-                  <li><strong>Forme juridique :</strong> [À compléter]</li>
-                  <li><strong>Capital social :</strong> [À compléter]</li>
-                  <li><strong>Siège social :</strong> {siteConfig.event.location}</li>
-                  <li><strong>SIRET :</strong> [À compléter]</li>
-                  <li><strong>RCS :</strong> [À compléter]</li>
-                  <li><strong>Numéro TVA intracommunautaire :</strong> [À compléter]</li>
+                  <li><strong>Raison sociale :</strong> PLATINUM CBD</li>
+                  <li><strong>Forme juridique :</strong> Association déclarée (loi 1901)</li>
+                  <li><strong>N° RNA :</strong> W442 027 639</li>
+                  <li><strong>Siège social :</strong> 9 rue de Beaulieu, 44340 Bouguenais, France</li>
+                  <li><strong>SIRET :</strong> 921 098 497 00016</li>
+                  <li><strong>Code NAF/APE :</strong> 94.99Z - Autres organisations fonctionnant par adhésion volontaire</li>
+                  <li><strong>Date de création :</strong> 26 octobre 2022</li>
                   <li><strong>Email :</strong> {siteConfig.contact.email}</li>
-                  <li><strong>Directeur de la publication :</strong> [À compléter]</li>
+                  <li><strong>Objet :</strong> Mise en avant du savoir-faire européen des producteurs de chanvre au travers de divers événements</li>
                 </ul>
               </section>
 
@@ -52,9 +52,9 @@ export default function MentionsLegalesPage() {
                   Le site est hébergé par :
                 </p>
                 <ul className="text-body/80 space-y-2">
-                  <li><strong>Hébergeur :</strong> [À compléter]</li>
-                  <li><strong>Adresse :</strong> [À compléter]</li>
-                  <li><strong>Téléphone :</strong> [À compléter]</li>
+                  <li><strong>Hébergeur :</strong> Vercel Inc.</li>
+                  <li><strong>Adresse :</strong> 340 S Lemon Ave #4133, Walnut, CA 91789, USA</li>
+                  <li><strong>Site web :</strong> https://vercel.com</li>
                 </ul>
               </section>
 
@@ -109,7 +109,7 @@ export default function MentionsLegalesPage() {
                 </h2>
                 <p className="text-body/80">
                   Les présentes mentions légales sont régies par le droit français.
-                  En cas de litige, les tribunaux français seront seuls compétents.
+                  En cas de litige, les tribunaux de Nantes seront seuls compétents.
                 </p>
               </section>
 

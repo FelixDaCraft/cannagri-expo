@@ -14,7 +14,7 @@ echo -e "${GREEN}========================================${NC}"
 # Check if .env exists
 if [ ! -f .env ]; then
     echo -e "${RED}Error: .env file not found!${NC}"
-    echo -e "${YELLOW}Copy .env.production.example to .env and fill in your values${NC}"
+    echo -e "${YELLOW}Copy .env.example to .env and fill in your values${NC}"
     exit 1
 fi
 
@@ -22,8 +22,8 @@ fi
 source .env
 
 # Check required variables
-if [ -z "$POSTGRES_PASSWORD" ] || [ "$POSTGRES_PASSWORD" = "CHANGE_ME_STRONG_PASSWORD_HERE" ]; then
-    echo -e "${RED}Error: Please set a strong POSTGRES_PASSWORD in .env${NC}"
+if [ -z "$DATABASE_URL" ]; then
+    echo -e "${RED}Error: Please set DATABASE_URL in .env${NC}"
     exit 1
 fi
 
@@ -40,17 +40,13 @@ echo -e "${YELLOW}Building and starting containers...${NC}"
 docker compose build --no-cache
 docker compose up -d
 
-# Wait for database to be ready
-echo -e "${YELLOW}Waiting for database to be ready...${NC}"
+# Wait for app to be ready
+echo -e "${YELLOW}Waiting for application to be ready...${NC}"
 sleep 10
 
 # Run migrations
 echo -e "${YELLOW}Running database migrations...${NC}"
 docker compose exec -T app npx prisma db push --accept-data-loss
-
-# Seed database (optional - uncomment if needed)
-# echo -e "${YELLOW}Seeding database...${NC}"
-# docker compose exec -T app npx prisma db seed
 
 echo -e "${GREEN}========================================${NC}"
 echo -e "${GREEN}  Deployment completed successfully!   ${NC}"
@@ -60,7 +56,6 @@ echo -e "Application URL: ${NEXT_PUBLIC_APP_URL:-http://localhost:3000}"
 echo ""
 echo -e "${YELLOW}Useful commands:${NC}"
 echo "  docker compose logs -f app     # View app logs"
-echo "  docker compose logs -f db      # View database logs"
 echo "  docker compose ps              # View running containers"
 echo "  docker compose down            # Stop all containers"
 echo "  docker compose restart app     # Restart app"

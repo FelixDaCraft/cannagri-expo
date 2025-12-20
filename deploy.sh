@@ -23,11 +23,11 @@ echo -e "${NC}"
 
 # Variables
 REPO_URL="https://github.com/BorisHenne/cannagri"
-BRANCH="claude/cannagri-expo-website-01KPxPrPBdZJDnyNNoaqLipw"
-APP_DIR="/volume1/docker/cannagri-expo"
+BRANCH="dev"
+APP_DIR="/opt/cannagri-expo"
 
 # 1. Vérifier Docker
-echo -e "${BLUE}[1/8] Vérification de Docker...${NC}"
+echo -e "${BLUE}[1/6] Vérification de Docker...${NC}"
 if ! command -v docker >/dev/null 2>&1; then
     echo -e "${RED}Docker non trouvé. Veuillez l'installer.${NC}"
     exit 1
@@ -35,7 +35,7 @@ fi
 echo -e "${GREEN}✓ Docker OK${NC}"
 
 # 2. Vérifier Docker Compose
-echo -e "${BLUE}[2/8] Vérification de Docker Compose...${NC}"
+echo -e "${BLUE}[2/6] Vérification de Docker Compose...${NC}"
 if ! docker compose version >/dev/null 2>&1; then
     echo -e "${RED}Docker Compose non trouvé.${NC}"
     exit 1
@@ -43,7 +43,7 @@ fi
 echo -e "${GREEN}✓ Docker Compose OK${NC}"
 
 # 3. Nettoyer et télécharger
-echo -e "${BLUE}[3/8] Téléchargement du projet...${NC}"
+echo -e "${BLUE}[3/6] Téléchargement du projet...${NC}"
 
 # Arrêter les containers existants avant nettoyage
 if [ -d "$APP_DIR" ]; then
@@ -57,7 +57,13 @@ if [ -d "$APP_DIR/public/images" ]; then
     cp -r "$APP_DIR/public/images/"* /tmp/cannagri-images-backup/ 2>/dev/null || true
 fi
 
-# Supprimer l'ancien répertoire (sudo si nécessaire pour les fichiers Docker)
+# Sauvegarder le .env si présent
+if [ -f "$APP_DIR/.env" ]; then
+    echo -e "${YELLOW}Sauvegarde du .env existant...${NC}"
+    cp "$APP_DIR/.env" /tmp/cannagri-env-backup
+fi
+
+# Supprimer l'ancien répertoire
 rm -rf "$APP_DIR" 2>/dev/null || sudo rm -rf "$APP_DIR"
 mkdir -p "$APP_DIR"
 cd "$APP_DIR"
@@ -72,8 +78,8 @@ if [ ! -f "package.json" ]; then
 fi
 echo -e "${GREEN}✓ Projet téléchargé${NC}"
 
-# 4. Restaurer les images sauvegardées
-echo -e "${BLUE}[4/8] Préparation des images...${NC}"
+# 4. Restaurer les fichiers sauvegardés
+echo -e "${BLUE}[4/6] Restauration des fichiers...${NC}"
 mkdir -p "$APP_DIR/public/images/gallery"
 
 if [ -d "/tmp/cannagri-images-backup" ]; then
@@ -82,170 +88,48 @@ if [ -d "/tmp/cannagri-images-backup" ]; then
     rm -rf /tmp/cannagri-images-backup
 fi
 
-# ============================================================
-# PAUSE POUR COPIER LES IMAGES
-# ============================================================
-echo ""
-echo -e "${CYAN}╔═══════════════════════════════════════════════════════════════════╗${NC}"
-echo -e "${CYAN}║                                                                   ║${NC}"
-echo -e "${CYAN}║                    ⏸  PAUSE - COPIE DES IMAGES                   ║${NC}"
-echo -e "${CYAN}║                                                                   ║${NC}"
-echo -e "${CYAN}╚═══════════════════════════════════════════════════════════════════╝${NC}"
-echo ""
-echo -e "${YELLOW}══════════════════════════════════════════════════════════════════════${NC}"
-echo -e "${YELLOW}  Copiez maintenant vos images dans les emplacements suivants :${NC}"
-echo -e "${YELLOW}══════════════════════════════════════════════════════════════════════${NC}"
-echo ""
-echo -e "  ${GREEN}1. AFFICHE OFFICIELLE 2026 (obligatoire pour la page d'accueil) :${NC}"
-echo -e "     ${BLUE}→${NC} $APP_DIR/public/images/${CYAN}poster-2026.png${NC}"
-echo ""
-echo -e "  ${GREEN}2. LOGO (header/footer) :${NC}"
-echo -e "     ${BLUE}→${NC} $APP_DIR/public/images/${CYAN}logo.PNG${NC}"
-echo ""
-echo -e "  ${GREEN}3. PHOTOS GALERIE (médiathèque) :${NC}"
-echo -e "     ${BLUE}→${NC} $APP_DIR/public/images/gallery/${CYAN}*.jpg${NC}"
-echo ""
-echo -e "${YELLOW}══════════════════════════════════════════════════════════════════════${NC}"
-echo -e "${CYAN}  Exemples de commandes pour copier depuis votre poste :${NC}"
-echo -e "${YELLOW}══════════════════════════════════════════════════════════════════════${NC}"
-echo ""
-echo -e "  ${BLUE}# Affiche 2026${NC}"
-echo -e "  scp poster-2026.png user@serveur:$APP_DIR/public/images/"
-echo ""
-echo -e "  ${BLUE}# Logo${NC}"
-echo -e "  scp logo.PNG user@serveur:$APP_DIR/public/images/"
-echo ""
-echo -e "  ${BLUE}# Photos galerie${NC}"
-echo -e "  scp *.jpg user@serveur:$APP_DIR/public/images/gallery/"
-echo ""
-echo -e "${YELLOW}══════════════════════════════════════════════════════════════════════${NC}"
-echo ""
-
-# Vérifier les fichiers existants
-echo -e "${BLUE}État actuel des fichiers :${NC}"
-echo ""
-
-# Vérifier le poster 2026
-if [ -f "$APP_DIR/public/images/poster-2026.png" ]; then
-    echo -e "  ${GREEN}✓${NC} Affiche 2026 : ${GREEN}poster-2026.png trouvé${NC}"
-else
-    echo -e "  ${RED}✗${NC} Affiche 2026 : ${RED}MANQUANT${NC} (requis pour la page d'accueil)"
+if [ -f "/tmp/cannagri-env-backup" ]; then
+    echo -e "${YELLOW}Restauration du .env sauvegardé...${NC}"
+    cp /tmp/cannagri-env-backup "$APP_DIR/.env"
+    rm -f /tmp/cannagri-env-backup
 fi
 
-# Vérifier le logo
-if [ -f "$APP_DIR/public/images/logo.PNG" ]; then
-    echo -e "  ${GREEN}✓${NC} Logo : ${GREEN}logo.PNG trouvé${NC}"
-else
-    echo -e "  ${YELLOW}⚠${NC} Logo : ${YELLOW}non trouvé${NC}"
+# 5. Vérifier le .env
+echo -e "${BLUE}[5/6] Vérification de la configuration...${NC}"
+
+if [ ! -f "$APP_DIR/.env" ]; then
+    echo -e "${RED}Erreur: Fichier .env manquant!${NC}"
+    echo -e "${YELLOW}Créez un fichier .env avec les variables suivantes:${NC}"
+    echo ""
+    echo "DATABASE_URL=postgresql://..."
+    echo "NEXTAUTH_URL=https://..."
+    echo "NEXTAUTH_SECRET=..."
+    echo ""
+    exit 1
 fi
 
-# Compter les images dans gallery
-GALLERY_COUNT=$(ls -1 "$APP_DIR/public/images/gallery/"*.jpg 2>/dev/null | wc -l || echo "0")
-if [ "$GALLERY_COUNT" -gt 0 ]; then
-    echo -e "  ${GREEN}✓${NC} Galerie : ${GREEN}$GALLERY_COUNT image(s) trouvée(s)${NC}"
-else
-    echo -e "  ${YELLOW}⚠${NC} Galerie : ${YELLOW}aucune image${NC}"
+# Vérifier DATABASE_URL
+source .env
+if [ -z "$DATABASE_URL" ]; then
+    echo -e "${RED}Erreur: DATABASE_URL non défini dans .env${NC}"
+    exit 1
 fi
+echo -e "${GREEN}✓ Configuration OK${NC}"
 
-echo ""
-echo -e "${YELLOW}══════════════════════════════════════════════════════════════════════${NC}"
-echo ""
-echo -e "${GREEN}  Appuyez sur ENTRÉE quand toutes les images sont copiées...${NC}"
-echo ""
-read -r
-
-# Vérification finale
-echo ""
-echo -e "${BLUE}Vérification finale des fichiers...${NC}"
-echo ""
-
-if [ -f "$APP_DIR/public/images/poster-2026.png" ]; then
-    echo -e "  ${GREEN}✓${NC} Affiche 2026 : OK"
-else
-    echo -e "  ${RED}✗${NC} Affiche 2026 : MANQUANT - La page d'accueil affichera une erreur d'image"
-fi
-
-if [ -f "$APP_DIR/public/images/logo.PNG" ]; then
-    echo -e "  ${GREEN}✓${NC} Logo : OK"
-else
-    echo -e "  ${YELLOW}⚠${NC} Logo : manquant - Un placeholder sera utilisé"
-fi
-
-GALLERY_COUNT=$(ls -1 "$APP_DIR/public/images/gallery/"*.jpg 2>/dev/null | wc -l || echo "0")
-echo -e "  ${GREEN}✓${NC} Galerie : $GALLERY_COUNT image(s)"
-
-echo ""
-
-# 5. Configuration .env
-echo -e "${BLUE}[5/8] Configuration de l'environnement...${NC}"
-
-RANDOM_SECRET=$(openssl rand -base64 32 2>/dev/null || echo "Secret$(date +%s)")
-RANDOM_PASSWORD="CannAgri$(openssl rand -hex 6 2>/dev/null || date +%s)!"
-PUBLIC_IP=$(curl -s ifconfig.me 2>/dev/null || curl -s icanhazip.com 2>/dev/null || echo "localhost")
-
-cat > .env << EOF
-# CANN'AGRI EXPO - Configuration
-# Généré le $(date)
-
-POSTGRES_USER=cannagri
-POSTGRES_PASSWORD=${RANDOM_PASSWORD}
-POSTGRES_DB=cannagri
-
-DATABASE_URL=postgresql://cannagri:${RANDOM_PASSWORD}@db:5432/cannagri
-
-APP_PORT=3000
-NEXT_PUBLIC_APP_URL=http://${PUBLIC_IP}:3000
-NEXTAUTH_URL=http://${PUBLIC_IP}:3000
-NEXTAUTH_SECRET=${RANDOM_SECRET}
-
-VIVA_WALLET_CLIENT_ID=
-VIVA_WALLET_CLIENT_SECRET=
-VIVA_WALLET_MERCHANT_ID=
-VIVA_WALLET_API_KEY=
-VIVA_WALLET_SOURCE_CODE=
-VIVA_WALLET_DEMO_MODE=true
-
-SMTP_HOST=
-SMTP_PORT=587
-SMTP_USER=
-SMTP_PASSWORD=
-EMAIL_FROM=noreply@cannagri-expo.fr
-EOF
-echo -e "${GREEN}✓ Fichier .env créé${NC}"
-
-# 6. Permissions
-echo -e "${BLUE}[6/8] Configuration des permissions...${NC}"
-chmod -R 755 "$APP_DIR/public/images"
-echo -e "${GREEN}✓ Permissions OK${NC}"
-
-# 7. Build et démarrage
-echo -e "${BLUE}[7/8] Construction Docker (5-10 min)...${NC}"
+# 6. Build et démarrage
+echo -e "${BLUE}[6/6] Construction Docker (5-10 min)...${NC}"
 
 docker compose down 2>/dev/null || true
 docker compose build --no-cache
 docker compose up -d
 
-echo -e "${YELLOW}Attente de la base de données (45s)...${NC}"
-sleep 45
+echo -e "${YELLOW}Attente du démarrage de l'application (30s)...${NC}"
+sleep 30
 
-# 8. Initialiser la BDD
-echo -e "${BLUE}[8/8] Initialisation de la base de données...${NC}"
-
-# Vérifier que la base est accessible
-echo -e "${YELLOW}Vérification de la connexion à PostgreSQL...${NC}"
-for i in 1 2 3 4 5; do
-    if docker compose exec -T db pg_isready -U cannagri -d cannagri; then
-        echo -e "${GREEN}✓ PostgreSQL accessible${NC}"
-        break
-    fi
-    echo -e "${YELLOW}Tentative $i/5 - Attente 10s...${NC}"
-    sleep 10
-done
-
-# Appliquer le schéma Prisma (sans cacher les erreurs)
+# Appliquer le schéma Prisma
 echo -e "${YELLOW}Application du schéma de base de données...${NC}"
 for i in 1 2 3; do
-    if docker compose exec -T app ./node_modules/.bin/prisma db push --accept-data-loss; then
+    if docker compose exec -T app npx prisma db push --accept-data-loss; then
         echo -e "${GREEN}✓ Schéma de base de données appliqué${NC}"
         break
     fi
@@ -253,12 +137,9 @@ for i in 1 2 3; do
     sleep 15
 done
 
-# Seed the database with initial data
-echo -e "${YELLOW}Insertion des données initiales...${NC}"
-docker compose exec -T app ./node_modules/.bin/prisma db seed || echo -e "${YELLOW}⚠ Le seed a échoué (données peut-être déjà présentes)${NC}"
-echo -e "${GREEN}✓ Base de données initialisée${NC}"
-
 # Résultat
+PUBLIC_IP=$(curl -s ifconfig.me 2>/dev/null || curl -s icanhazip.com 2>/dev/null || echo "localhost")
+
 echo ""
 echo -e "${GREEN}"
 echo "╔═══════════════════════════════════════════════════════╗"
@@ -273,9 +154,4 @@ echo -e "  ${BLUE}Commandes utiles:${NC}"
 echo "    cd $APP_DIR"
 echo "    docker compose logs -f app"
 echo "    docker compose restart app"
-echo ""
-echo -e "  ${YELLOW}Pour ajouter des images plus tard:${NC}"
-echo "    1. Copiez dans $APP_DIR/public/images/"
-echo "    2. Les images sont automatiquement disponibles (volume monté)"
-echo "    3. Si besoin: docker compose restart app"
 echo ""

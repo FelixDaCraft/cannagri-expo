@@ -18,7 +18,7 @@ export default function ConfidentialitePage() {
               Politique de Confidentialité
             </h1>
             <p className="text-body/70">
-              Dernière mise à jour : Décembre 2024
+              Dernière mise à jour : Décembre 2025
             </p>
           </div>
 
@@ -48,8 +48,11 @@ export default function ConfidentialitePage() {
                   Le responsable du traitement des données est :
                 </p>
                 <ul className="text-body/80 space-y-2">
-                  <li><strong>Cann&apos;Agri Expo</strong></li>
-                  <li><strong>Adresse :</strong> {siteConfig.event.location}</li>
+                  <li><strong>PLATINUM CBD</strong></li>
+                  <li><strong>Forme juridique :</strong> Association déclarée (loi 1901)</li>
+                  <li><strong>N° RNA :</strong> W442 027 639</li>
+                  <li><strong>SIRET :</strong> 921 098 497 00016</li>
+                  <li><strong>Adresse :</strong> 9 rue de Beaulieu, 44340 Bouguenais, France</li>
                   <li><strong>Email :</strong> {siteConfig.contact.email}</li>
                 </ul>
               </section>
@@ -87,7 +90,7 @@ export default function ConfidentialitePage() {
                 </h3>
                 <ul className="text-body/80 space-y-1 list-disc pl-6">
                   <li>Historique des achats (billets, stands)</li>
-                  <li>Informations de paiement (traitées par Stripe, non stockées chez nous)</li>
+                  <li>Informations de paiement (traitées par Viva Wallet, non stockées chez nous)</li>
                 </ul>
               </section>
 
@@ -146,8 +149,9 @@ export default function ConfidentialitePage() {
                   Vos données peuvent être partagées avec :
                 </p>
                 <ul className="text-body/80 space-y-2 list-disc pl-6">
-                  <li><strong>Stripe :</strong> Pour le traitement sécurisé des paiements</li>
-                  <li><strong>Prestataires techniques :</strong> Hébergement et maintenance du site</li>
+                  <li><strong>Viva Wallet :</strong> Pour le traitement sécurisé des paiements</li>
+                  <li><strong>Vercel :</strong> Hébergement du site</li>
+                  <li><strong>Neon :</strong> Hébergement de la base de données</li>
                   <li><strong>Autorités compétentes :</strong> En cas d&apos;obligation légale</li>
                 </ul>
                 <p className="text-body/80 mt-4">
@@ -160,9 +164,9 @@ export default function ConfidentialitePage() {
                   8. Transferts internationaux
                 </h2>
                 <p className="text-body/80">
-                  Certains de nos prestataires (comme Stripe) peuvent traiter vos données en dehors
+                  Certains de nos prestataires (comme Vercel) peuvent traiter vos données en dehors
                   de l&apos;Union européenne. Dans ce cas, nous nous assurons que des garanties appropriées
-                  sont en place (clauses contractuelles types, certification Privacy Shield, etc.).
+                  sont en place (clauses contractuelles types, décision d&apos;adéquation, etc.).
                 </p>
               </section>
 

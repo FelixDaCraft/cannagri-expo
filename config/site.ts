@@ -61,7 +61,7 @@ export const siteConfig = {
 }
 
 export const navigation: NavItem[] = [
-  { label: "Notre Vision", href: "/evenement" },
+  { label: "Présentation", href: "/evenement" },
   {
     label: "L'Événement",
     href: "/programme",
