@@ -209,6 +209,7 @@ export function InteractiveStandPlan({
   }, [stands])
 
   const handleStandClick = (stand: Stand) => {
+    console.log('[InteractiveStandPlan] Stand clicked:', stand.name, 'status:', stand.status)
     setSelectedStand(stand)
     onStandSelect?.(stand)
   }

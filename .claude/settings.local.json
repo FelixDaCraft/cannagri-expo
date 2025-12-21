@@ -39,7 +39,9 @@
       "Bash(npx shadcn@latest mcp init:*)",
       "Bash(npm test:*)",
       "Bash(ssh:*)",
-      "Bash(scp:*)"
+      "Bash(scp:*)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" run view 20399962553 --repo FelixDaCraft/cannagri-expo --log-failed)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" run list --repo FelixDaCraft/cannagri-expo --limit 3)"
     ]
   }
 }
