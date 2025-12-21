@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { authOptions } from '@/lib/auth'
 import { generateOrderNumber } from '@/lib/utils'
 import { createVivaWalletOrder } from '@/lib/vivawallet'
+import { checkRateLimit, getClientIP, RATE_LIMIT_PRESETS } from '@/lib/rate-limit'
 
 // Check if Viva Wallet is configured
 const isVivaWalletEnabled = !!(
@@ -11,12 +12,25 @@ const isVivaWalletEnabled = !!(
   process.env.VIVA_WALLET_API_KEY
 )
 
-// Local simulation mode (completely bypasses Viva Wallet)
-// Set VIVA_WALLET_LOCAL_SIMULATION="true" to enable local payment simulation
-const isLocalSimulation = process.env.VIVA_WALLET_LOCAL_SIMULATION === 'true'
-
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting - 10 checkout attempts per minute per IP
+    const clientIP = getClientIP(request)
+    const rateLimitResult = checkRateLimit(`checkout:${clientIP}`, RATE_LIMIT_PRESETS.PAYMENT)
+
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        { error: 'Trop de tentatives. Veuillez réessayer plus tard.' },
+        {
+          status: 429,
+          headers: {
+            'Retry-After': String(Math.ceil((rateLimitResult.resetAt - Date.now()) / 1000)),
+            'X-RateLimit-Remaining': '0',
+          }
+        }
+      )
+    }
+
     const body = await request.json()
     const { type, items, customer } = body
 
@@ -78,17 +92,28 @@ export async function POST(request: NextRequest) {
       }
 
       // Find the stand and calculate price
-      if (!items?.standId) {
+      if (!items?.standId && !items?.standCode) {
         return NextResponse.json(
           { error: 'Aucun stand sélectionné' },
           { status: 400 }
         )
       }
 
+      // Try to find stand by ID first, then by code
       stand = await prisma.stand.findUnique({
         where: { id: items.standId },
         select: { id: true, code: true, surfaceM2: true, priceHT: true, status: true }
       })
+
+      // If not found by ID, try by code (for interactive plan which uses stand numbers)
+      if (!stand && items?.standCode) {
+        // Extract number from "Stand X" format
+        const standNumber = items.standCode.replace(/\D/g, '')
+        stand = await prisma.stand.findFirst({
+          where: { code: standNumber },
+          select: { id: true, code: true, surfaceM2: true, priceHT: true, status: true }
+        })
+      }
 
       if (!stand) {
         return NextResponse.json(
@@ -146,60 +171,78 @@ export async function POST(request: NextRequest) {
     })
 
     // If it's a stand booking, link the stand to the order
-    if (type === 'STAND_BOOKING' && items?.standId) {
+    if (type === 'STAND_BOOKING' && stand) {
       await prisma.stand.update({
-        where: { id: items.standId },
+        where: { id: stand.id },
         data: { orderId: order.id }
       })
     }
 
-    // Create payment checkout URL
-    let checkoutUrl: string
-    const baseUrl = process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
-    const successUrl = `${baseUrl}/paiement/succes?orderId=${order.id}`
-    const failureUrl = `${baseUrl}/paiement/echec?orderId=${order.id}`
-
-    if (!isVivaWalletEnabled || isLocalSimulation) {
-      // Local simulation mode - redirect to payment simulation page
-      const amountCents = Math.round(amount * 100)
-      checkoutUrl = `${baseUrl}/paiement/demo?orderId=${order.id}&amount=${amountCents}`
-    } else {
-      try {
-        // Create Viva Wallet payment order
-        // Amount must be in cents (e.g., 25.00€ = 2500)
-        const vivaOrder = await createVivaWalletOrder({
-          amount: Math.round(amount * 100),
-          customerEmail: customer.email,
-          customerFullName: customer.name,
-          customerPhone: customer.phone || '',
-          merchantTrns: order.id, // Store our order ID for webhook
+    // Create payment checkout URL via Viva Wallet
+    if (!isVivaWalletEnabled) {
+      // Revert stand reservation if Viva Wallet is not configured
+      if (type === 'STAND_BOOKING' && stand) {
+        await prisma.stand.update({
+          where: { id: stand.id },
+          data: { status: 'FREE', orderId: null, reservedAt: null, reservedUntil: null }
         })
-
-        // Update order with Viva Wallet order code BEFORE building URL
-        await prisma.order.update({
-          where: { id: order.id },
-          data: {
-            vivaWalletRef: vivaOrder.orderCode,
-            vivaPaymentUrl: vivaOrder.checkoutUrl,
-          }
-        })
-
-        // Build checkout URL - Viva Wallet redirects to the URL configured in the Source
-        // We add our orderId so the success page can find the order
-        // The success page will use polling to verify payment status
-        checkoutUrl = vivaOrder.checkoutUrl
-
-        console.log('Viva Wallet order created:', {
-          orderCode: vivaOrder.orderCode,
-          orderId: order.id,
-          checkoutUrl,
-        })
-      } catch (vivaError) {
-        console.error('Viva Wallet error:', vivaError)
-        // Fallback to demo mode if Viva Wallet fails
-        const amountCents = Math.round(amount * 100)
-        checkoutUrl = `${baseUrl}/paiement/demo?orderId=${order.id}&amount=${amountCents}`
       }
+      return NextResponse.json(
+        { error: 'Le système de paiement n\'est pas configuré. Veuillez contacter l\'administrateur.' },
+        { status: 503 }
+      )
+    }
+
+    let checkoutUrl: string
+
+    try {
+      // Create Viva Wallet payment order
+      // Amount must be in cents (e.g., 25.00€ = 2500)
+      const vivaOrder = await createVivaWalletOrder({
+        amount: Math.round(amount * 100),
+        customerEmail: customer.email,
+        customerFullName: customer.name,
+        customerPhone: customer.phone || '',
+        merchantTrns: order.id, // Store our order ID for webhook
+      })
+
+      // Update order with Viva Wallet order code
+      await prisma.order.update({
+        where: { id: order.id },
+        data: {
+          vivaWalletRef: vivaOrder.orderCode,
+          vivaPaymentUrl: vivaOrder.checkoutUrl,
+        }
+      })
+
+      checkoutUrl = vivaOrder.checkoutUrl
+
+      console.log('Viva Wallet order created:', {
+        orderCode: vivaOrder.orderCode,
+        orderId: order.id,
+        checkoutUrl,
+      })
+    } catch (vivaError) {
+      console.error('Viva Wallet error:', vivaError)
+
+      // Revert stand reservation on Viva Wallet error
+      if (type === 'STAND_BOOKING' && stand) {
+        await prisma.stand.update({
+          where: { id: stand.id },
+          data: { status: 'FREE', orderId: null, reservedAt: null, reservedUntil: null }
+        })
+      }
+
+      // Update order status to failed
+      await prisma.order.update({
+        where: { id: order.id },
+        data: { status: 'CANCELLED' }
+      })
+
+      return NextResponse.json(
+        { error: 'Erreur lors de la création du paiement. Veuillez réessayer.' },
+        { status: 500 }
+      )
     }
 
     return NextResponse.json({

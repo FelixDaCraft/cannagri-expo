@@ -4,16 +4,57 @@ on:
   push:
     branches:
       - Prod
+      - dev
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - prod
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: felixdacraft/cannagri-expo
 
 jobs:
+  security-audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    # Security audit is informational - doesn't block deployment
+    # Review audit results and update dependencies when safe to do so
+    continue-on-error: true
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Run npm audit (all dependencies)
+        run: npm audit --audit-level=high || true
+
+      - name: Run npm audit (production only)
+        run: npm audit --omit=dev --audit-level=critical || true
+
+      - name: Security audit summary
+        run: |
+          echo "::notice::Security audit completed. Review vulnerabilities above."
+          echo "::notice::Some vulnerabilities may require major version updates."
+
   test:
     name: Run Tests
     runs-on: ubuntu-latest
+    # Test runs in parallel with security-audit, doesn't depend on it
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -41,7 +82,7 @@ jobs:
       contents: read
       packages: write
     outputs:
-      image_tag: ${{ steps.meta.outputs.tags }}
+      image_tag: ${{ steps.set-tag.outputs.tag }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -56,29 +97,27 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            type=sha,prefix=
-            type=raw,value=latest,enable={{is_default_branch}}
+      - name: Set image tag
+        id: set-tag
+        run: |
+          if [[ "${{ github.ref_name }}" == "Prod" ]]; then
+            echo "tag=latest" >> $GITHUB_OUTPUT
+          else
+            echo "tag=dev" >> $GITHUB_OUTPUT
+          fi
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.set-tag.outputs.tag }}
+          no-cache: true
           build-args: |
-            NEXT_PUBLIC_APP_URL=${{ secrets.NEXT_PUBLIC_APP_URL }}
-            NEXT_PUBLIC_SITE_URL=${{ secrets.NEXT_PUBLIC_SITE_URL }}
-            NEXT_PUBLIC_TICKETING_ENABLED=${{ secrets.NEXT_PUBLIC_TICKETING_ENABLED }}
-            NEXT_PUBLIC_DEMO_MODE=${{ secrets.NEXT_PUBLIC_DEMO_MODE }}
+            NEXT_PUBLIC_APP_URL=${{ github.ref_name == 'Prod' && 'https://cannagri-expo.eu' || 'https://dev.cannagri-expo.eu' }}
+            NEXT_PUBLIC_SITE_URL=${{ github.ref_name == 'Prod' && 'https://cannagri-expo.eu' || 'https://dev.cannagri-expo.eu' }}
+            NEXT_PUBLIC_TICKETING_ENABLED=${{ github.ref_name == 'Prod' && 'false' || 'true' }}
+            NEXT_PUBLIC_DEMO_MODE=${{ github.ref_name == 'Prod' && 'false' || 'true' }}
 
   deploy:
     name: Deploy to Hetzner
@@ -98,16 +137,22 @@ jobs:
             cd /opt/cannagri-expo
 
             # Login to GitHub Container Registry
-            echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            echo ${{ secrets.GH_PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-            # Pull the latest image
-            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+            # Determine which image to pull based on branch
+            if [[ "${{ github.ref_name }}" == "Prod" ]]; then
+              IMAGE_TAG="latest"
+              CONTAINER="cannagri-app"
+            else
+              IMAGE_TAG="dev"
+              CONTAINER="cannagri-app-dev"
+            fi
 
-            # Stop and remove old containers
-            docker compose down
+            # Pull the image
+            docker pull ghcr.io/felixdacraft/cannagri-expo:${IMAGE_TAG}
 
-            # Start new containers
-            docker compose up -d
+            # Restart only the relevant container (keep the other one running)
+            docker compose up -d --no-deps ${CONTAINER}
 
             # Clean up old images
             docker image prune -f

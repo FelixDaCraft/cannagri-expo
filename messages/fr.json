@@ -10,6 +10,7 @@
     "logout": "Déconnexion",
     "myAccount": "Mon compte",
     "myTickets": "Mes billets",
+    "myStands": "Mes Stands",
     "admin": "Administration",
     "user": "Utilisateur",
     "buyTickets": "Acheter des billets",
@@ -145,17 +146,10 @@
     "program": {
       "title": "Temps Forts & Conférences",
       "subtitle": "Un programme riche avec des intervenants de qualité pour comprendre les enjeux de la filière chanvre CBD.",
-      "eventTypes": {
-        "conference": "Conférence",
-        "workshop": "Atelier",
-        "ceremony": "Cérémonie",
-        "opening": "Conférence d'ouverture"
-      },
-      "defaultTitle": "L'Avenir de la réglementation européenne du CBD",
-      "defaultDescription": "Quelles perspectives pour la filière chanvre CBD en France et en Europe ? Les dernières évolutions réglementaires et leurs impacts sur les acteurs du marché.",
-      "expertToConfirm": "Expert à confirmer",
-      "specialistSpeaker": "Intervenant spécialiste",
-      "viewFullProgram": "Voir tout le programme",
+      "comingSoon": "À venir",
+      "programComingSoonTitle": "Programme à venir",
+      "programComingSoonDescription": "Le programme détaillé de l'édition 2026 sera bientôt disponible. Conférences, tables rondes et ateliers seront animés par des experts reconnus de la filière chanvre CBD.",
+      "viewFullProgram": "Voir le programme",
       "stats": {
         "conferences": "Conférences",
         "speakers": "Intervenants",
@@ -628,6 +622,21 @@
       "MATERIEL": "Matériel agricole",
       "LIFESTYLE": "Lifestyle & Bien-être",
       "SERVICE": "Services"
+    },
+    "stands": {
+      "title": "Mes Stands",
+      "subtitle": "Retrouvez vos réservations de stands pour le salon.",
+      "backToAccount": "Retour au compte",
+      "noStands": "Aucun stand réservé",
+      "noStandsDescription": "Vous n'avez pas encore réservé de stand.",
+      "bookStand": "Réserver un stand",
+      "order": "Commande",
+      "furniture": "Mobilier",
+      "electricity": "Électricité",
+      "exhibitorName": "Nom exposant",
+      "totalStands": "Total stands",
+      "totalSurface": "Surface totale",
+      "bookAnotherStand": "Réserver un autre stand"
     }
   },
   "footer": {

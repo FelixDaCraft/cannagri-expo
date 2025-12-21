@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getVivaWalletOrder } from '@/lib/vivawallet'
 import { generateQRCodeData } from '@/lib/utils'
-import { generateTicketPDF } from '@/lib/pdf'
+import { generateTicketPDF, generateInvoicePDF } from '@/lib/pdf'
 import { sendTicketEmail } from '@/lib/email'
 import { generateQRCode } from '@/lib/qrcode'
 
@@ -168,6 +168,16 @@ export async function POST(request: NextRequest) {
 }
 
 /**
+ * Generate invoice number from order number
+ * Format: F-YYYYMMDD-XXXXX (F for Facture + date + order sequence)
+ */
+function generateInvoiceNumber(orderNumber: string): string {
+  // orderNumber format: ORD-YYYYMMDD-XXXXX
+  // Convert to: F-YYYYMMDD-XXXXX
+  return orderNumber.replace('ORD-', 'F-')
+}
+
+/**
  * Process a successful payment - create tickets, update stands, send emails
  */
 async function processSuccessfulPayment(orderId: string, transactionId?: string) {
@@ -188,6 +198,9 @@ async function processSuccessfulPayment(orderId: string, transactionId?: string)
     },
     include: { stands: true }
   })
+
+  // Generate invoice number
+  const invoiceNumber = generateInvoiceNumber(order.orderNumber)
 
   // Fetch active sponsors with logos for ticket PDF
   const sponsors = await prisma.sponsor.findMany({
@@ -214,6 +227,9 @@ async function processSuccessfulPayment(orderId: string, transactionId?: string)
     // Collect all tickets for a single email
     const ticketAttachments: Array<{ attendeeName: string; ticketType: string; pdfBuffer: Buffer }> = []
 
+    // Build invoice items list
+    const invoiceItems: Array<{ description: string; quantity: number; unitPrice: number }> = []
+
     for (const item of items) {
       const quantity = item.quantity || 1
       const unitPrice = item.price
@@ -222,6 +238,19 @@ async function processSuccessfulPayment(orderId: string, transactionId?: string)
 
       // Only STANDARD and FLEX ticket types are supported
       const ticketType: 'STANDARD' | 'FLEX' = item.type === 'FLEX' ? 'FLEX' : 'STANDARD'
+
+      // Add to invoice items (grouped by ticket type)
+      const ticketLabel = ticketType === 'FLEX' ? 'Billet Flex' : 'Billet Standard'
+      const existingItem = invoiceItems.find(i => i.description === ticketLabel && i.unitPrice === unitPrice)
+      if (existingItem) {
+        existingItem.quantity += quantity
+      } else {
+        invoiceItems.push({
+          description: ticketLabel,
+          quantity,
+          unitPrice,
+        })
+      }
 
       for (let i = 0; i < quantity; i++) {
         const qrData = generateQRCodeData(order.id, Date.now().toString())
@@ -257,13 +286,36 @@ async function processSuccessfulPayment(orderId: string, transactionId?: string)
       }
     }
 
-    // Send a single email with all tickets
+    // Generate invoice PDF for tickets
+    let invoicePdfBuffer: Buffer | undefined
+    try {
+      invoicePdfBuffer = await generateInvoicePDF({
+        invoiceNumber,
+        orderNumber: order.orderNumber,
+        invoiceDate: new Date(),
+        customerName: order.customerName,
+        customerEmail: order.customerEmail,
+        companyName: order.companyName || undefined,
+        companySiret: order.companySiret || undefined,
+        companyAddress: order.companyAddress || undefined,
+        items: invoiceItems,
+        totalTTC: order.amount,
+        orderType: 'VISITOR_TICKET',
+      })
+    } catch (err) {
+      console.error('Failed to generate invoice PDF:', err)
+    }
+
+    // Send a single email with all tickets and invoice (non-blocking)
     if (ticketAttachments.length > 0) {
-      await sendTicketEmail({
+      sendTicketEmail({
         to: order.customerEmail,
         customerName: order.customerName, // Buyer's name for greeting
         orderNumber: order.orderNumber,
         tickets: ticketAttachments,
+        invoicePdfBuffer,
+      }).catch(err => {
+        console.error('Failed to send ticket email (non-blocking):', err.message)
       })
     }
   }
@@ -282,12 +334,46 @@ async function processSuccessfulPayment(orderId: string, transactionId?: string)
       })
     }
 
-    await sendTicketEmail({
+    // Build invoice items for stands
+    const standInvoiceItems: Array<{ description: string; quantity: number; unitPrice: number }> = []
+    for (const stand of order.stands) {
+      standInvoiceItems.push({
+        description: `Stand ${stand.code} - ${stand.surfaceM2}m²`,
+        quantity: 1,
+        unitPrice: stand.priceHT,
+      })
+    }
+
+    // Generate invoice PDF for stand booking
+    let invoicePdfBuffer: Buffer | undefined
+    try {
+      invoicePdfBuffer = await generateInvoicePDF({
+        invoiceNumber,
+        orderNumber: order.orderNumber,
+        invoiceDate: new Date(),
+        customerName: order.customerName,
+        customerEmail: order.customerEmail,
+        companyName: order.companyName || undefined,
+        companySiret: order.companySiret || undefined,
+        companyAddress: order.companyAddress || undefined,
+        items: standInvoiceItems,
+        totalTTC: order.amount,
+        orderType: 'STAND_BOOKING',
+      })
+    } catch (err) {
+      console.error('Failed to generate stand invoice PDF:', err)
+    }
+
+    // Send confirmation email with invoice (non-blocking)
+    sendTicketEmail({
       to: order.customerEmail,
       customerName: order.customerName,
       orderNumber: order.orderNumber,
       isStandBooking: true,
       standCodes: order.stands.map(s => s.code),
+      invoicePdfBuffer,
+    }).catch(err => {
+      console.error('Failed to send stand booking email (non-blocking):', err.message)
     })
   }
 

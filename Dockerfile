@@ -21,6 +21,18 @@ COPY . .
 # Generate Prisma Client (use local version from node_modules to avoid global version conflicts)
 RUN ./node_modules/.bin/prisma generate
 
+# Build arguments for Next.js public environment variables (inlined at build time)
+ARG NEXT_PUBLIC_APP_URL
+ARG NEXT_PUBLIC_SITE_URL
+ARG NEXT_PUBLIC_TICKETING_ENABLED
+ARG NEXT_PUBLIC_DEMO_MODE
+
+# Convert ARGs to ENVs for the build process
+ENV NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL
+ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
+ENV NEXT_PUBLIC_TICKETING_ENABLED=$NEXT_PUBLIC_TICKETING_ENABLED
+ENV NEXT_PUBLIC_DEMO_MODE=$NEXT_PUBLIC_DEMO_MODE
+
 # Build the application
 ENV NEXT_TELEMETRY_DISABLED 1
 RUN npm run build
