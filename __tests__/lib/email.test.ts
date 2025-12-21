@@ -196,8 +196,28 @@ describe('Email HTML Templates', () => {
 
     const callArgs = mockSendMail.mock.calls[0][0]
     expect(callArgs.html).toContain('Prochaines étapes')
-    expect(callArgs.html).toContain('facture')
     expect(callArgs.html).toContain('guide de l\'exposant')
     expect(callArgs.html).toContain('badge exposant')
+  })
+
+  it('should mention invoice when invoicePdfBuffer is provided', async () => {
+    const mockInvoice = Buffer.from('mock invoice pdf')
+    await sendTicketEmail({
+      to: 'pro@example.com',
+      customerName: 'Test Pro',
+      orderNumber: 'CAE-STAND-001',
+      isStandBooking: true,
+      standCodes: ['A1'],
+      invoicePdfBuffer: mockInvoice,
+    })
+
+    const callArgs = mockSendMail.mock.calls[0][0]
+    expect(callArgs.html).toContain('facture est jointe')
+    expect(callArgs.attachments).toContainEqual(
+      expect.objectContaining({
+        filename: 'facture-CAE-STAND-001.pdf',
+        content: mockInvoice,
+      })
+    )
   })
 })
