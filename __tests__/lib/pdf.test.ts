@@ -119,17 +119,19 @@ describe('generateTicketPDF', () => {
 describe('generateInvoicePDF', () => {
   it('should generate a PDF buffer', async () => {
     const pdfBuffer = await generateInvoicePDF({
-      orderNumber: 'FAC-001',
+      invoiceNumber: 'F-20260328-00001',
+      orderNumber: 'ORD-20260328-00001',
+      invoiceDate: new Date('2026-03-28'),
       customerName: 'Company Test',
+      customerEmail: 'test@example.com',
       companyName: 'Test SARL',
       companySiret: '12345678901234',
       companyAddress: '123 Rue Test, 44000 Nantes',
       items: [
-        { description: 'Stand A1 - 6m²', quantity: 1, priceHT: 250 },
+        { description: 'Stand A1 - 6m²', quantity: 1, unitPrice: 250 },
       ],
-      totalHT: 250,
-      tva: 50,
       totalTTC: 300,
+      orderType: 'STAND_BOOKING',
     })
 
     expect(Buffer.isBuffer(pdfBuffer)).toBe(true)
@@ -138,12 +140,14 @@ describe('generateInvoicePDF', () => {
 
   it('should generate valid PDF format for invoice', async () => {
     const pdfBuffer = await generateInvoicePDF({
-      orderNumber: 'FAC-002',
+      invoiceNumber: 'F-20260328-00002',
+      orderNumber: 'ORD-20260328-00002',
+      invoiceDate: new Date('2026-03-28'),
       customerName: 'Invoice Test',
+      customerEmail: 'invoice@test.com',
       items: [],
-      totalHT: 0,
-      tva: 0,
       totalTTC: 0,
+      orderType: 'VISITOR_TICKET',
     })
 
     const pdfString = pdfBuffer.toString('utf8', 0, 8)
@@ -152,16 +156,18 @@ describe('generateInvoicePDF', () => {
 
   it('should handle multiple items', async () => {
     const pdfBuffer = await generateInvoicePDF({
-      orderNumber: 'FAC-MULTI',
+      invoiceNumber: 'F-20260328-MULTI',
+      orderNumber: 'ORD-20260328-MULTI',
+      invoiceDate: new Date('2026-03-28'),
       customerName: 'Multi Items',
+      customerEmail: 'multi@test.com',
       items: [
-        { description: 'Stand A1', quantity: 1, priceHT: 250 },
-        { description: 'Stand A2', quantity: 1, priceHT: 300 },
-        { description: 'Option électricité', quantity: 2, priceHT: 50 },
+        { description: 'Stand A1', quantity: 1, unitPrice: 250 },
+        { description: 'Stand A2', quantity: 1, unitPrice: 300 },
+        { description: 'Option électricité', quantity: 2, unitPrice: 50 },
       ],
-      totalHT: 650,
-      tva: 130,
       totalTTC: 780,
+      orderType: 'STAND_BOOKING',
     })
 
     expect(Buffer.isBuffer(pdfBuffer)).toBe(true)
@@ -170,17 +176,19 @@ describe('generateInvoicePDF', () => {
 
   it('should handle company details', async () => {
     const pdfBuffer = await generateInvoicePDF({
-      orderNumber: 'FAC-COMPANY',
+      invoiceNumber: 'F-20260328-COMPANY',
+      orderNumber: 'ORD-20260328-COMPANY',
+      invoiceDate: new Date('2026-03-28'),
       customerName: 'Jean Martin',
+      customerEmail: 'jean@company.com',
       companyName: 'Cannabis France SARL',
       companySiret: '98765432101234',
       companyAddress: '456 Avenue CBD, 75001 Paris',
       items: [
-        { description: 'Stand Premium', quantity: 1, priceHT: 450 },
+        { description: 'Stand Premium', quantity: 1, unitPrice: 540 },
       ],
-      totalHT: 450,
-      tva: 90,
       totalTTC: 540,
+      orderType: 'STAND_BOOKING',
     })
 
     expect(Buffer.isBuffer(pdfBuffer)).toBe(true)
@@ -189,14 +197,16 @@ describe('generateInvoicePDF', () => {
 
   it('should handle empty company details', async () => {
     const pdfBuffer = await generateInvoicePDF({
-      orderNumber: 'FAC-NOCOMPANY',
+      invoiceNumber: 'F-20260328-NOCOMPANY',
+      orderNumber: 'ORD-20260328-NOCOMPANY',
+      invoiceDate: new Date('2026-03-28'),
       customerName: 'Individual Client',
+      customerEmail: 'individual@test.com',
       items: [
-        { description: 'Stand Basic', quantity: 1, priceHT: 150 },
+        { description: 'Stand Basic', quantity: 1, unitPrice: 180 },
       ],
-      totalHT: 150,
-      tva: 30,
       totalTTC: 180,
+      orderType: 'VISITOR_TICKET',
     })
 
     expect(Buffer.isBuffer(pdfBuffer)).toBe(true)
@@ -254,12 +264,14 @@ describe('PDF Integration', () => {
 
   it('should produce valid PDF header for invoices', async () => {
     const pdfBuffer = await generateInvoicePDF({
-      orderNumber: 'FAC-HEADER',
+      invoiceNumber: 'F-20260328-HEADER',
+      orderNumber: 'ORD-20260328-HEADER',
+      invoiceDate: new Date('2026-03-28'),
       customerName: 'Header Test',
-      items: [{ description: 'Test', quantity: 1, priceHT: 100 }],
-      totalHT: 100,
-      tva: 20,
+      customerEmail: 'header@test.com',
+      items: [{ description: 'Test', quantity: 1, unitPrice: 120 }],
       totalTTC: 120,
+      orderType: 'VISITOR_TICKET',
     })
 
     // Check PDF magic bytes
