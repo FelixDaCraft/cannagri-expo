@@ -517,3 +517,187 @@ export async function sendNewsletterConfirmation(email: string): Promise<void> {
     `,
   })
 }
+
+/**
+ * Send password reset email
+ */
+interface SendPasswordResetEmailOptions {
+  to: string
+  name: string
+  resetUrl: string
+}
+
+export async function sendPasswordResetEmail(options: SendPasswordResetEmailOptions): Promise<void> {
+  const { to, name, resetUrl } = options
+
+  try {
+    await transporter.sendMail({
+      from: `"${siteConfig.name}" <${process.env.EMAIL_FROM}>`,
+      to,
+      subject: `Réinitialisation de votre mot de passe - ${siteConfig.name}`,
+      html: `
+        <!DOCTYPE html>
+        <html lang="fr">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Réinitialisation de mot de passe</title>
+        </head>
+        <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #F4F1E8;">
+          <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; background-color: #FFFFFF;">
+            <!-- Header -->
+            <tr>
+              <td style="background-color: #2E4A33; padding: 30px; text-align: center;">
+                <h1 style="color: #FFFFFF; margin: 0; font-size: 28px;">${siteConfig.name}</h1>
+                <p style="color: #A4B494; margin: 10px 0 0 0;">RÉINITIALISATION DE MOT DE PASSE</p>
+              </td>
+            </tr>
+
+            <!-- Content -->
+            <tr>
+              <td style="padding: 40px 30px;">
+                <h2 style="color: #2E4A33; margin: 0 0 20px 0;">Bonjour ${name},</h2>
+
+                <p style="color: #333333; line-height: 1.6;">
+                  Vous avez demandé la réinitialisation de votre mot de passe pour votre compte ${siteConfig.name}.
+                </p>
+
+                <p style="color: #333333; line-height: 1.6;">
+                  Cliquez sur le bouton ci-dessous pour créer un nouveau mot de passe :
+                </p>
+
+                <div style="text-align: center; margin: 30px 0;">
+                  <a href="${resetUrl}" style="display: inline-block; background-color: #2E4A33; color: #FFFFFF; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold;">
+                    Réinitialiser mon mot de passe
+                  </a>
+                </div>
+
+                <div style="background-color: #FEF3C7; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                  <p style="color: #92400E; margin: 0; font-size: 14px;">
+                    <strong>Ce lien expire dans 1 heure.</strong><br>
+                    Si vous n'avez pas demandé cette réinitialisation, vous pouvez ignorer cet email.
+                  </p>
+                </div>
+
+                <hr style="border: none; border-top: 1px solid #E8E2D1; margin: 30px 0;">
+
+                <p style="color: #666666; font-size: 12px;">
+                  Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :<br>
+                  <a href="${resetUrl}" style="color: #2E4A33; word-break: break-all;">${resetUrl}</a>
+                </p>
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td style="background-color: #2E4A33; padding: 20px 30px; text-align: center;">
+                <p style="color: #A4B494; margin: 0; font-size: 12px;">
+                  ${siteConfig.name} - ${siteConfig.event.year}<br>
+                  ${siteConfig.contact.email}
+                </p>
+              </td>
+            </tr>
+          </table>
+        </body>
+        </html>
+      `,
+    })
+
+    console.log(`Password reset email sent to ${to}`)
+  } catch (error) {
+    console.error('Error sending password reset email:', error)
+    throw new Error('Failed to send password reset email')
+  }
+}
+
+/**
+ * Send email verification email
+ */
+interface SendVerificationEmailOptions {
+  to: string
+  name: string
+  verificationUrl: string
+}
+
+export async function sendVerificationEmail(options: SendVerificationEmailOptions): Promise<void> {
+  const { to, name, verificationUrl } = options
+
+  try {
+    await transporter.sendMail({
+      from: `"${siteConfig.name}" <${process.env.EMAIL_FROM}>`,
+      to,
+      subject: `Confirmez votre adresse email - ${siteConfig.name}`,
+      html: `
+        <!DOCTYPE html>
+        <html lang="fr">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Vérification d'email</title>
+        </head>
+        <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #F4F1E8;">
+          <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; background-color: #FFFFFF;">
+            <!-- Header -->
+            <tr>
+              <td style="background-color: #2E4A33; padding: 30px; text-align: center;">
+                <h1 style="color: #FFFFFF; margin: 0; font-size: 28px;">${siteConfig.name}</h1>
+                <p style="color: #A4B494; margin: 10px 0 0 0;">BIENVENUE !</p>
+              </td>
+            </tr>
+
+            <!-- Content -->
+            <tr>
+              <td style="padding: 40px 30px;">
+                <h2 style="color: #2E4A33; margin: 0 0 20px 0;">Bonjour ${name},</h2>
+
+                <p style="color: #333333; line-height: 1.6;">
+                  Merci de vous être inscrit sur ${siteConfig.name} !
+                </p>
+
+                <p style="color: #333333; line-height: 1.6;">
+                  Pour activer votre compte et commencer à utiliser nos services, veuillez confirmer votre adresse email en cliquant sur le bouton ci-dessous :
+                </p>
+
+                <div style="text-align: center; margin: 30px 0;">
+                  <a href="${verificationUrl}" style="display: inline-block; background-color: #2E4A33; color: #FFFFFF; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold;">
+                    Confirmer mon adresse email
+                  </a>
+                </div>
+
+                <div style="background-color: #F4F1E8; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                  <p style="color: #2E4A33; margin: 0; font-size: 14px;">
+                    <strong>Ce lien expire dans 24 heures.</strong><br>
+                    Si vous n'avez pas créé de compte, vous pouvez ignorer cet email.
+                  </p>
+                </div>
+
+                <hr style="border: none; border-top: 1px solid #E8E2D1; margin: 30px 0;">
+
+                <p style="color: #666666; font-size: 12px;">
+                  Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :<br>
+                  <a href="${verificationUrl}" style="color: #2E4A33; word-break: break-all;">${verificationUrl}</a>
+                </p>
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td style="background-color: #2E4A33; padding: 20px 30px; text-align: center;">
+                <p style="color: #A4B494; margin: 0; font-size: 12px;">
+                  ${siteConfig.name} - ${siteConfig.event.year}<br>
+                  ${siteConfig.contact.email}
+                </p>
+              </td>
+            </tr>
+          </table>
+        </body>
+        </html>
+      `,
+    })
+
+    console.log(`Verification email sent to ${to}`)
+  } catch (error) {
+    console.error('Error sending verification email:', error)
+    throw new Error('Failed to send verification email')
+  }
+}

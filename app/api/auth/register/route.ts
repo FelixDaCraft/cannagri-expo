@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
+import { randomBytes } from 'crypto'
 import { prisma } from '@/lib/prisma'
 import { checkRateLimit, getClientIP, RATE_LIMIT_PRESETS } from '@/lib/rate-limit'
+import { sendVerificationEmail } from '@/lib/email'
 
 export async function POST(request: NextRequest) {
   try {
@@ -124,14 +126,42 @@ export async function POST(request: NextRequest) {
       })
     }
 
+    // Create verification token and send email
+    const verificationToken = randomBytes(32).toString('hex')
+    const tokenExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
+
+    await prisma.verificationToken.create({
+      data: {
+        identifier: user.email,
+        token: verificationToken,
+        expires: tokenExpiry,
+      }
+    })
+
+    // Send verification email
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || 'https://cannagri-expo.eu'
+    const verificationUrl = `${baseUrl}/verifier-email?token=${verificationToken}`
+
+    try {
+      await sendVerificationEmail({
+        to: user.email,
+        name: user.name || 'Utilisateur',
+        verificationUrl,
+      })
+    } catch (emailError) {
+      console.error('Failed to send verification email:', emailError)
+      // Don't fail registration if email fails - user can request a new one
+    }
+
     const isPro = wantsPro === true
 
     return NextResponse.json({
       success: true,
       message: isPro
-        ? 'Compte créé avec succès. Votre demande de compte professionnel est en attente de validation.'
-        : 'Compte créé avec succès.',
+        ? 'Compte créé avec succès. Un email de vérification a été envoyé. Votre demande de compte professionnel sera examinée après vérification.'
+        : 'Compte créé avec succès. Veuillez vérifier votre email pour activer votre compte.',
       isPro,
+      requiresEmailVerification: true,
       user: {
         id: user.id,
         email: user.email,
