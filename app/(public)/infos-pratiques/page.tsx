@@ -26,7 +26,7 @@ const defaultInfos: InfosPratiques = {
   eventDate: siteConfig.event.date,
   eventTime: '9h00 - 19h00',
   eventLocation: siteConfig.event.location,
-  eventAddress: 'Ancien MiN, Rue du Sénégal',
+  eventAddress: '2 Rue du Sénégal',
   eventCity: siteConfig.event.city,
   accessTransport: 'Tramway ligne 1, arrêt Médiathèque. Bus C3, C4, arrêt Chantiers Navals.',
   accessParking: 'Parking Médiathèque à 200m. Parking Commerce à 500m.',
@@ -181,7 +181,7 @@ export default function InfosPratiquesPage() {
               <Card variant="elevated" className="overflow-hidden h-full">
                 <div className="aspect-[4/3] md:aspect-video bg-sage/20 relative">
                   <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2710.5!2d-1.5235!3d47.1975!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4805c6e6c0e4e9e9%3A0x3a5e8f7c6d5b4a3c!2sL%27Agronaute!5e0!3m2!1sfr!2sfr!4v1703187600000"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2711.2!2d-1.5418!3d47.1958!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4805c6e8a8a8a8a8%3A0x1234567890abcdef!2s2%20Rue%20du%20S%C3%A9n%C3%A9gal%2C%2044200%20Nantes!5e0!3m2!1sfr!2sfr!4v1703187600000"
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}
@@ -193,7 +193,7 @@ export default function InfosPratiquesPage() {
                 </div>
                 <div className="p-3 bg-white border-t border-sage/10">
                   <a
-                    href="https://www.google.com/maps/dir/?api=1&destination=L'Agronaute,Rue+du+Sénégal,44200+Nantes"
+                    href="https://www.google.com/maps/dir/?api=1&destination=2+Rue+du+Sénégal,44200+Nantes"
                     target="_blank"
                     rel="noopener noreferrer"
                   >

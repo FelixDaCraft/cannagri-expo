@@ -11,21 +11,21 @@ export const siteConfig = {
     dateISO: "2026-03-28",
     location: "L'Agronaute",
     city: "Nantes",
-    address: "Ancien MiN, Rue du Sénégal, 44200 Nantes",
+    address: "2 Rue du Sénégal, 44200 Nantes",
     year: "2026",
   },
 
   // Contact
   contact: {
     email: "hello@cannagri-expo.fr",
-    phone: "+33 2 XX XX XX XX",
+    phone: "+33 6 26 73 55 97",
   },
 
   // Social links
   social: {
     facebook: "https://facebook.com/cannagriexpo",
-    instagram: "https://instagram.com/cannagriexpo",
-    linkedin: "https://linkedin.com/company/cannagriexpo",
+    instagram: "https://www.instagram.com/cannagri_expo",
+    linkedin: "https://www.linkedin.com/company/cannagri-expo/",
   },
 
   // SEO
