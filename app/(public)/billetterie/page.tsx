@@ -6,8 +6,8 @@ import { Spotlight, FloatingParticles } from '@/components/ui/aceternity'
 import { siteConfig } from '@/config/site'
 import Link from 'next/link'
 
-// Ticketing disabled - Coming Soon mode
-const TICKETING_ENABLED = false
+// Read ticketing status from environment variable
+const TICKETING_ENABLED = process.env.NEXT_PUBLIC_TICKETING_ENABLED === 'true'
 
 const features = [
   {
