@@ -248,6 +248,18 @@ export function Header() {
                       </Link>
                     )}
 
+                    {session.user.role === 'PRO' && (
+                      <Link
+                        href="/compte/stands"
+                        className="block px-4 py-2 text-gray-700 hover:bg-cream hover:text-forest transition-colors"
+                      >
+                        <svg className="w-4 h-4 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                        </svg>
+                        {t('myStands')}
+                      </Link>
+                    )}
+
                     {['SUPER_ADMIN', 'ADMIN', 'CONTRIBUTOR'].includes(session.user.role) && (
                       <Link
                         href="/admin"
@@ -387,6 +399,14 @@ export function Header() {
                       <Link href="/compte/billets" onClick={() => setIsMobileMenuOpen(false)}>
                         <Button variant="outline" className="w-full border-white text-white hover:bg-white hover:text-forest">
                           {t('myTickets')}
+                        </Button>
+                      </Link>
+                    )}
+
+                    {session.user.role === 'PRO' && (
+                      <Link href="/compte/stands" onClick={() => setIsMobileMenuOpen(false)}>
+                        <Button variant="outline" className="w-full border-white text-white hover:bg-white hover:text-forest">
+                          {t('myStands')}
                         </Button>
                       </Link>
                     )}

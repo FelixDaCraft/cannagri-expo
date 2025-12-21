@@ -40,37 +40,37 @@ interface StandPlanProps {
 // Espacement uniforme de 60px entre les stands
 const defaultStands: Stand[] = [
   // Rangée du haut (stands 3-8)
-  { id: '3', code: '3', number: 3, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 195, y: 30, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '4', code: '4', number: 4, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 255, y: 30, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '5', code: '5', number: 5, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 315, y: 30, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '6', code: '6', number: 6, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 375, y: 30, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '7', code: '7', number: 7, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 435, y: 30, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '8', code: '8', number: 8, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 495, y: 30, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '3', code: '3', number: 3, surfaceM2: 4, priceHT: 150, status: 'FREE', size: 'SMALL', x: 195, y: 30, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '4', code: '4', number: 4, surfaceM2: 4, priceHT: 150, status: 'FREE', size: 'SMALL', x: 255, y: 30, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '5', code: '5', number: 5, surfaceM2: 4, priceHT: 150, status: 'FREE', size: 'SMALL', x: 315, y: 30, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '6', code: '6', number: 6, surfaceM2: 4, priceHT: 150, status: 'FREE', size: 'SMALL', x: 375, y: 30, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '7', code: '7', number: 7, surfaceM2: 4, priceHT: 150, status: 'FREE', size: 'SMALL', x: 435, y: 30, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '8', code: '8', number: 8, surfaceM2: 4, priceHT: 150, status: 'FREE', size: 'SMALL', x: 495, y: 30, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
 
   // Stands 1-2 (à côté de la salle conférence)
-  { id: '2', code: '2', number: 2, surfaceM2: 12, priceHT: 450, status: 'FREE', size: 'MEDIUM', x: 195, y: 100, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '1', code: '1', number: 1, surfaceM2: 12, priceHT: 450, status: 'FREE', size: 'MEDIUM', x: 195, y: 160, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '2', code: '2', number: 2, surfaceM2: 4, priceHT: 150, status: 'FREE', size: 'SMALL', x: 195, y: 100, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '1', code: '1', number: 1, surfaceM2: 4, priceHT: 150, status: 'FREE', size: 'SMALL', x: 195, y: 160, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
 
   // Colonne de droite (stands 9-18, de haut en bas)
-  { id: '9', code: '9', number: 9, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 555, y: 30, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '10', code: '10', number: 10, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 555, y: 90, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '11', code: '11', number: 11, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 555, y: 150, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '12', code: '12', number: 12, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 555, y: 210, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '13', code: '13', number: 13, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 555, y: 270, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '14', code: '14', number: 14, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 555, y: 330, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '15', code: '15', number: 15, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 555, y: 390, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '16', code: '16', number: 16, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 555, y: 450, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '17', code: '17', number: 17, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 555, y: 510, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '18', code: '18', number: 18, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 555, y: 570, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '9', code: '9', number: 9, surfaceM2: 4, priceHT: 150, status: 'FREE', size: 'SMALL', x: 555, y: 30, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '10', code: '10', number: 10, surfaceM2: 4, priceHT: 150, status: 'FREE', size: 'SMALL', x: 555, y: 90, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '11', code: '11', number: 11, surfaceM2: 4, priceHT: 150, status: 'FREE', size: 'SMALL', x: 555, y: 150, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '12', code: '12', number: 12, surfaceM2: 4, priceHT: 150, status: 'FREE', size: 'SMALL', x: 555, y: 210, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '13', code: '13', number: 13, surfaceM2: 4, priceHT: 150, status: 'FREE', size: 'SMALL', x: 555, y: 270, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '14', code: '14', number: 14, surfaceM2: 4, priceHT: 150, status: 'FREE', size: 'SMALL', x: 555, y: 330, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '15', code: '15', number: 15, surfaceM2: 4, priceHT: 150, status: 'FREE', size: 'SMALL', x: 555, y: 390, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '16', code: '16', number: 16, surfaceM2: 4, priceHT: 150, status: 'FREE', size: 'SMALL', x: 555, y: 450, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '17', code: '17', number: 17, surfaceM2: 4, priceHT: 150, status: 'FREE', size: 'SMALL', x: 555, y: 510, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '18', code: '18', number: 18, surfaceM2: 4, priceHT: 150, status: 'FREE', size: 'SMALL', x: 555, y: 570, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
 
   // Rangée du bas (stands 25-19, de gauche à droite) - décalés de 60px vers la gauche
-  { id: '25', code: '25', number: 25, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 135, y: 570, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '24', code: '24', number: 24, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 195, y: 570, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '23', code: '23', number: 23, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 255, y: 570, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '22', code: '22', number: 22, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 315, y: 570, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '21', code: '21', number: 21, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 375, y: 570, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '20', code: '20', number: 20, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 435, y: 570, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
-  { id: '19', code: '19', number: 19, surfaceM2: 9, priceHT: 350, status: 'FREE', size: 'SMALL', x: 555, y: 570, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '25', code: '25', number: 25, surfaceM2: 4, priceHT: 150, status: 'FREE', size: 'SMALL', x: 135, y: 570, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '24', code: '24', number: 24, surfaceM2: 4, priceHT: 150, status: 'FREE', size: 'SMALL', x: 195, y: 570, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '23', code: '23', number: 23, surfaceM2: 4, priceHT: 150, status: 'FREE', size: 'SMALL', x: 255, y: 570, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '22', code: '22', number: 22, surfaceM2: 4, priceHT: 150, status: 'FREE', size: 'SMALL', x: 315, y: 570, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '21', code: '21', number: 21, surfaceM2: 4, priceHT: 150, status: 'FREE', size: 'SMALL', x: 375, y: 570, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '20', code: '20', number: 20, surfaceM2: 4, priceHT: 150, status: 'FREE', size: 'SMALL', x: 435, y: 570, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
+  { id: '19', code: '19', number: 19, surfaceM2: 4, priceHT: 150, status: 'FREE', size: 'SMALL', x: 555, y: 570, width: 50, height: 50, hasFurniture: false, hasElectricity: false, furniturePrice: 120, electricityPrice: 80 },
 ]
 
 const statusColors = {

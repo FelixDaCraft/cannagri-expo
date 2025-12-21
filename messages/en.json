@@ -10,6 +10,7 @@
     "logout": "Logout",
     "myAccount": "My account",
     "myTickets": "My tickets",
+    "myStands": "My Stands",
     "admin": "Administration",
     "user": "User",
     "buyTickets": "Buy tickets",
@@ -621,6 +622,21 @@
       "MATERIEL": "Agricultural equipment",
       "LIFESTYLE": "Lifestyle & Wellness",
       "SERVICE": "Services"
+    },
+    "stands": {
+      "title": "My Stands",
+      "subtitle": "View your stand reservations for the exhibition.",
+      "backToAccount": "Back to account",
+      "noStands": "No stand reserved",
+      "noStandsDescription": "You have not reserved any stand yet.",
+      "bookStand": "Book a stand",
+      "order": "Order",
+      "furniture": "Furniture",
+      "electricity": "Electricity",
+      "exhibitorName": "Exhibitor name",
+      "totalStands": "Total stands",
+      "totalSurface": "Total surface",
+      "bookAnotherStand": "Book another stand"
     }
   },
   "footer": {
