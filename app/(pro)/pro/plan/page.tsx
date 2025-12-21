@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { getServerSession } from 'next-auth'
 import Link from 'next/link'
-import { InteractiveStandPlan } from '@/components/stands'
+import { StandPlanWithBooking } from '@/components/stands'
 import { Button, Badge } from '@/components/ui'
 import { siteConfig } from '@/config/site'
 import { authOptions } from '@/lib/auth'
@@ -51,9 +51,9 @@ export default async function PlanPage() {
           </p>
         </div>
 
-        {/* Interactive Plan */}
+        {/* Interactive Plan with Booking Modal */}
         <div className="mb-12">
-          <InteractiveStandPlan />
+          <StandPlanWithBooking />
         </div>
 
         {/* Info Cards */}
