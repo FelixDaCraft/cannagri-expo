@@ -24,8 +24,8 @@ export const siteConfig = {
   // Social links
   social: {
     facebook: "https://facebook.com/cannagriexpo",
-    instagram: "https://instagram.com/cannagriexpo",
-    linkedin: "https://linkedin.com/company/cannagriexpo",
+    instagram: "https://www.instagram.com/cannagri_expo",
+    linkedin: "https://www.linkedin.com/company/cannagri-expo/",
   },
 
   // SEO
