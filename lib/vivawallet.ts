@@ -1,3 +1,4 @@
+import crypto from 'crypto'
 import type { VivaWalletOrderRequest, VivaWalletOrderResponse } from '@/types'
 
 const VIVA_API_BASE = process.env.VIVA_WALLET_DEMO_MODE === 'true'
@@ -112,18 +113,68 @@ export async function getVivaWalletOrder(orderCode: string) {
 
 /**
  * Verify webhook signature from Viva Wallet
+ * Viva Wallet uses HMAC-SHA256 to sign webhook payloads
+ * The signature is computed using the Webhook Verification Key from the Viva Wallet dashboard
  */
 export function verifyVivaWalletSignature(
   payload: string,
   signature: string | null
 ): boolean {
-  if (!signature) return false
+  // Signature is required for verification
+  if (!signature) {
+    console.warn('[Viva Wallet] Webhook received without signature')
+    return false
+  }
 
-  // In demo mode, skip verification
-  if (process.env.VIVA_WALLET_DEMO_MODE === 'true') {
+  const webhookSecret = process.env.VIVA_WALLET_WEBHOOK_SECRET
+
+  // In demo mode with local simulation, skip verification
+  if (process.env.VIVA_WALLET_LOCAL_SIMULATION === 'true') {
+    console.log('[Viva Wallet] Local simulation mode - skipping signature verification')
     return true
   }
 
-  // TODO: Implement proper signature verification for production
-  return true
+  // In demo mode without a secret configured, allow but log warning
+  if (process.env.VIVA_WALLET_DEMO_MODE === 'true' && !webhookSecret) {
+    console.warn('[Viva Wallet] Demo mode without webhook secret - SECURITY WARNING: signature not verified')
+    return true
+  }
+
+  // In production, webhook secret is required
+  if (!webhookSecret) {
+    console.error('[Viva Wallet] CRITICAL: Webhook secret not configured - rejecting webhook')
+    return false
+  }
+
+  try {
+    // Viva Wallet HMAC-SHA256 signature verification
+    // The signature header contains the HMAC-SHA256 hash of the payload
+    const expectedSignature = crypto
+      .createHmac('sha256', webhookSecret)
+      .update(payload, 'utf8')
+      .digest('hex')
+      .toLowerCase()
+
+    // Compare signatures in constant time to prevent timing attacks
+    const receivedSignature = signature.toLowerCase()
+
+    if (expectedSignature.length !== receivedSignature.length) {
+      console.error('[Viva Wallet] Signature length mismatch')
+      return false
+    }
+
+    const isValid = crypto.timingSafeEqual(
+      Buffer.from(expectedSignature, 'utf8'),
+      Buffer.from(receivedSignature, 'utf8')
+    )
+
+    if (!isValid) {
+      console.error('[Viva Wallet] Invalid webhook signature')
+    }
+
+    return isValid
+  } catch (error) {
+    console.error('[Viva Wallet] Signature verification error:', error)
+    return false
+  }
 }
