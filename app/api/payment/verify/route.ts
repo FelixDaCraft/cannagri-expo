@@ -257,13 +257,15 @@ async function processSuccessfulPayment(orderId: string, transactionId?: string)
       }
     }
 
-    // Send a single email with all tickets
+    // Send a single email with all tickets (non-blocking)
     if (ticketAttachments.length > 0) {
-      await sendTicketEmail({
+      sendTicketEmail({
         to: order.customerEmail,
         customerName: order.customerName, // Buyer's name for greeting
         orderNumber: order.orderNumber,
         tickets: ticketAttachments,
+      }).catch(err => {
+        console.error('Failed to send ticket email (non-blocking):', err.message)
       })
     }
   }
@@ -282,12 +284,15 @@ async function processSuccessfulPayment(orderId: string, transactionId?: string)
       })
     }
 
-    await sendTicketEmail({
+    // Send confirmation email (non-blocking)
+    sendTicketEmail({
       to: order.customerEmail,
       customerName: order.customerName,
       orderNumber: order.orderNumber,
       isStandBooking: true,
       standCodes: order.stands.map(s => s.code),
+    }).catch(err => {
+      console.error('Failed to send stand booking email (non-blocking):', err.message)
     })
   }
 
