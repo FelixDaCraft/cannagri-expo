@@ -18,7 +18,7 @@ export const siteConfig = {
   // Contact
   contact: {
     email: "hello@cannagri-expo.fr",
-    phone: "+33 2 XX XX XX XX",
+    phone: "+33 6 26 73 55 97",
   },
 
   // Social links
