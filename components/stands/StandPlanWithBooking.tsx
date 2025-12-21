@@ -139,6 +139,8 @@ export function StandPlanWithBooking() {
     }
   }
 
+  console.log('[StandPlanWithBooking] Rendering - isModalOpen:', isModalOpen, 'selectedStand:', selectedStand?.name)
+
   return (
     <>
       <InteractiveStandPlan onReserve={handleReserve} />
