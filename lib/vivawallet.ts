@@ -51,8 +51,12 @@ export async function createVivaWalletOrder(
 
   if (!response.ok) {
     const error = await response.text()
-    console.error('Viva Wallet order error:', error)
-    throw new Error(`Failed to create Viva Wallet order: ${error}`)
+    console.error('Viva Wallet order error - Status:', response.status)
+    console.error('Viva Wallet order error - Body:', error)
+    console.error('Viva Wallet order error - URL:', `${VIVA_API_BASE}/api/orders`)
+    console.error('Viva Wallet credentials - MerchantID:', process.env.VIVA_WALLET_MERCHANT_ID?.substring(0, 8) + '...')
+    console.error('Viva Wallet credentials - API Key length:', process.env.VIVA_WALLET_API_KEY?.length)
+    throw new Error(`Failed to create Viva Wallet order: ${response.status} - ${error}`)
   }
 
   const data = await response.json()

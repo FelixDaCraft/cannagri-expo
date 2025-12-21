@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { Button } from '@/components/ui'
 
@@ -53,8 +53,70 @@ interface PlanConfig {
   amenities: Record<string, { name: string; icon: string; included: boolean; price?: number }>
 }
 
-// Default config from plan-config.json
-const defaultConfig: PlanConfig = {
+// Database stand type
+interface DBStand {
+  id: string
+  code: string
+  row: number
+  col: number
+  surfaceM2: number
+  priceHT: number
+  status: 'FREE' | 'RESERVED' | 'SOLD' | 'BLOCKED'
+  hasFurniture: boolean
+  hasElectricity: boolean
+  order?: {
+    customerName: string
+    companyName: string | null
+  } | null
+}
+
+// Map DB status to UI status
+function mapStatus(dbStatus: string): 'available' | 'reserved' | 'sold' | 'blocked' {
+  switch (dbStatus) {
+    case 'FREE': return 'available'
+    case 'RESERVED': return 'reserved'
+    case 'SOLD': return 'sold'
+    case 'BLOCKED': return 'blocked'
+    default: return 'blocked'
+  }
+}
+
+// Convert DB stand to UI stand format
+function convertDBStandToUIStand(dbStand: DBStand): Stand {
+  const amenities: string[] = []
+  if (dbStand.hasElectricity) amenities.push('electricity')
+  if (dbStand.hasFurniture) amenities.push('furniture')
+
+  return {
+    id: parseInt(dbStand.code) || 0,
+    name: `Stand ${dbStand.code}`,
+    position: {
+      gridColumn: dbStand.col,
+      gridRow: dbStand.row,
+    },
+    location: getLocationFromPosition(dbStand.row, dbStand.col),
+    surface: dbStand.surfaceM2,
+    price: dbStand.priceHT,
+    currency: 'EUR',
+    status: mapStatus(dbStand.status),
+    category: 'standard',
+    amenities,
+    reservedBy: dbStand.order?.companyName || dbStand.order?.customerName || null,
+    reservedAt: null,
+  }
+}
+
+// Get location description from position
+function getLocationFromPosition(row: number, col: number): string {
+  if (row === 1) return 'Allée Nord'
+  if (row === 13) return 'Allée Sud'
+  if (col === 10) return 'Allée Est'
+  if (col === 2) return 'Côté Conférences'
+  return 'Zone centrale'
+}
+
+// Default static config (zones and settings)
+const defaultConfig: Omit<PlanConfig, 'stands'> & { stands: Stand[] } = {
   grid: { columns: 10, rows: 13 },
   zones: [
     { id: 'CONF', type: 'conference', name: 'Conférences', position: { gridColumn: '1', gridRow: '1 / 5' }, style: 'dashed', clickable: false },
@@ -62,33 +124,7 @@ const defaultConfig: PlanConfig = {
     { id: 'TABLES', type: 'tables', name: 'Tables', position: { gridColumn: '3 / 7', gridRow: '6 / 9' }, style: 'dashed', clickable: false },
     { id: 'ENTRY', type: 'entry', name: 'Entrée', position: { gridColumn: '1', gridRow: '11 / 13' }, style: 'dashed', clickable: false, icon: { type: 'arrow', direction: 'right' } },
   ],
-  stands: [
-    { id: 1, name: 'Stand 1', position: { gridColumn: 2, gridRow: 4 }, location: 'Côté Conférences', surface: 4, price: 150, currency: 'EUR', status: 'available', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: null, reservedAt: null },
-    { id: 2, name: 'Stand 2', position: { gridColumn: 2, gridRow: 3 }, location: 'Côté Conférences', surface: 4, price: 150, currency: 'EUR', status: 'reserved', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: 'CBD France', reservedAt: null },
-    { id: 3, name: 'Stand 3', position: { gridColumn: 2, gridRow: 2 }, location: 'Angle Nord-Ouest', surface: 4, price: 150, currency: 'EUR', status: 'sold', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: 'HempCo', reservedAt: null },
-    { id: 4, name: 'Stand 4', position: { gridColumn: 3, gridRow: 1 }, location: 'Allée Nord', surface: 4, price: 150, currency: 'EUR', status: 'available', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: null, reservedAt: null },
-    { id: 5, name: 'Stand 5', position: { gridColumn: 4, gridRow: 1 }, location: 'Allée Nord', surface: 4, price: 150, currency: 'EUR', status: 'available', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: null, reservedAt: null },
-    { id: 6, name: 'Stand 6', position: { gridColumn: 5, gridRow: 1 }, location: 'Allée Nord', surface: 4, price: 150, currency: 'EUR', status: 'reserved', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: 'GreenLeaf', reservedAt: null },
-    { id: 7, name: 'Stand 7', position: { gridColumn: 6, gridRow: 1 }, location: 'Allée Nord', surface: 4, price: 150, currency: 'EUR', status: 'available', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: null, reservedAt: null },
-    { id: 8, name: 'Stand 8', position: { gridColumn: 7, gridRow: 1 }, location: 'Allée Nord', surface: 4, price: 150, currency: 'EUR', status: 'sold', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: 'BioHemp', reservedAt: null },
-    { id: 9, name: 'Stand 9', position: { gridColumn: 8, gridRow: 1 }, location: 'Angle Nord-Est', surface: 4, price: 150, currency: 'EUR', status: 'available', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: null, reservedAt: null },
-    { id: 10, name: 'Stand 10', position: { gridColumn: 10, gridRow: 2 }, location: 'Allée Est', surface: 4, price: 150, currency: 'EUR', status: 'available', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: null, reservedAt: null },
-    { id: 11, name: 'Stand 11', position: { gridColumn: 10, gridRow: 3 }, location: 'Allée Est', surface: 4, price: 150, currency: 'EUR', status: 'reserved', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: 'NaturaCBD', reservedAt: null },
-    { id: 12, name: 'Stand 12', position: { gridColumn: 10, gridRow: 4 }, location: 'Allée Est', surface: 4, price: 150, currency: 'EUR', status: 'available', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: null, reservedAt: null },
-    { id: 13, name: 'Stand 13', position: { gridColumn: 10, gridRow: 5 }, location: 'Allée Est', surface: 4, price: 150, currency: 'EUR', status: 'available', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: null, reservedAt: null },
-    { id: 14, name: 'Stand 14', position: { gridColumn: 10, gridRow: 6 }, location: 'Allée Est', surface: 4, price: 150, currency: 'EUR', status: 'sold', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: 'HempTech', reservedAt: null },
-    { id: 15, name: 'Stand 15', position: { gridColumn: 10, gridRow: 7 }, location: 'Allée Est', surface: 4, price: 150, currency: 'EUR', status: 'available', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: null, reservedAt: null },
-    { id: 16, name: 'Stand 16', position: { gridColumn: 10, gridRow: 8 }, location: 'Allée Est', surface: 4, price: 150, currency: 'EUR', status: 'available', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: null, reservedAt: null },
-    { id: 17, name: 'Stand 17', position: { gridColumn: 10, gridRow: 9 }, location: 'Allée Est', surface: 4, price: 150, currency: 'EUR', status: 'reserved', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: 'CannaBio', reservedAt: null },
-    { id: 18, name: 'Stand 18', position: { gridColumn: 10, gridRow: 10 }, location: 'Allée Est', surface: 4, price: 150, currency: 'EUR', status: 'available', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: null, reservedAt: null },
-    { id: 19, name: 'Stand 19', position: { gridColumn: 10, gridRow: 11 }, location: 'Angle Sud-Est', surface: 4, price: 150, currency: 'EUR', status: 'available', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: null, reservedAt: null },
-    { id: 20, name: 'Stand 20', position: { gridColumn: 8, gridRow: 13 }, location: 'Allée Sud', surface: 4, price: 150, currency: 'EUR', status: 'available', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: null, reservedAt: null },
-    { id: 21, name: 'Stand 21', position: { gridColumn: 7, gridRow: 13 }, location: 'Allée Sud', surface: 4, price: 150, currency: 'EUR', status: 'sold', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: 'FrenchHemp', reservedAt: null },
-    { id: 22, name: 'Stand 22', position: { gridColumn: 6, gridRow: 13 }, location: 'Allée Sud', surface: 4, price: 150, currency: 'EUR', status: 'available', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: null, reservedAt: null },
-    { id: 23, name: 'Stand 23', position: { gridColumn: 5, gridRow: 13 }, location: 'Allée Sud', surface: 4, price: 150, currency: 'EUR', status: 'available', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: null, reservedAt: null },
-    { id: 24, name: 'Stand 24', position: { gridColumn: 4, gridRow: 13 }, location: 'Allée Sud', surface: 4, price: 150, currency: 'EUR', status: 'reserved', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: 'EcoCBD', reservedAt: null },
-    { id: 25, name: 'Stand 25', position: { gridColumn: 3, gridRow: 13 }, location: 'Allée Sud (près entrée)', surface: 4, price: 150, currency: 'EUR', status: 'available', category: 'standard', amenities: ['electricity', 'furniture'], reservedBy: null, reservedAt: null },
-  ],
+  stands: [], // Will be loaded from API
   categories: {
     standard: { name: 'Stand 4m²', description: 'Mobilier et électricité inclus' },
     premium: { name: 'Stand 4m²', description: 'Mobilier et électricité inclus' },
@@ -121,25 +157,56 @@ export function InteractiveStandPlan({
   onReserve,
   readOnly = false,
 }: InteractiveStandPlanProps) {
-  const config = { ...defaultConfig, ...customConfig }
+  const [stands, setStands] = useState<Stand[]>([])
+  const [isLoading, setIsLoading] = useState(true)
   const [selectedStand, setSelectedStand] = useState<Stand | null>(null)
   const [statusFilter, setStatusFilter] = useState<string>('all')
 
+  const config = { ...defaultConfig, ...customConfig, stands }
+
+  // Fetch stands from API
+  const fetchStands = useCallback(async () => {
+    try {
+      const response = await fetch('/api/stands')
+      if (response.ok) {
+        const data = await response.json()
+        const dbStands: DBStand[] = data.data || []
+        const uiStands = dbStands.map(convertDBStandToUIStand)
+        setStands(uiStands)
+      }
+    } catch (error) {
+      console.error('Failed to fetch stands:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
+
+  // Initial fetch
+  useEffect(() => {
+    fetchStands()
+  }, [fetchStands])
+
+  // Auto-refresh every 30 seconds
+  useEffect(() => {
+    const interval = setInterval(fetchStands, 30000)
+    return () => clearInterval(interval)
+  }, [fetchStands])
+
   // Filter stands
   const filteredStands = useMemo(() => {
-    return config.stands.filter((stand) => {
+    return stands.filter((stand) => {
       if (statusFilter !== 'all' && stand.status !== statusFilter) return false
       return true
     })
-  }, [config.stands, statusFilter])
+  }, [stands, statusFilter])
 
   // Stats
   const stats = useMemo(() => {
-    const available = config.stands.filter((s) => s.status === 'available').length
-    const reserved = config.stands.filter((s) => s.status === 'reserved').length
-    const sold = config.stands.filter((s) => s.status === 'sold').length
-    return { available, reserved, sold, total: config.stands.length }
-  }, [config.stands])
+    const available = stands.filter((s) => s.status === 'available').length
+    const reserved = stands.filter((s) => s.status === 'reserved').length
+    const sold = stands.filter((s) => s.status === 'sold').length
+    return { available, reserved, sold, total: stands.length }
+  }, [stands])
 
   const handleStandClick = (stand: Stand) => {
     setSelectedStand(stand)
@@ -169,6 +236,14 @@ export function InteractiveStandPlan({
     }
   }
 
+  if (isLoading) {
+    return (
+      <div className="w-full flex items-center justify-center py-12">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-forest"></div>
+      </div>
+    )
+  }
+
   return (
     <div className="w-full">
       {/* Header with filters */}
@@ -193,6 +268,16 @@ export function InteractiveStandPlan({
             <option value="sold">Vendus</option>
           </select>
 
+          {/* Refresh button */}
+          <button
+            onClick={fetchStands}
+            className="px-3 py-2 border border-forest/20 rounded-lg bg-white text-sm hover:bg-cream transition-colors"
+            title="Actualiser"
+          >
+            <svg className="w-5 h-5 text-forest" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+          </button>
         </div>
       </div>
 
@@ -269,7 +354,7 @@ export function InteractiveStandPlan({
             ))}
 
             {/* Hidden stands (filtered out) */}
-            {config.stands
+            {stands
               .filter((s) => !filteredStands.includes(s))
               .map((stand) => (
                 <div
