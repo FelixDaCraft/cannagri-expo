@@ -181,7 +181,7 @@ export default function InfosPratiquesPage() {
               <Card variant="elevated" className="overflow-hidden h-full">
                 <div className="aspect-[4/3] md:aspect-video bg-sage/20 relative">
                   <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d800!2d-1.564347546973155!3d47.20063004101001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDfCsDEyJzAyLjMiTiAxwrAzMyczNy4zIlc!5e1!3m2!1sfr!2sfr!4v1"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2710.123!2d-1.5669!3d47.2128!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4805ee47c3b3f36f%3A0x7a3b9e8d7c6e5f4a!2s24%20Quai%20de%20la%20Fosse%2C%2044000%20Nantes!5e0!3m2!1sfr!2sfr!4v1703187600000"
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}
@@ -193,7 +193,7 @@ export default function InfosPratiquesPage() {
                 </div>
                 <div className="p-3 bg-white border-t border-sage/10">
                   <a
-                    href="https://www.google.com/maps/dir/?api=1&destination=47.20063004101001,-1.564347546973155"
+                    href="https://www.google.com/maps/dir/?api=1&destination=L'Agronaute,24+quai+de+la+Fosse,Nantes"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
