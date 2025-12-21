@@ -73,8 +73,10 @@ export function StandPlanWithBooking() {
   }, [session?.user?.id])
 
   const handleReserve = (stand: Stand) => {
+    console.log('[StandPlanWithBooking] handleReserve called with stand:', stand)
     setSelectedStand(stand)
     setIsModalOpen(true)
+    console.log('[StandPlanWithBooking] Modal should now be open')
   }
 
   const handleClose = () => {

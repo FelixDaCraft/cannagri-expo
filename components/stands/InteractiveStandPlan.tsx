@@ -214,8 +214,14 @@ export function InteractiveStandPlan({
   }
 
   const handleReserve = () => {
+    console.log('[InteractiveStandPlan] handleReserve called')
+    console.log('[InteractiveStandPlan] selectedStand:', selectedStand)
+    console.log('[InteractiveStandPlan] onReserve defined:', !!onReserve)
     if (selectedStand && selectedStand.status === 'available') {
+      console.log('[InteractiveStandPlan] Calling onReserve with stand:', selectedStand.name)
       onReserve?.(selectedStand)
+    } else {
+      console.log('[InteractiveStandPlan] Cannot reserve - status:', selectedStand?.status)
     }
   }
 
