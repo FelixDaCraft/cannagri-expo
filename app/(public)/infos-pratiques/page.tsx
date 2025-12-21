@@ -26,7 +26,7 @@ const defaultInfos: InfosPratiques = {
   eventDate: siteConfig.event.date,
   eventTime: '9h00 - 19h00',
   eventLocation: siteConfig.event.location,
-  eventAddress: 'Ancien MiN, Rue du Sénégal',
+  eventAddress: '2 Rue du Sénégal',
   eventCity: siteConfig.event.city,
   accessTransport: 'Tramway ligne 1, arrêt Médiathèque. Bus C3, C4, arrêt Chantiers Navals.',
   accessParking: 'Parking Médiathèque à 200m. Parking Commerce à 500m.',
@@ -193,7 +193,7 @@ export default function InfosPratiquesPage() {
                 </div>
                 <div className="p-3 bg-white border-t border-sage/10">
                   <a
-                    href="https://www.google.com/maps/dir/?api=1&destination=L'Agronaute,Rue+du+Sénégal,44200+Nantes"
+                    href="https://www.google.com/maps/dir/?api=1&destination=2+Rue+du+Sénégal,44200+Nantes"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
