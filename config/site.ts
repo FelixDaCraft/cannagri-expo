@@ -11,7 +11,7 @@ export const siteConfig = {
     dateISO: "2026-03-28",
     location: "L'Agronaute",
     city: "Nantes",
-    address: "Ancien MiN, Rue du Sénégal, 44200 Nantes",
+    address: "2 Rue du Sénégal, 44200 Nantes",
     year: "2026",
   },
 
