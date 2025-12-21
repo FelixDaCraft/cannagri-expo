@@ -116,7 +116,7 @@ jobs:
           build-args: |
             NEXT_PUBLIC_APP_URL=${{ github.ref_name == 'Prod' && 'https://cannagri-expo.eu' || 'https://dev.cannagri-expo.eu' }}
             NEXT_PUBLIC_SITE_URL=${{ github.ref_name == 'Prod' && 'https://cannagri-expo.eu' || 'https://dev.cannagri-expo.eu' }}
-            NEXT_PUBLIC_TICKETING_ENABLED=${{ github.ref_name == 'Prod' && 'false' || 'true' }}
+            NEXT_PUBLIC_TICKETING_ENABLED=true
             NEXT_PUBLIC_DEMO_MODE=${{ github.ref_name == 'Prod' && 'false' || 'true' }}
 
   deploy:
