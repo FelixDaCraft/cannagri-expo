@@ -81,8 +81,7 @@ jobs:
           context: .
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.set-tag.outputs.tag }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          no-cache: true
           build-args: |
             NEXT_PUBLIC_APP_URL=${{ github.ref_name == 'Prod' && 'https://cannagri-expo.eu' || 'https://dev.cannagri-expo.eu' }}
             NEXT_PUBLIC_SITE_URL=${{ github.ref_name == 'Prod' && 'https://cannagri-expo.eu' || 'https://dev.cannagri-expo.eu' }}
