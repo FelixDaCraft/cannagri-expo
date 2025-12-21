@@ -26,13 +26,14 @@ interface SendTicketEmailOptions {
   tickets?: TicketAttachment[]
   isStandBooking?: boolean
   standCodes?: string[]
+  invoicePdfBuffer?: Buffer // Invoice PDF attachment
 }
 
 /**
  * Send ticket email with PDF attachment(s)
  */
 export async function sendTicketEmail(options: SendTicketEmailOptions): Promise<void> {
-  const { to, customerName, orderNumber, pdfBuffer, tickets, isStandBooking, standCodes } = options
+  const { to, customerName, orderNumber, pdfBuffer, tickets, isStandBooking, standCodes, invoicePdfBuffer } = options
 
   const ticketCount = tickets?.length || (pdfBuffer ? 1 : 0)
 
@@ -42,9 +43,10 @@ export async function sendTicketEmail(options: SendTicketEmailOptions): Promise<
     ? `Vos ${ticketCount} e-billets - ${siteConfig.name}`
     : `Votre e-billet - ${siteConfig.name}`
 
+  const hasInvoice = !!invoicePdfBuffer
   const html = isStandBooking
-    ? generateStandConfirmationHTML(customerName, orderNumber, standCodes || [])
-    : generateTicketEmailHTML(customerName, orderNumber, tickets)
+    ? generateStandConfirmationHTML(customerName, orderNumber, standCodes || [], hasInvoice)
+    : generateTicketEmailHTML(customerName, orderNumber, tickets, hasInvoice)
 
   // Build attachments array
   let attachments: Array<{ filename: string; content: Buffer; contentType: string }> = []
@@ -65,6 +67,15 @@ export async function sendTicketEmail(options: SendTicketEmailOptions): Promise<
         contentType: 'application/pdf',
       },
     ]
+  }
+
+  // Add invoice PDF if provided
+  if (invoicePdfBuffer) {
+    attachments.push({
+      filename: `facture-${orderNumber}.pdf`,
+      content: invoicePdfBuffer,
+      contentType: 'application/pdf',
+    })
   }
 
   try {
@@ -88,7 +99,7 @@ const ticketTypeLabels: Record<string, string> = {
   FLEX: 'Flex',
 }
 
-function generateTicketEmailHTML(customerName: string, orderNumber: string, tickets?: TicketAttachment[]): string {
+function generateTicketEmailHTML(customerName: string, orderNumber: string, tickets?: TicketAttachment[], hasInvoice: boolean = true): string {
   const ticketCount = tickets?.length || 1
   const ticketWord = ticketCount > 1 ? 'e-billets sont' : 'e-billet est'
   const ticketWordSimple = ticketCount > 1 ? 'billets' : 'billet'
@@ -136,6 +147,7 @@ function generateTicketEmailHTML(customerName: string, orderNumber: string, tick
 
             <p style="color: #333333; line-height: 1.6;">
               Merci pour votre commande ! ${ticketCount > 1 ? `Vos ${ticketCount} ${ticketWord}` : `Votre ${ticketWord}`} en pièce${ticketCount > 1 ? 's' : ''} jointe${ticketCount > 1 ? 's' : ''} de cet email.
+              ${hasInvoice ? '<br><strong>Votre facture est également jointe à cet email.</strong>' : ''}
             </p>
 
             <div style="background-color: #F4F1E8; padding: 20px; border-radius: 8px; margin: 30px 0;">
@@ -192,7 +204,7 @@ function generateTicketEmailHTML(customerName: string, orderNumber: string, tick
   `
 }
 
-function generateStandConfirmationHTML(customerName: string, orderNumber: string, standCodes: string[]): string {
+function generateStandConfirmationHTML(customerName: string, orderNumber: string, standCodes: string[], hasInvoice: boolean = true): string {
   return `
     <!DOCTYPE html>
     <html lang="fr">
@@ -226,10 +238,15 @@ function generateStandConfirmationHTML(customerName: string, orderNumber: string
               <p style="margin: 15px 0 0 0; color: #666666; font-size: 14px;">N° de commande : ${orderNumber}</p>
             </div>
 
+            ${hasInvoice ? `
+            <div style="background-color: #A4B494; color: #2E4A33; padding: 15px; border-radius: 8px; margin: 20px 0; text-align: center;">
+              <strong>Votre facture est jointe à cet email.</strong>
+            </div>
+            ` : ''}
+
             <h3 style="color: #2E4A33; margin: 30px 0 15px 0;">Prochaines étapes</h3>
 
             <ol style="color: #333333; line-height: 1.8; padding-left: 20px;">
-              <li>Vous recevrez votre facture par email sous 48h.</li>
               <li>Un guide de l'exposant vous sera envoyé 1 mois avant l'événement.</li>
               <li>Votre badge exposant sera disponible à l'accueil le jour J.</li>
             </ol>
