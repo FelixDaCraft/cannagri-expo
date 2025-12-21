@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma'
 import { authOptions } from '@/lib/auth'
 import { generateOrderNumber } from '@/lib/utils'
 import { createVivaWalletOrder } from '@/lib/vivawallet'
+import { checkRateLimit, getClientIP, RATE_LIMIT_PRESETS } from '@/lib/rate-limit'
 
 // Check if Viva Wallet is configured
 const isVivaWalletEnabled = !!(
@@ -13,6 +14,23 @@ const isVivaWalletEnabled = !!(
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting - 10 checkout attempts per minute per IP
+    const clientIP = getClientIP(request)
+    const rateLimitResult = checkRateLimit(`checkout:${clientIP}`, RATE_LIMIT_PRESETS.PAYMENT)
+
+    if (!rateLimitResult.success) {
+      return NextResponse.json(
+        { error: 'Trop de tentatives. Veuillez réessayer plus tard.' },
+        {
+          status: 429,
+          headers: {
+            'Retry-After': String(Math.ceil((rateLimitResult.resetAt - Date.now()) / 1000)),
+            'X-RateLimit-Remaining': '0',
+          }
+        }
+      )
+    }
+
     const body = await request.json()
     const { type, items, customer } = body
 
