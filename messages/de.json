@@ -477,8 +477,8 @@
   "auth": {
     "login": {
       "title": "Anmelden",
-      "subtitle": "Zugang zu Ihrem professionellen Bereich",
-      "proSpace": "Pro-Bereich",
+      "subtitle": "Zugang zu Ihrem persönlichen Bereich",
+      "proSpace": "Mein Konto",
       "email": "E-Mail",
       "emailPlaceholder": "ihre@email.de",
       "password": "Passwort",

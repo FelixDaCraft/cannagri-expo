@@ -28,8 +28,8 @@ const defaultInfos: InfosPratiques = {
   eventLocation: siteConfig.event.location,
   eventAddress: '2 Rue du Sénégal',
   eventCity: siteConfig.event.city,
-  accessTransport: 'Tramway ligne 1, arrêt Médiathèque. Bus C3, C4, arrêt Chantiers Navals.',
-  accessParking: 'Parking Médiathèque à 200m. Parking Commerce à 500m.',
+  accessTransport: 'Bus lignes 5, C1, C6, C20 arrêt Basse Île (5 min). Navibus arrêt Trentemoult - Roquios (2 min). Tramway ligne 2/3, arrêt Vincent Gâche (22 min).',
+  accessParking: 'Parking gratuit sur le site de l\'Agronaute. Parking Île de Nantes (payant) à proximité.',
   accessInfo: 'Le lieu est accessible aux personnes à mobilité réduite.',
   ticketInfo: 'Les billets sont disponibles en ligne. Présentez votre QR code à l\'entrée.',
   contactEmail: siteConfig.contact.email,
@@ -256,7 +256,7 @@ export default function InfosPratiquesPage() {
             transition={{ delay: 0.25 }}
             className="space-y-3"
           >
-            {/* Transports */}
+            {/* Transports & Itinéraires */}
             <Accordion
               title={t('access.transport')}
               defaultOpen={true}
@@ -266,51 +266,129 @@ export default function InfosPratiquesPage() {
                 </svg>
               }
             >
-              <div className="overflow-x-auto -mx-2">
-                <table className="w-full text-sm min-w-[300px]">
-                  <thead>
-                    <tr className="border-b border-sage/20">
-                      <th className="text-left py-2 px-2 font-semibold text-forest">Ligne</th>
-                      <th className="text-left py-2 px-2 font-semibold text-forest">Type</th>
-                      <th className="text-left py-2 px-2 font-semibold text-forest">Arrêt</th>
-                      <th className="text-left py-2 px-2 font-semibold text-forest">Dist.</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-sage/10">
-                    <tr>
-                      <td className="py-2 px-2">
-                        <span className="inline-flex items-center justify-center w-7 h-7 bg-green-600 text-white text-xs font-bold rounded">1</span>
-                      </td>
-                      <td className="py-2 px-2 text-body/70">Tram</td>
-                      <td className="py-2 px-2 text-body/80 font-medium">Médiathèque</td>
-                      <td className="py-2 px-2 text-body/70">150m</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 px-2">
-                        <span className="inline-flex items-center justify-center w-7 h-7 bg-blue-600 text-white text-xs font-bold rounded">C3</span>
-                      </td>
-                      <td className="py-2 px-2 text-body/70">Bus</td>
-                      <td className="py-2 px-2 text-body/80 font-medium">Chantiers Navals</td>
-                      <td className="py-2 px-2 text-body/70">100m</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 px-2">
-                        <span className="inline-flex items-center justify-center w-7 h-7 bg-blue-600 text-white text-xs font-bold rounded">C4</span>
-                      </td>
-                      <td className="py-2 px-2 text-body/70">Bus</td>
-                      <td className="py-2 px-2 text-body/80 font-medium">Chantiers Navals</td>
-                      <td className="py-2 px-2 text-body/70">100m</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 px-2">
-                        <span className="inline-flex items-center justify-center w-7 h-7 bg-purple-600 text-white text-xs font-bold rounded">E1</span>
-                      </td>
-                      <td className="py-2 px-2 text-body/70">Navibus</td>
-                      <td className="py-2 px-2 text-body/80 font-medium">Gare Maritime</td>
-                      <td className="py-2 px-2 text-body/70">200m</td>
-                    </tr>
-                  </tbody>
-                </table>
+              <div className="space-y-4">
+                {/* Arrêts à proximité */}
+                <div>
+                  <h4 className="text-xs font-semibold text-forest uppercase tracking-wide mb-2">Arrêts à proximité</h4>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-3 p-2 bg-sage/5 rounded-lg">
+                      <div className="flex flex-wrap gap-1">
+                        <span className="inline-flex items-center justify-center w-6 h-6 bg-blue-600 text-white text-[10px] font-bold rounded">5</span>
+                        <span className="inline-flex items-center justify-center w-6 h-6 bg-blue-600 text-white text-[10px] font-bold rounded">C1</span>
+                        <span className="inline-flex items-center justify-center w-6 h-6 bg-blue-600 text-white text-[10px] font-bold rounded">C6</span>
+                        <span className="inline-flex items-center justify-center w-7 h-6 bg-blue-600 text-white text-[10px] font-bold rounded">C20</span>
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-xs font-medium text-heading">Bus</p>
+                        <p className="text-[10px] text-body/70">Arrêt Basse Île</p>
+                      </div>
+                      <span className="text-xs font-semibold text-forest">5 min</span>
+                    </div>
+                    <div className="flex items-center gap-3 p-2 bg-sage/5 rounded-lg">
+                      <span className="inline-flex items-center justify-center w-6 h-6 bg-purple-600 text-white text-[10px] font-bold rounded">N</span>
+                      <div className="flex-1">
+                        <p className="text-xs font-medium text-heading">Navibus</p>
+                        <p className="text-[10px] text-body/70">Arrêt Trentemoult - Roquios</p>
+                      </div>
+                      <span className="text-xs font-semibold text-forest">2 min</span>
+                    </div>
+                    <div className="flex items-center gap-3 p-2 bg-sage/5 rounded-lg">
+                      <span className="inline-flex items-center justify-center w-6 h-6 bg-green-600 text-white text-[10px] font-bold rounded">2/3</span>
+                      <div className="flex-1">
+                        <p className="text-xs font-medium text-heading">Tramway</p>
+                        <p className="text-[10px] text-body/70">Arrêt Vincent Gâche</p>
+                      </div>
+                      <span className="text-xs font-semibold text-forest">22 min</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Itinéraires */}
+                <div>
+                  <h4 className="text-xs font-semibold text-forest uppercase tracking-wide mb-2">Itinéraires</h4>
+                  <div className="space-y-2">
+                    {/* Depuis Gare Sud */}
+                    <div className="relative overflow-hidden rounded-lg border border-sage/20 bg-gradient-to-br from-white to-sage/5">
+                      <div className="absolute top-0 left-0 w-1 h-full bg-forest"></div>
+                      <div className="p-2.5 pl-4">
+                        <div className="flex items-center gap-2 mb-1.5">
+                          <div className="flex-1">
+                            <p className="text-xs font-semibold text-heading">Depuis Gare Sud de Nantes</p>
+                          </div>
+                          <span className="text-xs font-bold text-forest">~15 min</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <span className="inline-flex items-center justify-center w-5 h-5 bg-blue-600 text-white text-[10px] font-bold rounded">5</span>
+                          <span className="text-[10px] text-body/70">Busway direction Hangar à Bananes</span>
+                          <svg className="w-2.5 h-2.5 text-body/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </svg>
+                          <span className="text-[10px] font-medium text-heading">Basse Île</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Depuis Aéroport */}
+                    <div className="relative overflow-hidden rounded-lg border border-sage/20 bg-gradient-to-br from-white to-sage/5">
+                      <div className="absolute top-0 left-0 w-1 h-full bg-forest"></div>
+                      <div className="p-2.5 pl-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className="flex-1">
+                            <p className="text-xs font-semibold text-heading">Depuis Aéroport Nantes Atlantique</p>
+                          </div>
+                        </div>
+                        <div className="space-y-1.5">
+                          {/* Option rapide */}
+                          <div className="flex items-center gap-2 p-1.5 bg-forest/5 rounded border border-forest/10">
+                            <span className="px-1.5 py-0.5 bg-forest text-white text-[8px] font-bold rounded">RAPIDE</span>
+                            <div className="flex flex-wrap items-center gap-1 flex-1">
+                              <span className="text-[10px] text-body/70">Navette</span>
+                              <svg className="w-2 h-2 text-body/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
+                              <span className="text-[10px] text-body/70">Gare</span>
+                              <svg className="w-2 h-2 text-body/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
+                              <span className="inline-flex items-center justify-center w-4 h-4 bg-blue-600 text-white text-[8px] font-bold rounded">5</span>
+                              <svg className="w-2 h-2 text-body/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
+                              <span className="text-[10px] font-medium">Basse Île</span>
+                            </div>
+                            <div className="text-right">
+                              <span className="text-[10px] font-bold text-forest">~35 min</span>
+                              <p className="text-[8px] text-body/50">10€</p>
+                            </div>
+                          </div>
+                          {/* Option éco */}
+                          <div className="flex items-center gap-2 p-1.5 bg-sage/5 rounded border border-sage/20">
+                            <span className="px-1.5 py-0.5 bg-sage text-forest text-[8px] font-bold rounded">ÉCO</span>
+                            <div className="flex flex-wrap items-center gap-1 flex-1">
+                              <span className="inline-flex items-center justify-center w-4 h-4 bg-blue-600 text-white text-[8px] font-bold rounded">48</span>
+                              <svg className="w-2 h-2 text-body/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
+                              <span className="inline-flex items-center justify-center w-4 h-4 bg-green-600 text-white text-[8px] font-bold rounded">3</span>
+                              <svg className="w-2 h-2 text-body/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
+                              <span className="inline-flex items-center justify-center w-4 h-4 bg-blue-600 text-white text-[8px] font-bold rounded">C1</span>
+                              <svg className="w-2 h-2 text-body/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
+                              <span className="text-[10px] font-medium">Basse Île</span>
+                            </div>
+                            <div className="text-right">
+                              <span className="text-[10px] font-bold text-forest">~45 min</span>
+                              <p className="text-[8px] text-body/50">1,70€</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </Accordion>
 
@@ -323,14 +401,56 @@ export default function InfosPratiquesPage() {
                 </svg>
               }
             >
-              <div className="space-y-2">
-                <div className="flex items-center justify-between p-2 bg-sage/5 rounded-lg">
-                  <span className="font-medium">Parking Médiathèque</span>
-                  <span className="text-sm text-body/70">200m</span>
+              <div className="space-y-4">
+                {/* Parking gratuit */}
+                <div>
+                  <h4 className="text-xs font-semibold text-forest uppercase tracking-wide mb-2">Parking gratuit</h4>
+                  <div className="flex items-center gap-3 p-2 bg-green-50 border border-green-200 rounded-lg">
+                    <span className="inline-flex items-center justify-center w-6 h-6 bg-green-600 text-white text-[10px] font-bold rounded">P</span>
+                    <div className="flex-1">
+                      <p className="text-xs font-medium text-heading">Parking L&apos;Agronaute</p>
+                      <p className="text-[10px] text-green-700">Places disponibles sur le site</p>
+                    </div>
+                    <span className="text-xs font-semibold text-green-600">Sur place</span>
+                  </div>
                 </div>
-                <div className="flex items-center justify-between p-2 bg-sage/5 rounded-lg">
-                  <span className="font-medium">Parking Commerce</span>
-                  <span className="text-sm text-body/70">500m</span>
+
+                {/* Parkings payants */}
+                <div>
+                  <h4 className="text-xs font-semibold text-forest uppercase tracking-wide mb-2">Parkings à proximité</h4>
+                  <div className="space-y-2">
+                    {/* Zone jaune */}
+                    <div className="relative overflow-hidden rounded-lg border border-sage/20 bg-gradient-to-br from-white to-sage/5">
+                      <div className="absolute top-0 left-0 w-1 h-full bg-amber-500"></div>
+                      <div className="p-2.5 pl-4">
+                        <div className="flex items-center gap-2 mb-1.5">
+                          <div className="flex-1">
+                            <p className="text-xs font-semibold text-heading">Stationnement voirie - Zone jaune</p>
+                          </div>
+                          <span className="text-[10px] text-body/60">Île de Nantes</span>
+                        </div>
+                        <div className="flex flex-wrap gap-x-3 gap-y-1 text-[10px]">
+                          <span className="text-body/70"><span className="font-medium">Horaires :</span> 9h-12h / 14h-19h (lun-sam)</span>
+                          <span className="text-body/70"><span className="font-medium">Tarif :</span> 0,30€/15min</span>
+                          <span className="text-green-600"><span className="font-medium">Gratuit :</span> 12h-14h, soirs, dim.</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Hangar à Bananes */}
+                    <div className="relative overflow-hidden rounded-lg border border-sage/20 bg-gradient-to-br from-white to-sage/5">
+                      <div className="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
+                      <div className="p-2.5 pl-4">
+                        <div className="flex items-center gap-2">
+                          <div className="flex-1">
+                            <p className="text-xs font-semibold text-heading">Parking Hangar à Bananes</p>
+                            <p className="text-[10px] text-body/70"><span className="font-medium">Tarif :</span> ~2€/heure</p>
+                          </div>
+                          <span className="text-xs font-semibold text-forest">10 min</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </Accordion>
