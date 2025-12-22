@@ -477,8 +477,8 @@
   "auth": {
     "login": {
       "title": "Iniciar sesión",
-      "subtitle": "Accede a tu espacio profesional",
-      "proSpace": "Espacio Pro",
+      "subtitle": "Accede a tu espacio personal",
+      "proSpace": "Mi cuenta",
       "email": "Email",
       "emailPlaceholder": "tu@email.com",
       "password": "Contraseña",

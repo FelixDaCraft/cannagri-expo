@@ -471,8 +471,8 @@
   "auth": {
     "login": {
       "title": "Accedi",
-      "subtitle": "Accedi al tuo spazio professionale",
-      "proSpace": "Area Pro",
+      "subtitle": "Accedi al tuo spazio personale",
+      "proSpace": "Il mio account",
       "email": "Email",
       "emailPlaceholder": "tua@email.it",
       "password": "Password",
