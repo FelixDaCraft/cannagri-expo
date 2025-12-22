@@ -471,8 +471,8 @@
   "auth": {
     "login": {
       "title": "Connexion",
-      "subtitle": "Accédez à votre espace professionnel",
-      "proSpace": "Espace Pro",
+      "subtitle": "Accédez à votre espace personnel",
+      "proSpace": "Mon compte",
       "email": "Email",
       "emailPlaceholder": "votre@email.com",
       "password": "Mot de passe",
