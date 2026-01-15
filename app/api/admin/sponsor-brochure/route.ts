@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { writeFile, unlink, stat } from 'fs/promises'
+import { writeFile, unlink, stat, mkdir } from 'fs/promises'
 import path from 'path'
 import { checkAdminAuth, unauthorizedResponse } from '@/lib/admin-auth'
 
-const BROCHURE_PATH = path.join(process.cwd(), 'public', 'docs', 'plaquette-sponsoring.pdf')
+const DOCS_DIR = path.join(process.cwd(), 'public', 'docs')
+const BROCHURE_PATH = path.join(DOCS_DIR, 'plaquette-sponsoring.pdf')
 const BROCHURE_PUBLIC_URL = '/docs/plaquette-sponsoring.pdf'
 
 // GET /api/admin/sponsor-brochure - Check if brochure exists and get info
@@ -79,6 +80,9 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       )
     }
+
+    // Ensure the docs directory exists
+    await mkdir(DOCS_DIR, { recursive: true })
 
     // Delete existing file if it exists
     try {
