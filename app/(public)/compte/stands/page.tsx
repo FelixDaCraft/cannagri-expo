@@ -143,7 +143,7 @@ export default function MesStandsPage() {
               <p className="text-body/70 mb-6">
                 {t('stands.noStandsDescription')}
               </p>
-              <Link href="/espace-pro/stands">
+              <Link href="/pro/plan">
                 <Button>{t('stands.bookStand')}</Button>
               </Link>
             </CardContent>
@@ -244,7 +244,7 @@ export default function MesStandsPage() {
                       {t('stands.totalSurface')}: {stands.reduce((acc, s) => acc + s.surfaceM2, 0)} m²
                     </p>
                   </div>
-                  <Link href="/espace-pro/stands">
+                  <Link href="/pro/plan">
                     <Button variant="outline">
                       {t('stands.bookAnotherStand')}
                     </Button>
