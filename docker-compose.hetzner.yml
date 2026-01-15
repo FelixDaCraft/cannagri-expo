@@ -1,5 +1,5 @@
 # =============================================================================
-# Docker Compose for Hetzner - Production + Development
+# Docker Compose for Hetzner - Production Only
 # Includes Traefik for automatic SSL certificates via Let's Encrypt
 # =============================================================================
 
@@ -32,7 +32,7 @@ services:
       - cannagri-network
 
   # ---------------------------------------------------------------------------
-  # Production - cannagri-expo.eu
+  # Production - cannagri-expo.eu (canonical domain)
   # ---------------------------------------------------------------------------
   app:
     image: ghcr.io/felixdacraft/cannagri-expo:latest
@@ -46,30 +46,19 @@ services:
       - cannagri-network
     labels:
       - "traefik.enable=true"
+      # Main production routes
       - "traefik.http.routers.app.rule=Host(`cannagri-expo.eu`) || Host(`www.cannagri-expo.eu`)"
       - "traefik.http.routers.app.entrypoints=websecure"
       - "traefik.http.routers.app.tls.certresolver=letsencrypt"
       - "traefik.http.services.app.loadbalancer.server.port=3000"
-
-  # ---------------------------------------------------------------------------
-  # Development - dev.cannagri-expo.eu
-  # ---------------------------------------------------------------------------
-  app-dev:
-    image: ghcr.io/felixdacraft/cannagri-expo:dev
-    container_name: cannagri-app-dev
-    restart: always
-    env_file:
-      - .env.dev
-    volumes:
-      - /opt/cannagri-expo/images/gallery:/app/public/images/gallery:ro
-    networks:
-      - cannagri-network
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.app-dev.rule=Host(`dev.cannagri-expo.eu`)"
-      - "traefik.http.routers.app-dev.entrypoints=websecure"
-      - "traefik.http.routers.app-dev.tls.certresolver=letsencrypt"
-      - "traefik.http.services.app-dev.loadbalancer.server.port=3000"
+      # Redirect .com to .eu
+      - "traefik.http.routers.app-com-redirect.rule=Host(`cannagri-expo.com`) || Host(`www.cannagri-expo.com`)"
+      - "traefik.http.routers.app-com-redirect.entrypoints=websecure"
+      - "traefik.http.routers.app-com-redirect.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.app-com-redirect.middlewares=redirect-com-to-eu"
+      - "traefik.http.middlewares.redirect-com-to-eu.redirectregex.regex=^https://(www.)?cannagri-expo.com(.*)"
+      - "traefik.http.middlewares.redirect-com-to-eu.redirectregex.replacement=https://cannagri-expo.eu$${2}"
+      - "traefik.http.middlewares.redirect-com-to-eu.redirectregex.permanent=true"
 
 volumes:
   letsencrypt:

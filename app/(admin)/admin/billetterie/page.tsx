@@ -1,43 +1,25 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { DataTable } from '@/components/admin'
 import { Badge, Button, Card, CardContent } from '@/components/ui'
 import { formatPrice, formatDate } from '@/lib/utils'
 
-// Mock data
-const mockTickets = [
-  {
-    id: '1',
-    customerName: 'Jean Dupont',
-    customerEmail: 'jean@example.com',
-    ticketType: 'STANDARD',
-    ticketPrice: 15,
-    status: 'PAID',
-    qrCodeData: 'CANNAGRI-123-456',
-    createdAt: '2024-12-05T10:30:00Z',
-  },
-  {
-    id: '2',
-    customerName: 'Marie Martin',
-    customerEmail: 'marie@example.com',
-    ticketType: 'FLEX',
-    ticketPrice: 20,
-    status: 'PAID',
-    qrCodeData: 'CANNAGRI-789-012',
-    createdAt: '2024-12-04T14:20:00Z',
-  },
-  {
-    id: '3',
-    customerName: 'Pierre Durand',
-    customerEmail: 'pierre@example.com',
-    ticketType: 'STANDARD',
-    ticketPrice: 15,
-    status: 'USED',
-    qrCodeData: 'CANNAGRI-345-678',
-    createdAt: '2024-12-03T09:15:00Z',
-  },
-]
+interface Ticket {
+  id: string
+  customerName: string
+  customerEmail: string
+  ticketType: 'STANDARD' | 'FLEX'
+  ticketPrice: number
+  status: 'PENDING' | 'PAID' | 'USED' | 'CANCELLED' | 'EXPIRED'
+  qrCodeData: string
+  createdAt: string
+  scannedAt?: string | null
+  order?: {
+    orderNumber: string
+    status: string
+  } | null
+}
 
 const ticketTypeLabels: Record<string, string> = {
   STANDARD: 'Standard',
@@ -56,7 +38,7 @@ const columns = [
     key: 'customerName',
     label: 'Client',
     sortable: true,
-    render: (ticket: typeof mockTickets[0]) => (
+    render: (ticket: Ticket) => (
       <div>
         <p className="font-medium">{ticket.customerName}</p>
         <p className="text-xs text-gray-500">{ticket.customerEmail}</p>
@@ -66,7 +48,7 @@ const columns = [
   {
     key: 'ticketType',
     label: 'Type',
-    render: (ticket: typeof mockTickets[0]) => (
+    render: (ticket: Ticket) => (
       <Badge
         variant={ticket.ticketType === 'FLEX' ? 'terracotta' : 'sage'}
       >
@@ -77,12 +59,12 @@ const columns = [
   {
     key: 'ticketPrice',
     label: 'Prix',
-    render: (ticket: typeof mockTickets[0]) => formatPrice(ticket.ticketPrice),
+    render: (ticket: Ticket) => formatPrice(ticket.ticketPrice),
   },
   {
     key: 'status',
     label: 'Statut',
-    render: (ticket: typeof mockTickets[0]) => {
+    render: (ticket: Ticket) => {
       const config = statusConfig[ticket.status] || { label: ticket.status, variant: 'default' as const }
       return <Badge variant={config.variant}>{config.label}</Badge>
     },
@@ -91,12 +73,33 @@ const columns = [
     key: 'createdAt',
     label: 'Date',
     sortable: true,
-    render: (ticket: typeof mockTickets[0]) => formatDate(ticket.createdAt),
+    render: (ticket: Ticket) => formatDate(ticket.createdAt),
   },
 ]
 
 export default function BilletteriePage() {
-  const [tickets] = useState(mockTickets)
+  const [tickets, setTickets] = useState<Ticket[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    async function fetchTickets() {
+      try {
+        setLoading(true)
+        const response = await fetch('/api/tickets?limit=100')
+        if (!response.ok) {
+          throw new Error('Erreur lors du chargement des billets')
+        }
+        const result = await response.json()
+        setTickets(result.data || [])
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Erreur inconnue')
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchTickets()
+  }, [])
 
   const stats = {
     total: tickets.length,
@@ -127,6 +130,28 @@ export default function BilletteriePage() {
     a.href = url
     a.download = 'billets.csv'
     a.click()
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-forest mx-auto mb-4"></div>
+          <p className="text-gray-600">Chargement des billets...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center text-red-600">
+          <p className="text-lg font-medium">Erreur</p>
+          <p>{error}</p>
+        </div>
+      </div>
+    )
   }
 
   return (
