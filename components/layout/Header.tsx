@@ -138,7 +138,7 @@ export function Header() {
               {filteredNavigation.map((item) => (
                 <div
                   key={item.label}
-                  className="relative"
+                  className="relative group"
                   onMouseEnter={() => item.children && setOpenDropdown(item.label)}
                   onMouseLeave={() => setOpenDropdown(null)}
                 >
@@ -152,7 +152,10 @@ export function Header() {
                     {item.label}
                     {item.children && (
                       <svg
-                        className="w-3 h-3 opacity-70"
+                        className={cn(
+                          "w-3 h-3 opacity-70 transition-transform duration-200",
+                          openDropdown === item.label && "rotate-180"
+                        )}
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -162,18 +165,22 @@ export function Header() {
                     )}
                   </Link>
 
-                  {/* Dropdown */}
+                  {/* Dropdown with invisible bridge to prevent hover gap issue */}
                   {item.children && openDropdown === item.label && (
-                    <div className="absolute top-full left-0 mt-1 bg-white rounded-lg shadow-lg py-2 min-w-[200px] z-50">
-                      {item.children.map((child) => (
-                        <Link
-                          key={child.label}
-                          href={child.href}
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-cream hover:text-forest transition-colors"
-                        >
-                          {child.label}
-                        </Link>
-                      ))}
+                    <div className="absolute top-full left-0 pt-2 z-50">
+                      {/* Invisible bridge area */}
+                      <div className="absolute -top-2 left-0 right-0 h-2" />
+                      <div className="bg-white rounded-lg shadow-lg py-2 min-w-[200px]">
+                        {item.children.map((child) => (
+                          <Link
+                            key={child.label}
+                            href={child.href}
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-cream hover:text-forest transition-colors"
+                          >
+                            {child.label}
+                          </Link>
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>
@@ -213,14 +220,20 @@ export function Header() {
                   <span className="text-white text-sm font-medium max-w-[120px] truncate">
                     {session.user.name || session.user.email?.split('@')[0]}
                   </span>
-                  <svg className="w-4 h-4 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className={cn(
+                    "w-4 h-4 text-white/70 transition-transform duration-200",
+                    userMenuOpen && "rotate-180"
+                  )} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </button>
 
-                {/* Dropdown menu */}
+                {/* Dropdown menu with invisible bridge */}
                 {userMenuOpen && (
-                  <div className="absolute top-full right-0 mt-1 bg-white rounded-lg shadow-lg py-2 min-w-[200px] z-50">
+                  <div className="absolute top-full right-0 pt-2 z-50">
+                    {/* Invisible bridge area */}
+                    <div className="absolute -top-2 left-0 right-0 h-2" />
+                    <div className="bg-white rounded-lg shadow-lg py-2 min-w-[200px]">
                     <div className="px-4 py-2 border-b border-gray-100">
                       <p className="font-medium text-gray-900 truncate">{session.user.name || t('user')}</p>
                       <p className="text-sm text-gray-500 truncate">{session.user.email}</p>
@@ -284,6 +297,7 @@ export function Header() {
                       </svg>
                       {t('logout')}
                     </button>
+                    </div>
                   </div>
                 )}
               </div>
