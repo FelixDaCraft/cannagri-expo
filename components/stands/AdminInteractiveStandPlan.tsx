@@ -20,6 +20,8 @@ export interface AdminStand {
   y?: number
   width?: number
   height?: number
+  row: number
+  col: number
   hasFurniture: boolean
   hasElectricity: boolean
   furniturePrice: number
@@ -106,11 +108,13 @@ export function AdminInteractiveStandPlan({
   const [statusFilter, setStatusFilter] = useState<string>('all')
   const [quickEditMode, setQuickEditMode] = useState(false)
 
-  // Map stands with positions
+  // Map stands with positions - use row/col from database, fallback to hardcoded positions
   const standsWithPositions = useMemo((): StandWithPosition[] => {
     return stands.map(stand => ({
       ...stand,
-      position: defaultStandPositions[stand.number] || { gridColumn: 1, gridRow: 1 }
+      position: stand.row && stand.col
+        ? { gridColumn: stand.col, gridRow: stand.row }
+        : defaultStandPositions[stand.number] || { gridColumn: 1, gridRow: 1 }
     }))
   }, [stands])
 
