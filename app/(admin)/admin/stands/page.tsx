@@ -150,7 +150,7 @@ export default function StandsPage() {
   }
 
   const handleInitializeStands = async () => {
-    if (!confirm('Voulez-vous initialiser les 25 stands par défaut ? Les stands non vendus seront réinitialisés.')) {
+    if (!confirm('Voulez-vous initialiser les 40 stands par défaut ? Les stands non vendus seront réinitialisés.')) {
       return
     }
 
@@ -173,6 +173,35 @@ export default function StandsPage() {
       }
     } catch (error) {
       setMessage({ type: 'error', text: 'Erreur lors de l\'initialisation' })
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleAddMissingStands = async () => {
+    if (!confirm('Ajouter les nouveaux stands (26-40) autour de la zone Tables ? Les stands existants seront conservés.')) {
+      return
+    }
+
+    setSaving(true)
+    try {
+      const res = await fetch('/api/admin/stands', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'add_missing_stands',
+        })
+      })
+
+      const data = await res.json()
+      if (res.ok) {
+        setMessage({ type: 'success', text: data.message })
+        fetchStands()
+      } else {
+        setMessage({ type: 'error', text: data.error || 'Erreur lors de l\'ajout des stands' })
+      }
+    } catch (error) {
+      setMessage({ type: 'error', text: 'Erreur lors de l\'ajout des stands' })
     } finally {
       setSaving(false)
     }
@@ -222,6 +251,18 @@ export default function StandsPage() {
             Liste
           </Button>
           <Button
+            variant="primary"
+            size="sm"
+            onClick={handleAddMissingStands}
+            disabled={saving}
+            className="flex-1 sm:flex-none bg-forest hover:bg-forest/90"
+          >
+            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            Ajouter stands 26-40
+          </Button>
+          <Button
             variant="outline"
             size="sm"
             onClick={handleInitializeStands}
@@ -231,7 +272,7 @@ export default function StandsPage() {
             <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
             </svg>
-            Initialiser 25 stands
+            Réinitialiser tout
           </Button>
         </div>
       </div>
