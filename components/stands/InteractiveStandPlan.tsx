@@ -5,19 +5,13 @@ import { motion, AnimatePresence } from 'motion/react'
 import { Button } from '@/components/ui'
 
 // Types
-interface StandPosition {
-  gridColumn: number
-  gridRow: number
-  isVertical?: boolean
-}
-
-// Stands verticaux (basé sur la numérotation admin)
-const VERTICAL_STANDS = [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 28, 29, 30, 31]
-
 interface Stand {
   id: number
   name: string
-  position: StandPosition
+  x: number
+  y: number
+  width: number
+  height: number
   location: string
   surface: number
   price: number
@@ -31,36 +25,119 @@ interface Stand {
 
 interface Zone {
   id: string
-  type: string
   name: string
-  position: {
-    gridColumn: string
-    gridRow: string
-  }
-  style: string
-  clickable: boolean
-  icon?: {
-    type: string
-    direction: string
-  }
+  icon: string
+  x: number
+  y: number
+  width: number
+  height: number
+  bgColor: string
+  borderColor: string
 }
 
-interface PlanConfig {
-  stands: Stand[]
-  zones: Zone[]
-  grid: {
-    columns: number
-    rows: number
-  }
-  categories: Record<string, { name: string; description: string }>
-  statuses: Record<string, { label: string; color: string; canReserve: boolean }>
-  amenities: Record<string, { name: string; icon: string; included: boolean; price?: number }>
+// Plan dimensions
+const PLAN_WIDTH = 700
+const PLAN_HEIGHT = 550
+
+// Zones de la salle
+const zones: Zone[] = [
+  {
+    id: 'CONF',
+    name: 'Conferences',
+    icon: '🎤',
+    x: 10, y: 10, width: 100, height: 140,
+    bgColor: 'bg-blue-50/80',
+    borderColor: 'border-blue-200'
+  },
+  {
+    id: 'BAR',
+    name: 'Bar',
+    icon: '🍷',
+    x: 10, y: 200, width: 100, height: 120,
+    bgColor: 'bg-amber-50/80',
+    borderColor: 'border-amber-200'
+  },
+  {
+    id: 'TABLES',
+    name: 'Tables',
+    icon: '🪑',
+    x: 200, y: 220, width: 300, height: 120,
+    bgColor: 'bg-emerald-50/80',
+    borderColor: 'border-emerald-200'
+  },
+  {
+    id: 'ENTRY',
+    name: 'Entree',
+    icon: '🚪',
+    x: 10, y: 450, width: 100, height: 80,
+    bgColor: 'bg-purple-50/80',
+    borderColor: 'border-purple-200'
+  },
+]
+
+// Default stand positions (x, y, width, height)
+const defaultStandConfig: Record<number, { x: number; y: number; width: number; height: number }> = {
+  // === RANGEE DU HAUT (1-6) - horizontaux ===
+  1: { x: 200, y: 20, width: 70, height: 40 },
+  2: { x: 280, y: 20, width: 70, height: 40 },
+  3: { x: 360, y: 20, width: 70, height: 40 },
+  4: { x: 440, y: 20, width: 70, height: 40 },
+  5: { x: 520, y: 20, width: 70, height: 40 },
+  6: { x: 600, y: 20, width: 70, height: 40 },
+
+  // === PRES CONFERENCES (7-8) - VERTICAUX ===
+  7: { x: 130, y: 20, width: 40, height: 70 },
+  8: { x: 130, y: 100, width: 40, height: 70 },
+
+  // === COLONNE DE DROITE (9-16) - VERTICAUX ===
+  9: { x: 650, y: 70, width: 40, height: 70 },
+  10: { x: 650, y: 150, width: 40, height: 70 },
+  11: { x: 650, y: 230, width: 40, height: 70 },
+  12: { x: 650, y: 310, width: 40, height: 70 },
+  13: { x: 650, y: 390, width: 40, height: 70 },
+  14: { x: 650, y: 470, width: 40, height: 70 },
+  15: { x: 600, y: 350, width: 40, height: 70 },
+  16: { x: 600, y: 430, width: 40, height: 70 },
+
+  // === RANGEE DU BAS (17-22) - horizontaux ===
+  17: { x: 520, y: 500, width: 70, height: 40 },
+  18: { x: 440, y: 500, width: 70, height: 40 },
+  19: { x: 360, y: 500, width: 70, height: 40 },
+  20: { x: 280, y: 500, width: 70, height: 40 },
+  21: { x: 200, y: 500, width: 70, height: 40 },
+  22: { x: 130, y: 500, width: 70, height: 40 },
+
+  // === AU-DESSUS DES TABLES (23-27) - horizontaux ===
+  23: { x: 200, y: 170, width: 70, height: 40 },
+  24: { x: 280, y: 170, width: 70, height: 40 },
+  25: { x: 360, y: 170, width: 70, height: 40 },
+  26: { x: 440, y: 170, width: 70, height: 40 },
+  27: { x: 520, y: 170, width: 70, height: 40 },
+
+  // === GAUCHE DES TABLES (28-29) - VERTICAUX ===
+  28: { x: 130, y: 220, width: 40, height: 70 },
+  29: { x: 130, y: 300, width: 40, height: 70 },
+
+  // === DROITE DES TABLES (30-31) - VERTICAUX ===
+  30: { x: 530, y: 220, width: 40, height: 70 },
+  31: { x: 530, y: 300, width: 40, height: 70 },
+
+  // === EN-DESSOUS DES TABLES (32-36) - horizontaux ===
+  32: { x: 200, y: 350, width: 70, height: 40 },
+  33: { x: 280, y: 350, width: 70, height: 40 },
+  34: { x: 360, y: 350, width: 70, height: 40 },
+  35: { x: 440, y: 350, width: 70, height: 40 },
+  36: { x: 520, y: 350, width: 70, height: 40 },
 }
 
 // Database stand type
 interface DBStand {
   id: string
   code: string
+  x?: number
+  y?: number
+  width?: number
+  height?: number
   row: number
   col: number
   surfaceM2: number
@@ -92,15 +169,21 @@ function convertDBStandToUIStand(dbStand: DBStand): Stand {
   if (dbStand.hasFurniture) amenities.push('furniture')
   const standNumber = parseInt(dbStand.code) || 0
 
+  // Use DB position if available, otherwise use default
+  const defaultPos = defaultStandConfig[standNumber] || { x: 0, y: 0, width: 70, height: 40 }
+  const x = dbStand.x ?? defaultPos.x
+  const y = dbStand.y ?? defaultPos.y
+  const width = dbStand.width ?? defaultPos.width
+  const height = dbStand.height ?? defaultPos.height
+
   return {
     id: standNumber,
     name: `Stand ${dbStand.code}`,
-    position: {
-      gridColumn: dbStand.col,
-      gridRow: dbStand.row,
-      isVertical: VERTICAL_STANDS.includes(standNumber),
-    },
-    location: getLocationFromPosition(dbStand.row, dbStand.col),
+    x,
+    y,
+    width,
+    height,
+    location: getLocationFromPosition(y),
     surface: dbStand.surfaceM2,
     price: dbStand.priceHT,
     currency: 'EUR',
@@ -113,38 +196,68 @@ function convertDBStandToUIStand(dbStand: DBStand): Stand {
 }
 
 // Get location description from position
-function getLocationFromPosition(row: number, col: number): string {
-  if (row === 1) return 'Allée Nord'
-  if (row === 9) return 'Allée Sud'
-  if (col === 9) return 'Allée Est'
-  if (col === 2) return 'Côté Conférences'
-  if (row >= 4 && row <= 7 && col >= 3 && col <= 7) return 'Zone Tables'
+function getLocationFromPosition(y: number): string {
+  if (y < 100) return 'Allee Nord'
+  if (y > 450) return 'Allee Sud'
+  if (y >= 200 && y <= 350) return 'Zone Tables'
   return 'Zone centrale'
 }
 
-// Default static config (zones and settings) - synchronized with admin
-const defaultConfig: Omit<PlanConfig, 'stands'> & { stands: Stand[] } = {
-  grid: { columns: 10, rows: 9 },
-  zones: [
-    { id: 'CONF', type: 'conference', name: 'Conférences', position: { gridColumn: '1', gridRow: '1 / 3' }, style: 'dashed', clickable: false },
-    { id: 'BAR', type: 'bar', name: 'Bar', position: { gridColumn: '1', gridRow: '4 / 6' }, style: 'dashed', clickable: false },
-    { id: 'TABLES', type: 'tables', name: 'Tables', position: { gridColumn: '3 / 8', gridRow: '5 / 7' }, style: 'dashed', clickable: false },
-    { id: 'ENTRY', type: 'entry', name: 'Entrée', position: { gridColumn: '1', gridRow: '8 / 10' }, style: 'dashed', clickable: false, icon: { type: 'arrow', direction: 'right' } },
-  ],
-  stands: [], // Will be loaded from API
+const statusConfig = {
+  available: {
+    label: 'Disponible',
+    bgClass: 'bg-gradient-to-br from-green-400 to-green-600',
+    hoverClass: 'hover:from-green-500 hover:to-green-700',
+    shadowClass: 'shadow-green-500/30',
+    glowClass: 'hover:shadow-green-400/50',
+    color: '#4CAF50'
+  },
+  reserved: {
+    label: 'Reserve',
+    bgClass: 'bg-gradient-to-br from-orange-400 to-orange-600',
+    hoverClass: 'hover:from-orange-500 hover:to-orange-700',
+    shadowClass: 'shadow-orange-500/30',
+    glowClass: 'hover:shadow-orange-400/50',
+    color: '#FFA726'
+  },
+  sold: {
+    label: 'Vendu',
+    bgClass: 'bg-gradient-to-br from-red-400 to-red-600',
+    hoverClass: 'hover:from-red-500 hover:to-red-700',
+    shadowClass: 'shadow-red-500/30',
+    glowClass: 'hover:shadow-red-400/50',
+    color: '#EF5350'
+  },
+  blocked: {
+    label: 'Indisponible',
+    bgClass: 'bg-gradient-to-br from-gray-400 to-gray-600',
+    hoverClass: '',
+    shadowClass: 'shadow-gray-500/30',
+    glowClass: '',
+    color: '#9E9E9E'
+  },
+}
+
+interface PlanConfig {
+  categories: Record<string, { name: string; description: string }>
+  statuses: Record<string, { label: string; color: string; canReserve: boolean }>
+  amenities: Record<string, { name: string; icon: string; included: boolean; price?: number }>
+}
+
+const defaultConfig: PlanConfig = {
   categories: {
-    standard: { name: 'Stand 4m²', description: 'Mobilier et électricité inclus' },
-    premium: { name: 'Stand 4m²', description: 'Mobilier et électricité inclus' },
-    corner: { name: 'Stand 4m²', description: 'Mobilier et électricité inclus' },
+    standard: { name: 'Stand 4m2', description: 'Mobilier et electricite inclus' },
+    premium: { name: 'Stand 4m2', description: 'Mobilier et electricite inclus' },
+    corner: { name: 'Stand 4m2', description: 'Mobilier et electricite inclus' },
   },
   statuses: {
     available: { label: 'Disponible', color: '#4CAF50', canReserve: true },
-    reserved: { label: 'Réservé', color: '#FFA726', canReserve: false },
+    reserved: { label: 'Reserve', color: '#FFA726', canReserve: false },
     sold: { label: 'Vendu', color: '#EF5350', canReserve: false },
     blocked: { label: 'Indisponible', color: '#9E9E9E', canReserve: false },
   },
   amenities: {
-    electricity: { name: 'Électricité', icon: '⚡', included: true },
+    electricity: { name: 'Electricite', icon: '⚡', included: true },
     wifi: { name: 'WiFi', icon: '📶', included: true },
     water: { name: 'Point d\'eau', icon: '💧', included: false, price: 50 },
     furniture: { name: 'Mobilier', icon: '🪑', included: true },
@@ -169,7 +282,7 @@ export function InteractiveStandPlan({
   const [selectedStand, setSelectedStand] = useState<Stand | null>(null)
   const [statusFilter, setStatusFilter] = useState<string>('all')
 
-  const config = { ...defaultConfig, ...customConfig, stands }
+  const config = { ...defaultConfig, ...customConfig }
 
   // Fetch stands from API
   const fetchStands = useCallback(async () => {
@@ -233,23 +346,6 @@ export function InteractiveStandPlan({
     }
   }
 
-  const getStatusColor = (status: string) => {
-    return config.statuses[status]?.color || '#9E9E9E'
-  }
-
-  const getStatusClass = (status: string) => {
-    switch (status) {
-      case 'available':
-        return 'bg-green-500 hover:bg-green-600 cursor-pointer'
-      case 'reserved':
-        return 'bg-orange-400 cursor-not-allowed'
-      case 'sold':
-        return 'bg-red-400 cursor-not-allowed'
-      default:
-        return 'bg-gray-400 cursor-not-allowed'
-    }
-  }
-
   if (isLoading) {
     return (
       <div className="w-full flex items-center justify-center py-12">
@@ -274,18 +370,18 @@ export function InteractiveStandPlan({
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-3 py-2 border border-forest/20 rounded-lg bg-white text-sm focus:ring-2 focus:ring-sage focus:border-transparent"
+            className="px-3 py-2 border border-forest/20 rounded-xl bg-white text-sm focus:ring-2 focus:ring-sage focus:border-transparent shadow-sm"
           >
             <option value="all">Tous les statuts</option>
             <option value="available">Disponibles</option>
-            <option value="reserved">Réservés</option>
+            <option value="reserved">Reserves</option>
             <option value="sold">Vendus</option>
           </select>
 
           {/* Refresh button */}
           <button
             onClick={fetchStands}
-            className="px-3 py-2 border border-forest/20 rounded-lg bg-white text-sm hover:bg-cream transition-colors"
+            className="px-3 py-2 border border-forest/20 rounded-xl bg-white text-sm hover:bg-cream transition-colors shadow-sm"
             title="Actualiser"
           >
             <svg className="w-5 h-5 text-forest" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -298,15 +394,15 @@ export function InteractiveStandPlan({
       {/* Legend */}
       <div className="mb-6 flex flex-wrap gap-4 text-sm">
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded bg-green-500" />
+          <div className="w-4 h-4 rounded-md bg-gradient-to-br from-green-400 to-green-600 shadow-sm" />
           <span className="text-forest/70">Disponible</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded bg-orange-400" />
-          <span className="text-forest/70">Réservé</span>
+          <div className="w-4 h-4 rounded-md bg-gradient-to-br from-orange-400 to-orange-600 shadow-sm" />
+          <span className="text-forest/70">Reserve</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded bg-red-400" />
+          <div className="w-4 h-4 rounded-md bg-gradient-to-br from-red-400 to-red-600 shadow-sm" />
           <span className="text-forest/70">Vendu</span>
         </div>
         <div className="flex items-center gap-2">
@@ -316,87 +412,98 @@ export function InteractiveStandPlan({
       </div>
 
       <div className={`flex flex-col xl:flex-row gap-6 ${!selectedStand ? 'justify-center' : ''}`}>
-        {/* Plan Grid */}
-        <div className={`bg-cream/50 rounded-2xl p-6 overflow-x-auto ${!selectedStand ? 'xl:max-w-4xl mx-auto' : 'flex-1'}`}>
+        {/* Plan Canvas */}
+        <div className={`bg-gradient-to-br from-slate-50 via-cream/30 to-slate-100 rounded-2xl p-6 overflow-x-auto shadow-inner ${!selectedStand ? 'xl:max-w-4xl mx-auto' : 'flex-1'}`}>
           <div
-            className="grid gap-2 min-w-[600px]"
-            style={{
-              gridTemplateColumns: `repeat(${config.grid.columns}, minmax(50px, 1fr))`,
-              gridTemplateRows: `repeat(${config.grid.rows}, 55px)`,
-            }}
+            className="relative mx-auto"
+            style={{ width: PLAN_WIDTH, height: PLAN_HEIGHT }}
           >
+            {/* Background grid pattern */}
+            <div
+              className="absolute inset-0 opacity-30"
+              style={{
+                backgroundImage: 'radial-gradient(circle, #cbd5e1 1px, transparent 1px)',
+                backgroundSize: '20px 20px'
+              }}
+            />
+
             {/* Zones */}
-            {config.zones.map((zone) => (
+            {zones.map((zone) => (
               <div
                 key={zone.id}
-                className="border-2 border-dashed border-forest/30 rounded-lg flex items-center justify-center bg-white/50"
+                className={`absolute rounded-xl border-2 border-dashed ${zone.bgColor} ${zone.borderColor} flex flex-col items-center justify-center backdrop-blur-sm transition-all hover:scale-[1.02]`}
                 style={{
-                  gridColumn: zone.position.gridColumn,
-                  gridRow: zone.position.gridRow,
+                  left: zone.x,
+                  top: zone.y,
+                  width: zone.width,
+                  height: zone.height,
                 }}
               >
-                <div className="text-center px-2">
-                  {zone.icon?.type === 'arrow' && (
-                    <span className="text-2xl block mb-1">→</span>
-                  )}
-                  <span className="text-xs font-medium text-forest/60">{zone.name}</span>
-                </div>
+                <span className="text-2xl mb-1">{zone.icon}</span>
+                <span className="text-xs font-medium text-gray-600">{zone.name}</span>
               </div>
             ))}
 
             {/* Stands */}
-            {filteredStands.map((stand) => {
-              const isVertical = stand.position.isVertical
-              return (
-                <motion.button
-                  key={stand.id}
-                  whileHover={{ scale: stand.status === 'available' ? 1.05 : 1 }}
-                  whileTap={{ scale: stand.status === 'available' ? 0.95 : 1 }}
-                  onClick={() => handleStandClick(stand)}
-                  className={`
-                    rounded-lg flex items-center justify-center font-bold text-white text-xs
-                    transition-all shadow-md
-                    ${getStatusClass(stand.status)}
-                    ${selectedStand?.id === stand.id ? 'ring-4 ring-forest ring-offset-2' : ''}
-                  `}
-                  style={{
-                    gridColumn: stand.position.gridColumn,
-                    gridRow: stand.position.gridRow,
-                    // Stands verticaux : plus hauts, stands horizontaux : plus larges
-                    width: isVertical ? '35px' : '100%',
-                    height: isVertical ? '100%' : '38px',
-                    justifySelf: isVertical ? 'center' : 'stretch',
-                    alignSelf: isVertical ? 'stretch' : 'center',
-                  }}
-                  title={`${stand.name} - ${config.statuses[stand.status]?.label}`}
-                >
-                  {stand.id}
-                </motion.button>
-              )
-            })}
+            <AnimatePresence>
+              {filteredStands.map((stand, index) => {
+                const standConfig = statusConfig[stand.status]
+
+                return (
+                  <motion.button
+                    key={stand.id}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    transition={{
+                      delay: index * 0.02,
+                      type: 'spring',
+                      stiffness: 300,
+                      damping: 25
+                    }}
+                    whileHover={stand.status === 'available' ? { scale: 1.1, zIndex: 20 } : { zIndex: 10 }}
+                    whileTap={stand.status === 'available' ? { scale: 0.95 } : {}}
+                    onClick={() => handleStandClick(stand)}
+                    className={`
+                      absolute rounded-xl flex flex-col items-center justify-center text-white font-bold
+                      shadow-lg transition-all duration-200
+                      ${standConfig.bgClass} ${standConfig.hoverClass}
+                      ${selectedStand?.id === stand.id ? 'ring-4 ring-forest ring-offset-2' : ''}
+                      ${stand.status === 'available' ? 'cursor-pointer' : 'cursor-not-allowed'}
+                      ${standConfig.shadowClass}
+                      hover:shadow-xl ${standConfig.glowClass}
+                    `}
+                    style={{
+                      left: stand.x,
+                      top: stand.y,
+                      width: stand.width,
+                      height: stand.height,
+                    }}
+                    title={`${stand.name} - ${standConfig.label}`}
+                  >
+                    <span className="font-bold text-sm drop-shadow-sm">{stand.id}</span>
+                  </motion.button>
+                )
+              })}
+            </AnimatePresence>
 
             {/* Hidden stands (filtered out) */}
             {stands
               .filter((s) => !filteredStands.includes(s))
-              .map((stand) => {
-                const isVertical = stand.position.isVertical
-                return (
-                  <div
-                    key={stand.id}
-                    className="rounded-lg flex items-center justify-center bg-gray-200 text-gray-400 text-xs opacity-30"
-                    style={{
-                      gridColumn: stand.position.gridColumn,
-                      gridRow: stand.position.gridRow,
-                      width: isVertical ? '35px' : '100%',
-                      height: isVertical ? '100%' : '38px',
-                      justifySelf: isVertical ? 'center' : 'stretch',
-                      alignSelf: isVertical ? 'stretch' : 'center',
-                    }}
-                  >
-                    {stand.id}
-                  </div>
-                )
-              })}
+              .map((stand) => (
+                <div
+                  key={stand.id}
+                  className="absolute rounded-xl flex items-center justify-center bg-gray-200/50 text-gray-400 text-xs border border-gray-300/50"
+                  style={{
+                    left: stand.x,
+                    top: stand.y,
+                    width: stand.width,
+                    height: stand.height,
+                  }}
+                >
+                  {stand.id}
+                </div>
+              ))}
           </div>
         </div>
 
@@ -408,7 +515,7 @@ export function InteractiveStandPlan({
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 20 }}
-              className="w-full xl:w-80 bg-white rounded-2xl shadow-lg p-6"
+              className="w-full xl:w-80 bg-white rounded-2xl shadow-xl p-6 border border-gray-100"
             >
               <div className="flex items-start justify-between mb-4">
                 <div>
@@ -429,20 +536,19 @@ export function InteractiveStandPlan({
 
               {/* Status Badge */}
               <div
-                className="inline-flex items-center px-3 py-1 rounded-full text-white text-sm font-medium mb-4"
-                style={{ backgroundColor: getStatusColor(selectedStand.status) }}
+                className={`inline-flex items-center px-3 py-1.5 rounded-full text-white text-sm font-semibold mb-4 ${statusConfig[selectedStand.status].bgClass}`}
               >
-                {config.statuses[selectedStand.status]?.label}
+                {statusConfig[selectedStand.status].label}
               </div>
 
               {/* Details */}
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between text-sm">
                   <span className="text-forest/60">Surface</span>
-                  <span className="font-medium text-forest">{selectedStand.surface} m²</span>
+                  <span className="font-medium text-forest">{selectedStand.surface} m2</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-forest/60">Catégorie</span>
+                  <span className="text-forest/60">Categorie</span>
                   <span className="font-medium text-forest">
                     {config.categories[selectedStand.category]?.name}
                   </span>
@@ -450,14 +556,14 @@ export function InteractiveStandPlan({
                 <div className="flex justify-between text-sm">
                   <span className="text-forest/60">Prix</span>
                   <span className="font-bold text-terracotta text-lg">
-                    {selectedStand.price} €
+                    {selectedStand.price} EUR
                   </span>
                 </div>
               </div>
 
               {/* Amenities */}
               <div className="mb-6">
-                <p className="text-sm text-forest/60 mb-2">Équipements inclus</p>
+                <p className="text-sm text-forest/60 mb-2">Equipements inclus</p>
                 <div className="flex flex-wrap gap-2">
                   {selectedStand.amenities.map((amenityKey) => {
                     const amenity = config.amenities[amenityKey]
@@ -476,8 +582,8 @@ export function InteractiveStandPlan({
 
               {/* Reserved By */}
               {selectedStand.reservedBy && (
-                <div className="mb-6 p-3 bg-cream rounded-lg">
-                  <p className="text-xs text-forest/60 mb-1">Réservé par</p>
+                <div className="mb-6 p-3 bg-cream rounded-xl">
+                  <p className="text-xs text-forest/60 mb-1">Reserve par</p>
                   <p className="font-medium text-forest">{selectedStand.reservedBy}</p>
                 </div>
               )}
@@ -488,12 +594,12 @@ export function InteractiveStandPlan({
                   onClick={handleReserve}
                   className="w-full bg-terracotta hover:bg-terracotta-600"
                 >
-                  Réserver ce stand
+                  Reserver ce stand
                 </Button>
               )}
 
               {selectedStand.status !== 'available' && (
-                <p className="text-center text-sm text-forest/50">
+                <p className="text-center text-sm text-forest/50 p-3 bg-gray-50 rounded-xl">
                   Ce stand n&apos;est plus disponible
                 </p>
               )}
@@ -504,19 +610,19 @@ export function InteractiveStandPlan({
 
       {/* Stats Summary */}
       <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl p-4 text-center">
+        <div className="bg-white rounded-xl p-4 text-center shadow-sm">
           <p className="text-2xl font-bold text-forest">{stats.total}</p>
           <p className="text-sm text-forest/60">Total stands</p>
         </div>
-        <div className="bg-green-50 rounded-xl p-4 text-center">
+        <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-4 text-center shadow-sm">
           <p className="text-2xl font-bold text-green-600">{stats.available}</p>
           <p className="text-sm text-green-600/70">Disponibles</p>
         </div>
-        <div className="bg-orange-50 rounded-xl p-4 text-center">
+        <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-4 text-center shadow-sm">
           <p className="text-2xl font-bold text-orange-500">{stats.reserved}</p>
-          <p className="text-sm text-orange-500/70">Réservés</p>
+          <p className="text-sm text-orange-500/70">Reserves</p>
         </div>
-        <div className="bg-red-50 rounded-xl p-4 text-center">
+        <div className="bg-gradient-to-br from-red-50 to-red-100 rounded-xl p-4 text-center shadow-sm">
           <p className="text-2xl font-bold text-red-500">{stats.sold}</p>
           <p className="text-sm text-red-500/70">Vendus</p>
         </div>
