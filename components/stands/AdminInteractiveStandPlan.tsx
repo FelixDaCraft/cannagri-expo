@@ -32,6 +32,7 @@ export interface AdminStand {
 interface StandPosition {
   gridColumn: number
   gridRow: number
+  rowSpan?: number // 2 pour stands verticaux
 }
 
 interface StandWithPosition extends AdminStand {
@@ -64,30 +65,29 @@ const zones: Zone[] = [
 ]
 
 // Default positions for stands - NUMÉROTATION SENS HORAIRE (36 stands)
+// rowSpan: 2 = stand vertical
 const defaultStandPositions: Record<number, StandPosition> = {
-  // === RANGÉE DU HAUT (1-7) - gauche à droite ===
+  // === RANGÉE DU HAUT (1-6) - horizontaux ===
   1: { gridColumn: 3, gridRow: 1 },
   2: { gridColumn: 4, gridRow: 1 },
   3: { gridColumn: 5, gridRow: 1 },
   4: { gridColumn: 6, gridRow: 1 },
   5: { gridColumn: 7, gridRow: 1 },
   6: { gridColumn: 8, gridRow: 1 },
-  7: { gridColumn: 9, gridRow: 1 },
 
-  // === PRÈS CONFÉRENCES (8-9) - haut en bas ===
-  8: { gridColumn: 2, gridRow: 2 },
-  9: { gridColumn: 2, gridRow: 3 },
+  // === PRÈS CONFÉRENCES (7-8) - VERTICAUX ===
+  7: { gridColumn: 2, gridRow: 1, rowSpan: 2 },
+  8: { gridColumn: 2, gridRow: 3, rowSpan: 2 },
 
-  // === COLONNE DE DROITE (10-16) - haut en bas ===
-  10: { gridColumn: 9, gridRow: 2 },
-  11: { gridColumn: 9, gridRow: 3 },
-  12: { gridColumn: 9, gridRow: 4 },
-  13: { gridColumn: 9, gridRow: 5 },
-  14: { gridColumn: 9, gridRow: 6 },
-  15: { gridColumn: 9, gridRow: 7 },
-  16: { gridColumn: 9, gridRow: 8 },
+  // === COLONNE DE DROITE (9-14) - VERTICAUX ===
+  9: { gridColumn: 9, gridRow: 1, rowSpan: 2 },
+  10: { gridColumn: 9, gridRow: 3, rowSpan: 2 },
+  11: { gridColumn: 9, gridRow: 5, rowSpan: 2 },
+  12: { gridColumn: 9, gridRow: 7, rowSpan: 2 },
+  13: { gridColumn: 9, gridRow: 9, rowSpan: 2 },
+  14: { gridColumn: 9, gridRow: 11, rowSpan: 2 },
 
-  // === RANGÉE DU BAS (17-22) - droite à gauche (sens horaire) ===
+  // === RANGÉE DU BAS (17-22) - horizontaux, droite à gauche ===
   17: { gridColumn: 8, gridRow: 13 },
   18: { gridColumn: 7, gridRow: 13 },
   19: { gridColumn: 6, gridRow: 13 },
@@ -95,27 +95,27 @@ const defaultStandPositions: Record<number, StandPosition> = {
   21: { gridColumn: 4, gridRow: 13 },
   22: { gridColumn: 3, gridRow: 13 },
 
-  // === AU-DESSUS DES TABLES (23-27) - gauche à droite ===
+  // === AU-DESSUS DES TABLES (23-27) - horizontaux ===
   23: { gridColumn: 3, gridRow: 5 },
   24: { gridColumn: 4, gridRow: 5 },
   25: { gridColumn: 5, gridRow: 5 },
   26: { gridColumn: 6, gridRow: 5 },
   27: { gridColumn: 7, gridRow: 5 },
 
-  // === GAUCHE DES TABLES (28-29) - haut en bas ===
-  28: { gridColumn: 2, gridRow: 6 },
-  29: { gridColumn: 2, gridRow: 7 },
+  // === GAUCHE DES TABLES (28-29) - VERTICAUX ===
+  28: { gridColumn: 2, gridRow: 6, rowSpan: 2 },
+  29: { gridColumn: 2, gridRow: 8, rowSpan: 2 },
 
-  // === DROITE DES TABLES (30-31) - haut en bas ===
-  30: { gridColumn: 8, gridRow: 6 },
-  31: { gridColumn: 8, gridRow: 7 },
+  // === DROITE DES TABLES (30-31) - VERTICAUX ===
+  30: { gridColumn: 8, gridRow: 6, rowSpan: 2 },
+  31: { gridColumn: 8, gridRow: 8, rowSpan: 2 },
 
-  // === EN-DESSOUS DES TABLES (32-36) - gauche à droite ===
-  32: { gridColumn: 3, gridRow: 9 },
-  33: { gridColumn: 4, gridRow: 9 },
-  34: { gridColumn: 5, gridRow: 9 },
-  35: { gridColumn: 6, gridRow: 9 },
-  36: { gridColumn: 7, gridRow: 9 },
+  // === EN-DESSOUS DES TABLES (32-36) - horizontaux ===
+  32: { gridColumn: 3, gridRow: 10 },
+  33: { gridColumn: 4, gridRow: 10 },
+  34: { gridColumn: 5, gridRow: 10 },
+  35: { gridColumn: 6, gridRow: 10 },
+  36: { gridColumn: 7, gridRow: 10 },
 }
 
 const statusConfig = {
@@ -275,10 +275,13 @@ export function AdminInteractiveStandPlan({
             {filteredStands.map((stand) => {
               const pos = getStandPosition(stand)
               const config = statusConfig[stand.status]
+              // Déterminer si le stand est vertical (height > width ou rowSpan défini)
+              const isVertical = (stand.height && stand.width && stand.height > stand.width) || pos.rowSpan === 2
+              const rowSpan = pos.rowSpan || (isVertical ? 2 : 1)
               return (
                 <motion.button
                   key={stand.id}
-                  whileHover={{ scale: 1.08 }}
+                  whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => handleStandClick(stand)}
                   className={`
@@ -289,7 +292,7 @@ export function AdminInteractiveStandPlan({
                   `}
                   style={{
                     gridColumn: pos.gridColumn,
-                    gridRow: pos.gridRow,
+                    gridRow: rowSpan > 1 ? `${pos.gridRow} / span ${rowSpan}` : pos.gridRow,
                   }}
                   title={`Stand ${stand.number} - ${config.label}${stand.exhibitorName ? ` - ${stand.exhibitorName}` : ''}`}
                 >
@@ -308,13 +311,15 @@ export function AdminInteractiveStandPlan({
               .filter((s) => !filteredStands.includes(s))
               .map((stand) => {
                 const pos = getStandPosition(stand)
+                const isVertical = (stand.height && stand.width && stand.height > stand.width) || pos.rowSpan === 2
+                const rowSpan = pos.rowSpan || (isVertical ? 2 : 1)
                 return (
                   <div
                     key={stand.id}
                     className="rounded-lg flex items-center justify-center bg-gray-200 text-gray-400 text-xs opacity-40"
                     style={{
                       gridColumn: pos.gridColumn,
-                      gridRow: pos.gridRow,
+                      gridRow: rowSpan > 1 ? `${pos.gridRow} / span ${rowSpan}` : pos.gridRow,
                     }}
                   >
                     {stand.number}
