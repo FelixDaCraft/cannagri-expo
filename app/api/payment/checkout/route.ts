@@ -130,8 +130,9 @@ export async function POST(request: NextRequest) {
       }
 
       // Calculate total (simple price without options)
+      // Association loi 1901 non assujettie à la TVA - pas de majoration
       amountHT = stand.priceHT
-      amount = amountHT * 1.2 // TVA 20%
+      amount = amountHT
 
       // Reserve the stand temporarily (30 minutes for checkout)
       const reservedUntil = new Date(Date.now() + 30 * 60 * 1000)
