@@ -142,17 +142,17 @@ jobs:
             # Determine which image to pull based on branch
             if [[ "${{ github.ref_name }}" == "Prod" ]]; then
               IMAGE_TAG="latest"
-              CONTAINER="cannagri-app"
+              SERVICE="app"
             else
               IMAGE_TAG="dev"
-              CONTAINER="cannagri-app-dev"
+              SERVICE="app-dev"
             fi
 
             # Pull the image
             docker pull ghcr.io/felixdacraft/cannagri-expo:${IMAGE_TAG}
 
-            # Restart only the relevant container (keep the other one running)
-            docker compose up -d --no-deps ${CONTAINER}
+            # Restart the service (using service name, not container name)
+            docker compose up -d --no-deps --force-recreate ${SERVICE}
 
             # Clean up old images
             docker image prune -f
