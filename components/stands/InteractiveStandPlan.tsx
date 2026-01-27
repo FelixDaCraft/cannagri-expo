@@ -8,7 +8,11 @@ import { Button } from '@/components/ui'
 interface StandPosition {
   gridColumn: number
   gridRow: number
+  isVertical?: boolean
 }
+
+// Stands verticaux (basé sur la numérotation admin)
+const VERTICAL_STANDS = [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 28, 29, 30, 31]
 
 interface Stand {
   id: number
@@ -86,13 +90,15 @@ function convertDBStandToUIStand(dbStand: DBStand): Stand {
   const amenities: string[] = []
   if (dbStand.hasElectricity) amenities.push('electricity')
   if (dbStand.hasFurniture) amenities.push('furniture')
+  const standNumber = parseInt(dbStand.code) || 0
 
   return {
-    id: parseInt(dbStand.code) || 0,
+    id: standNumber,
     name: `Stand ${dbStand.code}`,
     position: {
       gridColumn: dbStand.col,
       gridRow: dbStand.row,
+      isVertical: VERTICAL_STANDS.includes(standNumber),
     },
     location: getLocationFromPosition(dbStand.row, dbStand.col),
     surface: dbStand.surfaceM2,
@@ -109,21 +115,21 @@ function convertDBStandToUIStand(dbStand: DBStand): Stand {
 // Get location description from position
 function getLocationFromPosition(row: number, col: number): string {
   if (row === 1) return 'Allée Nord'
-  if (row === 13) return 'Allée Sud'
+  if (row === 9) return 'Allée Sud'
   if (col === 9) return 'Allée Est'
   if (col === 2) return 'Côté Conférences'
-  if (row >= 5 && row <= 9 && col >= 3 && col <= 8) return 'Zone Tables'
+  if (row >= 4 && row <= 7 && col >= 3 && col <= 7) return 'Zone Tables'
   return 'Zone centrale'
 }
 
-// Default static config (zones and settings)
+// Default static config (zones and settings) - synchronized with admin
 const defaultConfig: Omit<PlanConfig, 'stands'> & { stands: Stand[] } = {
-  grid: { columns: 10, rows: 13 },
+  grid: { columns: 10, rows: 9 },
   zones: [
-    { id: 'CONF', type: 'conference', name: 'Conférences', position: { gridColumn: '1', gridRow: '1 / 5' }, style: 'dashed', clickable: false },
-    { id: 'BAR', type: 'bar', name: 'Bar', position: { gridColumn: '1', gridRow: '6 / 9' }, style: 'dashed', clickable: false },
-    { id: 'TABLES', type: 'tables', name: 'Tables', position: { gridColumn: '3 / 8', gridRow: '6 / 9' }, style: 'dashed', clickable: false },
-    { id: 'ENTRY', type: 'entry', name: 'Entrée', position: { gridColumn: '1', gridRow: '11 / 13' }, style: 'dashed', clickable: false, icon: { type: 'arrow', direction: 'right' } },
+    { id: 'CONF', type: 'conference', name: 'Conférences', position: { gridColumn: '1', gridRow: '1 / 3' }, style: 'dashed', clickable: false },
+    { id: 'BAR', type: 'bar', name: 'Bar', position: { gridColumn: '1', gridRow: '4 / 6' }, style: 'dashed', clickable: false },
+    { id: 'TABLES', type: 'tables', name: 'Tables', position: { gridColumn: '3 / 8', gridRow: '5 / 7' }, style: 'dashed', clickable: false },
+    { id: 'ENTRY', type: 'entry', name: 'Entrée', position: { gridColumn: '1', gridRow: '8 / 10' }, style: 'dashed', clickable: false, icon: { type: 'arrow', direction: 'right' } },
   ],
   stands: [], // Will be loaded from API
   categories: {
@@ -316,7 +322,7 @@ export function InteractiveStandPlan({
             className="grid gap-2 min-w-[600px]"
             style={{
               gridTemplateColumns: `repeat(${config.grid.columns}, minmax(50px, 1fr))`,
-              gridTemplateRows: `repeat(${config.grid.rows}, 50px)`,
+              gridTemplateRows: `repeat(${config.grid.rows}, 55px)`,
             }}
           >
             {/* Zones */}
@@ -339,43 +345,58 @@ export function InteractiveStandPlan({
             ))}
 
             {/* Stands */}
-            {filteredStands.map((stand) => (
-              <motion.button
-                key={stand.id}
-                whileHover={{ scale: stand.status === 'available' ? 1.05 : 1 }}
-                whileTap={{ scale: stand.status === 'available' ? 0.95 : 1 }}
-                onClick={() => handleStandClick(stand)}
-                className={`
-                  rounded-lg flex items-center justify-center font-bold text-white text-sm
-                  transition-all shadow-md
-                  ${getStatusClass(stand.status)}
-                  ${selectedStand?.id === stand.id ? 'ring-4 ring-forest ring-offset-2' : ''}
-                `}
-                style={{
-                  gridColumn: stand.position.gridColumn,
-                  gridRow: stand.position.gridRow,
-                }}
-                title={`${stand.name} - ${config.statuses[stand.status]?.label}`}
-              >
-                {stand.id}
-              </motion.button>
-            ))}
+            {filteredStands.map((stand) => {
+              const isVertical = stand.position.isVertical
+              return (
+                <motion.button
+                  key={stand.id}
+                  whileHover={{ scale: stand.status === 'available' ? 1.05 : 1 }}
+                  whileTap={{ scale: stand.status === 'available' ? 0.95 : 1 }}
+                  onClick={() => handleStandClick(stand)}
+                  className={`
+                    rounded-lg flex items-center justify-center font-bold text-white text-xs
+                    transition-all shadow-md
+                    ${getStatusClass(stand.status)}
+                    ${selectedStand?.id === stand.id ? 'ring-4 ring-forest ring-offset-2' : ''}
+                  `}
+                  style={{
+                    gridColumn: stand.position.gridColumn,
+                    gridRow: stand.position.gridRow,
+                    // Stands verticaux : plus hauts, stands horizontaux : plus larges
+                    width: isVertical ? '35px' : '100%',
+                    height: isVertical ? '100%' : '38px',
+                    justifySelf: isVertical ? 'center' : 'stretch',
+                    alignSelf: isVertical ? 'stretch' : 'center',
+                  }}
+                  title={`${stand.name} - ${config.statuses[stand.status]?.label}`}
+                >
+                  {stand.id}
+                </motion.button>
+              )
+            })}
 
             {/* Hidden stands (filtered out) */}
             {stands
               .filter((s) => !filteredStands.includes(s))
-              .map((stand) => (
-                <div
-                  key={stand.id}
-                  className="rounded-lg flex items-center justify-center bg-gray-200 text-gray-400 text-sm opacity-30"
-                  style={{
-                    gridColumn: stand.position.gridColumn,
-                    gridRow: stand.position.gridRow,
-                  }}
-                >
-                  {stand.id}
-                </div>
-              ))}
+              .map((stand) => {
+                const isVertical = stand.position.isVertical
+                return (
+                  <div
+                    key={stand.id}
+                    className="rounded-lg flex items-center justify-center bg-gray-200 text-gray-400 text-xs opacity-30"
+                    style={{
+                      gridColumn: stand.position.gridColumn,
+                      gridRow: stand.position.gridRow,
+                      width: isVertical ? '35px' : '100%',
+                      height: isVertical ? '100%' : '38px',
+                      justifySelf: isVertical ? 'center' : 'stretch',
+                      alignSelf: isVertical ? 'stretch' : 'center',
+                    }}
+                  >
+                    {stand.id}
+                  </div>
+                )
+              })}
           </div>
         </div>
 

@@ -350,6 +350,21 @@ export default function StandsPage() {
                 setMessage({ type: 'error', text: 'Erreur de mise à jour' })
               }
             }}
+            onPositionChange={async (standId, newRow, newCol) => {
+              try {
+                const res = await fetch('/api/admin/stands', {
+                  method: 'PUT',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ id: standId, row: newRow, col: newCol })
+                })
+                if (res.ok) {
+                  fetchStands()
+                  setMessage({ type: 'success', text: 'Position mise à jour' })
+                }
+              } catch {
+                setMessage({ type: 'error', text: 'Erreur de mise à jour de position' })
+              }
+            }}
           />
         </div>
       ) : (

@@ -19,13 +19,15 @@ const defaultStandsConfig = [
   { number: 7, surfaceM2: 4, price: 150, size: 'SMALL', x: 195, y: 30, width: 35, height: 55, row: 1, col: 2 },
   { number: 8, surfaceM2: 4, price: 150, size: 'SMALL', x: 195, y: 90, width: 35, height: 55, row: 2, col: 2 },
 
-  // === COLONNE DE DROITE (9-14) - VERTICAUX ===
+  // === COLONNE DE DROITE (9-16) - VERTICAUX ===
   { number: 9, surfaceM2: 4, price: 150, size: 'SMALL', x: 615, y: 30, width: 35, height: 55, row: 1, col: 9 },
   { number: 10, surfaceM2: 4, price: 150, size: 'SMALL', x: 615, y: 90, width: 35, height: 55, row: 2, col: 9 },
   { number: 11, surfaceM2: 4, price: 150, size: 'SMALL', x: 615, y: 150, width: 35, height: 55, row: 3, col: 9 },
   { number: 12, surfaceM2: 4, price: 150, size: 'SMALL', x: 615, y: 210, width: 35, height: 55, row: 4, col: 9 },
   { number: 13, surfaceM2: 4, price: 150, size: 'SMALL', x: 615, y: 270, width: 35, height: 55, row: 5, col: 9 },
   { number: 14, surfaceM2: 4, price: 150, size: 'SMALL', x: 615, y: 330, width: 35, height: 55, row: 6, col: 9 },
+  { number: 15, surfaceM2: 4, price: 150, size: 'SMALL', x: 615, y: 390, width: 35, height: 55, row: 7, col: 9 },
+  { number: 16, surfaceM2: 4, price: 150, size: 'SMALL', x: 615, y: 450, width: 35, height: 55, row: 8, col: 9 },
 
   // === RANGÉE DU BAS (17-22) - droite à gauche (horizontaux) ===
   { number: 17, surfaceM2: 4, price: 150, size: 'SMALL', x: 555, y: 490, width: 50, height: 50, row: 9, col: 8 },
@@ -239,6 +241,8 @@ export async function PUT(request: NextRequest) {
       y,
       width,
       height,
+      row,
+      col,
       hasFurniture,
       hasElectricity,
       furniturePrice,
@@ -327,6 +331,8 @@ export async function PUT(request: NextRequest) {
       if (y !== undefined) updateData.y = parseInt(y)
       if (width !== undefined) updateData.width = parseInt(width)
       if (height !== undefined) updateData.height = parseInt(height)
+      if (row !== undefined) updateData.row = parseInt(row)
+      if (col !== undefined) updateData.col = parseInt(col)
       if (hasFurniture !== undefined) updateData.hasFurniture = hasFurniture
       if (hasElectricity !== undefined) updateData.hasElectricity = hasElectricity
       if (furniturePrice !== undefined) updateData.furniturePrice = parseFloat(furniturePrice)

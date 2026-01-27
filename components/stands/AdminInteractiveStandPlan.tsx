@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { Button } from '@/components/ui'
 
@@ -53,6 +53,7 @@ interface AdminStandPlanProps {
   stands: AdminStand[]
   onStandClick?: (stand: AdminStand) => void
   onStatusChange?: (standId: string, newStatus: 'FREE' | 'RESERVED' | 'SOLD') => void
+  onPositionChange?: (standId: string, newRow: number, newCol: number) => void
   loading?: boolean
 }
 
@@ -124,15 +125,25 @@ const statusConfig = {
   SOLD: { label: 'Vendu', color: 'bg-red-400', hoverColor: 'hover:bg-red-500' },
 }
 
+// Grid configuration
+const GRID_COLS = 10
+const GRID_ROWS = 9
+const CELL_WIDTH = 57 // pixels (including gap)
+const CELL_HEIGHT = 57 // pixels (including gap)
+
 export function AdminInteractiveStandPlan({
   stands,
   onStandClick,
   onStatusChange,
+  onPositionChange,
   loading = false,
 }: AdminStandPlanProps) {
   const [selectedStand, setSelectedStand] = useState<StandWithPosition | null>(null)
   const [statusFilter, setStatusFilter] = useState<string>('all')
   const [quickEditMode, setQuickEditMode] = useState(false)
+  const [dragMode, setDragMode] = useState(false)
+  const [draggingStand, setDraggingStand] = useState<string | null>(null)
+  const gridRef = useRef<HTMLDivElement>(null)
 
   // Map stands with positions - use row/col from database, merge with default isVertical
   const standsWithPositions = useMemo((): StandWithPosition[] => {
@@ -184,6 +195,27 @@ export function AdminInteractiveStandPlan({
     return stand.position || defaultStandPositions[stand.number] || { gridColumn: 1, gridRow: 1 }
   }
 
+  // Handle drag end - calculate new grid position
+  const handleDragEnd = useCallback((stand: StandWithPosition, info: { point: { x: number; y: number } }) => {
+    if (!gridRef.current || !onPositionChange) return
+
+    const gridRect = gridRef.current.getBoundingClientRect()
+    const relativeX = info.point.x - gridRect.left
+    const relativeY = info.point.y - gridRect.top
+
+    // Calculate new grid position (1-indexed)
+    const newCol = Math.max(1, Math.min(GRID_COLS, Math.ceil(relativeX / CELL_WIDTH)))
+    const newRow = Math.max(1, Math.min(GRID_ROWS, Math.ceil(relativeY / CELL_HEIGHT)))
+
+    // Only update if position changed
+    const currentPos = getStandPosition(stand)
+    if (newCol !== currentPos.gridColumn || newRow !== currentPos.gridRow) {
+      onPositionChange(stand.id, newRow, newCol)
+    }
+
+    setDraggingStand(null)
+  }, [onPositionChange])
+
   if (loading) {
     return (
       <div className="flex justify-center items-center py-12">
@@ -210,21 +242,45 @@ export function AdminInteractiveStandPlan({
           </select>
         </div>
 
-        {/* Quick Edit Mode Toggle */}
-        <label className="flex items-center gap-2 cursor-pointer">
-          <input
-            type="checkbox"
-            checked={quickEditMode}
-            onChange={(e) => setQuickEditMode(e.target.checked)}
-            className="w-4 h-4 rounded border-gray-300 text-forest focus:ring-forest"
-          />
-          <span className="text-sm text-gray-700">Mode édition rapide</span>
-          {quickEditMode && (
-            <span className="text-xs text-orange-600 bg-orange-100 px-2 py-0.5 rounded-full">
-              Clic = changer statut
-            </span>
-          )}
-        </label>
+        <div className="flex flex-wrap gap-4">
+          {/* Drag Mode Toggle */}
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={dragMode}
+              onChange={(e) => {
+                setDragMode(e.target.checked)
+                if (e.target.checked) setQuickEditMode(false)
+              }}
+              className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            />
+            <span className="text-sm text-gray-700">Mode déplacement</span>
+            {dragMode && (
+              <span className="text-xs text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">
+                Glisser-déposer
+              </span>
+            )}
+          </label>
+
+          {/* Quick Edit Mode Toggle */}
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={quickEditMode}
+              onChange={(e) => {
+                setQuickEditMode(e.target.checked)
+                if (e.target.checked) setDragMode(false)
+              }}
+              className="w-4 h-4 rounded border-gray-300 text-forest focus:ring-forest"
+            />
+            <span className="text-sm text-gray-700">Mode édition rapide</span>
+            {quickEditMode && (
+              <span className="text-xs text-orange-600 bg-orange-100 px-2 py-0.5 rounded-full">
+                Clic = changer statut
+              </span>
+            )}
+          </label>
+        </div>
       </div>
 
       {/* Legend */}
@@ -251,7 +307,8 @@ export function AdminInteractiveStandPlan({
         {/* Plan Grid */}
         <div className="flex-1 bg-gray-50 rounded-xl p-4 overflow-x-auto">
           <div
-            className="grid gap-2 min-w-[550px]"
+            ref={gridRef}
+            className={`grid gap-2 min-w-[550px] ${dragMode ? 'relative' : ''}`}
             style={{
               gridTemplateColumns: 'repeat(10, minmax(50px, 1fr))',
               gridTemplateRows: 'repeat(9, 55px)',
@@ -280,17 +337,27 @@ export function AdminInteractiveStandPlan({
               const config = statusConfig[stand.status]
               // Stands verticaux : plus hauts que larges (même surface)
               const isVertical = pos.isVertical
+              const isDragging = draggingStand === stand.id
+
               return (
                 <motion.button
                   key={stand.id}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => handleStandClick(stand)}
+                  drag={dragMode}
+                  dragMomentum={false}
+                  dragElastic={0}
+                  onDragStart={() => setDraggingStand(stand.id)}
+                  onDragEnd={(_, info) => handleDragEnd(stand, info)}
+                  whileHover={!dragMode ? { scale: 1.05 } : {}}
+                  whileTap={!dragMode ? { scale: 0.95 } : {}}
+                  whileDrag={{ scale: 1.1, zIndex: 50 }}
+                  onClick={() => !dragMode && handleStandClick(stand)}
                   className={`
                     rounded-lg flex flex-col items-center justify-center text-white text-xs font-bold
-                    transition-all shadow-md cursor-pointer
+                    transition-shadow shadow-md
                     ${config.color} ${config.hoverColor}
                     ${selectedStand?.id === stand.id ? 'ring-4 ring-forest ring-offset-2' : ''}
+                    ${dragMode ? 'cursor-grab active:cursor-grabbing' : 'cursor-pointer'}
+                    ${isDragging ? 'shadow-xl z-50' : ''}
                   `}
                   style={{
                     gridColumn: pos.gridColumn,
@@ -301,7 +368,7 @@ export function AdminInteractiveStandPlan({
                     justifySelf: isVertical ? 'center' : 'stretch',
                     alignSelf: isVertical ? 'stretch' : 'center',
                   }}
-                  title={`Stand ${stand.number} - ${config.label}${stand.exhibitorName ? ` - ${stand.exhibitorName}` : ''}`}
+                  title={`Stand ${stand.number} - ${config.label}${stand.exhibitorName ? ` - ${stand.exhibitorName}` : ''}${dragMode ? ' (glisser pour déplacer)' : ''}`}
                 >
                   <span className="font-bold text-[10px]">{stand.number}</span>
                   {stand.exhibitorName && (
