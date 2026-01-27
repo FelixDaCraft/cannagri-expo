@@ -8,7 +8,10 @@ import { Modal, Button, Input, Badge } from '@/components/ui'
 interface Stand {
   id: number
   name: string
-  position: { gridColumn: number; gridRow: number }
+  x: number
+  y: number
+  width: number
+  height: number
   location: string
   surface: number
   price: number
