@@ -134,14 +134,17 @@ export function AdminInteractiveStandPlan({
   const [statusFilter, setStatusFilter] = useState<string>('all')
   const [quickEditMode, setQuickEditMode] = useState(false)
 
-  // Map stands with positions - use row/col from database, fallback to hardcoded positions
+  // Map stands with positions - use row/col from database, merge with default rowSpan
   const standsWithPositions = useMemo((): StandWithPosition[] => {
-    return stands.map(stand => ({
-      ...stand,
-      position: stand.row && stand.col
-        ? { gridColumn: stand.col, gridRow: stand.row }
-        : defaultStandPositions[stand.number] || { gridColumn: 1, gridRow: 1 }
-    }))
+    return stands.map(stand => {
+      const defaultPos = defaultStandPositions[stand.number]
+      return {
+        ...stand,
+        position: stand.row && stand.col
+          ? { gridColumn: stand.col, gridRow: stand.row, rowSpan: defaultPos?.rowSpan }
+          : defaultPos || { gridColumn: 1, gridRow: 1 }
+      }
+    })
   }, [stands])
 
   // Filter stands
