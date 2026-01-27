@@ -65,15 +65,18 @@ const zones: Zone[] = [
 
 // Default positions for stands if not from API
 const defaultStandPositions: Record<number, StandPosition> = {
+  // Stands à côté conférence (1-3)
   1: { gridColumn: 2, gridRow: 4 },
   2: { gridColumn: 2, gridRow: 3 },
   3: { gridColumn: 2, gridRow: 2 },
+  // Rangée du haut (4-9)
   4: { gridColumn: 3, gridRow: 1 },
   5: { gridColumn: 4, gridRow: 1 },
   6: { gridColumn: 5, gridRow: 1 },
   7: { gridColumn: 6, gridRow: 1 },
   8: { gridColumn: 7, gridRow: 1 },
   9: { gridColumn: 8, gridRow: 1 },
+  // Colonne de droite (10-19)
   10: { gridColumn: 10, gridRow: 2 },
   11: { gridColumn: 10, gridRow: 3 },
   12: { gridColumn: 10, gridRow: 4 },
@@ -84,12 +87,33 @@ const defaultStandPositions: Record<number, StandPosition> = {
   17: { gridColumn: 10, gridRow: 9 },
   18: { gridColumn: 10, gridRow: 10 },
   19: { gridColumn: 10, gridRow: 11 },
+  // Rangée du bas (20-25)
   20: { gridColumn: 8, gridRow: 13 },
   21: { gridColumn: 7, gridRow: 13 },
   22: { gridColumn: 6, gridRow: 13 },
   23: { gridColumn: 5, gridRow: 13 },
   24: { gridColumn: 4, gridRow: 13 },
   25: { gridColumn: 3, gridRow: 13 },
+  // === NOUVEAUX STANDS AUTOUR DES TABLES (26-40) ===
+  // Rangée au-dessus des Tables
+  26: { gridColumn: 3, gridRow: 5 },
+  27: { gridColumn: 4, gridRow: 5 },
+  28: { gridColumn: 5, gridRow: 5 },
+  29: { gridColumn: 6, gridRow: 5 },
+  30: { gridColumn: 7, gridRow: 5 },
+  // Côté gauche des Tables
+  31: { gridColumn: 2, gridRow: 6 },
+  32: { gridColumn: 2, gridRow: 8 },
+  // Côté droit des Tables
+  33: { gridColumn: 8, gridRow: 6 },
+  34: { gridColumn: 8, gridRow: 7 },
+  35: { gridColumn: 8, gridRow: 8 },
+  // Rangée en-dessous des Tables
+  36: { gridColumn: 3, gridRow: 9 },
+  37: { gridColumn: 4, gridRow: 9 },
+  38: { gridColumn: 5, gridRow: 9 },
+  39: { gridColumn: 6, gridRow: 9 },
+  40: { gridColumn: 7, gridRow: 9 },
 }
 
 const statusConfig = {

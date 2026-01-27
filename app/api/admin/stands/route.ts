@@ -2,39 +2,59 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { checkAdminAuth, unauthorizedResponse } from '@/lib/admin-auth'
 
-// Configuration des 25 stands par défaut
+// Configuration des 40 stands par défaut
 // Association non soumise à la TVA - Prix net
 // Mobilier (tables/chaises) et électricité inclus
 const defaultStandsConfig = [
-  // Rangée du haut (stands 3-8)
-  { number: 3, surfaceM2: 4, price: 150, size: 'SMALL', x: 195, y: 30, width: 50, height: 50 },
-  { number: 4, surfaceM2: 4, price: 150, size: 'SMALL', x: 255, y: 30, width: 50, height: 50 },
-  { number: 5, surfaceM2: 4, price: 150, size: 'SMALL', x: 315, y: 30, width: 50, height: 50 },
-  { number: 6, surfaceM2: 4, price: 150, size: 'SMALL', x: 375, y: 30, width: 50, height: 50 },
-  { number: 7, surfaceM2: 4, price: 150, size: 'SMALL', x: 435, y: 30, width: 50, height: 50 },
-  { number: 8, surfaceM2: 4, price: 150, size: 'SMALL', x: 495, y: 30, width: 50, height: 50 },
-  // Stands 1-2 (à côté conférence)
-  { number: 2, surfaceM2: 4, price: 150, size: 'SMALL', x: 195, y: 100, width: 50, height: 50 },
-  { number: 1, surfaceM2: 4, price: 150, size: 'SMALL', x: 195, y: 160, width: 50, height: 50 },
-  // Colonne de droite (stands 9-18)
-  { number: 9, surfaceM2: 4, price: 150, size: 'SMALL', x: 555, y: 30, width: 50, height: 50 },
-  { number: 10, surfaceM2: 4, price: 150, size: 'SMALL', x: 555, y: 90, width: 50, height: 50 },
-  { number: 11, surfaceM2: 4, price: 150, size: 'SMALL', x: 555, y: 150, width: 50, height: 50 },
-  { number: 12, surfaceM2: 4, price: 150, size: 'SMALL', x: 555, y: 210, width: 50, height: 50 },
-  { number: 13, surfaceM2: 4, price: 150, size: 'SMALL', x: 555, y: 270, width: 50, height: 50 },
-  { number: 14, surfaceM2: 4, price: 150, size: 'SMALL', x: 555, y: 330, width: 50, height: 50 },
-  { number: 15, surfaceM2: 4, price: 150, size: 'SMALL', x: 555, y: 390, width: 50, height: 50 },
-  { number: 16, surfaceM2: 4, price: 150, size: 'SMALL', x: 555, y: 450, width: 50, height: 50 },
-  { number: 17, surfaceM2: 4, price: 150, size: 'SMALL', x: 555, y: 510, width: 50, height: 50 },
-  { number: 18, surfaceM2: 4, price: 150, size: 'SMALL', x: 555, y: 570, width: 50, height: 50 },
-  // Rangée du bas (stands 25-19) - décalés de 60px vers la gauche
-  { number: 25, surfaceM2: 4, price: 150, size: 'SMALL', x: 135, y: 570, width: 50, height: 50 },
-  { number: 24, surfaceM2: 4, price: 150, size: 'SMALL', x: 195, y: 570, width: 50, height: 50 },
-  { number: 23, surfaceM2: 4, price: 150, size: 'SMALL', x: 255, y: 570, width: 50, height: 50 },
-  { number: 22, surfaceM2: 4, price: 150, size: 'SMALL', x: 315, y: 570, width: 50, height: 50 },
-  { number: 21, surfaceM2: 4, price: 150, size: 'SMALL', x: 375, y: 570, width: 50, height: 50 },
-  { number: 20, surfaceM2: 4, price: 150, size: 'SMALL', x: 435, y: 570, width: 50, height: 50 },
-  { number: 19, surfaceM2: 4, price: 150, size: 'SMALL', x: 555, y: 570, width: 50, height: 50 },
+  // Rangée du haut (stands 4-9)
+  { number: 4, surfaceM2: 4, price: 150, size: 'SMALL', x: 255, y: 30, width: 50, height: 50, row: 1, col: 3 },
+  { number: 5, surfaceM2: 4, price: 150, size: 'SMALL', x: 315, y: 30, width: 50, height: 50, row: 1, col: 4 },
+  { number: 6, surfaceM2: 4, price: 150, size: 'SMALL', x: 375, y: 30, width: 50, height: 50, row: 1, col: 5 },
+  { number: 7, surfaceM2: 4, price: 150, size: 'SMALL', x: 435, y: 30, width: 50, height: 50, row: 1, col: 6 },
+  { number: 8, surfaceM2: 4, price: 150, size: 'SMALL', x: 495, y: 30, width: 50, height: 50, row: 1, col: 7 },
+  { number: 9, surfaceM2: 4, price: 150, size: 'SMALL', x: 555, y: 30, width: 50, height: 50, row: 1, col: 8 },
+  // Stands 1-3 (à côté conférence)
+  { number: 3, surfaceM2: 4, price: 150, size: 'SMALL', x: 195, y: 100, width: 50, height: 50, row: 2, col: 2 },
+  { number: 2, surfaceM2: 4, price: 150, size: 'SMALL', x: 195, y: 160, width: 50, height: 50, row: 3, col: 2 },
+  { number: 1, surfaceM2: 4, price: 150, size: 'SMALL', x: 195, y: 220, width: 50, height: 50, row: 4, col: 2 },
+  // Colonne de droite (stands 10-19)
+  { number: 10, surfaceM2: 4, price: 150, size: 'SMALL', x: 615, y: 90, width: 50, height: 50, row: 2, col: 10 },
+  { number: 11, surfaceM2: 4, price: 150, size: 'SMALL', x: 615, y: 150, width: 50, height: 50, row: 3, col: 10 },
+  { number: 12, surfaceM2: 4, price: 150, size: 'SMALL', x: 615, y: 210, width: 50, height: 50, row: 4, col: 10 },
+  { number: 13, surfaceM2: 4, price: 150, size: 'SMALL', x: 615, y: 270, width: 50, height: 50, row: 5, col: 10 },
+  { number: 14, surfaceM2: 4, price: 150, size: 'SMALL', x: 615, y: 330, width: 50, height: 50, row: 6, col: 10 },
+  { number: 15, surfaceM2: 4, price: 150, size: 'SMALL', x: 615, y: 390, width: 50, height: 50, row: 7, col: 10 },
+  { number: 16, surfaceM2: 4, price: 150, size: 'SMALL', x: 615, y: 450, width: 50, height: 50, row: 8, col: 10 },
+  { number: 17, surfaceM2: 4, price: 150, size: 'SMALL', x: 615, y: 510, width: 50, height: 50, row: 9, col: 10 },
+  { number: 18, surfaceM2: 4, price: 150, size: 'SMALL', x: 615, y: 570, width: 50, height: 50, row: 10, col: 10 },
+  { number: 19, surfaceM2: 4, price: 150, size: 'SMALL', x: 615, y: 630, width: 50, height: 50, row: 11, col: 10 },
+  // Rangée du bas (stands 20-25)
+  { number: 25, surfaceM2: 4, price: 150, size: 'SMALL', x: 195, y: 690, width: 50, height: 50, row: 13, col: 3 },
+  { number: 24, surfaceM2: 4, price: 150, size: 'SMALL', x: 255, y: 690, width: 50, height: 50, row: 13, col: 4 },
+  { number: 23, surfaceM2: 4, price: 150, size: 'SMALL', x: 315, y: 690, width: 50, height: 50, row: 13, col: 5 },
+  { number: 22, surfaceM2: 4, price: 150, size: 'SMALL', x: 375, y: 690, width: 50, height: 50, row: 13, col: 6 },
+  { number: 21, surfaceM2: 4, price: 150, size: 'SMALL', x: 435, y: 690, width: 50, height: 50, row: 13, col: 7 },
+  { number: 20, surfaceM2: 4, price: 150, size: 'SMALL', x: 495, y: 690, width: 50, height: 50, row: 13, col: 8 },
+  // === NOUVEAUX STANDS AUTOUR DES TABLES (26-40) ===
+  // Rangée au-dessus des Tables (row 5)
+  { number: 26, surfaceM2: 4, price: 150, size: 'SMALL', x: 255, y: 280, width: 50, height: 50, row: 5, col: 3 },
+  { number: 27, surfaceM2: 4, price: 150, size: 'SMALL', x: 315, y: 280, width: 50, height: 50, row: 5, col: 4 },
+  { number: 28, surfaceM2: 4, price: 150, size: 'SMALL', x: 375, y: 280, width: 50, height: 50, row: 5, col: 5 },
+  { number: 29, surfaceM2: 4, price: 150, size: 'SMALL', x: 435, y: 280, width: 50, height: 50, row: 5, col: 6 },
+  { number: 30, surfaceM2: 4, price: 150, size: 'SMALL', x: 495, y: 280, width: 50, height: 50, row: 5, col: 7 },
+  // Côté gauche des Tables (col 2)
+  { number: 31, surfaceM2: 4, price: 150, size: 'SMALL', x: 195, y: 340, width: 50, height: 50, row: 6, col: 2 },
+  { number: 32, surfaceM2: 4, price: 150, size: 'SMALL', x: 195, y: 460, width: 50, height: 50, row: 8, col: 2 },
+  // Côté droit des Tables (col 8)
+  { number: 33, surfaceM2: 4, price: 150, size: 'SMALL', x: 555, y: 340, width: 50, height: 50, row: 6, col: 8 },
+  { number: 34, surfaceM2: 4, price: 150, size: 'SMALL', x: 555, y: 400, width: 50, height: 50, row: 7, col: 8 },
+  { number: 35, surfaceM2: 4, price: 150, size: 'SMALL', x: 555, y: 460, width: 50, height: 50, row: 8, col: 8 },
+  // Rangée en-dessous des Tables (row 9)
+  { number: 36, surfaceM2: 4, price: 150, size: 'SMALL', x: 255, y: 520, width: 50, height: 50, row: 9, col: 3 },
+  { number: 37, surfaceM2: 4, price: 150, size: 'SMALL', x: 315, y: 520, width: 50, height: 50, row: 9, col: 4 },
+  { number: 38, surfaceM2: 4, price: 150, size: 'SMALL', x: 375, y: 520, width: 50, height: 50, row: 9, col: 5 },
+  { number: 39, surfaceM2: 4, price: 150, size: 'SMALL', x: 435, y: 520, width: 50, height: 50, row: 9, col: 6 },
+  { number: 40, surfaceM2: 4, price: 150, size: 'SMALL', x: 495, y: 520, width: 50, height: 50, row: 9, col: 7 },
 ]
 
 // GET /api/admin/stands - List all stands with full details
@@ -443,7 +463,7 @@ export async function PATCH(request: NextRequest) {
       // Delete all existing stands
       await prisma.stand.deleteMany({})
 
-      // Create all 25 stands
+      // Create all 40 stands
       // Association non soumise à TVA - mobilier et électricité inclus
       for (const stand of defaultStandsConfig) {
         await prisma.stand.create({
@@ -458,8 +478,8 @@ export async function PATCH(request: NextRequest) {
             y: stand.y,
             width: stand.width,
             height: stand.height,
-            row: 0,
-            col: 0,
+            row: stand.row,
+            col: stand.col,
             hasFurniture: true,  // Mobilier inclus
             hasElectricity: true, // Électricité incluse
             furniturePrice: 0,    // Inclus dans le prix
@@ -475,6 +495,63 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({
         success: true,
         message: `Initialized ${allStands.length} stands`,
+        data: allStands
+      })
+    }
+
+    // Ajouter les nouveaux stands manquants (sans supprimer les existants)
+    if (action === 'add_missing_stands') {
+      let created = 0
+      for (const stand of defaultStandsConfig) {
+        const existing = await prisma.stand.findUnique({
+          where: { number: stand.number }
+        })
+        if (!existing) {
+          await prisma.stand.create({
+            data: {
+              number: stand.number,
+              code: String(stand.number),
+              surfaceM2: stand.surfaceM2,
+              priceHT: stand.price,
+              status: 'FREE',
+              size: stand.size as any,
+              x: stand.x,
+              y: stand.y,
+              width: stand.width,
+              height: stand.height,
+              row: stand.row,
+              col: stand.col,
+              hasFurniture: true,
+              hasElectricity: true,
+              furniturePrice: 0,
+              electricityPrice: 0,
+            }
+          })
+          created++
+        }
+      }
+
+      // Also update existing stands with row/col if missing
+      for (const stand of defaultStandsConfig) {
+        await prisma.stand.updateMany({
+          where: {
+            number: stand.number,
+            OR: [{ row: 0 }, { col: 0 }]
+          },
+          data: {
+            row: stand.row,
+            col: stand.col,
+          }
+        })
+      }
+
+      const allStands = await prisma.stand.findMany({
+        orderBy: [{ number: 'asc' }]
+      })
+
+      return NextResponse.json({
+        success: true,
+        message: `${created} nouveaux stands créés. Total: ${allStands.length} stands`,
         data: allStands
       })
     }
