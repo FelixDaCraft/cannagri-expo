@@ -338,27 +338,32 @@ export function InteractiveStandPlan({
             ))}
 
             {/* Stands */}
-            {filteredStands.map((stand) => (
-              <motion.button
-                key={stand.id}
-                whileHover={{ scale: stand.status === 'available' ? 1.05 : 1 }}
-                whileTap={{ scale: stand.status === 'available' ? 0.95 : 1 }}
-                onClick={() => handleStandClick(stand)}
-                className={`
-                  rounded-lg flex items-center justify-center font-bold text-white text-sm
-                  transition-all shadow-md
-                  ${getStatusClass(stand.status)}
-                  ${selectedStand?.id === stand.id ? 'ring-4 ring-forest ring-offset-2' : ''}
-                `}
-                style={{
-                  gridColumn: stand.position.gridColumn,
-                  gridRow: stand.position.gridRow,
-                }}
-                title={`${stand.name} - ${config.statuses[stand.status]?.label}`}
-              >
-                {stand.id}
-              </motion.button>
-            ))}
+            {filteredStands.map((stand) => {
+              // Stands à rotation 90°: 10-19 (colonne droite) et 31-34 (autour des tables)
+              const shouldRotate = (stand.id >= 10 && stand.id <= 19) || (stand.id >= 31 && stand.id <= 34)
+              return (
+                <motion.button
+                  key={stand.id}
+                  whileHover={{ scale: stand.status === 'available' ? 1.05 : 1 }}
+                  whileTap={{ scale: stand.status === 'available' ? 0.95 : 1 }}
+                  onClick={() => handleStandClick(stand)}
+                  className={`
+                    rounded-lg flex items-center justify-center font-bold text-white text-sm
+                    transition-all shadow-md
+                    ${getStatusClass(stand.status)}
+                    ${selectedStand?.id === stand.id ? 'ring-4 ring-forest ring-offset-2' : ''}
+                  `}
+                  style={{
+                    gridColumn: stand.position.gridColumn,
+                    gridRow: stand.position.gridRow,
+                    transform: shouldRotate ? 'rotate(90deg)' : undefined,
+                  }}
+                  title={`${stand.name} - ${config.statuses[stand.status]?.label}`}
+                >
+                  {stand.id}
+                </motion.button>
+              )
+            })}
 
             {/* Hidden stands (filtered out) */}
             {stands

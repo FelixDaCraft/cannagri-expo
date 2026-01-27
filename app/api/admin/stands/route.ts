@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { checkAdminAuth, unauthorizedResponse } from '@/lib/admin-auth'
 
-// Configuration des 40 stands par défaut
+// Configuration des 39 stands par défaut (1-34, 36-40 - stand 35 supprimé)
 // Association non soumise à la TVA - Prix net
 // Mobilier (tables/chaises) et électricité inclus
 const defaultStandsConfig = [
@@ -42,13 +42,12 @@ const defaultStandsConfig = [
   { number: 28, surfaceM2: 4, price: 150, size: 'SMALL', x: 375, y: 280, width: 50, height: 50, row: 5, col: 5 },
   { number: 29, surfaceM2: 4, price: 150, size: 'SMALL', x: 435, y: 280, width: 50, height: 50, row: 5, col: 6 },
   { number: 30, surfaceM2: 4, price: 150, size: 'SMALL', x: 495, y: 280, width: 50, height: 50, row: 5, col: 7 },
-  // Côté gauche des Tables (col 2)
+  // Côté gauche des Tables (col 2) - rotation 90°
   { number: 31, surfaceM2: 4, price: 150, size: 'SMALL', x: 195, y: 340, width: 50, height: 50, row: 6, col: 2 },
-  { number: 32, surfaceM2: 4, price: 150, size: 'SMALL', x: 195, y: 460, width: 50, height: 50, row: 8, col: 2 },
-  // Côté droit des Tables (col 8)
+  { number: 32, surfaceM2: 4, price: 150, size: 'SMALL', x: 195, y: 400, width: 50, height: 50, row: 7, col: 2 },
+  // Côté droit des Tables (col 8) - rotation 90° - seulement 2 stands
   { number: 33, surfaceM2: 4, price: 150, size: 'SMALL', x: 555, y: 340, width: 50, height: 50, row: 6, col: 8 },
   { number: 34, surfaceM2: 4, price: 150, size: 'SMALL', x: 555, y: 400, width: 50, height: 50, row: 7, col: 8 },
-  { number: 35, surfaceM2: 4, price: 150, size: 'SMALL', x: 555, y: 460, width: 50, height: 50, row: 8, col: 8 },
   // Rangée en-dessous des Tables (row 9)
   { number: 36, surfaceM2: 4, price: 150, size: 'SMALL', x: 255, y: 520, width: 50, height: 50, row: 9, col: 3 },
   { number: 37, surfaceM2: 4, price: 150, size: 'SMALL', x: 315, y: 520, width: 50, height: 50, row: 9, col: 4 },

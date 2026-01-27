@@ -94,20 +94,19 @@ const defaultStandPositions: Record<number, StandPosition> = {
   23: { gridColumn: 5, gridRow: 13 },
   24: { gridColumn: 4, gridRow: 13 },
   25: { gridColumn: 3, gridRow: 13 },
-  // === NOUVEAUX STANDS AUTOUR DES TABLES (26-40) ===
+  // === NOUVEAUX STANDS AUTOUR DES TABLES (26-39) ===
   // Rangée au-dessus des Tables
   26: { gridColumn: 3, gridRow: 5 },
   27: { gridColumn: 4, gridRow: 5 },
   28: { gridColumn: 5, gridRow: 5 },
   29: { gridColumn: 6, gridRow: 5 },
   30: { gridColumn: 7, gridRow: 5 },
-  // Côté gauche des Tables
+  // Côté gauche des Tables (rotation 90°)
   31: { gridColumn: 2, gridRow: 6 },
-  32: { gridColumn: 2, gridRow: 8 },
-  // Côté droit des Tables
+  32: { gridColumn: 2, gridRow: 7 },
+  // Côté droit des Tables (rotation 90°) - seulement 2 stands
   33: { gridColumn: 8, gridRow: 6 },
   34: { gridColumn: 8, gridRow: 7 },
-  35: { gridColumn: 8, gridRow: 8 },
   // Rangée en-dessous des Tables
   36: { gridColumn: 3, gridRow: 9 },
   37: { gridColumn: 4, gridRow: 9 },
@@ -273,6 +272,8 @@ export function AdminInteractiveStandPlan({
             {filteredStands.map((stand) => {
               const pos = getStandPosition(stand)
               const config = statusConfig[stand.status]
+              // Stands à rotation 90°: 10-19 (colonne droite) et 31-34 (autour des tables)
+              const shouldRotate = (stand.number >= 10 && stand.number <= 19) || (stand.number >= 31 && stand.number <= 34)
               return (
                 <motion.button
                   key={stand.id}
@@ -287,6 +288,7 @@ export function AdminInteractiveStandPlan({
                   `}
                   style={{
                     gridColumn: pos.gridColumn,
+                    transform: shouldRotate ? 'rotate(90deg)' : undefined,
                     gridRow: pos.gridRow,
                   }}
                   title={`Stand ${stand.number} - ${config.label}${stand.exhibitorName ? ` - ${stand.exhibitorName}` : ''}`}
