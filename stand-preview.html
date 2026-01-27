@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Éditeur Plan des Stands</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, sans-serif;
+      background: #f0f0f0;
+      padding: 20px;
+    }
+    h1 { margin-bottom: 10px; color: #2d5a3d; }
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .toolbar button {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.2s;
+    }
+    .toolbar button:hover { transform: scale(1.05); }
+    .btn-add { background: #4CAF50; color: white; }
+    .btn-export { background: #2196F3; color: white; }
+    .btn-clear { background: #f44336; color: white; }
+    .legend {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 15px;
+      font-size: 13px;
+      flex-wrap: wrap;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .legend-box {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+    }
+    .editor-container {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .grid-container {
+      position: relative;
+      width: 700px;
+      height: 800px;
+      background: #fafafa;
+      border-radius: 12px;
+      border: 2px solid #ddd;
+      background-image:
+        linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px);
+      background-size: 50px 50px;
+    }
+    .stand {
+      position: absolute;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: white;
+      font-size: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      cursor: move;
+      user-select: none;
+      min-width: 40px;
+      min-height: 40px;
+    }
+    .stand:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+    .stand.selected { outline: 3px solid #000; outline-offset: 2px; }
+    .stand.free { background: linear-gradient(135deg, #4CAF50, #45a049); }
+    .stand.reserved { background: linear-gradient(135deg, #FFA726, #ef9a00); }
+    .stand.sold { background: linear-gradient(135deg, #EF5350, #e53935); }
+    .stand .resize-handle {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: white;
+      border: 2px solid #333;
+      border-radius: 2px;
+      bottom: -6px;
+      right: -6px;
+      cursor: se-resize;
+    }
+    .stand .delete-btn {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      width: 20px;
+      height: 20px;
+      background: #f44336;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      font-size: 12px;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+    .stand:hover .delete-btn { display: flex; }
+    .stand .stand-label {
+      text-align: center;
+      font-size: 12px;
+      pointer-events: none;
+    }
+    .stand .stand-label small {
+      display: block;
+      font-size: 9px;
+      opacity: 0.9;
+    }
+    .zone {
+      position: absolute;
+      border: 2px dashed #aaa;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.3);
+      font-size: 12px;
+      color: #666;
+      pointer-events: none;
+    }
+    .panel {
+      background: white;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      width: 280px;
+    }
+    .panel h3 { margin-bottom: 15px; color: #333; font-size: 16px; }
+    .panel label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 13px;
+      color: #555;
+    }
+    .panel input, .panel select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    .panel .btn-update {
+      width: 100%;
+      padding: 10px;
+      background: #2d5a3d;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .panel .btn-update:hover { background: #3d7a4d; }
+    .export-area {
+      margin-top: 20px;
+      padding: 15px;
+      background: #e8f5e9;
+      border-radius: 8px;
+    }
+    .export-area pre {
+      background: #1e1e1e;
+      color: #9cdcfe;
+      padding: 15px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-size: 11px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .instructions {
+      background: #fff3cd;
+      padding: 10px 15px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      font-size: 13px;
+    }
+    .instructions strong { color: #856404; }
+  </style>
+</head>
+<body>
+  <h1>Éditeur Plan des Stands - Drag & Drop</h1>
+
+  <div class="instructions">
+    <strong>Instructions:</strong>
+    Glissez les stands pour les déplacer |
+    Utilisez la poignée en bas à droite pour redimensionner |
+    Cliquez sur un stand pour le modifier |
+    ❌ pour supprimer
+  </div>
+
+  <div class="toolbar">
+    <button class="btn-add" onclick="addStand('free')">+ Ajouter Stand Libre</button>
+    <button class="btn-add" style="background:#FFA726;" onclick="addStand('reserved')">+ Stand Réservé</button>
+    <button class="btn-add" style="background:#EF5350;" onclick="addStand('sold')">+ Stand Vendu</button>
+    <button class="btn-export" onclick="exportConfig()">📋 Exporter Configuration</button>
+    <button class="btn-clear" onclick="if(confirm('Tout supprimer?')) clearAll()">🗑️ Tout effacer</button>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-box" style="background: #4CAF50;"></div><span>Libre</span></div>
+    <div class="legend-item"><div class="legend-box" style="background: #FFA726;"></div><span>Réservé</span></div>
+    <div class="legend-item"><div class="legend-box" style="background: #EF5350;"></div><span>Vendu</span></div>
+  </div>
+
+  <div class="editor-container">
+    <div class="grid-container" id="grid">
+      <!-- Zones fixes -->
+      <div class="zone" style="left: 10px; top: 10px; width: 80px; height: 200px;">Conférences</div>
+      <div class="zone" style="left: 10px; top: 280px; width: 80px; height: 150px;">Bar</div>
+      <div class="zone" style="left: 200px; top: 320px; width: 250px; height: 150px;">Tables</div>
+      <div class="zone" style="left: 10px; top: 600px; width: 80px; height: 80px;">→ Entrée</div>
+    </div>
+
+    <div class="panel" id="panel">
+      <h3>Propriétés du Stand</h3>
+      <p style="color:#888; font-size:12px; margin-bottom:15px;">Cliquez sur un stand pour le modifier</p>
+
+      <label>Numéro</label>
+      <input type="number" id="standNumber" placeholder="N°" min="1">
+
+      <label>Nom (optionnel)</label>
+      <input type="text" id="standName" placeholder="Ex: Terra, NORML...">
+
+      <label>Statut</label>
+      <select id="standStatus">
+        <option value="free">Libre</option>
+        <option value="reserved">Réservé</option>
+        <option value="sold">Vendu</option>
+      </select>
+
+      <label>Largeur (px)</label>
+      <input type="number" id="standWidth" min="40" step="10">
+
+      <label>Hauteur (px)</label>
+      <input type="number" id="standHeight" min="40" step="10">
+
+      <button class="btn-update" onclick="updateSelectedStand()">Mettre à jour</button>
+    </div>
+  </div>
+
+  <div class="export-area" id="exportArea" style="display:none;">
+    <h3>Configuration exportée (copier pour me montrer)</h3>
+    <pre id="exportOutput"></pre>
+  </div>
+
+  <script>
+    let stands = [];
+    let selectedStand = null;
+    let standCounter = 1;
+    let isDragging = false;
+    let isResizing = false;
+    let dragOffset = { x: 0, y: 0 };
+
+    // Initialiser avec les stands existants (vendus/réservés à garder)
+    const initialStands = [
+      // Rangée du haut - existants
+      { id: 1, number: 4, name: 'Terra', status: 'sold', x: 150, y: 20, width: 60, height: 50 },
+      { id: 2, number: 5, name: '', status: 'free', x: 220, y: 20, width: 60, height: 50 },
+      { id: 3, number: 6, name: 'Matsu', status: 'sold', x: 290, y: 20, width: 60, height: 50 },
+      { id: 4, number: 7, name: '', status: 'free', x: 360, y: 20, width: 60, height: 50 },
+      { id: 5, number: 8, name: 'NORML', status: 'reserved', x: 430, y: 20, width: 60, height: 50 },
+      { id: 6, number: 9, name: 'AFPC', status: 'reserved', x: 500, y: 20, width: 60, height: 50 },
+
+      // Au-dessus des Tables
+      { id: 7, number: 26, name: '', status: 'free', x: 200, y: 250, width: 60, height: 50 },
+      { id: 8, number: 27, name: '', status: 'free', x: 270, y: 250, width: 60, height: 50 },
+      { id: 9, number: 28, name: '', status: 'free', x: 340, y: 250, width: 60, height: 50 },
+      { id: 10, number: 29, name: '', status: 'free', x: 410, y: 250, width: 60, height: 50 },
+      { id: 11, number: 30, name: '', status: 'free', x: 480, y: 250, width: 60, height: 50 },
+
+      // En-dessous des Tables
+      { id: 12, number: 36, name: '', status: 'free', x: 200, y: 490, width: 60, height: 50 },
+      { id: 13, number: 37, name: '', status: 'free', x: 270, y: 490, width: 60, height: 50 },
+      { id: 14, number: 38, name: '', status: 'free', x: 340, y: 490, width: 60, height: 50 },
+      { id: 15, number: 39, name: '', status: 'free', x: 410, y: 490, width: 60, height: 50 },
+      { id: 16, number: 40, name: '', status: 'free', x: 480, y: 490, width: 60, height: 50 },
+
+      // Rangée du bas
+      { id: 17, number: 25, name: '', status: 'free', x: 150, y: 700, width: 60, height: 50 },
+      { id: 18, number: 24, name: '', status: 'free', x: 220, y: 700, width: 60, height: 50 },
+      { id: 19, number: 23, name: '', status: 'free', x: 290, y: 700, width: 60, height: 50 },
+      { id: 20, number: 22, name: '', status: 'free', x: 360, y: 700, width: 60, height: 50 },
+      { id: 21, number: 21, name: '', status: 'free', x: 430, y: 700, width: 60, height: 50 },
+      { id: 22, number: 20, name: '', status: 'free', x: 500, y: 700, width: 60, height: 50 },
+    ];
+
+    function init() {
+      initialStands.forEach(s => {
+        stands.push(s);
+        standCounter = Math.max(standCounter, s.id + 1);
+      });
+      renderStands();
+    }
+
+    function renderStands() {
+      const grid = document.getElementById('grid');
+      // Remove old stands (keep zones)
+      grid.querySelectorAll('.stand').forEach(el => el.remove());
+
+      stands.forEach(stand => {
+        const div = document.createElement('div');
+        div.className = `stand ${stand.status}${selectedStand?.id === stand.id ? ' selected' : ''}`;
+        div.dataset.id = stand.id;
+        div.style.left = stand.x + 'px';
+        div.style.top = stand.y + 'px';
+        div.style.width = stand.width + 'px';
+        div.style.height = stand.height + 'px';
+
+        div.innerHTML = `
+          <div class="stand-label">
+            ${stand.number}
+            ${stand.name ? '<small>' + stand.name + '</small>' : ''}
+          </div>
+          <div class="resize-handle"></div>
+          <button class="delete-btn" onclick="deleteStand(${stand.id})">×</button>
+        `;
+
+        // Drag events
+        div.addEventListener('mousedown', (e) => {
+          if (e.target.classList.contains('resize-handle')) {
+            startResize(e, stand);
+          } else if (!e.target.classList.contains('delete-btn')) {
+            startDrag(e, stand);
+          }
+        });
+
+        div.addEventListener('click', (e) => {
+          if (!isDragging && !isResizing) {
+            selectStand(stand);
+          }
+        });
+
+        grid.appendChild(div);
+      });
+    }
+
+    function startDrag(e, stand) {
+      isDragging = true;
+      selectedStand = stand;
+      dragOffset.x = e.clientX - stand.x;
+      dragOffset.y = e.clientY - stand.y;
+
+      document.addEventListener('mousemove', onDrag);
+      document.addEventListener('mouseup', stopDrag);
+    }
+
+    function onDrag(e) {
+      if (!isDragging || !selectedStand) return;
+
+      const grid = document.getElementById('grid');
+      const rect = grid.getBoundingClientRect();
+
+      let newX = e.clientX - dragOffset.x;
+      let newY = e.clientY - dragOffset.y;
+
+      // Snap to grid (25px)
+      newX = Math.round(newX / 10) * 10;
+      newY = Math.round(newY / 10) * 10;
+
+      // Bounds
+      newX = Math.max(0, Math.min(newX, 700 - selectedStand.width));
+      newY = Math.max(0, Math.min(newY, 800 - selectedStand.height));
+
+      selectedStand.x = newX;
+      selectedStand.y = newY;
+      renderStands();
+    }
+
+    function stopDrag() {
+      setTimeout(() => { isDragging = false; }, 100);
+      document.removeEventListener('mousemove', onDrag);
+      document.removeEventListener('mouseup', stopDrag);
+    }
+
+    function startResize(e, stand) {
+      e.stopPropagation();
+      isResizing = true;
+      selectedStand = stand;
+
+      document.addEventListener('mousemove', onResize);
+      document.addEventListener('mouseup', stopResize);
+    }
+
+    function onResize(e) {
+      if (!isResizing || !selectedStand) return;
+
+      const grid = document.getElementById('grid');
+      const rect = grid.getBoundingClientRect();
+
+      let newWidth = e.clientX - rect.left - selectedStand.x;
+      let newHeight = e.clientY - rect.top - selectedStand.y;
+
+      // Snap to 10px
+      newWidth = Math.round(newWidth / 10) * 10;
+      newHeight = Math.round(newHeight / 10) * 10;
+
+      // Min size
+      newWidth = Math.max(40, newWidth);
+      newHeight = Math.max(40, newHeight);
+
+      selectedStand.width = newWidth;
+      selectedStand.height = newHeight;
+      renderStands();
+      updatePanel();
+    }
+
+    function stopResize() {
+      setTimeout(() => { isResizing = false; }, 100);
+      document.removeEventListener('mousemove', onResize);
+      document.removeEventListener('mouseup', stopResize);
+    }
+
+    function selectStand(stand) {
+      selectedStand = stand;
+      updatePanel();
+      renderStands();
+    }
+
+    function updatePanel() {
+      if (!selectedStand) return;
+      document.getElementById('standNumber').value = selectedStand.number;
+      document.getElementById('standName').value = selectedStand.name || '';
+      document.getElementById('standStatus').value = selectedStand.status;
+      document.getElementById('standWidth').value = selectedStand.width;
+      document.getElementById('standHeight').value = selectedStand.height;
+    }
+
+    function updateSelectedStand() {
+      if (!selectedStand) return alert('Sélectionnez d\'abord un stand');
+
+      selectedStand.number = parseInt(document.getElementById('standNumber').value) || selectedStand.number;
+      selectedStand.name = document.getElementById('standName').value;
+      selectedStand.status = document.getElementById('standStatus').value;
+      selectedStand.width = parseInt(document.getElementById('standWidth').value) || 60;
+      selectedStand.height = parseInt(document.getElementById('standHeight').value) || 50;
+
+      renderStands();
+    }
+
+    function addStand(status = 'free') {
+      const newStand = {
+        id: standCounter++,
+        number: stands.length + 1,
+        name: '',
+        status: status,
+        x: 300,
+        y: 400,
+        width: 60,
+        height: 50
+      };
+      stands.push(newStand);
+      selectStand(newStand);
+      renderStands();
+    }
+
+    function deleteStand(id) {
+      stands = stands.filter(s => s.id !== id);
+      if (selectedStand?.id === id) selectedStand = null;
+      renderStands();
+    }
+
+    function clearAll() {
+      stands = [];
+      selectedStand = null;
+      renderStands();
+    }
+
+    function exportConfig() {
+      const config = stands.map(s => ({
+        number: s.number,
+        name: s.name || null,
+        status: s.status,
+        x: s.x,
+        y: s.y,
+        width: s.width,
+        height: s.height,
+        orientation: s.width > s.height ? 'horizontal' : (s.height > s.width ? 'vertical' : 'square')
+      })).sort((a, b) => a.number - b.number);
+
+      const output = JSON.stringify(config, null, 2);
+      document.getElementById('exportOutput').textContent = output;
+      document.getElementById('exportArea').style.display = 'block';
+
+      // Copy to clipboard
+      navigator.clipboard.writeText(output).then(() => {
+        alert('Configuration copiée dans le presse-papier!');
+      });
+    }
+
+    init();
+  </script>
+</body>
+</html>

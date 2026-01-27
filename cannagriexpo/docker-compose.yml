@@ -1,0 +1,43 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cannagri-app
+    restart: always
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    volumes:
+      - ./public/images:/app/public/images:ro
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=${DATABASE_URL}
+      - NEXTAUTH_URL=${NEXTAUTH_URL}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
+      - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - VIVA_WALLET_MERCHANT_ID=${VIVA_WALLET_MERCHANT_ID}
+      - VIVA_WALLET_API_KEY=${VIVA_WALLET_API_KEY}
+      - VIVA_WALLET_SOURCE_CODE=${VIVA_WALLET_SOURCE_CODE}
+      - VIVA_WALLET_DEMO_MODE=${VIVA_WALLET_DEMO_MODE}
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - EMAIL_FROM=${EMAIL_FROM}
+      - NEXT_PUBLIC_TICKETING_ENABLED=${NEXT_PUBLIC_TICKETING_ENABLED:-false}
+      - NEXT_PUBLIC_DEMO_MODE=${NEXT_PUBLIC_DEMO_MODE:-false}
+    networks:
+      - cannagri-network
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  cannagri-network:
+    driver: bridge

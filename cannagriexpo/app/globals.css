@@ -1,0 +1,214 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Nouvelle charte graphique Cann'Agri Expo 2026 */
+  /* Basée sur l'affiche officielle */
+
+  /* Couleurs primaires */
+  --color-mint: #8FB58B;
+  --color-forest: #3D5A45;
+  --color-cream: #F4F1E8;
+  --color-terracotta: #C4784A;
+  --color-wood: #8B7355;
+
+  /* Alias pour rétrocompatibilité */
+  --color-sage: #8FB58B;
+
+  /* Textes */
+  --color-text-body: #333333;
+  --color-text-heading: #3D5A45;
+  --color-text-light: #FFFFFF;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-cream text-body font-body;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading text-heading;
+  }
+
+  h1 {
+    @apply text-4xl md:text-5xl lg:text-6xl font-bold;
+  }
+
+  h2 {
+    @apply text-3xl md:text-4xl font-bold;
+  }
+
+  h3 {
+    @apply text-2xl md:text-3xl font-semibold;
+  }
+
+  h4 {
+    @apply text-xl md:text-2xl font-semibold;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-forest text-white px-6 py-3 rounded-lg font-heading font-semibold
+           transition-all duration-200 hover:bg-forest-600
+           focus:outline-none focus:ring-2 focus:ring-mint focus:ring-offset-2;
+  }
+
+  .btn-secondary {
+    @apply bg-mint text-forest px-6 py-3 rounded-lg font-heading font-semibold
+           transition-all duration-200 hover:bg-mint-600
+           focus:outline-none focus:ring-2 focus:ring-forest focus:ring-offset-2;
+  }
+
+  .btn-outline {
+    @apply border-2 border-forest text-forest px-6 py-3 rounded-lg font-heading font-semibold
+           transition-all duration-200 hover:bg-forest hover:text-white
+           focus:outline-none focus:ring-2 focus:ring-mint focus:ring-offset-2;
+  }
+
+  .btn-terracotta {
+    @apply bg-terracotta text-white px-6 py-3 rounded-lg font-heading font-semibold
+           transition-all duration-200 hover:bg-terracotta-600
+           focus:outline-none focus:ring-2 focus:ring-terracotta focus:ring-offset-2;
+  }
+
+  .card {
+    @apply bg-white rounded-xl shadow-md p-6 transition-shadow duration-200 hover:shadow-lg;
+  }
+
+  .section-title {
+    @apply text-3xl md:text-4xl font-heading font-bold text-heading text-center mb-4;
+  }
+
+  .section-subtitle {
+    @apply text-lg text-body/80 text-center max-w-2xl mx-auto mb-12;
+  }
+
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Badge style bois inspiré de l'affiche */
+  .badge-wood {
+    @apply inline-flex items-center px-4 py-2 text-cream font-heading font-semibold
+           rounded-sm shadow-md transform -rotate-1;
+    background: linear-gradient(135deg, #8B7355 0%, #6F5C44 100%);
+    box-shadow: 2px 3px 0 rgba(0, 0, 0, 0.3);
+  }
+
+  /* Scrollbar cachée pour les filtres mobile */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-forest to-mint bg-clip-text text-transparent;
+  }
+
+  .text-gradient-cream {
+    @apply bg-gradient-to-r from-cream via-cream-300 to-cream bg-clip-text text-transparent;
+  }
+}
+
+/* Aceternity UI Animations */
+@keyframes spotlight {
+  0% {
+    opacity: 0;
+    transform: translate(-72%, -62%) scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -40%) scale(1);
+  }
+}
+
+.animate-spotlight {
+  animation: spotlight 2s ease 0.75s 1 forwards;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s linear infinite;
+  background-size: 200% 100%;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(143, 181, 139, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(143, 181, 139, 0.6);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+/* Effet de fumée inspiré de l'affiche */
+@keyframes smoke {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-30px) scale(1.5);
+  }
+}
+
+.animate-smoke {
+  animation: smoke 3s ease-out infinite;
+}
+
+/* Effet de rotation douce */
+@keyframes gentle-spin {
+  0% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+  100% {
+    transform: rotate(-3deg);
+  }
+}
+
+.animate-gentle-spin {
+  animation: gentle-spin 4s ease-in-out infinite;
+}

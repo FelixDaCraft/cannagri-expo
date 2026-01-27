@@ -1,0 +1,716 @@
+{
+  "common": {
+    "home": "Accueil",
+    "tickets": "Billetterie",
+    "exhibitors": "Exposants",
+    "program": "Programme",
+    "contact": "Contact",
+    "login": "Connexion",
+    "register": "Inscription",
+    "logout": "Déconnexion",
+    "myAccount": "Mon compte",
+    "myTickets": "Mes billets",
+    "myStands": "Mes Stands",
+    "admin": "Administration",
+    "user": "Utilisateur",
+    "buyTickets": "Acheter des billets",
+    "learnMore": "En savoir plus",
+    "submit": "Envoyer",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "close": "Fermer",
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "required": "Requis",
+    "optional": "Optionnel",
+    "yes": "Oui",
+    "no": "Non",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "seeAll": "Voir tout",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "sort": "Trier",
+    "noResults": "Aucun résultat",
+    "language": "Langue",
+    "orWith": "ou avec",
+    "continueWith": "Continuer avec {provider}",
+    "registerWith": "S'inscrire avec {provider}",
+    "stayConnected": "Restons Connectés",
+    "yourEmail": "Votre email",
+    "allRightsReserved": "Tous droits réservés.",
+    "errorOccurred": "Une erreur est survenue",
+    "question": "Une question ?"
+  },
+  "nav": {
+    "ourVision": "Présentation",
+    "theEvent": "L'Événement",
+    "event": "L'événement",
+    "program": "Programme",
+    "exhibitors": "Exposants",
+    "photoGallery": "Galerie Photo",
+    "practicalInfo": "Infos pratiques",
+    "sponsoring": "Sponsoring",
+    "contact": "Contact",
+    "proSpace": "Espace Pro",
+    "becomeExhibitor": "Devenir Exposant",
+    "bookStand": "Réserver un Stand",
+    "cgv": "CGV"
+  },
+  "home": {
+    "hero": {
+      "title": "CANN'AGRI",
+      "titleHighlight": "EXPO",
+      "subtitle": "Le salon de référence du chanvre CBD",
+      "edition": "Édition 2026",
+      "buyTicket": "Acheter mon billet",
+      "practicalInfo": "Infos Pratiques",
+      "discover": "Découvrir"
+    },
+    "pillars": {
+      "title": "Au Coeur de la Filière",
+      "subtitle": "Découvrez les acteurs clés de l'industrie du chanvre CBD français et européen réunis pour une journée exceptionnelle.",
+      "stats": {
+        "exhibitors": "Exposants",
+        "visitors": "Visiteurs attendus",
+        "conferences": "Conférences",
+        "uniqueDay": "Journée unique"
+      }
+    },
+    "tickets": {
+      "badge": "Billetterie",
+      "title": "Réservez vos billets",
+      "subtitle": "Choisissez la formule qui vous convient et rejoignez-nous le {date} à {location}, {city}.",
+      "standard": {
+        "name": "Billet Standard",
+        "description": "Accès au salon toute la journée",
+        "features": {
+          "stands": "Accès aux stands exposants",
+          "conferences": "Accès aux conférences",
+          "badge": "Badge visiteur"
+        },
+        "supportMessage": "On vous en veut pas, merci quand même, c'est déjà bien de payer sa place !"
+      },
+      "flex": {
+        "name": "Billet Flex",
+        "description": "Soutenez l'association",
+        "features": {
+          "stands": "Accès aux stands exposants",
+          "conferences": "Accès aux conférences",
+          "badge": "Badge visiteur"
+        },
+        "supportMessage": "Votre soutien nous permet d'organiser de plus beaux événements et de développer la filière chanvre CBD en France.",
+        "badge": "FULL SUPPORT"
+      },
+      "quantity": "Quantité",
+      "yourSelection": "Votre sélection",
+      "ticket": "billet",
+      "tickets": "billets",
+      "proceedPayment": "Procéder au paiement",
+      "seeAllOptions": "Voir toutes les options",
+      "securePayment": "Paiement sécurisé",
+      "eTicket": "E-billet par email",
+      "refundable": "Remboursable 48h avant"
+    },
+    "sponsors": {
+      "featured": "À la Une",
+      "featuredSubtitle": "Découvrez nos partenaires Platine et leurs actualités",
+      "platineSponsor": "Sponsor Platine",
+      "readArticle": "Lire l'article",
+      "viewAllPartners": "Voir tous nos partenaires",
+      "comingSoon": "Nos partenaires Platine seront bientôt annoncés",
+      "articleComingSoon": "Article partenaire à venir",
+      "discoverPartner": "Découvrez notre partenaire Premium.",
+      "title": "Nos Partenaires",
+      "subtitle": "Merci à nos partenaires qui rendent cet événement possible",
+      "tiers": {
+        "platinum": "Partenaires Platine",
+        "gold": "Partenaires Or",
+        "silver": "Partenaires Argent",
+        "bronze": "Partenaires Bronze"
+      },
+      "placeholders": {
+        "platinum": "Logo Platine",
+        "gold": "Logo Or",
+        "silver": "Logo Argent",
+        "bronze": "Logo"
+      },
+      "becomePartner": "Devenez Partenaire",
+      "becomePartnerSubtitle": "Associez votre marque au salon de référence du chanvre CBD",
+      "discoverOffers": "Découvrir nos offres"
+    },
+    "program": {
+      "title": "Temps Forts & Conférences",
+      "subtitle": "Un programme riche avec des intervenants de qualité pour comprendre les enjeux de la filière chanvre CBD.",
+      "comingSoon": "À venir",
+      "programComingSoonTitle": "Programme à venir",
+      "programComingSoonDescription": "Le programme détaillé de l'édition 2026 sera bientôt disponible. Conférences, tables rondes et ateliers seront animés par des experts reconnus de la filière chanvre CBD.",
+      "viewFullProgram": "Voir le programme",
+      "stats": {
+        "conferences": "Conférences",
+        "speakers": "Intervenants",
+        "exhibitors": "Exposants",
+        "award": "Award Show Platinum CBD Cup"
+      }
+    },
+    "newsletter": {
+      "title": "Restez informé",
+      "subtitle": "Inscrivez-vous à notre newsletter pour ne rien manquer",
+      "placeholder": "Votre adresse email",
+      "subscribe": "S'inscrire",
+      "success": "Merci pour votre inscription !",
+      "error": "Une erreur est survenue"
+    }
+  },
+  "exhibitors": {
+    "title": "Nos Exposants",
+    "subtitle": "Découvrez les acteurs de la filière chanvre CBD présents lors du salon",
+    "confirmedCount": "{count} exposants confirmés",
+    "comingSoon": "Exposants à venir",
+    "categories": {
+      "all": "Tous",
+      "PRODUCTEURS": "Producteurs CBD",
+      "MATERIEL": "Matériel de Culture",
+      "LIFESTYLE": "Lifestyle & Food",
+      "SERVICE": "Services",
+      "agriculture": "Agriculture",
+      "industry": "Industrie",
+      "wellness": "Bien-être",
+      "technology": "Technologie"
+    },
+    "stand": "Stand",
+    "descriptionComingSoon": "Description à venir",
+    "visitWebsite": "Visiter le site",
+    "websiteComingSoon": "Site web à venir",
+    "noExhibitors": "Les exposants seront bientôt annoncés.",
+    "cta": {
+      "title": "Vous souhaitez exposer ?",
+      "description": "Rejoignez les exposants du salon de référence du chanvre CBD. Réservez votre stand dès maintenant.",
+      "button": "Devenir Exposant"
+    },
+    "becomeExhibitor": "Devenir exposant",
+    "contactUs": "Nous contacter"
+  },
+  "event": {
+    "badge": "Le salon de référence du chanvre CBD",
+    "title": "Présentation",
+    "subtitle": "Le rendez-vous incontournable des professionnels du chanvre CBD",
+    "about": {
+      "title": "Cann'Agri Expo, c'est quoi ?",
+      "p1": "Cann'Agri Expo est le premier salon professionnel dédié à la filière chanvre CBD en région Ouest. Organisé à Nantes, cet événement rassemble producteurs, distributeurs, transformateurs et experts du secteur pour une journée riche en échanges et découvertes.",
+      "p2": "Notre objectif est de créer un espace de rencontre privilégié entre tous les acteurs de la filière : agriculteurs, laboratoires, boutiques spécialisées, et porteurs de projets innovants dans le domaine du chanvre bien-être.",
+      "p3": "L'édition {year} promet d'être exceptionnelle avec une trentaine d'exposants, des conférences animées par des experts reconnus, et la prestigieuse cérémonie de la Platinum CBD Cup."
+    },
+    "stats": {
+      "title": "Cann'Agri Expo en chiffres",
+      "exhibitors": "Exposants",
+      "visitors": "Visiteurs attendus",
+      "companies": "Entreprises présentes",
+      "conferences": "Conférences"
+    },
+    "features": {
+      "title": "Ce qui vous attend",
+      "exhibition": {
+        "title": "Espace Exposition",
+        "description": "Découvrez les stands de nos exposants : producteurs CBD, équipements de culture, produits bien-être, cosmétiques, alimentaire et plus encore."
+      },
+      "conferences": {
+        "title": "Conférences & Tables Rondes",
+        "description": "Assistez aux interventions d'experts sur la réglementation, les tendances du marché, les innovations techniques et les perspectives de la filière."
+      },
+      "cup": {
+        "title": "Platinum CBD Cup",
+        "description": "La compétition qui récompense les meilleurs produits CBD de l'année. Un jury d'experts évalue et prime les créations les plus innovantes."
+      },
+      "networking": {
+        "title": "Networking",
+        "description": "Échangez avec les professionnels du secteur, développez votre réseau et découvrez de nouvelles opportunités de partenariats."
+      },
+      "innovations": {
+        "title": "Innovations",
+        "description": "Découvrez les dernières avancées technologiques, les nouvelles variétés et les innovations qui façonnent l'avenir de la filière chanvre."
+      },
+      "documentation": {
+        "title": "Documentation",
+        "description": "Repartez avec des ressources, guides et contacts précieux pour développer votre activité dans le secteur du chanvre CBD."
+      }
+    },
+    "cta": {
+      "title": "Rejoignez-nous le {date}",
+      "description": "Ne manquez pas cette occasion unique de rencontrer les acteurs clés de la filière chanvre CBD et de participer à l'événement de référence du secteur.",
+      "bookTicket": "Réserver mon billet",
+      "practicalInfo": "Infos pratiques"
+    },
+    "edition": "Édition {year}"
+  },
+  "practicalInfo": {
+    "title": "Infos Pratiques",
+    "subtitle": "Tout ce que vous devez savoir pour préparer votre visite à Cann'Agri Expo",
+    "dateLocation": {
+      "title": "Date & Lieu",
+      "date": "Date",
+      "location": "Lieu"
+    },
+    "access": {
+      "title": "Comment venir ?",
+      "transport": "Transports en commun",
+      "parking": "Parking",
+      "accessibility": "Accessibilité"
+    },
+    "tickets": {
+      "title": "Billetterie",
+      "buyButton": "Acheter mes billets"
+    },
+    "contact": {
+      "title": "Contact"
+    },
+    "social": {
+      "title": "Suivez-nous"
+    },
+    "professional": {
+      "title": "Vous êtes professionnel ?",
+      "description": "Réservez votre stand et exposez vos produits lors du salon.",
+      "button": "Devenir exposant"
+    }
+  },
+  "contact": {
+    "title": "Contactez-nous",
+    "subtitle": "Une question sur le salon, les stands ou les partenariats ? Notre équipe est à votre disposition.",
+    "types": {
+      "general": "Question générale",
+      "press": "Presse / Média",
+      "sponsor": "Partenariat / Sponsoring",
+      "exhibitor": "Devenir exposant"
+    },
+    "form": {
+      "type": "Type de demande",
+      "name": "Nom",
+      "namePlaceholder": "Votre nom",
+      "email": "Email",
+      "emailPlaceholder": "votre@email.com",
+      "phone": "Téléphone",
+      "phonePlaceholder": "06 12 34 56 78",
+      "company": "Société",
+      "companyPlaceholder": "Nom de votre société",
+      "subject": "Sujet",
+      "subjectPlaceholder": "Objet de votre message",
+      "message": "Message",
+      "messagePlaceholder": "Votre message...",
+      "send": "Envoyer le message",
+      "sending": "Envoi en cours...",
+      "success": "Message envoyé !",
+      "successMessage": "Nous avons bien reçu votre message et vous répondrons dans les plus brefs délais.",
+      "sendAnother": "Envoyer un autre message",
+      "error": "Erreur lors de l'envoi du message",
+      "connectionError": "Erreur de connexion. Veuillez réessayer.",
+      "privacyNotice": "En soumettant ce formulaire, vous acceptez notre",
+      "privacyPolicy": "politique de confidentialité"
+    },
+    "info": {
+      "title": "Informations",
+      "email": "Email",
+      "phone": "Téléphone",
+      "address": "Adresse"
+    },
+    "press": {
+      "title": "Presse & Médias",
+      "description": "Journalistes et médias, contactez notre service presse pour les accréditations et interviews."
+    }
+  },
+  "sponsoring": {
+    "badge": "Partenariat",
+    "title": "Devenez Partenaire",
+    "subtitle": "Associez votre marque au salon de référence du chanvre CBD et bénéficiez d'une visibilité exceptionnelle.",
+    "intro": "Associez votre image à l'événement de référence du secteur",
+    "benefits": {
+      "title": "Avantages",
+      "visibility": {
+        "title": "Visibilité",
+        "description": "Associez votre marque à l'événement de référence du secteur CBD."
+      },
+      "notoriety": {
+        "title": "Notoriété",
+        "description": "Renforcez votre image de marque auprès des professionnels du secteur."
+      },
+      "network": {
+        "title": "Réseau",
+        "description": "Accédez à un réseau privilégié de décideurs et d'influenceurs."
+      },
+      "stand": "Stand premium",
+      "conference": "Slot conférence",
+      "networking": "Accès événements VIP"
+    },
+    "packagesTitle": "Nos offres de partenariat",
+    "packagesSubtitle": "Nous proposons 4 niveaux de partenariat adaptés à vos objectifs. Contactez-nous pour recevoir le détail complet de chaque offre.",
+    "tiers": {
+      "platinum": {
+        "name": "Platinum",
+        "description": "Visibilité maximale et partenariat exclusif"
+      },
+      "gold": {
+        "name": "Or",
+        "description": "Partenariat premium avec forte visibilité"
+      },
+      "silver": {
+        "name": "Argent",
+        "description": "Partenariat avec visibilité ciblée"
+      },
+      "bronze": {
+        "name": "Bronze",
+        "description": "Partenariat de soutien"
+      }
+    },
+    "requestBrochure": "Demander la plaquette",
+    "form": {
+      "title": "Recevez nos plaquettes de sponsoring",
+      "subtitle": "Remplissez ce formulaire pour recevoir le détail complet de nos offres de partenariat Platinum, Or, Argent et Bronze.",
+      "company": "Nom de l'entreprise",
+      "companyPlaceholder": "Votre entreprise",
+      "contact": "Nom et prénom",
+      "contactPlaceholder": "Jean Dupont",
+      "email": "Email",
+      "emailPlaceholder": "contact@entreprise.fr",
+      "phone": "Téléphone",
+      "phonePlaceholder": "06 XX XX XX XX",
+      "submit": "Recevoir les plaquettes",
+      "sending": "Envoi en cours...",
+      "success": "Demande envoyée ! Vous recevrez les plaquettes par email.",
+      "error": "Erreur lors de l'envoi de la demande",
+      "privacyNotice": "En soumettant ce formulaire, vous acceptez d'être recontacté par notre équipe. Vos données sont traitées conformément à notre",
+      "privacyPolicy": "politique de confidentialité"
+    },
+    "alternativeContact": {
+      "title": "Vous préférez nous contacter directement ?"
+    }
+  },
+  "tickets": {
+    "title": "Billetterie",
+    "subtitle": "Réservez votre place pour le salon de référence du chanvre CBD",
+    "selectTicket": "Choisissez votre billet",
+    "quantity": "Quantité",
+    "total": "Total",
+    "checkout": "Passer au paiement",
+    "features": {
+      "eTicket": {
+        "title": "E-billet instantané",
+        "description": "Recevez votre billet avec QR code par email immédiatement après paiement."
+      },
+      "securePayment": {
+        "title": "Paiement sécurisé",
+        "description": "Transactions 100% sécurisées avec protocole 3D Secure."
+      },
+      "priorityAccess": {
+        "title": "Accès prioritaire",
+        "description": "Évitez les files d'attente avec votre QR code à scanner."
+      }
+    },
+    "contactQuestion": "Une question ? Contactez-nous à",
+    "form": {
+      "attendees": "Participants",
+      "attendee": "Participant",
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "email": "Email",
+      "addAttendee": "Ajouter un participant",
+      "removeAttendee": "Retirer"
+    },
+    "payment": {
+      "title": "Paiement",
+      "secure": "Paiement sécurisé",
+      "processing": "Traitement en cours...",
+      "success": "Paiement réussi !",
+      "error": "Erreur de paiement"
+    },
+    "confirmation": {
+      "title": "Confirmation",
+      "thankYou": "Merci pour votre commande !",
+      "emailSent": "Un email de confirmation avec vos billets a été envoyé.",
+      "orderNumber": "Numéro de commande",
+      "downloadTickets": "Télécharger les billets"
+    }
+  },
+  "programme": {
+    "title": "Programme",
+    "subtitle": "Une journée riche en conférences, ateliers et networking",
+    "types": {
+      "all": "Tous",
+      "CONFERENCE": "Conférence",
+      "WORKSHOP": "Atelier",
+      "CEREMONY": "Cérémonie",
+      "BREAK": "Pause",
+      "NETWORKING": "Networking"
+    },
+    "filters": {
+      "all": "Tous",
+      "conference": "Conférence",
+      "workshop": "Atelier",
+      "ceremony": "Cérémonie"
+    },
+    "platinumCup": {
+      "title": "Platinum CBD Cup",
+      "description": "Le concours de référence qui récompense les meilleures variétés CBD de l'année. Participez à la dégustation et votez pour vos favoris !"
+    },
+    "emptyState": {
+      "title": "Programme à venir",
+      "description": "Le programme détaillé de l'événement sera bientôt disponible. Revenez nous voir prochainement !",
+      "newsletterHint": "Inscrivez-vous à notre newsletter pour être informé de la publication du programme."
+    },
+    "badges": {
+      "highlighted": "Événement phare",
+      "mustSee": "À ne pas manquer"
+    },
+    "footer": {
+      "disclaimer": "Le programme peut être sujet à modifications.",
+      "downloadPdf": "Programme complet (PDF) - Bientôt"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Connexion",
+      "subtitle": "Accédez à votre espace personnel",
+      "proSpace": "Mon compte",
+      "email": "Email",
+      "emailPlaceholder": "votre@email.com",
+      "password": "Mot de passe",
+      "passwordPlaceholder": "Votre mot de passe",
+      "rememberMe": "Se souvenir de moi",
+      "submit": "Se connecter",
+      "submitting": "Connexion...",
+      "forgotPassword": "Mot de passe oublié ?",
+      "noAccount": "Pas encore de compte ?",
+      "register": "Créer un compte",
+      "error": "Email ou mot de passe incorrect",
+      "errorGeneric": "Une erreur est survenue lors de la connexion",
+      "orWithEmail": "ou avec email",
+      "legalNotice": "En vous connectant, vous acceptez nos",
+      "legalLinks": "mentions légales",
+      "and": "et notre",
+      "privacyPolicy": "politique de confidentialité"
+    },
+    "register": {
+      "title": "Créer un compte",
+      "subtitle": "Rejoignez la communauté Cann'Agri Expo",
+      "proSpace": "Espace Pro",
+      "fullName": "Nom complet",
+      "namePlaceholder": "Jean Dupont",
+      "phone": "Téléphone",
+      "phonePlaceholder": "06 12 34 56 78",
+      "email": "Email",
+      "emailPlaceholder": "votre@email.com",
+      "password": "Mot de passe",
+      "passwordPlaceholder": "Minimum 8 caractères",
+      "confirmPassword": "Confirmer le mot de passe",
+      "confirmPasswordPlaceholder": "Confirmez votre mot de passe",
+      "submit": "Créer mon compte",
+      "submitting": "Création...",
+      "hasAccount": "Déjà un compte ?",
+      "login": "Se connecter",
+      "success": "Compte créé avec succès !",
+      "error": "Erreur lors de la création du compte",
+      "passwordsNotMatch": "Les mots de passe ne correspondent pas",
+      "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères",
+      "mustAcceptTerms": "Vous devez accepter les conditions d'utilisation",
+      "orWithEmail": "ou avec email",
+      "wantProAccount": "Je souhaite un compte Pro",
+      "proAccountInfo": "Complétez les informations ci-dessous pour demander un compte exposant. Votre demande sera validée par notre équipe.",
+      "company": "Entreprise",
+      "companyPlaceholder": "Nom de votre entreprise",
+      "siret": "SIRET",
+      "siretPlaceholder": "123 456 789 00012",
+      "businessType": "Type d'activité",
+      "selectBusinessType": "Sélectionnez votre activité",
+      "businessTypes": {
+        "PRODUCTEURS": "Producteurs",
+        "MATERIEL": "Matériel agricole",
+        "LIFESTYLE": "Lifestyle & Bien-être",
+        "SERVICE": "Services"
+      },
+      "acceptTerms": "J'accepte les",
+      "legalLinks": "mentions légales",
+      "and": "et la",
+      "privacyPolicy": "politique de confidentialité",
+      "newsletter": "Je souhaite recevoir la newsletter et les actualités du salon",
+      "dataProtection": "Protection de vos données",
+      "dataProtectionText": "Conformément au RGPD, vos données personnelles sont traitées de manière sécurisée. Vous pouvez exercer vos droits d'accès, de rectification et de suppression en nous contactant à tout moment. Vos données ne sont jamais vendues à des tiers.",
+      "proPending": "Compte créé. Votre demande PRO est en attente de validation.",
+      "accountCreated": "Compte créé avec succès"
+    },
+    "forgotPassword": {
+      "badge": "Réinitialisation",
+      "title": "Mot de passe oublié",
+      "subtitle": "Entrez votre email pour recevoir un lien de réinitialisation",
+      "email": "Email",
+      "emailPlaceholder": "votre@email.com",
+      "submit": "Envoyer le lien",
+      "submitting": "Envoi en cours...",
+      "backToLogin": "Retour à la connexion",
+      "successTitle": "Email envoyé !",
+      "successMessage": "Si un compte existe avec cet email, vous recevrez un lien de réinitialisation dans quelques minutes. Pensez à vérifier vos spams.",
+      "errorGeneric": "Une erreur est survenue. Veuillez réessayer."
+    },
+    "resetPassword": {
+      "badge": "Nouveau mot de passe",
+      "title": "Réinitialiser le mot de passe",
+      "subtitle": "Choisissez un nouveau mot de passe sécurisé",
+      "newPassword": "Nouveau mot de passe",
+      "newPasswordPlaceholder": "Minimum 8 caractères",
+      "confirmPassword": "Confirmer le mot de passe",
+      "confirmPasswordPlaceholder": "Confirmez votre nouveau mot de passe",
+      "passwordRequirement": "Le mot de passe doit contenir au moins 8 caractères",
+      "submit": "Réinitialiser",
+      "submitting": "Réinitialisation...",
+      "successTitle": "Mot de passe modifié !",
+      "successMessage": "Votre mot de passe a été mis à jour. Vous allez être redirigé vers la page de connexion.",
+      "goToLogin": "Aller à la connexion",
+      "invalidTokenTitle": "Lien invalide ou expiré",
+      "invalidTokenMessage": "Ce lien de réinitialisation n'est plus valide. Veuillez faire une nouvelle demande.",
+      "requestNewLink": "Demander un nouveau lien",
+      "verifying": "Vérification du lien...",
+      "passwordMismatch": "Les mots de passe ne correspondent pas",
+      "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères",
+      "errorGeneric": "Une erreur est survenue. Veuillez réessayer."
+    },
+    "verifyEmail": {
+      "verifying": "Vérification en cours",
+      "pleaseWait": "Veuillez patienter...",
+      "successTitle": "Email vérifié !",
+      "successMessage": "Votre adresse email a été confirmée. Vous pouvez maintenant vous connecter.",
+      "goToLogin": "Se connecter",
+      "alreadyVerifiedTitle": "Déjà vérifié",
+      "alreadyVerifiedMessage": "Votre adresse email a déjà été vérifiée. Vous pouvez vous connecter.",
+      "errorTitle": "Erreur de vérification",
+      "noToken": "Lien de vérification invalide.",
+      "errorGeneric": "Une erreur est survenue lors de la vérification.",
+      "registerAgain": "S'inscrire à nouveau"
+    }
+  },
+  "account": {
+    "title": "Mon compte",
+    "subtitle": "Gérez vos informations personnelles",
+    "profile": {
+      "title": "Informations personnelles",
+      "edit": "Modifier",
+      "fullName": "Nom complet",
+      "email": "Email",
+      "emailNotEditable": "L'email ne peut pas être modifié",
+      "phone": "Téléphone",
+      "company": "Entreprise",
+      "businessType": "Type d'activité",
+      "selectActivity": "Sélectionnez votre activité",
+      "siret": "SIRET",
+      "notProvided": "Non renseigné",
+      "save": "Enregistrer",
+      "saving": "Enregistrement...",
+      "cancel": "Annuler",
+      "updateSuccess": "Profil mis à jour avec succès",
+      "updateError": "Erreur lors de la mise à jour"
+    },
+    "pro": {
+      "title": "Compte Professionnel",
+      "validated": "Validé",
+      "pending": "En attente",
+      "validatedMessage": "Votre compte est validé. Vous avez accès à l'Espace Pro.",
+      "pendingMessage": "Votre demande est en cours de validation par notre équipe.",
+      "requestPending": "Votre demande de compte professionnel a bien été enregistrée. Elle sera validée par notre équipe dans les plus brefs délais.",
+      "requestSent": "Votre demande de compte professionnel a été envoyée. Elle sera validée par notre équipe."
+    },
+    "exhibitor": {
+      "title": "Profil Exposant",
+      "subtitle": "Ces informations apparaîtront sur la page Exposants du site",
+      "description": "Description de votre activité",
+      "descriptionPlaceholder": "Décrivez votre activité, vos produits, vos services...",
+      "maxChars": "Maximum 500 caractères",
+      "logo": "Logo de votre entreprise",
+      "currentLogo": "Logo actuel",
+      "deleteLogo": "Supprimer le logo",
+      "uploadLogo": "Cliquez pour choisir",
+      "uploadLogoHint": "ou glissez-déposez votre logo",
+      "uploadFormats": "PNG, JPG, WebP ou GIF - Max 2 Mo",
+      "uploading": "Upload en cours...",
+      "uploadSuccess": "Logo uploadé avec succès",
+      "uploadError": "Erreur lors de l'upload",
+      "logoDeleted": "Logo supprimé",
+      "website": "Site web de l'entreprise",
+      "websitePlaceholder": "https://www.mon-entreprise.fr",
+      "websiteHint": "Ce lien apparaîtra sur la page Exposants du site",
+      "noDescription": "Aucune description ajoutée",
+      "noWebsite": "Aucun site web ajouté",
+      "completeProfile": "Ajoutez une description, un logo et un site web pour apparaître sur la page Exposants du site.",
+      "updateSuccess": "Profil entreprise mis à jour avec succès",
+      "fileTypeError": "Type de fichier non autorisé. Utilisez JPG, PNG, WebP ou GIF.",
+      "fileSizeError": "Le fichier est trop volumineux. Maximum 2 Mo."
+    },
+    "becomeExhibitor": {
+      "title": "Devenir exposant professionnel",
+      "description": "Accédez à l'Espace Pro pour réserver votre stand, gérer vos informations exposant et profiter d'avantages exclusifs.",
+      "button": "Faire une demande",
+      "companyName": "Nom de l'entreprise",
+      "allFieldsRequired": "Tous les champs sont requis pour la demande PRO",
+      "submit": "Envoyer la demande",
+      "submitting": "Envoi..."
+    },
+    "memberSince": "Membre depuis le",
+    "tickets": {
+      "title": "Mes billets",
+      "noTickets": "Aucun billet",
+      "download": "Télécharger",
+      "viewQR": "Voir le QR code"
+    },
+    "orders": {
+      "title": "Mes commandes",
+      "noOrders": "Aucune commande",
+      "viewDetails": "Voir les détails"
+    },
+    "businessTypes": {
+      "PRODUCTEURS": "Producteurs",
+      "MATERIEL": "Matériel agricole",
+      "LIFESTYLE": "Lifestyle & Bien-être",
+      "SERVICE": "Services"
+    },
+    "stands": {
+      "title": "Mes Stands",
+      "subtitle": "Retrouvez vos réservations de stands pour le salon.",
+      "backToAccount": "Retour au compte",
+      "noStands": "Aucun stand réservé",
+      "noStandsDescription": "Vous n'avez pas encore réservé de stand.",
+      "bookStand": "Réserver un stand",
+      "order": "Commande",
+      "furniture": "Mobilier",
+      "electricity": "Électricité",
+      "exhibitorName": "Nom exposant",
+      "totalStands": "Total stands",
+      "totalSurface": "Surface totale",
+      "bookAnotherStand": "Réserver un autre stand"
+    }
+  },
+  "footer": {
+    "description": "Le salon de référence du chanvre et du cannabis en France",
+    "quickLinks": "Liens rapides",
+    "contact": "Contact",
+    "followUs": "Suivez-nous",
+    "legal": {
+      "title": "Informations légales",
+      "privacy": "Politique de confidentialité",
+      "terms": "Conditions générales",
+      "cgv": "CGV",
+      "cookies": "Gestion des cookies"
+    },
+    "copyright": "© {year} Cann'Agri Expo. Tous droits réservés."
+  },
+  "errors": {
+    "404": {
+      "title": "Page non trouvée",
+      "description": "La page que vous recherchez n'existe pas.",
+      "backHome": "Retour à l'accueil"
+    },
+    "500": {
+      "title": "Erreur serveur",
+      "description": "Une erreur est survenue. Veuillez réessayer plus tard.",
+      "backHome": "Retour à l'accueil"
+    }
+  }
+}
