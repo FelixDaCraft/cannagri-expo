@@ -63,59 +63,59 @@ const zones: Zone[] = [
   { id: 'ENTRY', type: 'entry', name: 'Entrée', position: { gridColumn: '1', gridRow: '11 / 13' } },
 ]
 
-// Default positions for stands if not from API - NOUVELLE DISPOSITION (36 stands)
+// Default positions for stands - NUMÉROTATION SENS HORAIRE (36 stands)
 const defaultStandPositions: Record<number, StandPosition> = {
-  // === RANGÉE DU HAUT (7 stands) ===
-  4: { gridColumn: 3, gridRow: 1 },   // Terra (SOLD)
-  5: { gridColumn: 4, gridRow: 1 },
-  6: { gridColumn: 5, gridRow: 1 },   // Matsu (SOLD)
-  7: { gridColumn: 6, gridRow: 1 },
-  8: { gridColumn: 7, gridRow: 1 },   // NORML (RESERVED)
-  9: { gridColumn: 8, gridRow: 1 },   // AFPC (RESERVED)
-  10: { gridColumn: 9, gridRow: 1 },
+  // === RANGÉE DU HAUT (1-7) - gauche à droite ===
+  1: { gridColumn: 3, gridRow: 1 },
+  2: { gridColumn: 4, gridRow: 1 },
+  3: { gridColumn: 5, gridRow: 1 },
+  4: { gridColumn: 6, gridRow: 1 },
+  5: { gridColumn: 7, gridRow: 1 },
+  6: { gridColumn: 8, gridRow: 1 },
+  7: { gridColumn: 9, gridRow: 1 },
 
-  // === PRÈS CONFÉRENCES (2 stands verticaux) ===
-  1: { gridColumn: 2, gridRow: 2 },
-  2: { gridColumn: 2, gridRow: 3 },
+  // === PRÈS CONFÉRENCES (8-9) - haut en bas ===
+  8: { gridColumn: 2, gridRow: 2 },
+  9: { gridColumn: 2, gridRow: 3 },
 
-  // === COLONNE DE DROITE (7 stands verticaux) ===
-  11: { gridColumn: 9, gridRow: 2 },
-  12: { gridColumn: 9, gridRow: 3 },
-  13: { gridColumn: 9, gridRow: 4 },
-  14: { gridColumn: 9, gridRow: 5 },
-  15: { gridColumn: 9, gridRow: 6 },
-  16: { gridColumn: 9, gridRow: 7 },
-  17: { gridColumn: 9, gridRow: 8 },
+  // === COLONNE DE DROITE (10-16) - haut en bas ===
+  10: { gridColumn: 9, gridRow: 2 },
+  11: { gridColumn: 9, gridRow: 3 },
+  12: { gridColumn: 9, gridRow: 4 },
+  13: { gridColumn: 9, gridRow: 5 },
+  14: { gridColumn: 9, gridRow: 6 },
+  15: { gridColumn: 9, gridRow: 7 },
+  16: { gridColumn: 9, gridRow: 8 },
 
-  // === AU-DESSUS DES TABLES (5 stands horizontaux) ===
-  18: { gridColumn: 3, gridRow: 5 },
-  19: { gridColumn: 4, gridRow: 5 },
-  20: { gridColumn: 5, gridRow: 5 },
-  21: { gridColumn: 6, gridRow: 5 },
-  22: { gridColumn: 7, gridRow: 5 },
+  // === RANGÉE DU BAS (17-22) - droite à gauche (sens horaire) ===
+  17: { gridColumn: 8, gridRow: 13 },
+  18: { gridColumn: 7, gridRow: 13 },
+  19: { gridColumn: 6, gridRow: 13 },
+  20: { gridColumn: 5, gridRow: 13 },
+  21: { gridColumn: 4, gridRow: 13 },
+  22: { gridColumn: 3, gridRow: 13 },
 
-  // === GAUCHE DES TABLES (2 stands verticaux) ===
-  3: { gridColumn: 2, gridRow: 6 },
-  23: { gridColumn: 2, gridRow: 7 },
+  // === AU-DESSUS DES TABLES (23-27) - gauche à droite ===
+  23: { gridColumn: 3, gridRow: 5 },
+  24: { gridColumn: 4, gridRow: 5 },
+  25: { gridColumn: 5, gridRow: 5 },
+  26: { gridColumn: 6, gridRow: 5 },
+  27: { gridColumn: 7, gridRow: 5 },
 
-  // === DROITE DES TABLES (2 stands verticaux) ===
-  24: { gridColumn: 8, gridRow: 6 },
-  25: { gridColumn: 8, gridRow: 7 },
+  // === GAUCHE DES TABLES (28-29) - haut en bas ===
+  28: { gridColumn: 2, gridRow: 6 },
+  29: { gridColumn: 2, gridRow: 7 },
 
-  // === EN-DESSOUS DES TABLES (5 stands horizontaux) ===
-  26: { gridColumn: 3, gridRow: 9 },
-  27: { gridColumn: 4, gridRow: 9 },
-  28: { gridColumn: 5, gridRow: 9 },
-  29: { gridColumn: 6, gridRow: 9 },
-  30: { gridColumn: 7, gridRow: 9 },
+  // === DROITE DES TABLES (30-31) - haut en bas ===
+  30: { gridColumn: 8, gridRow: 6 },
+  31: { gridColumn: 8, gridRow: 7 },
 
-  // === RANGÉE DU BAS (6 stands horizontaux) ===
-  31: { gridColumn: 3, gridRow: 13 },
-  32: { gridColumn: 4, gridRow: 13 },
-  33: { gridColumn: 5, gridRow: 13 },
-  34: { gridColumn: 6, gridRow: 13 },
-  35: { gridColumn: 7, gridRow: 13 },
-  36: { gridColumn: 8, gridRow: 13 },
+  // === EN-DESSOUS DES TABLES (32-36) - gauche à droite ===
+  32: { gridColumn: 3, gridRow: 9 },
+  33: { gridColumn: 4, gridRow: 9 },
+  34: { gridColumn: 5, gridRow: 9 },
+  35: { gridColumn: 6, gridRow: 9 },
+  36: { gridColumn: 7, gridRow: 9 },
 }
 
 const statusConfig = {

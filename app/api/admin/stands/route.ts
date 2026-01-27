@@ -2,61 +2,61 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { checkAdminAuth, unauthorizedResponse } from '@/lib/admin-auth'
 
-// Configuration des 36 stands - NOUVELLE DISPOSITION
+// Configuration des 36 stands - NUMÉROTATION SENS HORAIRE
 // Association non soumise à la TVA - Prix net
 // Mobilier (tables/chaises) et électricité inclus
 const defaultStandsConfig = [
-  // === RANGÉE DU HAUT (7 stands) ===
-  { number: 4, surfaceM2: 4, price: 150, size: 'SMALL', x: 255, y: 30, width: 50, height: 50, row: 1, col: 3 },   // Terra (SOLD)
-  { number: 5, surfaceM2: 4, price: 150, size: 'SMALL', x: 315, y: 30, width: 50, height: 50, row: 1, col: 4 },
-  { number: 6, surfaceM2: 4, price: 150, size: 'SMALL', x: 375, y: 30, width: 50, height: 50, row: 1, col: 5 },   // Matsu (SOLD)
-  { number: 7, surfaceM2: 4, price: 150, size: 'SMALL', x: 435, y: 30, width: 50, height: 50, row: 1, col: 6 },
-  { number: 8, surfaceM2: 4, price: 150, size: 'SMALL', x: 495, y: 30, width: 50, height: 50, row: 1, col: 7 },   // NORML (RESERVED)
-  { number: 9, surfaceM2: 4, price: 150, size: 'SMALL', x: 555, y: 30, width: 50, height: 50, row: 1, col: 8 },   // AFPC (RESERVED)
-  { number: 10, surfaceM2: 4, price: 150, size: 'SMALL', x: 615, y: 30, width: 50, height: 50, row: 1, col: 9 },
+  // === RANGÉE DU HAUT (1-7) - gauche à droite ===
+  { number: 1, surfaceM2: 4, price: 150, size: 'SMALL', x: 255, y: 30, width: 50, height: 50, row: 1, col: 3 },
+  { number: 2, surfaceM2: 4, price: 150, size: 'SMALL', x: 315, y: 30, width: 50, height: 50, row: 1, col: 4 },
+  { number: 3, surfaceM2: 4, price: 150, size: 'SMALL', x: 375, y: 30, width: 50, height: 50, row: 1, col: 5 },
+  { number: 4, surfaceM2: 4, price: 150, size: 'SMALL', x: 435, y: 30, width: 50, height: 50, row: 1, col: 6 },
+  { number: 5, surfaceM2: 4, price: 150, size: 'SMALL', x: 495, y: 30, width: 50, height: 50, row: 1, col: 7 },
+  { number: 6, surfaceM2: 4, price: 150, size: 'SMALL', x: 555, y: 30, width: 50, height: 50, row: 1, col: 8 },
+  { number: 7, surfaceM2: 4, price: 150, size: 'SMALL', x: 615, y: 30, width: 50, height: 50, row: 1, col: 9 },
 
-  // === PRÈS CONFÉRENCES (2 stands verticaux) ===
-  { number: 1, surfaceM2: 4, price: 150, size: 'SMALL', x: 195, y: 100, width: 50, height: 50, row: 2, col: 2 },
-  { number: 2, surfaceM2: 4, price: 150, size: 'SMALL', x: 195, y: 160, width: 50, height: 50, row: 3, col: 2 },
+  // === PRÈS CONFÉRENCES (8-9) - haut en bas ===
+  { number: 8, surfaceM2: 4, price: 150, size: 'SMALL', x: 195, y: 100, width: 50, height: 50, row: 2, col: 2 },
+  { number: 9, surfaceM2: 4, price: 150, size: 'SMALL', x: 195, y: 160, width: 50, height: 50, row: 3, col: 2 },
 
-  // === COLONNE DE DROITE (7 stands verticaux) ===
-  { number: 11, surfaceM2: 4, price: 150, size: 'SMALL', x: 615, y: 100, width: 50, height: 50, row: 2, col: 9 },
-  { number: 12, surfaceM2: 4, price: 150, size: 'SMALL', x: 615, y: 160, width: 50, height: 50, row: 3, col: 9 },
-  { number: 13, surfaceM2: 4, price: 150, size: 'SMALL', x: 615, y: 220, width: 50, height: 50, row: 4, col: 9 },
-  { number: 14, surfaceM2: 4, price: 150, size: 'SMALL', x: 615, y: 280, width: 50, height: 50, row: 5, col: 9 },
-  { number: 15, surfaceM2: 4, price: 150, size: 'SMALL', x: 615, y: 340, width: 50, height: 50, row: 6, col: 9 },
-  { number: 16, surfaceM2: 4, price: 150, size: 'SMALL', x: 615, y: 400, width: 50, height: 50, row: 7, col: 9 },
-  { number: 17, surfaceM2: 4, price: 150, size: 'SMALL', x: 615, y: 460, width: 50, height: 50, row: 8, col: 9 },
+  // === COLONNE DE DROITE (10-16) - haut en bas ===
+  { number: 10, surfaceM2: 4, price: 150, size: 'SMALL', x: 615, y: 100, width: 50, height: 50, row: 2, col: 9 },
+  { number: 11, surfaceM2: 4, price: 150, size: 'SMALL', x: 615, y: 160, width: 50, height: 50, row: 3, col: 9 },
+  { number: 12, surfaceM2: 4, price: 150, size: 'SMALL', x: 615, y: 220, width: 50, height: 50, row: 4, col: 9 },
+  { number: 13, surfaceM2: 4, price: 150, size: 'SMALL', x: 615, y: 280, width: 50, height: 50, row: 5, col: 9 },
+  { number: 14, surfaceM2: 4, price: 150, size: 'SMALL', x: 615, y: 340, width: 50, height: 50, row: 6, col: 9 },
+  { number: 15, surfaceM2: 4, price: 150, size: 'SMALL', x: 615, y: 400, width: 50, height: 50, row: 7, col: 9 },
+  { number: 16, surfaceM2: 4, price: 150, size: 'SMALL', x: 615, y: 460, width: 50, height: 50, row: 8, col: 9 },
 
-  // === AU-DESSUS DES TABLES (5 stands horizontaux) ===
-  { number: 18, surfaceM2: 4, price: 150, size: 'SMALL', x: 255, y: 280, width: 50, height: 50, row: 5, col: 3 },
-  { number: 19, surfaceM2: 4, price: 150, size: 'SMALL', x: 315, y: 280, width: 50, height: 50, row: 5, col: 4 },
-  { number: 20, surfaceM2: 4, price: 150, size: 'SMALL', x: 375, y: 280, width: 50, height: 50, row: 5, col: 5 },
-  { number: 21, surfaceM2: 4, price: 150, size: 'SMALL', x: 435, y: 280, width: 50, height: 50, row: 5, col: 6 },
-  { number: 22, surfaceM2: 4, price: 150, size: 'SMALL', x: 495, y: 280, width: 50, height: 50, row: 5, col: 7 },
+  // === RANGÉE DU BAS (17-22) - droite à gauche (sens horaire) ===
+  { number: 17, surfaceM2: 4, price: 150, size: 'SMALL', x: 555, y: 690, width: 50, height: 50, row: 13, col: 8 },
+  { number: 18, surfaceM2: 4, price: 150, size: 'SMALL', x: 495, y: 690, width: 50, height: 50, row: 13, col: 7 },
+  { number: 19, surfaceM2: 4, price: 150, size: 'SMALL', x: 435, y: 690, width: 50, height: 50, row: 13, col: 6 },
+  { number: 20, surfaceM2: 4, price: 150, size: 'SMALL', x: 375, y: 690, width: 50, height: 50, row: 13, col: 5 },
+  { number: 21, surfaceM2: 4, price: 150, size: 'SMALL', x: 315, y: 690, width: 50, height: 50, row: 13, col: 4 },
+  { number: 22, surfaceM2: 4, price: 150, size: 'SMALL', x: 255, y: 690, width: 50, height: 50, row: 13, col: 3 },
 
-  // === GAUCHE DES TABLES (2 stands verticaux) ===
-  { number: 3, surfaceM2: 4, price: 150, size: 'SMALL', x: 195, y: 340, width: 50, height: 50, row: 6, col: 2 },
-  { number: 23, surfaceM2: 4, price: 150, size: 'SMALL', x: 195, y: 400, width: 50, height: 50, row: 7, col: 2 },
+  // === AU-DESSUS DES TABLES (23-27) - gauche à droite ===
+  { number: 23, surfaceM2: 4, price: 150, size: 'SMALL', x: 255, y: 280, width: 50, height: 50, row: 5, col: 3 },
+  { number: 24, surfaceM2: 4, price: 150, size: 'SMALL', x: 315, y: 280, width: 50, height: 50, row: 5, col: 4 },
+  { number: 25, surfaceM2: 4, price: 150, size: 'SMALL', x: 375, y: 280, width: 50, height: 50, row: 5, col: 5 },
+  { number: 26, surfaceM2: 4, price: 150, size: 'SMALL', x: 435, y: 280, width: 50, height: 50, row: 5, col: 6 },
+  { number: 27, surfaceM2: 4, price: 150, size: 'SMALL', x: 495, y: 280, width: 50, height: 50, row: 5, col: 7 },
 
-  // === DROITE DES TABLES (2 stands verticaux) ===
-  { number: 24, surfaceM2: 4, price: 150, size: 'SMALL', x: 555, y: 340, width: 50, height: 50, row: 6, col: 8 },
-  { number: 25, surfaceM2: 4, price: 150, size: 'SMALL', x: 555, y: 400, width: 50, height: 50, row: 7, col: 8 },
+  // === GAUCHE DES TABLES (28-29) - haut en bas ===
+  { number: 28, surfaceM2: 4, price: 150, size: 'SMALL', x: 195, y: 340, width: 50, height: 50, row: 6, col: 2 },
+  { number: 29, surfaceM2: 4, price: 150, size: 'SMALL', x: 195, y: 400, width: 50, height: 50, row: 7, col: 2 },
 
-  // === EN-DESSOUS DES TABLES (5 stands horizontaux) ===
-  { number: 26, surfaceM2: 4, price: 150, size: 'SMALL', x: 255, y: 520, width: 50, height: 50, row: 9, col: 3 },
-  { number: 27, surfaceM2: 4, price: 150, size: 'SMALL', x: 315, y: 520, width: 50, height: 50, row: 9, col: 4 },
-  { number: 28, surfaceM2: 4, price: 150, size: 'SMALL', x: 375, y: 520, width: 50, height: 50, row: 9, col: 5 },
-  { number: 29, surfaceM2: 4, price: 150, size: 'SMALL', x: 435, y: 520, width: 50, height: 50, row: 9, col: 6 },
-  { number: 30, surfaceM2: 4, price: 150, size: 'SMALL', x: 495, y: 520, width: 50, height: 50, row: 9, col: 7 },
+  // === DROITE DES TABLES (30-31) - haut en bas ===
+  { number: 30, surfaceM2: 4, price: 150, size: 'SMALL', x: 555, y: 340, width: 50, height: 50, row: 6, col: 8 },
+  { number: 31, surfaceM2: 4, price: 150, size: 'SMALL', x: 555, y: 400, width: 50, height: 50, row: 7, col: 8 },
 
-  // === RANGÉE DU BAS (6 stands horizontaux) ===
-  { number: 31, surfaceM2: 4, price: 150, size: 'SMALL', x: 255, y: 690, width: 50, height: 50, row: 13, col: 3 },
-  { number: 32, surfaceM2: 4, price: 150, size: 'SMALL', x: 315, y: 690, width: 50, height: 50, row: 13, col: 4 },
-  { number: 33, surfaceM2: 4, price: 150, size: 'SMALL', x: 375, y: 690, width: 50, height: 50, row: 13, col: 5 },
-  { number: 34, surfaceM2: 4, price: 150, size: 'SMALL', x: 435, y: 690, width: 50, height: 50, row: 13, col: 6 },
-  { number: 35, surfaceM2: 4, price: 150, size: 'SMALL', x: 495, y: 690, width: 50, height: 50, row: 13, col: 7 },
-  { number: 36, surfaceM2: 4, price: 150, size: 'SMALL', x: 555, y: 690, width: 50, height: 50, row: 13, col: 8 },
+  // === EN-DESSOUS DES TABLES (32-36) - gauche à droite ===
+  { number: 32, surfaceM2: 4, price: 150, size: 'SMALL', x: 255, y: 520, width: 50, height: 50, row: 9, col: 3 },
+  { number: 33, surfaceM2: 4, price: 150, size: 'SMALL', x: 315, y: 520, width: 50, height: 50, row: 9, col: 4 },
+  { number: 34, surfaceM2: 4, price: 150, size: 'SMALL', x: 375, y: 520, width: 50, height: 50, row: 9, col: 5 },
+  { number: 35, surfaceM2: 4, price: 150, size: 'SMALL', x: 435, y: 520, width: 50, height: 50, row: 9, col: 6 },
+  { number: 36, surfaceM2: 4, price: 150, size: 'SMALL', x: 495, y: 520, width: 50, height: 50, row: 9, col: 7 },
 ]
 
 // GET /api/admin/stands - List all stands with full details
