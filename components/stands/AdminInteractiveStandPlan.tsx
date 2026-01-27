@@ -59,60 +59,63 @@ interface AdminStandPlanProps {
 const zones: Zone[] = [
   { id: 'CONF', type: 'conference', name: 'Conférences', position: { gridColumn: '1', gridRow: '1 / 5' } },
   { id: 'BAR', type: 'bar', name: 'Bar', position: { gridColumn: '1', gridRow: '6 / 9' } },
-  { id: 'TABLES', type: 'tables', name: 'Tables', position: { gridColumn: '3 / 7', gridRow: '6 / 9' } },
+  { id: 'TABLES', type: 'tables', name: 'Tables', position: { gridColumn: '3 / 8', gridRow: '6 / 9' } },
   { id: 'ENTRY', type: 'entry', name: 'Entrée', position: { gridColumn: '1', gridRow: '11 / 13' } },
 ]
 
-// Default positions for stands if not from API
+// Default positions for stands if not from API - NOUVELLE DISPOSITION (36 stands)
 const defaultStandPositions: Record<number, StandPosition> = {
-  // Stands à côté conférence (1-3)
-  1: { gridColumn: 2, gridRow: 4 },
-  2: { gridColumn: 2, gridRow: 3 },
-  3: { gridColumn: 2, gridRow: 2 },
-  // Rangée du haut (4-9)
-  4: { gridColumn: 3, gridRow: 1 },
+  // === RANGÉE DU HAUT (7 stands) ===
+  4: { gridColumn: 3, gridRow: 1 },   // Terra (SOLD)
   5: { gridColumn: 4, gridRow: 1 },
-  6: { gridColumn: 5, gridRow: 1 },
+  6: { gridColumn: 5, gridRow: 1 },   // Matsu (SOLD)
   7: { gridColumn: 6, gridRow: 1 },
-  8: { gridColumn: 7, gridRow: 1 },
-  9: { gridColumn: 8, gridRow: 1 },
-  // Colonne de droite (10-19)
-  10: { gridColumn: 10, gridRow: 2 },
-  11: { gridColumn: 10, gridRow: 3 },
-  12: { gridColumn: 10, gridRow: 4 },
-  13: { gridColumn: 10, gridRow: 5 },
-  14: { gridColumn: 10, gridRow: 6 },
-  15: { gridColumn: 10, gridRow: 7 },
-  16: { gridColumn: 10, gridRow: 8 },
-  17: { gridColumn: 10, gridRow: 9 },
-  18: { gridColumn: 10, gridRow: 10 },
-  19: { gridColumn: 10, gridRow: 11 },
-  // Rangée du bas (20-25)
-  20: { gridColumn: 8, gridRow: 13 },
-  21: { gridColumn: 7, gridRow: 13 },
-  22: { gridColumn: 6, gridRow: 13 },
-  23: { gridColumn: 5, gridRow: 13 },
-  24: { gridColumn: 4, gridRow: 13 },
-  25: { gridColumn: 3, gridRow: 13 },
-  // === NOUVEAUX STANDS AUTOUR DES TABLES (26-39) ===
-  // Rangée au-dessus des Tables
-  26: { gridColumn: 3, gridRow: 5 },
-  27: { gridColumn: 4, gridRow: 5 },
-  28: { gridColumn: 5, gridRow: 5 },
-  29: { gridColumn: 6, gridRow: 5 },
-  30: { gridColumn: 7, gridRow: 5 },
-  // Côté gauche des Tables (rotation 90°)
-  31: { gridColumn: 2, gridRow: 6 },
-  32: { gridColumn: 2, gridRow: 7 },
-  // Côté droit des Tables (rotation 90°) - seulement 2 stands
-  33: { gridColumn: 8, gridRow: 6 },
-  34: { gridColumn: 8, gridRow: 7 },
-  // Rangée en-dessous des Tables
-  36: { gridColumn: 3, gridRow: 9 },
-  37: { gridColumn: 4, gridRow: 9 },
-  38: { gridColumn: 5, gridRow: 9 },
-  39: { gridColumn: 6, gridRow: 9 },
-  40: { gridColumn: 7, gridRow: 9 },
+  8: { gridColumn: 7, gridRow: 1 },   // NORML (RESERVED)
+  9: { gridColumn: 8, gridRow: 1 },   // AFPC (RESERVED)
+  10: { gridColumn: 9, gridRow: 1 },
+
+  // === PRÈS CONFÉRENCES (2 stands verticaux) ===
+  1: { gridColumn: 2, gridRow: 2 },
+  2: { gridColumn: 2, gridRow: 3 },
+
+  // === COLONNE DE DROITE (7 stands verticaux) ===
+  11: { gridColumn: 9, gridRow: 2 },
+  12: { gridColumn: 9, gridRow: 3 },
+  13: { gridColumn: 9, gridRow: 4 },
+  14: { gridColumn: 9, gridRow: 5 },
+  15: { gridColumn: 9, gridRow: 6 },
+  16: { gridColumn: 9, gridRow: 7 },
+  17: { gridColumn: 9, gridRow: 8 },
+
+  // === AU-DESSUS DES TABLES (5 stands horizontaux) ===
+  18: { gridColumn: 3, gridRow: 5 },
+  19: { gridColumn: 4, gridRow: 5 },
+  20: { gridColumn: 5, gridRow: 5 },
+  21: { gridColumn: 6, gridRow: 5 },
+  22: { gridColumn: 7, gridRow: 5 },
+
+  // === GAUCHE DES TABLES (2 stands verticaux) ===
+  3: { gridColumn: 2, gridRow: 6 },
+  23: { gridColumn: 2, gridRow: 7 },
+
+  // === DROITE DES TABLES (2 stands verticaux) ===
+  24: { gridColumn: 8, gridRow: 6 },
+  25: { gridColumn: 8, gridRow: 7 },
+
+  // === EN-DESSOUS DES TABLES (5 stands horizontaux) ===
+  26: { gridColumn: 3, gridRow: 9 },
+  27: { gridColumn: 4, gridRow: 9 },
+  28: { gridColumn: 5, gridRow: 9 },
+  29: { gridColumn: 6, gridRow: 9 },
+  30: { gridColumn: 7, gridRow: 9 },
+
+  // === RANGÉE DU BAS (6 stands horizontaux) ===
+  31: { gridColumn: 3, gridRow: 13 },
+  32: { gridColumn: 4, gridRow: 13 },
+  33: { gridColumn: 5, gridRow: 13 },
+  34: { gridColumn: 6, gridRow: 13 },
+  35: { gridColumn: 7, gridRow: 13 },
+  36: { gridColumn: 8, gridRow: 13 },
 }
 
 const statusConfig = {
@@ -272,8 +275,6 @@ export function AdminInteractiveStandPlan({
             {filteredStands.map((stand) => {
               const pos = getStandPosition(stand)
               const config = statusConfig[stand.status]
-              // Stands à rotation 90°: 10-19 (colonne droite) et 31-34 (autour des tables)
-              const shouldRotate = (stand.number >= 10 && stand.number <= 19) || (stand.number >= 31 && stand.number <= 34)
               return (
                 <motion.button
                   key={stand.id}
@@ -288,7 +289,6 @@ export function AdminInteractiveStandPlan({
                   `}
                   style={{
                     gridColumn: pos.gridColumn,
-                    transform: shouldRotate ? 'rotate(90deg)' : undefined,
                     gridRow: pos.gridRow,
                   }}
                   title={`Stand ${stand.number} - ${config.label}${stand.exhibitorName ? ` - ${stand.exhibitorName}` : ''}`}

@@ -110,8 +110,9 @@ function convertDBStandToUIStand(dbStand: DBStand): Stand {
 function getLocationFromPosition(row: number, col: number): string {
   if (row === 1) return 'Allée Nord'
   if (row === 13) return 'Allée Sud'
-  if (col === 10) return 'Allée Est'
+  if (col === 9) return 'Allée Est'
   if (col === 2) return 'Côté Conférences'
+  if (row >= 5 && row <= 9 && col >= 3 && col <= 8) return 'Zone Tables'
   return 'Zone centrale'
 }
 
@@ -121,7 +122,7 @@ const defaultConfig: Omit<PlanConfig, 'stands'> & { stands: Stand[] } = {
   zones: [
     { id: 'CONF', type: 'conference', name: 'Conférences', position: { gridColumn: '1', gridRow: '1 / 5' }, style: 'dashed', clickable: false },
     { id: 'BAR', type: 'bar', name: 'Bar', position: { gridColumn: '1', gridRow: '6 / 9' }, style: 'dashed', clickable: false },
-    { id: 'TABLES', type: 'tables', name: 'Tables', position: { gridColumn: '3 / 7', gridRow: '6 / 9' }, style: 'dashed', clickable: false },
+    { id: 'TABLES', type: 'tables', name: 'Tables', position: { gridColumn: '3 / 8', gridRow: '6 / 9' }, style: 'dashed', clickable: false },
     { id: 'ENTRY', type: 'entry', name: 'Entrée', position: { gridColumn: '1', gridRow: '11 / 13' }, style: 'dashed', clickable: false, icon: { type: 'arrow', direction: 'right' } },
   ],
   stands: [], // Will be loaded from API
@@ -338,32 +339,27 @@ export function InteractiveStandPlan({
             ))}
 
             {/* Stands */}
-            {filteredStands.map((stand) => {
-              // Stands à rotation 90°: 10-19 (colonne droite) et 31-34 (autour des tables)
-              const shouldRotate = (stand.id >= 10 && stand.id <= 19) || (stand.id >= 31 && stand.id <= 34)
-              return (
-                <motion.button
-                  key={stand.id}
-                  whileHover={{ scale: stand.status === 'available' ? 1.05 : 1 }}
-                  whileTap={{ scale: stand.status === 'available' ? 0.95 : 1 }}
-                  onClick={() => handleStandClick(stand)}
-                  className={`
-                    rounded-lg flex items-center justify-center font-bold text-white text-sm
-                    transition-all shadow-md
-                    ${getStatusClass(stand.status)}
-                    ${selectedStand?.id === stand.id ? 'ring-4 ring-forest ring-offset-2' : ''}
-                  `}
-                  style={{
-                    gridColumn: stand.position.gridColumn,
-                    gridRow: stand.position.gridRow,
-                    transform: shouldRotate ? 'rotate(90deg)' : undefined,
-                  }}
-                  title={`${stand.name} - ${config.statuses[stand.status]?.label}`}
-                >
-                  {stand.id}
-                </motion.button>
-              )
-            })}
+            {filteredStands.map((stand) => (
+              <motion.button
+                key={stand.id}
+                whileHover={{ scale: stand.status === 'available' ? 1.05 : 1 }}
+                whileTap={{ scale: stand.status === 'available' ? 0.95 : 1 }}
+                onClick={() => handleStandClick(stand)}
+                className={`
+                  rounded-lg flex items-center justify-center font-bold text-white text-sm
+                  transition-all shadow-md
+                  ${getStatusClass(stand.status)}
+                  ${selectedStand?.id === stand.id ? 'ring-4 ring-forest ring-offset-2' : ''}
+                `}
+                style={{
+                  gridColumn: stand.position.gridColumn,
+                  gridRow: stand.position.gridRow,
+                }}
+                title={`${stand.name} - ${config.statuses[stand.status]?.label}`}
+              >
+                {stand.id}
+              </motion.button>
+            ))}
 
             {/* Hidden stands (filtered out) */}
             {stands
