@@ -193,6 +193,7 @@ export function AdminInteractiveStandPlan({
   const [dragMode, setDragMode] = useState(false)
   const [draggingStand, setDraggingStand] = useState<string | null>(null)
   const [pendingPositions, setPendingPositions] = useState<Map<string, PendingPosition>>(new Map())
+  const [dragOffsets, setDragOffsets] = useState<Map<string, { x: number; y: number }>>(new Map())
   const [isSaving, setIsSaving] = useState(false)
   const planRef = useRef<HTMLDivElement>(null)
 
@@ -246,13 +247,32 @@ export function AdminInteractiveStandPlan({
     }
   }
 
+  // Handle drag - track offset during drag
+  const handleDrag = useCallback((stand: AdminStand, info: { offset: { x: number; y: number } }) => {
+    setDragOffsets(prev => {
+      const newMap = new Map(prev)
+      newMap.set(stand.id, { x: info.offset.x, y: info.offset.y })
+      return newMap
+    })
+  }, [])
+
   // Handle drag end - store position locally (batch mode)
   const handleDragEnd = useCallback((stand: AdminStand, info: { offset: { x: number; y: number } }) => {
     if (!planRef.current) return
 
-    const currentPos = getStandPosition(stand)
-    const newX = Math.max(0, Math.min(PLAN_WIDTH - currentPos.width, currentPos.x + info.offset.x))
-    const newY = Math.max(0, Math.min(PLAN_HEIGHT - currentPos.height, currentPos.y + info.offset.y))
+    // Get the base position (original, not from pending)
+    const basePos = (stand.x !== undefined && stand.y !== undefined && stand.width && stand.height)
+      ? { x: stand.x, y: stand.y, width: stand.width, height: stand.height }
+      : defaultStandConfig[stand.number] || { x: 0, y: 0, width: STAND_SIZE, height: STAND_SIZE }
+
+    // Get current pending offset if any
+    const existingPending = pendingPositions.get(stand.id)
+    const currentX = existingPending ? existingPending.x : basePos.x
+    const currentY = existingPending ? existingPending.y : basePos.y
+
+    // Calculate new position
+    const newX = Math.max(0, Math.min(PLAN_WIDTH - basePos.width, currentX + info.offset.x))
+    const newY = Math.max(0, Math.min(PLAN_HEIGHT - basePos.height, currentY + info.offset.y))
 
     // Store in pending positions (batch mode)
     setPendingPositions(prev => {
@@ -260,13 +280,21 @@ export function AdminInteractiveStandPlan({
       newMap.set(stand.id, {
         x: Math.round(newX),
         y: Math.round(newY),
-        width: currentPos.width,
-        height: currentPos.height
+        width: basePos.width,
+        height: basePos.height
       })
       return newMap
     })
+
+    // Clear drag offset for this stand
+    setDragOffsets(prev => {
+      const newMap = new Map(prev)
+      newMap.delete(stand.id)
+      return newMap
+    })
+
     setDraggingStand(null)
-  }, [getStandPosition])
+  }, [pendingPositions])
 
   // Save all pending positions
   const handleSavePositions = useCallback(async () => {
@@ -302,6 +330,7 @@ export function AdminInteractiveStandPlan({
   // Reset pending positions
   const handleResetPositions = useCallback(() => {
     setPendingPositions(new Map())
+    setDragOffsets(new Map())
   }, [])
 
   if (loading) {
@@ -455,13 +484,11 @@ export function AdminInteractiveStandPlan({
 
                 return (
                   <motion.button
-                    key={stand.id}
+                    key={`${stand.id}-${pos.x}-${pos.y}`}
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{
                       opacity: 1,
                       scale: 1,
-                      x: 0,
-                      y: 0,
                     }}
                     exit={{ opacity: 0, scale: 0.8 }}
                     transition={{
@@ -472,8 +499,10 @@ export function AdminInteractiveStandPlan({
                     }}
                     drag={dragMode}
                     dragMomentum={false}
-                    dragElastic={0.1}
+                    dragElastic={0}
+                    dragConstraints={planRef}
                     onDragStart={() => setDraggingStand(stand.id)}
+                    onDrag={(_, info) => handleDrag(stand, info)}
                     onDragEnd={(_, info) => handleDragEnd(stand, info)}
                     whileHover={!dragMode ? { scale: 1.08, zIndex: 20 } : { zIndex: 30 }}
                     whileTap={!dragMode ? { scale: 0.95 } : {}}
