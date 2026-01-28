@@ -75,59 +75,62 @@ const zones: Zone[] = [
   },
 ]
 
-// Default stand positions (x, y, width, height)
+// Taille uniforme pour tous les stands (carres)
+const STAND_SIZE = 45
+
+// Default stand positions - tous les stands ont la meme taille
 const defaultStandConfig: Record<number, { x: number; y: number; width: number; height: number }> = {
-  // === RANGEE DU HAUT (1-6) - horizontaux ===
-  1: { x: 200, y: 20, width: 70, height: 40 },
-  2: { x: 280, y: 20, width: 70, height: 40 },
-  3: { x: 360, y: 20, width: 70, height: 40 },
-  4: { x: 440, y: 20, width: 70, height: 40 },
-  5: { x: 520, y: 20, width: 70, height: 40 },
-  6: { x: 600, y: 20, width: 70, height: 40 },
+  // === RANGEE DU HAUT (1-6) ===
+  1: { x: 180, y: 15, width: STAND_SIZE, height: STAND_SIZE },
+  2: { x: 235, y: 15, width: STAND_SIZE, height: STAND_SIZE },
+  3: { x: 290, y: 15, width: STAND_SIZE, height: STAND_SIZE },
+  4: { x: 345, y: 15, width: STAND_SIZE, height: STAND_SIZE },
+  5: { x: 400, y: 15, width: STAND_SIZE, height: STAND_SIZE },
+  6: { x: 455, y: 15, width: STAND_SIZE, height: STAND_SIZE },
 
-  // === PRES CONFERENCES (7-8) - VERTICAUX ===
-  7: { x: 130, y: 20, width: 40, height: 70 },
-  8: { x: 130, y: 100, width: 40, height: 70 },
+  // === PRES CONFERENCES (7-8) ===
+  7: { x: 125, y: 15, width: STAND_SIZE, height: STAND_SIZE },
+  8: { x: 125, y: 70, width: STAND_SIZE, height: STAND_SIZE },
 
-  // === COLONNE DE DROITE (9-16) - VERTICAUX ===
-  9: { x: 650, y: 70, width: 40, height: 70 },
-  10: { x: 650, y: 150, width: 40, height: 70 },
-  11: { x: 650, y: 230, width: 40, height: 70 },
-  12: { x: 650, y: 310, width: 40, height: 70 },
-  13: { x: 650, y: 390, width: 40, height: 70 },
-  14: { x: 650, y: 470, width: 40, height: 70 },
-  15: { x: 600, y: 350, width: 40, height: 70 },
-  16: { x: 600, y: 430, width: 40, height: 70 },
+  // === COLONNE DE DROITE (9-16) ===
+  9: { x: 510, y: 15, width: STAND_SIZE, height: STAND_SIZE },
+  10: { x: 510, y: 70, width: STAND_SIZE, height: STAND_SIZE },
+  11: { x: 510, y: 125, width: STAND_SIZE, height: STAND_SIZE },
+  12: { x: 510, y: 180, width: STAND_SIZE, height: STAND_SIZE },
+  13: { x: 510, y: 235, width: STAND_SIZE, height: STAND_SIZE },
+  14: { x: 510, y: 290, width: STAND_SIZE, height: STAND_SIZE },
+  15: { x: 510, y: 345, width: STAND_SIZE, height: STAND_SIZE },
+  16: { x: 510, y: 400, width: STAND_SIZE, height: STAND_SIZE },
 
-  // === RANGEE DU BAS (17-22) - horizontaux ===
-  17: { x: 520, y: 500, width: 70, height: 40 },
-  18: { x: 440, y: 500, width: 70, height: 40 },
-  19: { x: 360, y: 500, width: 70, height: 40 },
-  20: { x: 280, y: 500, width: 70, height: 40 },
-  21: { x: 200, y: 500, width: 70, height: 40 },
-  22: { x: 130, y: 500, width: 70, height: 40 },
+  // === RANGEE DU BAS (17-22) ===
+  17: { x: 455, y: 490, width: STAND_SIZE, height: STAND_SIZE },
+  18: { x: 400, y: 490, width: STAND_SIZE, height: STAND_SIZE },
+  19: { x: 345, y: 490, width: STAND_SIZE, height: STAND_SIZE },
+  20: { x: 290, y: 490, width: STAND_SIZE, height: STAND_SIZE },
+  21: { x: 235, y: 490, width: STAND_SIZE, height: STAND_SIZE },
+  22: { x: 180, y: 490, width: STAND_SIZE, height: STAND_SIZE },
 
-  // === AU-DESSUS DES TABLES (23-27) - horizontaux ===
-  23: { x: 200, y: 170, width: 70, height: 40 },
-  24: { x: 280, y: 170, width: 70, height: 40 },
-  25: { x: 360, y: 170, width: 70, height: 40 },
-  26: { x: 440, y: 170, width: 70, height: 40 },
-  27: { x: 520, y: 170, width: 70, height: 40 },
+  // === AU-DESSUS DES TABLES (23-27) ===
+  23: { x: 180, y: 165, width: STAND_SIZE, height: STAND_SIZE },
+  24: { x: 235, y: 165, width: STAND_SIZE, height: STAND_SIZE },
+  25: { x: 290, y: 165, width: STAND_SIZE, height: STAND_SIZE },
+  26: { x: 345, y: 165, width: STAND_SIZE, height: STAND_SIZE },
+  27: { x: 400, y: 165, width: STAND_SIZE, height: STAND_SIZE },
 
-  // === GAUCHE DES TABLES (28-29) - VERTICAUX ===
-  28: { x: 130, y: 220, width: 40, height: 70 },
-  29: { x: 130, y: 300, width: 40, height: 70 },
+  // === GAUCHE DES TABLES (28-29) ===
+  28: { x: 125, y: 230, width: STAND_SIZE, height: STAND_SIZE },
+  29: { x: 125, y: 285, width: STAND_SIZE, height: STAND_SIZE },
 
-  // === DROITE DES TABLES (30-31) - VERTICAUX ===
-  30: { x: 530, y: 220, width: 40, height: 70 },
-  31: { x: 530, y: 300, width: 40, height: 70 },
+  // === DROITE DES TABLES (30-31) ===
+  30: { x: 455, y: 230, width: STAND_SIZE, height: STAND_SIZE },
+  31: { x: 455, y: 285, width: STAND_SIZE, height: STAND_SIZE },
 
-  // === EN-DESSOUS DES TABLES (32-36) - horizontaux ===
-  32: { x: 200, y: 350, width: 70, height: 40 },
-  33: { x: 280, y: 350, width: 70, height: 40 },
-  34: { x: 360, y: 350, width: 70, height: 40 },
-  35: { x: 440, y: 350, width: 70, height: 40 },
-  36: { x: 520, y: 350, width: 70, height: 40 },
+  // === EN-DESSOUS DES TABLES (32-36) ===
+  32: { x: 180, y: 380, width: STAND_SIZE, height: STAND_SIZE },
+  33: { x: 235, y: 380, width: STAND_SIZE, height: STAND_SIZE },
+  34: { x: 290, y: 380, width: STAND_SIZE, height: STAND_SIZE },
+  35: { x: 345, y: 380, width: STAND_SIZE, height: STAND_SIZE },
+  36: { x: 400, y: 380, width: STAND_SIZE, height: STAND_SIZE },
 }
 
 // Database stand type
@@ -170,7 +173,7 @@ function convertDBStandToUIStand(dbStand: DBStand): Stand {
   const standNumber = parseInt(dbStand.code) || 0
 
   // Use DB position if available, otherwise use default
-  const defaultPos = defaultStandConfig[standNumber] || { x: 0, y: 0, width: 70, height: 40 }
+  const defaultPos = defaultStandConfig[standNumber] || { x: 0, y: 0, width: STAND_SIZE, height: STAND_SIZE }
   const x = dbStand.x ?? defaultPos.x
   const y = dbStand.y ?? defaultPos.y
   const width = dbStand.width ?? defaultPos.width

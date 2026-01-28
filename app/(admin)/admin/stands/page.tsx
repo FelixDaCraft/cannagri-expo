@@ -359,10 +359,38 @@ export default function StandsPage() {
                 })
                 if (res.ok) {
                   fetchStands()
-                  setMessage({ type: 'success', text: 'Position mise à jour' })
+                  setMessage({ type: 'success', text: 'Position mise a jour' })
                 }
               } catch {
-                setMessage({ type: 'error', text: 'Erreur de mise à jour de position' })
+                setMessage({ type: 'error', text: 'Erreur de mise a jour de position' })
+              }
+            }}
+            onBatchPositionChange={async (changes) => {
+              try {
+                // Save all positions in parallel
+                const promises = changes.map(change =>
+                  fetch('/api/admin/stands', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      id: change.standId,
+                      x: change.x,
+                      y: change.y,
+                      width: change.width,
+                      height: change.height
+                    })
+                  })
+                )
+                const results = await Promise.all(promises)
+                const allOk = results.every(r => r.ok)
+                if (allOk) {
+                  fetchStands()
+                  setMessage({ type: 'success', text: `${changes.length} position(s) mise(s) a jour` })
+                } else {
+                  setMessage({ type: 'error', text: 'Certaines positions n\'ont pas pu etre sauvegardees' })
+                }
+              } catch {
+                setMessage({ type: 'error', text: 'Erreur lors de la sauvegarde des positions' })
               }
             }}
           />

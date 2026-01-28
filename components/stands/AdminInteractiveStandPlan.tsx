@@ -41,11 +41,19 @@ interface Zone {
   borderColor: string
 }
 
+interface PendingPosition {
+  x: number
+  y: number
+  width: number
+  height: number
+}
+
 interface AdminStandPlanProps {
   stands: AdminStand[]
   onStandClick?: (stand: AdminStand) => void
   onStatusChange?: (standId: string, newStatus: 'FREE' | 'RESERVED' | 'SOLD') => void
   onPositionChange?: (standId: string, x: number, y: number, width: number, height: number) => void
+  onBatchPositionChange?: (changes: Array<{ standId: string; x: number; y: number; width: number; height: number }>) => Promise<void>
   loading?: boolean
 }
 
@@ -89,59 +97,62 @@ const zones: Zone[] = [
   },
 ]
 
-// Default stand positions (x, y, width, height) - positions absolues
+// Taille uniforme pour tous les stands (carres)
+const STAND_SIZE = 45
+
+// Default stand positions (x, y) - tous les stands ont la meme taille
 const defaultStandConfig: Record<number, { x: number; y: number; width: number; height: number }> = {
-  // === RANGÉE DU HAUT (1-6) - horizontaux ===
-  1: { x: 200, y: 20, width: 70, height: 40 },
-  2: { x: 280, y: 20, width: 70, height: 40 },
-  3: { x: 360, y: 20, width: 70, height: 40 },
-  4: { x: 440, y: 20, width: 70, height: 40 },
-  5: { x: 520, y: 20, width: 70, height: 40 },
-  6: { x: 600, y: 20, width: 70, height: 40 },
+  // === RANGEE DU HAUT (1-6) ===
+  1: { x: 180, y: 15, width: STAND_SIZE, height: STAND_SIZE },
+  2: { x: 235, y: 15, width: STAND_SIZE, height: STAND_SIZE },
+  3: { x: 290, y: 15, width: STAND_SIZE, height: STAND_SIZE },
+  4: { x: 345, y: 15, width: STAND_SIZE, height: STAND_SIZE },
+  5: { x: 400, y: 15, width: STAND_SIZE, height: STAND_SIZE },
+  6: { x: 455, y: 15, width: STAND_SIZE, height: STAND_SIZE },
 
-  // === PRÈS CONFÉRENCES (7-8) - VERTICAUX ===
-  7: { x: 130, y: 20, width: 40, height: 70 },
-  8: { x: 130, y: 100, width: 40, height: 70 },
+  // === PRES CONFERENCES (7-8) ===
+  7: { x: 125, y: 15, width: STAND_SIZE, height: STAND_SIZE },
+  8: { x: 125, y: 70, width: STAND_SIZE, height: STAND_SIZE },
 
-  // === COLONNE DE DROITE (9-16) - VERTICAUX ===
-  9: { x: 650, y: 70, width: 40, height: 70 },
-  10: { x: 650, y: 150, width: 40, height: 70 },
-  11: { x: 650, y: 230, width: 40, height: 70 },
-  12: { x: 650, y: 310, width: 40, height: 70 },
-  13: { x: 650, y: 390, width: 40, height: 70 },
-  14: { x: 650, y: 470, width: 40, height: 70 },
-  15: { x: 600, y: 350, width: 40, height: 70 },
-  16: { x: 600, y: 430, width: 40, height: 70 },
+  // === COLONNE DE DROITE (9-16) ===
+  9: { x: 510, y: 15, width: STAND_SIZE, height: STAND_SIZE },
+  10: { x: 510, y: 70, width: STAND_SIZE, height: STAND_SIZE },
+  11: { x: 510, y: 125, width: STAND_SIZE, height: STAND_SIZE },
+  12: { x: 510, y: 180, width: STAND_SIZE, height: STAND_SIZE },
+  13: { x: 510, y: 235, width: STAND_SIZE, height: STAND_SIZE },
+  14: { x: 510, y: 290, width: STAND_SIZE, height: STAND_SIZE },
+  15: { x: 510, y: 345, width: STAND_SIZE, height: STAND_SIZE },
+  16: { x: 510, y: 400, width: STAND_SIZE, height: STAND_SIZE },
 
-  // === RANGÉE DU BAS (17-22) - horizontaux ===
-  17: { x: 520, y: 500, width: 70, height: 40 },
-  18: { x: 440, y: 500, width: 70, height: 40 },
-  19: { x: 360, y: 500, width: 70, height: 40 },
-  20: { x: 280, y: 500, width: 70, height: 40 },
-  21: { x: 200, y: 500, width: 70, height: 40 },
-  22: { x: 130, y: 500, width: 70, height: 40 },
+  // === RANGEE DU BAS (17-22) ===
+  17: { x: 455, y: 490, width: STAND_SIZE, height: STAND_SIZE },
+  18: { x: 400, y: 490, width: STAND_SIZE, height: STAND_SIZE },
+  19: { x: 345, y: 490, width: STAND_SIZE, height: STAND_SIZE },
+  20: { x: 290, y: 490, width: STAND_SIZE, height: STAND_SIZE },
+  21: { x: 235, y: 490, width: STAND_SIZE, height: STAND_SIZE },
+  22: { x: 180, y: 490, width: STAND_SIZE, height: STAND_SIZE },
 
-  // === AU-DESSUS DES TABLES (23-27) - horizontaux ===
-  23: { x: 200, y: 170, width: 70, height: 40 },
-  24: { x: 280, y: 170, width: 70, height: 40 },
-  25: { x: 360, y: 170, width: 70, height: 40 },
-  26: { x: 440, y: 170, width: 70, height: 40 },
-  27: { x: 520, y: 170, width: 70, height: 40 },
+  // === AU-DESSUS DES TABLES (23-27) ===
+  23: { x: 180, y: 165, width: STAND_SIZE, height: STAND_SIZE },
+  24: { x: 235, y: 165, width: STAND_SIZE, height: STAND_SIZE },
+  25: { x: 290, y: 165, width: STAND_SIZE, height: STAND_SIZE },
+  26: { x: 345, y: 165, width: STAND_SIZE, height: STAND_SIZE },
+  27: { x: 400, y: 165, width: STAND_SIZE, height: STAND_SIZE },
 
-  // === GAUCHE DES TABLES (28-29) - VERTICAUX ===
-  28: { x: 130, y: 220, width: 40, height: 70 },
-  29: { x: 130, y: 300, width: 40, height: 70 },
+  // === GAUCHE DES TABLES (28-29) ===
+  28: { x: 125, y: 230, width: STAND_SIZE, height: STAND_SIZE },
+  29: { x: 125, y: 285, width: STAND_SIZE, height: STAND_SIZE },
 
-  // === DROITE DES TABLES (30-31) - VERTICAUX ===
-  30: { x: 530, y: 220, width: 40, height: 70 },
-  31: { x: 530, y: 300, width: 40, height: 70 },
+  // === DROITE DES TABLES (30-31) ===
+  30: { x: 455, y: 230, width: STAND_SIZE, height: STAND_SIZE },
+  31: { x: 455, y: 285, width: STAND_SIZE, height: STAND_SIZE },
 
-  // === EN-DESSOUS DES TABLES (32-36) - horizontaux ===
-  32: { x: 200, y: 350, width: 70, height: 40 },
-  33: { x: 280, y: 350, width: 70, height: 40 },
-  34: { x: 360, y: 350, width: 70, height: 40 },
-  35: { x: 440, y: 350, width: 70, height: 40 },
-  36: { x: 520, y: 350, width: 70, height: 40 },
+  // === EN-DESSOUS DES TABLES (32-36) ===
+  32: { x: 180, y: 380, width: STAND_SIZE, height: STAND_SIZE },
+  33: { x: 235, y: 380, width: STAND_SIZE, height: STAND_SIZE },
+  34: { x: 290, y: 380, width: STAND_SIZE, height: STAND_SIZE },
+  35: { x: 345, y: 380, width: STAND_SIZE, height: STAND_SIZE },
+  36: { x: 400, y: 380, width: STAND_SIZE, height: STAND_SIZE },
 }
 
 const statusConfig = {
@@ -173,6 +184,7 @@ export function AdminInteractiveStandPlan({
   onStandClick,
   onStatusChange,
   onPositionChange,
+  onBatchPositionChange,
   loading = false,
 }: AdminStandPlanProps) {
   const [selectedStand, setSelectedStand] = useState<AdminStand | null>(null)
@@ -180,15 +192,27 @@ export function AdminInteractiveStandPlan({
   const [quickEditMode, setQuickEditMode] = useState(false)
   const [dragMode, setDragMode] = useState(false)
   const [draggingStand, setDraggingStand] = useState<string | null>(null)
+  const [pendingPositions, setPendingPositions] = useState<Map<string, PendingPosition>>(new Map())
+  const [isSaving, setIsSaving] = useState(false)
   const planRef = useRef<HTMLDivElement>(null)
 
-  // Get stand position (from DB or default)
+  // Check if there are unsaved changes
+  const hasUnsavedChanges = pendingPositions.size > 0
+
+  // Get stand position (from pending changes, DB, or default)
   const getStandPosition = useCallback((stand: AdminStand) => {
+    // Check pending positions first
+    const pending = pendingPositions.get(stand.id)
+    if (pending) {
+      return pending
+    }
+    // Then check DB values
     if (stand.x !== undefined && stand.y !== undefined && stand.width && stand.height) {
       return { x: stand.x, y: stand.y, width: stand.width, height: stand.height }
     }
-    return defaultStandConfig[stand.number] || { x: 0, y: 0, width: 70, height: 40 }
-  }, [])
+    // Fall back to default
+    return defaultStandConfig[stand.number] || { x: 0, y: 0, width: STAND_SIZE, height: STAND_SIZE }
+  }, [pendingPositions])
 
   // Filter stands
   const filteredStands = useMemo(() => {
@@ -222,17 +246,63 @@ export function AdminInteractiveStandPlan({
     }
   }
 
-  // Handle drag end - save absolute position
+  // Handle drag end - store position locally (batch mode)
   const handleDragEnd = useCallback((stand: AdminStand, info: { offset: { x: number; y: number } }) => {
-    if (!planRef.current || !onPositionChange) return
+    if (!planRef.current) return
 
     const currentPos = getStandPosition(stand)
     const newX = Math.max(0, Math.min(PLAN_WIDTH - currentPos.width, currentPos.x + info.offset.x))
     const newY = Math.max(0, Math.min(PLAN_HEIGHT - currentPos.height, currentPos.y + info.offset.y))
 
-    onPositionChange(stand.id, Math.round(newX), Math.round(newY), currentPos.width, currentPos.height)
+    // Store in pending positions (batch mode)
+    setPendingPositions(prev => {
+      const newMap = new Map(prev)
+      newMap.set(stand.id, {
+        x: Math.round(newX),
+        y: Math.round(newY),
+        width: currentPos.width,
+        height: currentPos.height
+      })
+      return newMap
+    })
     setDraggingStand(null)
-  }, [onPositionChange, getStandPosition])
+  }, [getStandPosition])
+
+  // Save all pending positions
+  const handleSavePositions = useCallback(async () => {
+    if (pendingPositions.size === 0) return
+
+    setIsSaving(true)
+    try {
+      if (onBatchPositionChange) {
+        // Use batch save if available
+        const changes = Array.from(pendingPositions.entries()).map(([standId, pos]) => ({
+          standId,
+          x: pos.x,
+          y: pos.y,
+          width: pos.width,
+          height: pos.height
+        }))
+        await onBatchPositionChange(changes)
+      } else if (onPositionChange) {
+        // Fallback to individual saves
+        for (const [standId, pos] of pendingPositions.entries()) {
+          onPositionChange(standId, pos.x, pos.y, pos.width, pos.height)
+        }
+      }
+      // Clear pending after successful save
+      setPendingPositions(new Map())
+    } catch (error) {
+      console.error('Failed to save positions:', error)
+    } finally {
+      setIsSaving(false)
+    }
+  }, [pendingPositions, onBatchPositionChange, onPositionChange])
+
+  // Reset pending positions
+  const handleResetPositions = useCallback(() => {
+    setPendingPositions(new Map())
+  }, [])
 
   if (loading) {
     return (
@@ -259,7 +329,7 @@ export function AdminInteractiveStandPlan({
           </select>
         </div>
 
-        <div className="flex flex-wrap gap-4">
+        <div className="flex flex-wrap gap-4 items-center">
           {/* Drag Mode Toggle */}
           <label className="flex items-center gap-2 cursor-pointer group">
             <input
@@ -271,10 +341,10 @@ export function AdminInteractiveStandPlan({
               }}
               className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
             />
-            <span className="text-sm text-gray-700 group-hover:text-gray-900 transition-colors">Mode déplacement</span>
+            <span className="text-sm text-gray-700 group-hover:text-gray-900 transition-colors">Mode deplacement</span>
             {dragMode && (
               <span className="text-xs text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full animate-pulse">
-                Glisser-déposer
+                Glisser-deposer
               </span>
             )}
           </label>
@@ -290,13 +360,38 @@ export function AdminInteractiveStandPlan({
               }}
               className="w-4 h-4 rounded border-gray-300 text-forest focus:ring-forest"
             />
-            <span className="text-sm text-gray-700 group-hover:text-gray-900 transition-colors">Mode édition rapide</span>
+            <span className="text-sm text-gray-700 group-hover:text-gray-900 transition-colors">Mode edition rapide</span>
             {quickEditMode && (
               <span className="text-xs text-orange-600 bg-orange-100 px-2 py-0.5 rounded-full">
                 Clic = changer statut
               </span>
             )}
           </label>
+
+          {/* Save/Reset buttons when there are pending changes */}
+          {hasUnsavedChanges && (
+            <div className="flex items-center gap-2 ml-4 pl-4 border-l border-gray-200">
+              <span className="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded-full font-medium">
+                {pendingPositions.size} modification{pendingPositions.size > 1 ? 's' : ''}
+              </span>
+              <Button
+                onClick={handleSavePositions}
+                disabled={isSaving}
+                size="sm"
+                className="bg-forest hover:bg-forest/90"
+              >
+                {isSaving ? 'Enregistrement...' : 'Enregistrer'}
+              </Button>
+              <Button
+                onClick={handleResetPositions}
+                disabled={isSaving}
+                size="sm"
+                variant="outline"
+              >
+                Annuler
+              </Button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -356,6 +451,7 @@ export function AdminInteractiveStandPlan({
                 const pos = getStandPosition(stand)
                 const config = statusConfig[stand.status]
                 const isDragging = draggingStand === stand.id
+                const hasPendingChange = pendingPositions.has(stand.id)
 
                 return (
                   <motion.button
@@ -388,6 +484,7 @@ export function AdminInteractiveStandPlan({
                       shadow-lg transition-all duration-200
                       ${config.bgClass} ${config.hoverClass}
                       ${selectedStand?.id === stand.id ? 'ring-4 ring-forest ring-offset-2' : ''}
+                      ${hasPendingChange ? 'ring-2 ring-amber-400 ring-offset-1' : ''}
                       ${dragMode ? 'cursor-grab active:cursor-grabbing' : 'cursor-pointer'}
                       ${isDragging ? `shadow-2xl ${config.glowClass}` : config.shadowClass}
                       hover:shadow-xl ${config.glowClass}
@@ -398,13 +495,11 @@ export function AdminInteractiveStandPlan({
                       width: pos.width,
                       height: pos.height,
                     }}
-                    title={`Stand ${stand.number} - ${config.label}${stand.exhibitorName ? ` - ${stand.exhibitorName}` : ''}${dragMode ? ' (glisser pour déplacer)' : ''}`}
+                    title={`Stand ${stand.number} - ${config.label}${stand.exhibitorName ? ` - ${stand.exhibitorName}` : ''}${dragMode ? ' (glisser pour deplacer)' : ''}${hasPendingChange ? ' (non sauvegarde)' : ''}`}
                   >
                     <span className="font-bold text-sm drop-shadow-sm">{stand.number}</span>
-                    {stand.exhibitorName && (
-                      <span className="text-[8px] opacity-90 truncate max-w-full px-1 drop-shadow-sm">
-                        {stand.exhibitorName.slice(0, 6)}
-                      </span>
+                    {hasPendingChange && (
+                      <span className="absolute -top-1 -right-1 w-3 h-3 bg-amber-400 rounded-full border-2 border-white" />
                     )}
                   </motion.button>
                 )
