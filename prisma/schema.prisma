@@ -144,6 +144,10 @@ model Ticket {
   pdfUrl        String?
   status        TicketStatus  @default(PENDING)
 
+  // Invitation gratuite
+  isComplimentary Boolean     @default(false)
+  invitedBy       String?     // ID de l'admin qui a envoyé l'invitation
+
   // Scan info
   scannedAt     DateTime?
   scannedBy     String?
