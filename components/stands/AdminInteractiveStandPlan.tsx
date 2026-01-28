@@ -286,9 +286,9 @@ export function AdminInteractiveStandPlan({
         await onBatchPositionChange(changes)
       } else if (onPositionChange) {
         // Fallback to individual saves
-        for (const [standId, pos] of pendingPositions.entries()) {
+        Array.from(pendingPositions.entries()).forEach(([standId, pos]) => {
           onPositionChange(standId, pos.x, pos.y, pos.width, pos.height)
-        }
+        })
       }
       // Clear pending after successful save
       setPendingPositions(new Map())
