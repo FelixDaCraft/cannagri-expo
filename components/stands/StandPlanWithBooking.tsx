@@ -46,6 +46,16 @@ export function StandPlanWithBooking() {
   })
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
+  const [promoCode, setPromoCode] = useState('')
+  const [promoResult, setPromoResult] = useState<{
+    valid: boolean
+    code: string
+    type: string
+    value: number
+    discountAmount: number
+  } | null>(null)
+  const [promoError, setPromoError] = useState('')
+  const [promoLoading, setPromoLoading] = useState(false)
 
   // Fetch user profile on mount
   useEffect(() => {
@@ -96,6 +106,46 @@ export function StandPlanWithBooking() {
       })
     }
     setError('')
+    setPromoCode('')
+    setPromoResult(null)
+    setPromoError('')
+  }
+
+  const handleApplyPromo = async () => {
+    if (!promoCode.trim() || !selectedStand) return
+
+    setPromoLoading(true)
+    setPromoError('')
+    setPromoResult(null)
+
+    try {
+      const response = await fetch('/api/promo/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          code: promoCode.trim(),
+          standPriceHT: selectedStand.price,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        setPromoError(data.error || 'Code promo invalide')
+      } else {
+        setPromoResult(data)
+      }
+    } catch {
+      setPromoError('Erreur lors de la vérification du code promo')
+    } finally {
+      setPromoLoading(false)
+    }
+  }
+
+  const handleRemovePromo = () => {
+    setPromoCode('')
+    setPromoResult(null)
+    setPromoError('')
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -123,6 +173,7 @@ export function StandPlanWithBooking() {
             siret: formData.siret,
             address: formData.address,
           },
+          promoCode: promoResult?.code || undefined,
         }),
       })
 
@@ -163,7 +214,18 @@ export function StandPlanWithBooking() {
                   <Badge variant="forest">{selectedStand.name}</Badge>
                   <span className="ml-2 text-sm text-body/60">{selectedStand.surface} m²</span>
                 </div>
-                <span className="font-heading font-bold text-forest">{selectedStand.price} €</span>
+                <div className="text-right">
+                  {promoResult ? (
+                    <>
+                      <span className="line-through text-body/40 text-sm mr-2">{selectedStand.price} €</span>
+                      <span className="font-heading font-bold text-forest">
+                        {(selectedStand.price - promoResult.discountAmount).toFixed(2)} €
+                      </span>
+                    </>
+                  ) : (
+                    <span className="font-heading font-bold text-forest">{selectedStand.price} €</span>
+                  )}
+                </div>
               </div>
               <p className="text-xs text-forest/70 mt-1">
                 Mobilier (tables & chaises) + Électricité inclus
@@ -173,6 +235,50 @@ export function StandPlanWithBooking() {
               </p>
             </div>
           )}
+
+          {/* Code Promo */}
+          <div className="mb-4">
+            {promoResult ? (
+              <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded-lg p-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-green-600 font-medium">✓ Code « {promoResult.code} » appliqué</span>
+                  <span className="text-green-700 text-sm">
+                    (-{promoResult.type === 'PERCENTAGE' ? `${promoResult.value}%` : `${promoResult.value} €`})
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleRemovePromo}
+                  className="text-sm text-red-500 hover:text-red-700"
+                >
+                  Retirer
+                </button>
+              </div>
+            ) : (
+              <div className="flex gap-2">
+                <Input
+                  label="Code promo"
+                  name="promoCode"
+                  value={promoCode}
+                  onChange={(e) => { setPromoCode(e.target.value); setPromoError('') }}
+                  placeholder="Entrez votre code"
+                  className="flex-1"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleApplyPromo}
+                  isLoading={promoLoading}
+                  className="mt-6 shrink-0"
+                >
+                  Appliquer
+                </Button>
+              </div>
+            )}
+            {promoError && (
+              <p className="text-red-500 text-sm mt-1">{promoError}</p>
+            )}
+          </div>
 
           <Input
             label="Nom du responsable"

@@ -155,6 +155,29 @@ model Ticket {
   updatedAt     DateTime      @updatedAt
 }
 
+// ============ CODES PROMO ============
+enum PromoCodeType {
+  PERCENTAGE     // Réduction en pourcentage
+  FIXED_AMOUNT   // Réduction en montant fixe (€)
+}
+
+model PromoCode {
+  id            String         @id @default(cuid())
+  code          String         @unique
+  type          PromoCodeType
+  value         Float          // Montant ou pourcentage selon le type
+  maxUses       Int?           // Null = illimité
+  currentUses   Int            @default(0)
+  validFrom     DateTime
+  validUntil    DateTime
+  isActive      Boolean        @default(true)
+
+  orders        Order[]
+
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
 // ============ COMMANDES ============
 enum OrderType {
   VISITOR_TICKET
@@ -191,6 +214,11 @@ model Order {
   companyName     String?
   companySiret    String?
   companyAddress  String?
+
+  // Code promo
+  promoCodeId     String?
+  promoCode       PromoCode?   @relation(fields: [promoCodeId], references: [id])
+  discountAmount  Float        @default(0)  // Montant de la réduction appliquée
 
   // Notes
   notes           String?      @db.Text

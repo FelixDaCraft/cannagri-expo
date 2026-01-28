@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { type, items, customer } = body
+    const { type, items, customer, promoCode: promoCodeInput } = body
 
     // Validate required fields
     if (!type || !customer?.email || !customer?.name) {
@@ -44,6 +44,8 @@ export async function POST(request: NextRequest) {
 
     let amount = 0
     let amountHT = 0
+    let discountAmount = 0
+    let promoCodeId: string | null = null
     let stand: { id: string; code: string; surfaceM2: number; priceHT: number; status: string } | null = null
 
     if (type === 'VISITOR_TICKET') {
@@ -132,6 +134,46 @@ export async function POST(request: NextRequest) {
       // Calculate total (simple price without options)
       // Association loi 1901 non assujettie à la TVA - pas de majoration
       amountHT = stand.priceHT
+
+      // Apply promo code if provided
+      if (promoCodeInput && typeof promoCodeInput === 'string') {
+        const promoCode = await prisma.promoCode.findUnique({
+          where: { code: promoCodeInput.trim().toUpperCase() },
+        })
+
+        if (!promoCode || !promoCode.isActive) {
+          return NextResponse.json(
+            { error: 'Code promo invalide ou inactif' },
+            { status: 400 }
+          )
+        }
+
+        const now = new Date()
+        if (now < promoCode.validFrom || now > promoCode.validUntil) {
+          return NextResponse.json(
+            { error: 'Ce code promo a expiré ou n\'est pas encore valide' },
+            { status: 400 }
+          )
+        }
+
+        if (promoCode.maxUses !== null && promoCode.currentUses >= promoCode.maxUses) {
+          return NextResponse.json(
+            { error: 'Ce code promo a atteint sa limite d\'utilisation' },
+            { status: 400 }
+          )
+        }
+
+        // Calculate discount
+        if (promoCode.type === 'PERCENTAGE') {
+          discountAmount = Math.round((amountHT * promoCode.value / 100) * 100) / 100
+        } else {
+          discountAmount = Math.min(promoCode.value, amountHT)
+        }
+
+        promoCodeId = promoCode.id
+        amountHT = Math.max(0, amountHT - discountAmount)
+      }
+
       amount = amountHT
 
       // Reserve the stand temporarily (30 minutes for checkout)
@@ -152,23 +194,35 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Create order in database
-    const order = await prisma.order.create({
-      data: {
-        orderNumber: generateOrderNumber(),
-        type,
-        amount,
-        amountHT,
-        status: 'PENDING',
-        customerEmail: customer.email,
-        customerName: customer.name,
-        customerPhone: customer.phone || null,
-        companyName: customer.companyName || null,
-        companySiret: customer.siret || null,
-        companyAddress: customer.address || null,
-        // Store ticket details for webhook processing
-        notes: type === 'VISITOR_TICKET' ? JSON.stringify(items) : null,
+    // Create order in database (with promo code increment in transaction if applicable)
+    const order = await prisma.$transaction(async (tx) => {
+      // Increment promo code usage if applicable
+      if (promoCodeId) {
+        await tx.promoCode.update({
+          where: { id: promoCodeId },
+          data: { currentUses: { increment: 1 } },
+        })
       }
+
+      return tx.order.create({
+        data: {
+          orderNumber: generateOrderNumber(),
+          type,
+          amount,
+          amountHT,
+          status: 'PENDING',
+          customerEmail: customer.email,
+          customerName: customer.name,
+          customerPhone: customer.phone || null,
+          companyName: customer.companyName || null,
+          companySiret: customer.siret || null,
+          companyAddress: customer.address || null,
+          promoCodeId,
+          discountAmount,
+          // Store ticket details for webhook processing
+          notes: type === 'VISITOR_TICKET' ? JSON.stringify(items) : null,
+        }
+      })
     })
 
     // If it's a stand booking, link the stand to the order
