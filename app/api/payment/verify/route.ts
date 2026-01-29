@@ -143,6 +143,22 @@ export async function POST(request: NextRequest) {
           data: { status: 'FAILED' }
         })
 
+        // Release reserved stands linked to this failed order
+        if (order.stands && order.stands.length > 0) {
+          for (const stand of order.stands) {
+            await prisma.stand.update({
+              where: { id: stand.id },
+              data: {
+                status: 'FREE',
+                orderId: null,
+                reservedAt: null,
+                reservedUntil: null,
+              }
+            })
+          }
+          console.log(`[Verify] Released ${order.stands.length} stand(s) for failed order ${order.id}`)
+        }
+
         return NextResponse.json({
           success: false,
           status: 'FAILED',

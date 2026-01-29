@@ -35,10 +35,13 @@ export async function GET(request: NextRequest) {
       }
     })
 
-    // Release expired reservations
+    // Release expired reservations + orphaned reservations (no reservedUntil and no order)
     const now = new Date()
     const expiredStands = stands.filter(
-      (s) => s.status === 'RESERVED' && s.reservedUntil && s.reservedUntil < now
+      (s) => s.status === 'RESERVED' && (
+        (s.reservedUntil && s.reservedUntil < now) ||
+        (!s.reservedUntil && !s.orderId)
+      )
     )
 
     if (expiredStands.length > 0) {

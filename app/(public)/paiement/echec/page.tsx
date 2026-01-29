@@ -66,6 +66,11 @@ export default function PaymentFailedPage() {
                   Réessayer l&apos;achat
                 </Button>
               </Link>
+              <Link href="/pro/plan">
+                <Button variant="outline">
+                  Réserver un stand
+                </Button>
+              </Link>
               <Link href="/">
                 <Button variant="outline">
                   Retour à l&apos;accueil
