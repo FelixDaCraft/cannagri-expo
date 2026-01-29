@@ -315,6 +315,17 @@ export function InteractiveStandPlan({
     return () => clearInterval(interval)
   }, [fetchStands])
 
+  // Re-fetch when page becomes visible (back button from payment gateway)
+  useEffect(() => {
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        fetchStands()
+      }
+    }
+    document.addEventListener('visibilitychange', handleVisibility)
+    return () => document.removeEventListener('visibilitychange', handleVisibility)
+  }, [fetchStands])
+
   // Filter stands
   const filteredStands = useMemo(() => {
     return stands.filter((stand) => {

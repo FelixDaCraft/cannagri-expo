@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { checkAdminAuth, unauthorizedResponse } from '@/lib/admin-auth'
+import { getVivaWalletOrder } from '@/lib/vivawallet'
 
 // GET /api/stands - List all stands
 export async function GET(request: NextRequest) {
@@ -23,6 +24,7 @@ export async function GET(request: NextRequest) {
             customerName: true,
             companyName: true,
             status: true,
+            vivaWalletRef: true,
           }
         },
         sponsor: {
@@ -35,19 +37,55 @@ export async function GET(request: NextRequest) {
       }
     })
 
-    // Release expired reservations + orphaned reservations (no reservedUntil and no order)
-    const now = new Date()
-    const expiredStands = stands.filter(
-      (s) => s.status === 'RESERVED' && (
-        (s.reservedUntil && s.reservedUntil < now) ||
-        (!s.reservedUntil && !s.orderId)
-      )
-    )
+    // Collect stands to release
+    const standsToRelease: string[] = []
 
-    if (expiredStands.length > 0) {
+    // 1. Release orphaned reservations (no reservedUntil and no order)
+    const now = new Date()
+    for (const s of stands) {
+      if (s.status !== 'RESERVED') continue
+
+      // Orphan: no order, no expiry
+      if (!s.reservedUntil && !s.orderId) {
+        standsToRelease.push(s.id)
+        continue
+      }
+
+      // Expired reservation
+      if (s.reservedUntil && s.reservedUntil < now) {
+        standsToRelease.push(s.id)
+        continue
+      }
+
+      // 2. Stand has a PENDING order with Viva Wallet ref → check payment status
+      if (s.order && s.order.status === 'PENDING' && s.order.vivaWalletRef) {
+        try {
+          const vivaOrder = await getVivaWalletOrder(s.order.vivaWalletRef)
+          const stateId = vivaOrder.StateId
+          // StateId: 0=Pending, 1=Expired, 2=Canceled, 3=Paid, 4=Awaiting, 5=Refunded
+          const isFailed = stateId === 1 || stateId === '1' ||
+                          stateId === 2 || stateId === '2' ||
+                          stateId === 5 || stateId === '5'
+
+          if (isFailed) {
+            console.log(`[Stands] Viva Wallet order ${s.order.vivaWalletRef} is failed/expired/cancelled (StateId: ${stateId}). Releasing stand ${s.code}`)
+            standsToRelease.push(s.id)
+            // Also update the order status
+            await prisma.order.update({
+              where: { id: s.order.id },
+              data: { status: 'FAILED' }
+            })
+          }
+        } catch (err) {
+          console.error(`[Stands] Error checking Viva Wallet status for stand ${s.code}:`, err)
+        }
+      }
+    }
+
+    if (standsToRelease.length > 0) {
       await prisma.stand.updateMany({
         where: {
-          id: { in: expiredStands.map((s) => s.id) },
+          id: { in: standsToRelease },
           status: 'RESERVED',
         },
         data: {
@@ -59,15 +97,15 @@ export async function GET(request: NextRequest) {
       })
 
       // Update the returned data
-      expiredStands.forEach((s) => {
-        const stand = stands.find((st) => st.id === s.id)
+      for (const id of standsToRelease) {
+        const stand = stands.find((st) => st.id === id)
         if (stand) {
           stand.status = 'FREE'
           stand.orderId = null
           stand.reservedAt = null
           stand.reservedUntil = null
         }
-      })
+      }
     }
 
     return NextResponse.json({ data: stands })
