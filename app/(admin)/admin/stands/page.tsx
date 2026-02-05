@@ -57,6 +57,10 @@ export default function StandsPage() {
     status: 'FREE' as AdminStandStatus,
     size: 'MEDIUM' as AdminStandSize,
     exhibitorName: '',
+    exhibitorDescription: '',
+    exhibitorLogo: '',
+    exhibitorWebsite: '',
+    exhibitorCategory: '',
     proId: '',
     sponsorId: '',
     hasFurniture: false,
@@ -100,6 +104,10 @@ export default function StandsPage() {
       status: stand.status,
       size: stand.size,
       exhibitorName: stand.exhibitorName || '',
+      exhibitorDescription: (stand as any).exhibitorDescription || '',
+      exhibitorLogo: (stand as any).exhibitorLogo || '',
+      exhibitorWebsite: (stand as any).exhibitorWebsite || '',
+      exhibitorCategory: (stand as any).exhibitorCategory || '',
       proId: (stand as any).proId || '',
       sponsorId: (stand as any).sponsor?.id || '',
       hasFurniture: stand.hasFurniture,
@@ -125,6 +133,10 @@ export default function StandsPage() {
           status: formData.status,
           size: formData.size,
           exhibitorName: formData.exhibitorName || null,
+          exhibitorDescription: formData.exhibitorDescription || null,
+          exhibitorLogo: formData.exhibitorLogo || null,
+          exhibitorWebsite: formData.exhibitorWebsite || null,
+          exhibitorCategory: formData.exhibitorCategory || null,
           proId: formData.proId || null,
           sponsorId: formData.sponsorId || null,
           hasFurniture: formData.hasFurniture,
@@ -598,6 +610,66 @@ export default function StandsPage() {
                 />
                 <p className="text-xs text-gray-500 mt-1">Rempli automatiquement si sponsor ou compte PRO sélectionné</p>
               </div>
+
+              {/* Infos exposant direct (visible quand pas de PRO ni Sponsor) */}
+              {!formData.proId && !formData.sponsorId && (
+                <div className="space-y-3 pt-3 border-t border-gray-200">
+                  <h5 className="text-sm font-medium text-amber-700 flex items-center gap-1">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Infos pour la page Exposants (sans compte PRO/Sponsor)
+                  </h5>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+                    <select
+                      value={formData.exhibitorCategory}
+                      onChange={(e) => setFormData({ ...formData, exhibitorCategory: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-forest"
+                    >
+                      <option value="">-- Sélectionner une catégorie --</option>
+                      <option value="PRODUCTEURS">Producteurs CBD</option>
+                      <option value="MATERIEL">Matériel de Culture</option>
+                      <option value="LIFESTYLE">Lifestyle & Food</option>
+                      <option value="SERVICE">Services</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Description de l'activité</label>
+                    <textarea
+                      value={formData.exhibitorDescription}
+                      onChange={(e) => setFormData({ ...formData, exhibitorDescription: e.target.value })}
+                      placeholder="Description de l'activité de l'exposant..."
+                      rows={3}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-forest"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">URL du logo</label>
+                    <input
+                      type="url"
+                      value={formData.exhibitorLogo}
+                      onChange={(e) => setFormData({ ...formData, exhibitorLogo: e.target.value })}
+                      placeholder="https://example.com/logo.png"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-forest"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Site web</label>
+                    <input
+                      type="url"
+                      value={formData.exhibitorWebsite}
+                      onChange={(e) => setFormData({ ...formData, exhibitorWebsite: e.target.value })}
+                      placeholder="https://example.com"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-forest"
+                    />
+                  </div>
+                </div>
+              )}
             </div>
 
             <div>

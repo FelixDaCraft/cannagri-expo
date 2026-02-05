@@ -86,6 +86,12 @@ model Stand {
   // Nom affiché pour l'exposant (optionnel, sinon utilise companyName du PRO)
   exhibitorName String?
 
+  // Infos exposant direct (quand pas de PRO ni Sponsor lié)
+  exhibitorDescription String?    @db.Text
+  exhibitorLogo        String?
+  exhibitorWebsite     String?
+  exhibitorCategory    BusinessType?
+
   // Lien vers compte Pro (exposant)
   proId         String?
   pro           User?        @relation(fields: [proId], references: [id])

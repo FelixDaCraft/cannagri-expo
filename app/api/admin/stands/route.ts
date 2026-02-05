@@ -248,6 +248,10 @@ export async function PUT(request: NextRequest) {
       furniturePrice,
       electricityPrice,
       exhibitorName,
+      exhibitorDescription,
+      exhibitorLogo,
+      exhibitorWebsite,
+      exhibitorCategory,
       proId,
       sponsorId,
     } = body
@@ -338,6 +342,10 @@ export async function PUT(request: NextRequest) {
       if (furniturePrice !== undefined) updateData.furniturePrice = parseFloat(furniturePrice)
       if (electricityPrice !== undefined) updateData.electricityPrice = parseFloat(electricityPrice)
       if (exhibitorName !== undefined) updateData.exhibitorName = exhibitorName || null
+      if (exhibitorDescription !== undefined) updateData.exhibitorDescription = exhibitorDescription || null
+      if (exhibitorLogo !== undefined) updateData.exhibitorLogo = exhibitorLogo || null
+      if (exhibitorWebsite !== undefined) updateData.exhibitorWebsite = exhibitorWebsite || null
+      if (exhibitorCategory !== undefined) updateData.exhibitorCategory = exhibitorCategory || null
       if (proId !== undefined) updateData.proId = proId || null
 
       // Handle status change to FREE (clear reservation and exhibitor)
@@ -346,6 +354,10 @@ export async function PUT(request: NextRequest) {
         updateData.reservedAt = null
         updateData.reservedUntil = null
         updateData.exhibitorName = null
+        updateData.exhibitorDescription = null
+        updateData.exhibitorLogo = null
+        updateData.exhibitorWebsite = null
+        updateData.exhibitorCategory = null
         updateData.proId = null
         // Also remove sponsor assignment if status is FREE
         if (existingStand.sponsor) {

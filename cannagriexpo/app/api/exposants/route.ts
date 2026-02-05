@@ -90,6 +90,20 @@ export async function GET() {
           categoryLabel: getCategoryLabel(stand.sponsor.exhibitorCategory),
         })
       }
+      // If stand has direct exhibitor info (admin-assigned, no PRO/Sponsor)
+      else if (stand.exhibitorName && !stand.proId && !stand.sponsor) {
+        exposants.push({
+          id: stand.id,
+          name: stand.exhibitorName,
+          description: stand.exhibitorDescription,
+          descriptionTranslations: null,
+          logoUrl: stand.exhibitorLogo,
+          websiteUrl: stand.exhibitorWebsite,
+          standNumber: stand.number.toString(),
+          category: stand.exhibitorCategory || 'SERVICE',
+          categoryLabel: getCategoryLabel(stand.exhibitorCategory),
+        })
+      }
     }
 
     // Get category counts
