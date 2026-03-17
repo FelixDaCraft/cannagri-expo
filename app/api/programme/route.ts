@@ -55,7 +55,7 @@ export async function GET() {
       if (Array.isArray(speakersJson) && speakersJson.length > 0) {
         speakers = speakersJson.map((s) => ({
           name: s.name || '',
-          role: s.title || s.company || '',
+          role: [s.title, s.company].filter(Boolean).join(' · '),
           photo: s.photo || null,
         }))
       } else if (event.speakerName) {
