@@ -47,6 +47,24 @@ export function SponsorForm({ sponsor, onSubmit, onCancel }: SponsorFormProps) {
   const [isDragging, setIsDragging] = useState(false)
   const [previewArticle, setPreviewArticle] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const articleBodyRef = useRef<HTMLTextAreaElement>(null)
+
+  const insertHtml = useCallback((before: string, after = '') => {
+    const textarea = articleBodyRef.current
+    if (!textarea) return
+    const start = textarea.selectionStart
+    const end = textarea.selectionEnd
+    const selected = textarea.value.substring(start, end)
+    const inserted = before + selected + after
+    const newValue = textarea.value.substring(0, start) + inserted + textarea.value.substring(end)
+    setFormData(prev => ({ ...prev, articleBody: newValue }))
+    // Restore cursor position after React re-render
+    requestAnimationFrame(() => {
+      textarea.focus()
+      const cursor = selected ? start + inserted.length : start + before.length
+      textarea.setSelectionRange(cursor, cursor)
+    })
+  }, [])
 
   const handleLogoUpload = useCallback(async (file: File) => {
     const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml']
@@ -502,15 +520,42 @@ export function SponsorForm({ sponsor, onSubmit, onCancel }: SponsorFormProps) {
               </div>
             </div>
             {!previewArticle ? (
-              <textarea
-                name="articleBody"
-                value={formData.articleBody}
-                onChange={(e) => setFormData({ ...formData, articleBody: e.target.value })}
-                rows={10}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sage focus:border-sage font-mono text-sm resize-y"
-                placeholder="<p>Rédigez l'article en HTML...</p>&#10;<p>Balises supportées : &lt;p&gt;, &lt;h2&gt;, &lt;strong&gt;, &lt;em&gt;, &lt;ul&gt;, &lt;li&gt;, &lt;a&gt;...</p>"
-                spellCheck={false}
-              />
+              <div className="border border-gray-300 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-sage focus-within:border-sage">
+                {/* Toolbar */}
+                <div className="flex flex-wrap gap-1 px-2 py-1.5 bg-gray-50 border-b border-gray-200">
+                  {[
+                    { label: 'p', title: 'Paragraphe', before: '<p>', after: '</p>' },
+                    { label: 'br', title: 'Saut de ligne', before: '<br>', after: '' },
+                    { label: 'B', title: 'Gras', before: '<strong>', after: '</strong>' },
+                    { label: 'I', title: 'Italique', before: '<em>', after: '</em>' },
+                    { label: 'H2', title: 'Titre 2', before: '<h2>', after: '</h2>' },
+                    { label: 'H3', title: 'Titre 3', before: '<h3>', after: '</h3>' },
+                    { label: '• li', title: 'Élément de liste', before: '<li>', after: '</li>' },
+                    { label: 'ul', title: 'Liste à puces', before: '<ul>\n  <li>', after: '</li>\n</ul>' },
+                    { label: 'a', title: 'Lien', before: '<a href="">', after: '</a>' },
+                  ].map(({ label, title, before, after }) => (
+                    <button
+                      key={label}
+                      type="button"
+                      title={title}
+                      onClick={() => insertHtml(before, after)}
+                      className="px-2 py-0.5 text-xs font-mono bg-white border border-gray-200 rounded hover:bg-forest hover:text-white hover:border-forest transition-colors"
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+                <textarea
+                  ref={articleBodyRef}
+                  name="articleBody"
+                  value={formData.articleBody}
+                  onChange={(e) => setFormData({ ...formData, articleBody: e.target.value })}
+                  rows={10}
+                  className="w-full px-4 py-3 font-mono text-sm resize-y outline-none"
+                  placeholder="<p>Rédigez l'article en HTML...</p>"
+                  spellCheck={false}
+                />
+              </div>
             ) : (
               <div
                 className="w-full min-h-[240px] px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 prose prose-sm max-w-none"
