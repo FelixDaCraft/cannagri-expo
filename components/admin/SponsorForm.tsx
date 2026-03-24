@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { Button, Input, Badge } from '@/components/ui'
 import type { Sponsor, SponsorType, BusinessType, Stand } from '@/types'
 
@@ -42,7 +42,65 @@ export function SponsorForm({ sponsor, onSubmit, onCancel }: SponsorFormProps) {
     contactPhone: sponsor?.contactPhone || '',
   })
   const [isLoading, setIsLoading] = useState(false)
+  const [isUploading, setIsUploading] = useState(false)
   const [error, setError] = useState('')
+  const [isDragging, setIsDragging] = useState(false)
+  const [previewArticle, setPreviewArticle] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const handleLogoUpload = useCallback(async (file: File) => {
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml']
+    if (!allowedTypes.includes(file.type)) {
+      setError('Type de fichier non autorisé. Utilisez JPG, PNG, WebP ou SVG.')
+      return
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setError('Le fichier est trop volumineux. Maximum 5 Mo.')
+      return
+    }
+
+    setIsUploading(true)
+    setError('')
+
+    try {
+      const body = new FormData()
+      body.append('logo', file)
+
+      const res = await fetch('/api/admin/sponsors/upload-logo', {
+        method: 'POST',
+        body,
+      })
+
+      const result = await res.json()
+
+      if (!res.ok) {
+        throw new Error(result.error || "Erreur lors de l'upload")
+      }
+
+      setFormData(prev => ({ ...prev, logoUrl: result.logoUrl }))
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Erreur lors de l'upload du logo")
+    } finally {
+      setIsUploading(false)
+    }
+  }, [])
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(false)
+    const file = e.dataTransfer.files[0]
+    if (file) handleLogoUpload(file)
+  }, [handleLogoUpload])
+
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(true)
+  }, [])
+
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(false)
+  }, [])
 
   // Charger les stands disponibles
   useEffect(() => {
@@ -189,14 +247,84 @@ export function SponsorForm({ sponsor, onSubmit, onCancel }: SponsorFormProps) {
           </div>
         </div>
 
+        {/* Logo upload */}
+        <div className="mt-4">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Logo du sponsor
+          </label>
+          <div className="flex gap-4 items-start">
+            {/* Drop zone */}
+            <div
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onClick={() => fileInputRef.current?.click()}
+              className={`
+                relative flex-1 flex flex-col items-center justify-center gap-2 p-6 border-2 border-dashed rounded-xl cursor-pointer transition-colors
+                ${isDragging
+                  ? 'border-forest bg-forest/5'
+                  : 'border-gray-300 hover:border-sage hover:bg-gray-50'
+                }
+                ${isUploading ? 'opacity-50 pointer-events-none' : ''}
+              `}
+            >
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp,image/svg+xml"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files?.[0]
+                  if (file) handleLogoUpload(file)
+                  e.target.value = ''
+                }}
+              />
+              <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+              </svg>
+              <span className="text-sm text-gray-600">
+                {isUploading ? 'Upload en cours...' : 'Glissez un logo ici ou cliquez pour choisir'}
+              </span>
+              <span className="text-xs text-gray-400">JPG, PNG, WebP, SVG — max 5 Mo</span>
+            </div>
+
+            {/* Preview */}
+            {formData.logoUrl && (
+              <div className="relative flex-shrink-0 w-24 h-24 border rounded-xl overflow-hidden bg-white flex items-center justify-center">
+                <img
+                  src={formData.logoUrl}
+                  alt="Logo preview"
+                  className="max-w-full max-h-full object-contain p-1"
+                />
+                <button
+                  type="button"
+                  onClick={() => setFormData(prev => ({ ...prev, logoUrl: '' }))}
+                  className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600 transition-colors"
+                  title="Supprimer le logo"
+                >
+                  &times;
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Fallback URL input */}
+          <details className="mt-2">
+            <summary className="text-xs text-gray-400 cursor-pointer hover:text-gray-600">
+              Ou coller une URL directement
+            </summary>
+            <Input
+              label=""
+              name="logoUrl"
+              value={formData.logoUrl}
+              onChange={(e) => setFormData({ ...formData, logoUrl: e.target.value })}
+              placeholder="https://..."
+              className="mt-1"
+            />
+          </details>
+        </div>
+
         <div className="grid md:grid-cols-2 gap-4 mt-4">
-          <Input
-            label="URL du logo"
-            name="logoUrl"
-            value={formData.logoUrl}
-            onChange={(e) => setFormData({ ...formData, logoUrl: e.target.value })}
-            placeholder="https://..."
-          />
           <Input
             label="Site web"
             name="websiteUrl"
@@ -352,17 +480,43 @@ export function SponsorForm({ sponsor, onSubmit, onCancel }: SponsorFormProps) {
           />
 
           <div className="mt-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Contenu de l&apos;article (Français)
-            </label>
-            <textarea
-              name="articleBody"
-              value={formData.articleBody}
-              onChange={(e) => setFormData({ ...formData, articleBody: e.target.value })}
-              rows={6}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sage focus:border-sage resize-none"
-              placeholder="Rédigez l'article qui sera affiché sur la page d'accueil..."
-            />
+            <div className="flex items-center justify-between mb-1">
+              <label className="block text-sm font-medium text-gray-700">
+                Contenu de l&apos;article (Français)
+              </label>
+              <div className="flex rounded-lg overflow-hidden border border-gray-200 text-xs">
+                <button
+                  type="button"
+                  onClick={() => setPreviewArticle(false)}
+                  className={`px-3 py-1 transition-colors ${!previewArticle ? 'bg-forest text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
+                >
+                  HTML
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPreviewArticle(true)}
+                  className={`px-3 py-1 transition-colors ${previewArticle ? 'bg-forest text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
+                >
+                  Prévisualisation
+                </button>
+              </div>
+            </div>
+            {!previewArticle ? (
+              <textarea
+                name="articleBody"
+                value={formData.articleBody}
+                onChange={(e) => setFormData({ ...formData, articleBody: e.target.value })}
+                rows={10}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sage focus:border-sage font-mono text-sm resize-y"
+                placeholder="<p>Rédigez l'article en HTML...</p>&#10;<p>Balises supportées : &lt;p&gt;, &lt;h2&gt;, &lt;strong&gt;, &lt;em&gt;, &lt;ul&gt;, &lt;li&gt;, &lt;a&gt;...</p>"
+                spellCheck={false}
+              />
+            ) : (
+              <div
+                className="w-full min-h-[240px] px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 prose prose-sm max-w-none"
+                dangerouslySetInnerHTML={{ __html: formData.articleBody || '<p style="color:#9ca3af">Aucun contenu à prévisualiser...</p>' }}
+              />
+            )}
           </div>
 
           <div className="mt-4">

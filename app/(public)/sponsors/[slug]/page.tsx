@@ -254,11 +254,10 @@ export default async function SponsorPage({ params }: PageProps) {
                   <h2 className="text-2xl font-heading font-bold text-heading mb-4">
                     {articleTitle}
                   </h2>
-                  <div className="prose prose-forest max-w-none">
-                    <p className="text-body/80 leading-relaxed whitespace-pre-line">
-                      {articleBody}
-                    </p>
-                  </div>
+                  <div
+                    className="prose prose-forest max-w-none text-body/80 leading-relaxed"
+                    dangerouslySetInnerHTML={{ __html: articleBody }}
+                  />
                 </CardContent>
               </Card>
             )}
