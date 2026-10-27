@@ -1,31 +1,28 @@
-name: Deploy to Hetzner
+name: Deploy to homelab
 
+# Prod tourne sur le homelab (/opt/cannagri-expo, image construite sur place).
+# - push sur Prod : tests puis déploiement par le runner auto-hébergé du homelab
+# - push sur dev / pull request : tests uniquement (pas d'environnement de dev)
 on:
   push:
     branches:
       - Prod
       - dev
+  pull_request:
   workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Environment to deploy'
-        required: true
-        default: 'dev'
-        type: choice
-        options:
-          - dev
-          - prod
 
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: felixdacraft/cannagri-expo
+concurrency:
+  group: cannagri-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
 
 jobs:
   security-audit:
     name: Security Audit
     runs-on: ubuntu-latest
-    # Security audit is informational - doesn't block deployment
-    # Review audit results and update dependencies when safe to do so
+    # Informatif : ne bloque pas le déploiement
     continue-on-error: true
     steps:
       - name: Checkout code
@@ -40,21 +37,12 @@ jobs:
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
 
-      - name: Run npm audit (all dependencies)
-        run: npm audit --audit-level=high || true
-
       - name: Run npm audit (production only)
         run: npm audit --omit=dev --audit-level=critical || true
-
-      - name: Security audit summary
-        run: |
-          echo "::notice::Security audit completed. Review vulnerabilities above."
-          echo "::notice::Some vulnerabilities may require major version updates."
 
   test:
     name: Run Tests
     runs-on: ubuntu-latest
-    # Test runs in parallel with security-audit, doesn't depend on it
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -74,88 +62,29 @@ jobs:
       - name: Run tests
         run: npm test
 
-  build-and-push:
-    name: Build and Push Docker Image
-    runs-on: ubuntu-latest
-    needs: test
-    permissions:
-      contents: read
-      packages: write
-    outputs:
-      image_tag: ${{ steps.set-tag.outputs.tag }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Set image tag
-        id: set-tag
-        run: |
-          if [[ "${{ github.ref_name }}" == "Prod" ]]; then
-            echo "tag=latest" >> $GITHUB_OUTPUT
-          else
-            echo "tag=dev" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.set-tag.outputs.tag }}
-          no-cache: true
-          build-args: |
-            NEXT_PUBLIC_APP_URL=${{ github.ref_name == 'Prod' && 'https://cannagri-expo.eu' || 'https://dev.cannagri-expo.eu' }}
-            NEXT_PUBLIC_SITE_URL=${{ github.ref_name == 'Prod' && 'https://cannagri-expo.eu' || 'https://dev.cannagri-expo.eu' }}
-            NEXT_PUBLIC_TICKETING_ENABLED=true
-            NEXT_PUBLIC_DEMO_MODE=${{ github.ref_name == 'Prod' && 'false' || 'true' }}
-
   deploy:
-    name: Deploy to Hetzner
-    runs-on: ubuntu-latest
-    needs: build-and-push
+    name: Deploy to homelab
+    needs: test
+    if: github.ref == 'refs/heads/Prod' && github.event_name != 'pull_request'
+    runs-on: [self-hosted, linux, homelab]
+    # Un seul déploiement à la fois, jamais annulé en cours de route
+    concurrency:
+      group: deploy-cannagri-prod
+      cancel-in-progress: false
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Deploy to Hetzner via SSH
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.HETZNER_HOST }}
-          username: ${{ secrets.HETZNER_USER }}
-          key: ${{ secrets.HETZNER_SSH_KEY }}
-          script: |
-            cd /opt/cannagri-expo
+      - name: Deploy
+        # Sauvegarde de la base, build (tests inclus), contrôle du schéma,
+        # bascule et retour automatique à l'image précédente en cas d'échec.
+        # Script : scripts/homelab/cannagri-deploy.sh, installé en root.
+        run: sudo /usr/local/bin/cannagri-deploy "$GITHUB_WORKSPACE"
 
-            # Login to GitHub Container Registry
-            echo ${{ secrets.GH_PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-
-            # Determine which image to pull based on branch
-            if [[ "${{ github.ref_name }}" == "Prod" ]]; then
-              IMAGE_TAG="latest"
-              SERVICE="app"
-            else
-              IMAGE_TAG="dev"
-              SERVICE="app-dev"
-            fi
-
-            # Pull the image
-            docker pull ghcr.io/felixdacraft/cannagri-expo:${IMAGE_TAG}
-
-            # Restart the service (using service name, not container name)
-            docker compose up -d --no-deps --force-recreate ${SERVICE}
-
-            # Clean up old images
-            docker image prune -f
-
-            # Show status
-            docker compose ps
+      - name: Check public site
+        run: |
+          for path in / /api/health /programme; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 30 "https://cannagri-expo.eu$path")
+            echo "$path $code"
+            [ "$code" = "200" ] || { echo "::error::$path répond $code"; exit 1; }
+          done
