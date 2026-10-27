@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import { Card, CardContent, Badge, Button } from '@/components/ui'
+import { getSafeCallbackUrl, isExternalUrl } from '@/lib/safe-redirect'
 
 // Demo mode disabled in production
 const DEMO_MODE_ENABLED = false
@@ -13,7 +14,10 @@ const DEMO_MODE_ENABLED = false
 export default function LoginPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get('callbackUrl') || '/'
+  const callbackUrl = getSafeCallbackUrl(
+    searchParams.get('callbackUrl'),
+    typeof window !== 'undefined' ? window.location.origin : undefined
+  )
   const error = searchParams.get('error')
 
   const t = useTranslations('auth.login')
@@ -69,6 +73,15 @@ export default function LoginPage() {
     },
   ] : []
 
+  const goToCallback = () => {
+    if (isExternalUrl(callbackUrl)) {
+      window.location.assign(callbackUrl)
+      return
+    }
+    router.push(callbackUrl)
+    router.refresh()
+  }
+
   const handleDemoLogin = async (demoEmail: string, role: string) => {
     if (!DEMO_MODE_ENABLED) return
 
@@ -86,8 +99,7 @@ export default function LoginPage() {
       if (result?.error) {
         setErrorMessage('Erreur de connexion demo. Executez le seed pour creer les comptes.')
       } else if (result?.ok) {
-        router.push(callbackUrl)
-        router.refresh()
+        goToCallback()
       }
     } catch {
       setErrorMessage('Erreur de connexion demo')
@@ -112,8 +124,7 @@ export default function LoginPage() {
       if (result?.error) {
         setErrorMessage(t('error'))
       } else if (result?.ok) {
-        router.push(callbackUrl)
-        router.refresh()
+        goToCallback()
       }
     } catch {
       setErrorMessage(t('errorGeneric'))

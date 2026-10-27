@@ -7,6 +7,16 @@ import bcrypt from 'bcryptjs'
 import { prisma } from '@/lib/prisma'
 import type { Adapter } from 'next-auth/adapters'
 
+// Session partagée avec les sous-domaines (ex. planner.cannagri-expo.eu),
+// activée uniquement si AUTH_COOKIE_DOMAIN est défini (ex. ".cannagri-expo.eu")
+const cookieDomain = process.env.AUTH_COOKIE_DOMAIN
+
+// Hôtes externes vers lesquels on peut revenir après connexion
+const allowedRedirectHosts = (process.env.AUTH_REDIRECT_HOSTS || '')
+  .split(',')
+  .map((host) => host.trim())
+  .filter(Boolean)
+
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma) as Adapter,
   providers: [
@@ -70,6 +80,21 @@ export const authOptions: NextAuthOptions = {
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
 
+  ...(cookieDomain && {
+    cookies: {
+      sessionToken: {
+        name: '__Secure-cannagri.session-token',
+        options: {
+          httpOnly: true,
+          sameSite: 'lax' as const,
+          path: '/',
+          secure: true,
+          domain: cookieDomain,
+        },
+      },
+    },
+  }),
+
   pages: {
     signIn: '/connexion',
     signOut: '/connexion',
@@ -78,6 +103,18 @@ export const authOptions: NextAuthOptions = {
   },
 
   callbacks: {
+    async redirect({ url, baseUrl }) {
+      if (url.startsWith('/')) return `${baseUrl}${url}`
+      try {
+        const target = new URL(url)
+        if (target.origin === baseUrl) return url
+        if (target.protocol === 'https:' && allowedRedirectHosts.includes(target.hostname)) return url
+      } catch {
+        // URL invalide : retour à l'accueil
+      }
+      return baseUrl
+    },
+
     async jwt({ token, user, account }) {
       if (user) {
         token.id = user.id
