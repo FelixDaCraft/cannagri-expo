@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { parseQRCodeData, extractQRCodeFromUrl } from '@/lib/qrcode'
+import { checkAdminAuth, unauthorizedResponse } from '@/lib/admin-auth'
 
 /**
  * POST /api/tickets/scan
@@ -8,6 +9,10 @@ import { parseQRCodeData, extractQRCodeFromUrl } from '@/lib/qrcode'
  */
 export async function POST(request: NextRequest) {
   try {
+    // Contrôle d'accès réservé à l'équipe (données personnelles + invalidation des billets)
+    const session = await checkAdminAuth()
+    if (!session) return unauthorizedResponse()
+
     const body = await request.json()
     const { qrData, markAsUsed = true } = body
 
@@ -161,6 +166,10 @@ export async function POST(request: NextRequest) {
  * Verify a ticket without marking it as used (preview mode)
  */
 export async function GET(request: NextRequest) {
+  // Contrôle d'accès réservé à l'équipe (données personnelles + invalidation des billets)
+  const session = await checkAdminAuth()
+  if (!session) return unauthorizedResponse()
+
   const { searchParams } = new URL(request.url)
   const code = searchParams.get('code')
 

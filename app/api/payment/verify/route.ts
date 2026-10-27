@@ -231,7 +231,7 @@ async function processSuccessfulPayment(orderId: string, transactionId?: string)
 
   // Handle ticket orders
   if (order.type === 'VISITOR_TICKET') {
-    let items: Array<{ type: string; price: number; quantity: number; attendeeName?: string }> = []
+    let items: Array<{ type?: string; ticketType?: string; price: number; quantity: number; attendeeName?: string }> = []
     try {
       if (order.notes) {
         items = JSON.parse(order.notes)
@@ -253,7 +253,7 @@ async function processSuccessfulPayment(orderId: string, transactionId?: string)
       const attendeeName = item.attendeeName || order.customerName
 
       // Only STANDARD and FLEX ticket types are supported
-      const ticketType: 'STANDARD' | 'FLEX' = item.type === 'FLEX' ? 'FLEX' : 'STANDARD'
+      const ticketType: 'STANDARD' | 'FLEX' = (item.type ?? item.ticketType)?.toUpperCase() === 'FLEX' ? 'FLEX' : 'STANDARD'
 
       // Add to invoice items (grouped by ticket type)
       const ticketLabel = ticketType === 'FLEX' ? 'Billet Flex' : 'Billet Standard'

@@ -9,11 +9,27 @@ jest.mock('@/lib/prisma', () => ({
   prisma: mockPrisma,
 }))
 
+// Session admin simulée
+const mockCheckAdminAuth = jest.fn()
+jest.mock('@/lib/admin-auth', () => ({
+  checkAdminAuth: () => mockCheckAdminAuth(),
+  unauthorizedResponse: () =>
+    new (require('next/server').NextResponse)(JSON.stringify({ error: 'Non autorisé' }), { status: 401 }),
+}))
+
 import { GET, POST } from '@/app/api/tickets/route'
 
 describe('GET /api/tickets', () => {
   beforeEach(() => {
     resetPrismaMocks()
+    mockCheckAdminAuth.mockResolvedValue({ user: { id: 'admin-1', role: 'ADMIN' } })
+  })
+
+  it('refuse un visiteur non authentifié (données personnelles)', async () => {
+    mockCheckAdminAuth.mockResolvedValue(null)
+    const response = await GET(new NextRequest('http://localhost:3000/api/tickets'))
+    expect(response.status).toBe(401)
+    expect(mockPrisma.ticket.findMany).not.toHaveBeenCalled()
   })
 
   it('should return tickets with pagination', async () => {
@@ -102,6 +118,18 @@ describe('GET /api/tickets', () => {
 describe('POST /api/tickets (validate ticket)', () => {
   beforeEach(() => {
     resetPrismaMocks()
+    mockCheckAdminAuth.mockResolvedValue({ user: { id: 'admin-1', role: 'ADMIN' } })
+  })
+
+  it('refuse un visiteur non authentifié (invalidation de billets)', async () => {
+    mockCheckAdminAuth.mockResolvedValue(null)
+    const request = new NextRequest('http://localhost:3000/api/tickets', {
+      method: 'POST',
+      body: JSON.stringify({ qrCodeData: 'CANNAGRI-x' }),
+    })
+    const response = await POST(request)
+    expect(response.status).toBe(401)
+    expect(mockPrisma.ticket.update).not.toHaveBeenCalled()
   })
 
   it('should validate a paid ticket successfully', async () => {

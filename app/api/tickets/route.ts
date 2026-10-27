@@ -1,9 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { checkAdminAuth, unauthorizedResponse } from '@/lib/admin-auth'
 
 // GET /api/tickets - List all tickets (admin)
 export async function GET(request: NextRequest) {
   try {
+    // Données personnelles des acheteurs : réservé à l'administration
+    const session = await checkAdminAuth()
+    if (!session) return unauthorizedResponse()
+
     const { searchParams } = new URL(request.url)
     const status = searchParams.get('status')
     const page = parseInt(searchParams.get('page') || '1')
@@ -52,6 +57,9 @@ export async function GET(request: NextRequest) {
 // POST /api/tickets/validate - Validate a ticket (scan QR code)
 export async function POST(request: NextRequest) {
   try {
+    const session = await checkAdminAuth()
+    if (!session) return unauthorizedResponse()
+
     const body = await request.json()
     const { qrCodeData, scannedBy } = body
 

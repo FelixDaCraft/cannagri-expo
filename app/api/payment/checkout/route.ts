@@ -5,6 +5,8 @@ import { authOptions } from '@/lib/auth'
 import { generateOrderNumber } from '@/lib/utils'
 import { createVivaWalletOrder } from '@/lib/vivawallet'
 import { checkRateLimit, getClientIP, RATE_LIMIT_PRESETS } from '@/lib/rate-limit'
+import { siteConfig } from '@/config/site'
+import { buildTicketItems, TicketItemsError, type TicketItem } from '@/lib/ticket-items'
 
 // Check if Viva Wallet is configured
 const isVivaWalletEnabled = !!(
@@ -44,22 +46,26 @@ export async function POST(request: NextRequest) {
 
     let amount = 0
     let amountHT = 0
+    let ticketItems: TicketItem[] = []
     let discountAmount = 0
     let promoCodeId: string | null = null
     let stand: { id: string; code: string; surfaceM2: number; priceHT: number; status: string } | null = null
 
     if (type === 'VISITOR_TICKET') {
-      // Calculate ticket total
-      if (!items || !Array.isArray(items) || items.length === 0) {
-        return NextResponse.json(
-          { error: 'Aucun billet sélectionné' },
-          { status: 400 }
-        )
+      // Les prix viennent de la configuration serveur, jamais du navigateur
+      try {
+        ticketItems = buildTicketItems(items, {
+          standardTicketPrice: siteConfig.tickets.standard.price,
+          flexTicketPrice: siteConfig.tickets.flex.price,
+        })
+      } catch (error) {
+        if (error instanceof TicketItemsError) {
+          return NextResponse.json({ error: error.message }, { status: 400 })
+        }
+        throw error
       }
 
-      amount = items.reduce((sum: number, item: { price: number; quantity: number }) => {
-        return sum + item.price * item.quantity
-      }, 0)
+      amount = ticketItems.reduce((sum, item) => sum + item.price, 0)
       amountHT = amount / 1.2 // TVA 20%
 
     } else if (type === 'STAND_BOOKING') {
@@ -220,7 +226,7 @@ export async function POST(request: NextRequest) {
           promoCodeId,
           discountAmount,
           // Store ticket details for webhook processing
-          notes: type === 'VISITOR_TICKET' ? JSON.stringify(items) : null,
+          notes: type === 'VISITOR_TICKET' ? JSON.stringify(ticketItems) : null,
         }
       })
     })

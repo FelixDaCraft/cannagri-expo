@@ -135,6 +135,10 @@ export async function POST(request: NextRequest) {
     const file = formData.get('file') as File | null
     const caption = formData.get('caption') as string || ''
     const edition = formData.get('edition') as string || new Date().getFullYear().toString()
+    // L'année entre dans le nom du fichier écrit sur le disque : 4 chiffres uniquement
+    if (!/^\d{4}$/.test(edition)) {
+      return NextResponse.json({ error: 'Édition invalide' }, { status: 400 })
+    }
     const category = formData.get('category') as string || 'Général'
 
     if (!file) {
@@ -162,7 +166,8 @@ export async function POST(request: NextRequest) {
     // Generate unique filename
     const timestamp = Date.now()
     const randomStr = Math.random().toString(36).substring(2, 8)
-    const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg'
+    // Extension dérivée du type MIME validé (jamais du nom fourni par le client)
+    const ext = ({ 'image/png': 'png', 'image/webp': 'webp' } as Record<string, string>)[file.type] ?? 'jpg'
     const filename = `${edition}_${timestamp}_${randomStr}.${ext}`
     const filepath = path.join(UPLOAD_DIR, filename)
 

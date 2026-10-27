@@ -119,7 +119,7 @@ async function handlePaymentSuccess(eventData: VivaWalletWebhookPayload['EventDa
   // Handle ticket orders
   if (order.type === 'VISITOR_TICKET') {
     // Parse ticket items from notes
-    let items: Array<{ type: string; price: number; quantity: number; attendeeName?: string }> = []
+    let items: Array<{ type?: string; ticketType?: string; price: number; quantity: number; attendeeName?: string }> = []
     try {
       if (order.notes) {
         items = JSON.parse(order.notes)
@@ -138,7 +138,7 @@ async function handlePaymentSuccess(eventData: VivaWalletWebhookPayload['EventDa
       const attendeeName = item.attendeeName || order.customerName
 
       // Determine ticket type for database (only STANDARD and FLEX are supported)
-      const ticketType: 'STANDARD' | 'FLEX' = item.type === 'FLEX' ? 'FLEX' : 'STANDARD'
+      const ticketType: 'STANDARD' | 'FLEX' = (item.type ?? item.ticketType)?.toUpperCase() === 'FLEX' ? 'FLEX' : 'STANDARD'
 
       for (let i = 0; i < quantity; i++) {
         const qrData = generateQRCodeData(order.id, Date.now().toString())
