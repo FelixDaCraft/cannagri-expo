@@ -4,8 +4,8 @@ import { useState } from 'react'
 import { motion } from 'motion/react'
 import { Card, CardContent, Badge } from '@/components/ui'
 import { Spotlight, FloatingParticles } from '@/components/ui/aceternity'
-import { siteConfig } from '@/config/site'
 import { getTranslatedText, Translations } from '@/lib/translation'
+import { useEdition } from '@/components/editions'
 
 interface Speaker {
   id: string
@@ -60,6 +60,7 @@ interface ProgrammeClientProps {
 }
 
 export default function ProgrammeClient({ events, locale }: ProgrammeClientProps) {
+  const edition = useEdition()
   const [filter, setFilter] = useState('Tous')
 
   const filteredEvents = filter === 'Tous'
@@ -94,9 +95,9 @@ export default function ProgrammeClient({ events, locale }: ProgrammeClientProps
               <svg className="w-5 h-5 text-sage" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
-              <span className="font-semibold text-cream">{siteConfig.event.date}</span>
+              <span className="font-semibold text-cream">{edition.dateLabel}</span>
               <span className="text-cream/60">•</span>
-              <span className="text-cream/80">{siteConfig.event.location}</span>
+              <span className="text-cream/80">{edition.venueName}</span>
             </div>
           </motion.div>
         </div>
@@ -166,7 +167,7 @@ export default function ProgrammeClient({ events, locale }: ProgrammeClientProps
                 Programme bientot disponible
               </h2>
               <p className="text-body/70 mb-6">
-                Nous preparons un programme riche en conferences, ateliers et rencontres pour l edition 2026 de Cann Agri Expo.
+                Nous preparons un programme riche en conferences, ateliers et rencontres pour l&apos;édition {edition.year} de Cann&apos;Agri Expo.
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
                 <div className="bg-sage/5 rounded-xl p-4">

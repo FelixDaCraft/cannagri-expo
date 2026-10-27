@@ -1,5 +1,7 @@
 import { NextIntlClientProvider } from 'next-intl'
 import { getMessages, getLocale } from 'next-intl/server'
+import { getActiveEditionView } from '@/lib/editions'
+import { EditionProvider } from '@/components/editions'
 import { Header, Footer } from '@/components/layout'
 
 export default async function ProLayout({
@@ -9,14 +11,17 @@ export default async function ProLayout({
 }) {
   const locale = await getLocale()
   const messages = await getMessages()
+  const edition = await getActiveEditionView()
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
-      <Header />
-      <main className="flex-1 pt-16">
-        {children}
-      </main>
-      <Footer />
+      <EditionProvider edition={edition}>
+        <Header />
+        <main className="flex-1 pt-16">
+          {children}
+        </main>
+        <Footer />
+      </EditionProvider>
     </NextIntlClientProvider>
   )
 }

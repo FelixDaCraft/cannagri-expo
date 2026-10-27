@@ -5,6 +5,7 @@ import { verifyVivaWalletSignature, getVivaWalletOrder } from '@/lib/vivawallet'
 import { generateQRCodeData } from '@/lib/utils'
 import { generateTicketPDF } from '@/lib/pdf'
 import { sendTicketEmail } from '@/lib/email'
+import { toEditionSummary } from '@/lib/editions/format'
 import { generateQRCode } from '@/lib/qrcode'
 
 interface VivaWalletWebhookPayload {
@@ -84,6 +85,7 @@ async function handlePaymentSuccess(eventData: VivaWalletWebhookPayload['EventDa
     },
     include: {
       stands: true,
+      edition: true,
     }
   })
 
@@ -102,12 +104,16 @@ async function handlePaymentSuccess(eventData: VivaWalletWebhookPayload['EventDa
     },
     include: {
       stands: true,
+      edition: true,
     }
   })
 
   // Fetch active sponsors with logos for ticket PDF
+  const editionSummary = toEditionSummary(order.edition)
+
   const sponsors = await prisma.sponsor.findMany({
     where: {
+      editionId: order.editionId,
       isActive: true,
       logoUrl: { not: null },
     },
@@ -153,6 +159,7 @@ async function handlePaymentSuccess(eventData: VivaWalletWebhookPayload['EventDa
             qrCodeData: qrData,
             status: 'PAID',
             orderId: order.id,
+            editionId: order.editionId,
           }
         })
 
@@ -163,6 +170,7 @@ async function handlePaymentSuccess(eventData: VivaWalletWebhookPayload['EventDa
           orderNumber: order.orderNumber,
           qrCodeImage,
           sponsors, // Pass sponsors for logo display on ticket
+          edition: editionSummary,
         })
 
         // Add to attachments array
@@ -177,6 +185,7 @@ async function handlePaymentSuccess(eventData: VivaWalletWebhookPayload['EventDa
     // Send a single email with all tickets
     if (ticketAttachments.length > 0) {
       await sendTicketEmail({
+        edition: editionSummary,
         to: order.customerEmail,
         customerName: order.customerName, // Buyer's name for greeting
         orderNumber: order.orderNumber,
@@ -200,6 +209,7 @@ async function handlePaymentSuccess(eventData: VivaWalletWebhookPayload['EventDa
     }
 
     await sendTicketEmail({
+      edition: editionSummary,
       to: order.customerEmail,
       customerName: order.customerName,
       orderNumber: order.orderNumber,
@@ -219,7 +229,7 @@ async function handlePaymentFailed(eventData: VivaWalletWebhookPayload['EventDat
         { id: eventData.MerchantTrns },
       ]
     },
-    include: { stands: true }
+    include: { stands: true, edition: true }
   })
 
   if (!order) return

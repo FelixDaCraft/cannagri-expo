@@ -71,8 +71,8 @@ export async function PATCH(
 
     // Check if new slug conflicts with another event
     if (slug && slug !== existingEvent.slug) {
-      const slugConflict = await prisma.event.findUnique({
-        where: { slug },
+      const slugConflict = await prisma.event.findFirst({
+        where: { editionId: existingEvent.editionId, slug },
       })
       if (slugConflict) {
         return NextResponse.json(

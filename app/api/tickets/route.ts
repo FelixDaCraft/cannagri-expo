@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { checkAdminAuth, unauthorizedResponse } from '@/lib/admin-auth'
+import { getAdminEdition } from '@/lib/editions/admin'
+import { getActiveEdition } from '@/lib/editions'
 
 // GET /api/tickets - List all tickets (admin)
 export async function GET(request: NextRequest) {
@@ -15,7 +17,8 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '20')
     const skip = (page - 1) * limit
 
-    const where = status ? { status: status as any } : {}
+    const edition = await getAdminEdition()
+    const where = { editionId: edition.id, ...(status ? { status: status as any } : {}) }
 
     const [tickets, total] = await Promise.all([
       prisma.ticket.findMany({
@@ -81,6 +84,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         valid: false,
         error: 'Billet invalide ou inconnu',
+      })
+    }
+
+    // Un billet n'ouvre l'entrée que pour son édition
+    const activeEdition = await getActiveEdition()
+    if (ticket.editionId !== activeEdition.id) {
+      return NextResponse.json({
+        valid: false,
+        error: 'Ce billet concerne une autre édition',
       })
     }
 

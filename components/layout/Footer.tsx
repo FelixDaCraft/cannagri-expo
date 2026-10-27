@@ -4,9 +4,11 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useTranslations } from 'next-intl'
 import { siteConfig } from '@/config/site'
+import { useEdition } from '@/components/editions'
 
 export function Footer() {
   const t = useTranslations('common')
+  const edition = useEdition()
   const tFooter = useTranslations('footer')
 
   // Navigation links with translations
@@ -84,8 +86,8 @@ export function Footer() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
                 <span>
-                  {siteConfig.event.location}<br />
-                  {siteConfig.event.city}
+                  {edition.venueName}<br />
+                  {edition.city}
                 </span>
               </li>
             </ul>

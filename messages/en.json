@@ -54,6 +54,7 @@
     "exhibitors": "Exhibitors",
     "photoGallery": "Photo Gallery",
     "practicalInfo": "Practical info",
+    "pastEditions": "Past editions",
     "sponsoring": "Sponsoring",
     "contact": "Contact",
     "proSpace": "Pro Space",
@@ -66,7 +67,7 @@
       "title": "CANN'AGRI",
       "titleHighlight": "EXPO",
       "subtitle": "The reference CBD hemp exhibition",
-      "edition": "2026 Edition",
+      "edition": "{year} Edition",
       "buyTicket": "Buy my ticket",
       "practicalInfo": "Practical Info",
       "discover": "Discover"
@@ -148,7 +149,7 @@
       "subtitle": "A rich program with quality speakers to understand the challenges of the CBD hemp industry.",
       "comingSoon": "Coming Soon",
       "programComingSoonTitle": "Program Coming Soon",
-      "programComingSoonDescription": "The detailed program for the 2026 edition will be available soon. Conferences, round tables and workshops will be led by recognized experts in the CBD hemp industry.",
+      "programComingSoonDescription": "The detailed program for the {year} edition will be available soon. Conferences, round tables and workshops will be led by recognized experts in the CBD hemp industry.",
       "viewFullProgram": "View program",
       "stats": {
         "conferences": "Conferences",

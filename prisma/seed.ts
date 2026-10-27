@@ -76,6 +76,26 @@ async function main() {
   console.log('Demo accounts created:', demoAccounts.length)
 
   // Create site settings
+  // Édition de référence : toutes les données de démonstration y sont rattachées
+  const edition = await prisma.edition.upsert({
+    where: { year: 2026 },
+    update: {},
+    create: {
+      year: 2026,
+      status: 'ACTIVE',
+      startAt: new Date('2026-03-28T08:00:00Z'), // 9h00 heure de Paris
+      endAt: new Date('2026-03-28T18:00:00Z'),   // 19h00 heure de Paris
+      venueName: "L'Agronaute",
+      address: '2 Rue du Sénégal, 44200 Nantes',
+      city: 'Nantes',
+      posterUrl: '/images/affiche-2026.png',
+      ticketingOpenAt: new Date('2026-01-15T00:00:00Z'),
+      ticketingCloseAt: new Date('2026-03-27T23:00:00Z'),
+      standardTicketPrice: 15,
+      flexTicketPrice: 25,
+    },
+  })
+
   await prisma.siteSettings.upsert({
     where: { id: 'site_settings' },
     update: {},
@@ -130,9 +150,10 @@ async function main() {
 
   for (const stand of stands) {
     await prisma.stand.upsert({
-      where: { number: stand.number },
+      where: { editionId_number: { editionId: edition.id, number: stand.number } },
       update: {},
       create: {
+        editionId: edition.id,
         number: stand.number,
         code: String(stand.number),
         surfaceM2: stand.surfaceM2,
@@ -205,9 +226,9 @@ async function main() {
 
   for (const event of events) {
     await prisma.event.upsert({
-      where: { slug: event.slug },
+      where: { editionId_slug: { editionId: edition.id, slug: event.slug } },
       update: {},
-      create: event,
+      create: { ...event, editionId: edition.id },
     })
   }
   console.log(`${events.length} events created`)
@@ -236,9 +257,9 @@ async function main() {
 
   for (const sponsor of sponsors) {
     await prisma.sponsor.upsert({
-      where: { slug: sponsor.slug },
+      where: { editionId_slug: { editionId: edition.id, slug: sponsor.slug } },
       update: {},
-      create: sponsor,
+      create: { ...sponsor, editionId: edition.id },
     })
   }
   console.log(`${sponsors.length} sponsors created`)

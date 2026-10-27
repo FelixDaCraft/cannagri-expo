@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { prisma } from '@/lib/prisma'
 import { authOptions } from '@/lib/auth'
+import { getAdminEdition } from '@/lib/editions/admin'
 
 // GET /api/admin/events - Get all events (admin only)
 export async function GET() {
@@ -12,7 +13,9 @@ export async function GET() {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
     }
 
+    const edition = await getAdminEdition()
     const events = await prisma.event.findMany({
+      where: { editionId: edition.id },
       orderBy: [
         { startAt: 'asc' },
         { displayOrder: 'asc' },
@@ -61,9 +64,10 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Check if slug already exists
-    const existingEvent = await prisma.event.findUnique({
-      where: { slug },
+    // Check if slug already exists in this edition
+    const edition = await getAdminEdition()
+    const existingEvent = await prisma.event.findFirst({
+      where: { editionId: edition.id, slug },
     })
 
     if (existingEvent) {
@@ -75,6 +79,7 @@ export async function POST(request: NextRequest) {
 
     const event = await prisma.event.create({
       data: {
+        editionId: edition.id,
         title,
         slug,
         description: description || null,

@@ -14,10 +14,11 @@ interface Media {
 }
 
 const categories = ['Conférences', 'Stands', 'Cérémonie', 'Networking', 'Produits', 'Général']
-const editions = ['2024', '2025', '2026']
-
 export default function AdminMediathequePage() {
   const [media, setMedia] = useState<Media[]>([])
+  // Années des éditions existantes (les photos sont rattachées à une édition)
+  const [editions, setEditions] = useState<string[]>([])
+  const [defaultEdition, setDefaultEdition] = useState('')
   const [loading, setLoading] = useState(true)
   const [uploading, setUploading] = useState(false)
   const [showUploadModal, setShowUploadModal] = useState(false)
@@ -27,13 +28,13 @@ export default function AdminMediathequePage() {
   const [uploadProgress, setUploadProgress] = useState<string>('')
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
   const [uploadForm, setUploadForm] = useState({
-    edition: '2024',
+    edition: '',
     category: 'Général',
     caption: '',
   })
   const [editForm, setEditForm] = useState({
     caption: '',
-    edition: '2024',
+    edition: '',
     category: 'Général',
   })
   const [saving, setSaving] = useState(false)
@@ -42,7 +43,20 @@ export default function AdminMediathequePage() {
   // Fetch media on mount
   useEffect(() => {
     fetchMedia()
+    fetchEditions()
   }, [])
+
+  const fetchEditions = async () => {
+    const res = await fetch('/api/admin/editions')
+    if (!res.ok) return
+    const { data, currentEditionId } = await res.json()
+    const years: string[] = data.map((e: { year: number }) => String(e.year))
+    const current = data.find((e: { id: string }) => e.id === currentEditionId)
+    const year = current ? String(current.year) : years[0] ?? ''
+    setEditions(years)
+    setDefaultEdition(year)
+    setUploadForm(prev => ({ ...prev, edition: year }))
+  }
 
   const fetchMedia = async () => {
     try {
@@ -113,7 +127,7 @@ export default function AdminMediathequePage() {
     await fetchMedia()
     setShowUploadModal(false)
     setSelectedFiles([])
-    setUploadForm({ edition: '2024', category: 'Général', caption: '' })
+    setUploadForm({ edition: defaultEdition, category: 'Général', caption: '' })
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
 

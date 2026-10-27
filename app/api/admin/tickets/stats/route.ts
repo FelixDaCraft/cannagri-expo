@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { getAdminEdition } from '@/lib/editions/admin'
 
 /**
  * GET /api/admin/tickets/stats
@@ -15,10 +16,12 @@ export async function GET() {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
     }
 
-    // Get all paid tickets
+    // Billets valides de l'édition (un billet scanné passe au statut USED)
+    const edition = await getAdminEdition()
     const tickets = await prisma.ticket.findMany({
       where: {
-        status: 'PAID',
+        editionId: edition.id,
+        status: { in: ['PAID', 'USED'] },
       },
       select: {
         id: true,

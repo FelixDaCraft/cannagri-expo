@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import { Button, Badge } from '@/components/ui'
+import { useEdition } from '@/components/editions'
 
 interface ProgramStats {
   conferenceCount: number
@@ -16,6 +17,7 @@ interface ProgramHighlightProps {
 
 export function ProgramHighlight({ stats }: ProgramHighlightProps) {
   const t = useTranslations('home.program')
+  const edition = useEdition()
 
   return (
     <section className="py-16 md:py-24 bg-white">
@@ -46,7 +48,7 @@ export function ProgramHighlight({ stats }: ProgramHighlightProps) {
             </h3>
 
             <p className="text-body/70 mb-6 leading-relaxed max-w-xl mx-auto">
-              {t('programComingSoonDescription')}
+              {t('programComingSoonDescription', { year: edition.year })}
             </p>
 
             <Link href="/programme">

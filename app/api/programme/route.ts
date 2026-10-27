@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { getActiveEdition } from '@/lib/editions'
 
 // Speaker format stored in Event.speakers JSON array
 interface SpeakerJson {
@@ -20,8 +21,10 @@ interface Translations {
 // GET /api/programme - Get all conferences for public display (used by InstaPlanner)
 export async function GET() {
   try {
+    const edition = await getActiveEdition()
     const events = await prisma.event.findMany({
       where: {
+        editionId: edition.id,
         type: 'CONFERENCE',
       },
       select: {

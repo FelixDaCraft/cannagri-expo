@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { checkFullAdminAuth, unauthorizedResponse } from '@/lib/admin-auth'
+import { getAdminEdition } from '@/lib/editions/admin'
 
 // GET /api/admin/sponsors - Get all sponsors (admin only)
 export async function GET() {
@@ -11,7 +12,9 @@ export async function GET() {
       return unauthorizedResponse()
     }
 
+    const edition = await getAdminEdition()
     const sponsors = await prisma.sponsor.findMany({
+      where: { editionId: edition.id },
       include: {
         stand: true, // Inclure les infos du stand associé
       },
@@ -71,9 +74,10 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Check if slug already exists
-    const existingSponsor = await prisma.sponsor.findUnique({
-      where: { slug },
+    // Check if slug already exists in this edition
+    const edition = await getAdminEdition()
+    const existingSponsor = await prisma.sponsor.findFirst({
+      where: { editionId: edition.id, slug },
     })
 
     if (existingSponsor) {
@@ -88,7 +92,7 @@ export async function POST(request: NextRequest) {
       const stand = await prisma.stand.findUnique({
         where: { id: standId },
       })
-      if (!stand) {
+      if (!stand || stand.editionId !== edition.id) {
         return NextResponse.json(
           { error: 'Stand non trouvé' },
           { status: 400 }
@@ -111,6 +115,7 @@ export async function POST(request: NextRequest) {
       // Créer le sponsor
       const newSponsor = await tx.sponsor.create({
         data: {
+          editionId: edition.id,
           name,
           slug,
           type: type || 'BRONZE',

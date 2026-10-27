@@ -67,6 +67,7 @@ export function Header() {
         { label: tNav('exhibitors'), href: "/exposants" },
         { label: tNav('photoGallery'), href: "/mediatheque" },
         { label: tNav('practicalInfo'), href: "/infos-pratiques" },
+        { label: tNav('pastEditions'), href: "/editions" },
       ],
     },
     { label: tNav('sponsoring'), href: "/sponsoring" },

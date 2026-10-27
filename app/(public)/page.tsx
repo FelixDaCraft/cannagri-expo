@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import {
   HeroSection,
   TicketSection,
@@ -8,34 +9,28 @@ import {
   PartnersGrid,
 } from '@/components/home'
 import { prisma } from '@/lib/prisma'
+import { getActiveEdition, formatEditionDate } from '@/lib/editions'
+import { getEditionSponsors } from '@/lib/editions/content'
 
-async function getSponsors() {
+async function getSponsors(editionId: string) {
   try {
-    const sponsors = await prisma.sponsor.findMany({
-      where: {
-        isActive: true,
-      },
-      orderBy: [
-        { displayOrder: 'asc' },
-        { name: 'asc' },
-      ],
-    })
-    return sponsors
+    return await getEditionSponsors(editionId)
   } catch (error) {
     console.error('Error fetching sponsors:', error)
     return []
   }
 }
 
-async function getStats() {
+async function getStats(editionId: string) {
   try {
     // Count conferences
     const conferenceCount = await prisma.event.count({
-      where: { type: 'CONFERENCE' },
+      where: { editionId, type: 'CONFERENCE' },
     })
 
     // Get all events to count speakers
     const events = await prisma.event.findMany({
+      where: { editionId },
       select: {
         speakers: true,
         speakerName: true,
@@ -56,7 +51,7 @@ async function getStats() {
     })
 
     // Count total stands
-    const standCount = await prisma.stand.count()
+    const standCount = await prisma.stand.count({ where: { editionId } })
 
     return {
       conferenceCount,
@@ -73,8 +68,25 @@ async function getStats() {
   }
 }
 
+// Titre et description de l'édition en ligne
+export async function generateMetadata(): Promise<Metadata> {
+  const edition = await getActiveEdition()
+  const title = `Cann'Agri Expo ${edition.year} | Salon Professionnel du Chanvre CBD`
+  const when = [formatEditionDate(edition.startAt), [edition.venueName, edition.city].filter(Boolean).join(', ')]
+    .filter(Boolean)
+    .join(' - ')
+  const description = `Le rendez-vous incontournable des professionnels du chanvre CBD. ${when}. Exposants, conférences, Platinum CBD Cup.`
+  return {
+    title: { absolute: title },
+    description,
+    openGraph: { title, description },
+    twitter: { title, description },
+  }
+}
+
 export default async function HomePage() {
-  const [sponsors, stats] = await Promise.all([getSponsors(), getStats()])
+  const edition = await getActiveEdition()
+  const [sponsors, stats] = await Promise.all([getSponsors(edition.id), getStats(edition.id)])
 
   return (
     <>

@@ -4,6 +4,7 @@ import { getVivaWalletOrder } from '@/lib/vivawallet'
 import { generateQRCodeData } from '@/lib/utils'
 import { generateTicketPDF, generateInvoicePDF } from '@/lib/pdf'
 import { sendTicketEmail } from '@/lib/email'
+import { toEditionSummary } from '@/lib/editions/format'
 import { generateQRCode } from '@/lib/qrcode'
 
 /**
@@ -199,7 +200,7 @@ function generateInvoiceNumber(orderNumber: string): string {
 async function processSuccessfulPayment(orderId: string, transactionId?: string) {
   let order = await prisma.order.findUnique({
     where: { id: orderId },
-    include: { stands: true }
+    include: { stands: true, edition: true }
   })
 
   if (!order || order.status === 'PAID') return
@@ -212,15 +213,18 @@ async function processSuccessfulPayment(orderId: string, transactionId?: string)
       paidAt: new Date(),
       ...(transactionId ? { vivaWalletRef: transactionId } : {}),
     },
-    include: { stands: true }
+    include: { stands: true, edition: true }
   })
 
   // Generate invoice number
   const invoiceNumber = generateInvoiceNumber(order.orderNumber)
 
   // Fetch active sponsors with logos for ticket PDF
+  const editionSummary = toEditionSummary(order.edition)
+
   const sponsors = await prisma.sponsor.findMany({
     where: {
+      editionId: order.editionId,
       isActive: true,
       logoUrl: { not: null },
     },
@@ -281,6 +285,7 @@ async function processSuccessfulPayment(orderId: string, transactionId?: string)
             qrCodeData: qrData, // Store raw data for database lookup
             status: 'PAID',
             orderId: order.id,
+            editionId: order.editionId,
           }
         })
 
@@ -291,6 +296,7 @@ async function processSuccessfulPayment(orderId: string, transactionId?: string)
           orderNumber: order.orderNumber,
           qrCodeImage,
           sponsors, // Pass sponsors for logo display on ticket
+          edition: editionSummary,
         })
 
         // Add to attachments array
@@ -325,6 +331,7 @@ async function processSuccessfulPayment(orderId: string, transactionId?: string)
     // Send a single email with all tickets and invoice (non-blocking)
     if (ticketAttachments.length > 0) {
       sendTicketEmail({
+        edition: editionSummary,
         to: order.customerEmail,
         customerName: order.customerName, // Buyer's name for greeting
         orderNumber: order.orderNumber,
@@ -382,6 +389,7 @@ async function processSuccessfulPayment(orderId: string, transactionId?: string)
 
     // Send confirmation email with invoice (non-blocking)
     sendTicketEmail({
+      edition: editionSummary,
       to: order.customerEmail,
       customerName: order.customerName,
       orderNumber: order.orderNumber,

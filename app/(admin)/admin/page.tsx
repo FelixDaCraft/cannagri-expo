@@ -6,13 +6,15 @@ import { authOptions } from '@/lib/auth'
 import { StatsGrid, VisitorStats } from '@/components/admin'
 import { Card, CardContent, Badge } from '@/components/ui'
 import { prisma } from '@/lib/prisma'
+import { getAdminEdition } from '@/lib/editions/admin'
 
 export const metadata: Metadata = {
   title: 'Dashboard Admin',
 }
 
 // Fonction pour récupérer les statistiques réelles
-async function getStats() {
+// Statistiques de l'édition gérée
+async function getStats(editionId: string) {
   const [
     ticketsSold,
     ticketsStandard,
@@ -26,40 +28,41 @@ async function getStats() {
   ] = await Promise.all([
     // Nombre de billets vendus (status PAID)
     prisma.ticket.count({
-      where: { status: 'PAID' }
+      where: { editionId, status: 'PAID' }
     }),
     // Billets Standard vendus
     prisma.ticket.count({
-      where: { status: 'PAID', ticketType: 'STANDARD' }
+      where: { editionId, status: 'PAID', ticketType: 'STANDARD' }
     }),
     // Billets Flex vendus
     prisma.ticket.count({
-      where: { status: 'PAID', ticketType: 'FLEX' }
+      where: { editionId, status: 'PAID', ticketType: 'FLEX' }
     }),
     // Chiffre d'affaires total (commandes payées)
     prisma.order.aggregate({
-      where: { status: 'PAID' },
+      where: { editionId, status: 'PAID' },
       _sum: { amount: true }
     }),
     // Stands libres (status FREE)
     prisma.stand.count({
-      where: { status: 'FREE' }
+      where: { editionId, status: 'FREE' }
     }),
     // Stands réservés (status RESERVED)
     prisma.stand.count({
-      where: { status: 'RESERVED' }
+      where: { editionId, status: 'RESERVED' }
     }),
     // Stands vendus (status SOLD)
     prisma.stand.count({
-      where: { status: 'SOLD' }
+      where: { editionId, status: 'SOLD' }
     }),
     // Total des sponsors actifs
     prisma.sponsor.count({
-      where: { isActive: true }
+      where: { editionId, isActive: true }
     }),
     // Sponsors premium (PLATINE ou OR)
     prisma.sponsor.count({
       where: {
+        editionId,
         isActive: true,
         type: { in: ['PLATINE', 'OR'] }
       }
@@ -85,8 +88,9 @@ async function getStats() {
 }
 
 // Fonction pour récupérer les commandes récentes
-async function getRecentOrders() {
+async function getRecentOrders(editionId: string) {
   const orders = await prisma.order.findMany({
+    where: { editionId },
     take: 10,
     orderBy: { createdAt: 'desc' },
     include: {
@@ -122,9 +126,10 @@ export default async function AdminDashboard() {
   }
 
   // Récupérer les vraies statistiques et commandes
+  const edition = await getAdminEdition()
   const [stats, recentOrders] = await Promise.all([
-    getStats(),
-    getRecentOrders()
+    getStats(edition.id),
+    getRecentOrders(edition.id)
   ])
 
   return (

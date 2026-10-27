@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { getAdminEdition } from '@/lib/editions/admin'
 import { checkFullAdminAuth, unauthorizedResponse } from '@/lib/admin-auth'
 
 // GET /api/admin/promo-codes - List all promo codes
@@ -8,7 +9,9 @@ export async function GET() {
     const session = await checkFullAdminAuth()
     if (!session) return unauthorizedResponse()
 
+    const edition = await getAdminEdition()
     const promoCodes = await prisma.promoCode.findMany({
+      where: { editionId: edition.id },
       orderBy: { createdAt: 'desc' },
       include: {
         _count: { select: { orders: true } },
@@ -73,8 +76,10 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    const edition = await getAdminEdition()
     const promoCode = await prisma.promoCode.create({
       data: {
+        editionId: edition.id,
         code: code.trim().toUpperCase(),
         type,
         value: parseFloat(value),

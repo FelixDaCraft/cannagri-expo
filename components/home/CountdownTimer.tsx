@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'motion/react'
-import { siteConfig } from '@/config/site'
+import { useEdition } from '@/components/editions'
+import { toIcsDateTime } from '@/lib/editions/format'
 
 interface TimeLeft {
   days: number
@@ -15,10 +16,8 @@ interface CountdownTimerProps {
   variant?: 'default' | 'hero'
 }
 
-function calculateTimeLeft(): TimeLeft {
-  const eventDate = new Date(siteConfig.event.dateISO + 'T10:00:00')
-  const now = new Date()
-  const difference = eventDate.getTime() - now.getTime()
+function calculateTimeLeft(startAt: string | null): TimeLeft {
+  const difference = startAt ? new Date(startAt).getTime() - Date.now() : 0
 
   if (difference <= 0) {
     return { days: 0, hours: 0, minutes: 0, seconds: 0 }
@@ -67,28 +66,37 @@ function TimeUnit({ value, label, variant = 'default' }: { value: number; label:
 }
 
 export function CountdownTimer({ variant = 'default' }: CountdownTimerProps) {
-  const [timeLeft, setTimeLeft] = useState<TimeLeft>(calculateTimeLeft())
+  const edition = useEdition()
+  const [timeLeft, setTimeLeft] = useState<TimeLeft>(calculateTimeLeft(edition.startAt))
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
     setMounted(true)
     const timer = setInterval(() => {
-      setTimeLeft(calculateTimeLeft())
+      setTimeLeft(calculateTimeLeft(edition.startAt))
     }, 1000)
 
     return () => clearInterval(timer)
-  }, [])
+  }, [edition.startAt])
+
+  const title = `Cann'Agri Expo ${edition.year}`
+  const location = `${edition.venueName}, ${edition.city}, France`
+  // Sans heure de fin connue, l'événement est supposé durer 10 heures
+  const startIcs = edition.startAt ? toIcsDateTime(edition.startAt) : ''
+  const endIcs = edition.endAt
+    ? toIcsDateTime(edition.endAt)
+    : edition.startAt
+      ? toIcsDateTime(new Date(new Date(edition.startAt).getTime() + 10 * 3600 * 1000))
+      : ''
 
   const handleAddToCalendar = () => {
-    const eventTitle = encodeURIComponent("Cann'Agri Expo 2026")
+    const eventTitle = encodeURIComponent(title)
     const eventDetails = encodeURIComponent(
-      "Le salon de référence du chanvre CBD - L'Agronaute, Nantes"
+      `Le salon de référence du chanvre CBD - ${edition.venueName}, ${edition.city}`
     )
-    const eventLocation = encodeURIComponent("L'Agronaute, Nantes, France")
-    const startDate = '20260328T100000'
-    const endDate = '20260328T190000'
+    const eventLocation = encodeURIComponent(location)
 
-    const googleUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${eventTitle}&details=${eventDetails}&location=${eventLocation}&dates=${startDate}/${endDate}`
+    const googleUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${eventTitle}&details=${eventDetails}&location=${eventLocation}&dates=${startIcs}/${endIcs}`
     window.open(googleUrl, '_blank')
   }
 
@@ -97,11 +105,11 @@ export function CountdownTimer({ variant = 'default' }: CountdownTimerProps) {
 VERSION:2.0
 PRODID:-//Cann'Agri Expo//FR
 BEGIN:VEVENT
-DTSTART:20260328T100000
-DTEND:20260328T190000
-SUMMARY:Cann'Agri Expo 2026
+DTSTART:${startIcs}
+DTEND:${endIcs}
+SUMMARY:${title}
 DESCRIPTION:Le salon de référence du chanvre CBD
-LOCATION:L'Agronaute, Nantes, France
+LOCATION:${location}
 END:VEVENT
 END:VCALENDAR`
 
@@ -109,7 +117,7 @@ END:VCALENDAR`
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
-    link.download = 'cannagri-expo-2026.ics'
+    link.download = `cannagri-expo-${edition.year}.ics`
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
@@ -180,10 +188,10 @@ END:VCALENDAR`
             Save the date
           </span>
           <h2 className="text-3xl md:text-4xl font-heading font-bold text-forest mb-2">
-            {siteConfig.event.date}
+            {edition.dateLabel}
           </h2>
           <p className="text-forest/70">
-            {siteConfig.event.location}, {siteConfig.event.city}
+            {edition.venueName}, {edition.city}
           </p>
         </motion.div>
 

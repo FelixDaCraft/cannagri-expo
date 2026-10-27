@@ -1,3 +1,5 @@
+import type { Edition } from '@prisma/client'
+
 export const MAX_TICKETS_PER_ORDER = 20
 const MAX_ATTENDEE_NAME_LENGTH = 100
 
@@ -18,10 +20,7 @@ export class TicketItemsError extends Error {
   }
 }
 
-export interface TicketPrices {
-  standardTicketPrice: number
-  flexTicketPrice: number
-}
+type TicketPrices = Pick<Edition, 'standardTicketPrice' | 'flexTicketPrice'>
 
 function parseKind(value: unknown): TicketKind {
   const kind = typeof value === 'string' ? value.toUpperCase() : ''
@@ -31,7 +30,7 @@ function parseKind(value: unknown): TicketKind {
 
 /**
  * Reconstruit les billets d'une commande à partir de la saisie du client.
- * Le prix vient toujours de la configuration serveur : le montant envoyé par le navigateur est ignoré.
+ * Le prix vient toujours de l'édition : le montant envoyé par le navigateur est ignoré.
  */
 export function buildTicketItems(raw: unknown, prices: TicketPrices): TicketItem[] {
   if (!Array.isArray(raw) || raw.length === 0) throw new TicketItemsError('Aucun billet sélectionné')

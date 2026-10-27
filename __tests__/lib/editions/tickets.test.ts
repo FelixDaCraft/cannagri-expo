@@ -1,4 +1,4 @@
-import { buildTicketItems, TicketItemsError, MAX_TICKETS_PER_ORDER } from '@/lib/ticket-items'
+import { buildTicketItems, TicketItemsError, MAX_TICKETS_PER_ORDER } from '@/lib/editions/tickets'
 
 const edition = { standardTicketPrice: 18, flexTicketPrice: 30 }
 

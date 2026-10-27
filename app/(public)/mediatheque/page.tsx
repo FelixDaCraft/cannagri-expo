@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { motion } from 'motion/react'
 import { Badge } from '@/components/ui'
+import { useEdition } from '@/components/editions'
 import { Spotlight, FloatingParticles } from '@/components/ui/aceternity'
 import Lightbox from 'yet-another-react-lightbox'
 import 'yet-another-react-lightbox/styles.css'
@@ -26,6 +27,7 @@ const photos2024: GalleryImage[] = [
 ]
 
 export default function GalleryPage() {
+  const edition = useEdition()
   const [photos, setPhotos] = useState<GalleryImage[]>(photos2024)
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [lightboxIndex, setLightboxIndex] = useState(0)
@@ -214,8 +216,8 @@ export default function GalleryPage() {
               ))}
             </div>
 
-            {/* Info édition 2026 */}
-            {!photosByEdition['2026'] && (
+            {/* Info édition en cours */}
+            {!photosByEdition[String(edition.year)] && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -229,10 +231,10 @@ export default function GalleryPage() {
                   </svg>
                 </div>
                 <h3 className="text-xl font-heading font-semibold text-heading mb-2">
-                  Édition 2026 - À venir
+                  Édition {edition.year} - À venir
                 </h3>
                 <p className="text-body/70 max-w-md mx-auto">
-                  Les photos de l&apos;édition 2026 seront ajoutées après l&apos;événement du 28 mars.
+                  Les photos de l&apos;édition {edition.year} seront ajoutées après l&apos;événement{edition.dateLabel ? ` du ${edition.dateLabel}` : ''}.
                 </p>
               </motion.div>
             )}

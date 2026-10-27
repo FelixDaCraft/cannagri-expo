@@ -4,6 +4,7 @@ import { existsSync } from 'fs'
 import path from 'path'
 import { prisma } from '@/lib/prisma'
 import { checkAdminAuth, unauthorizedResponse } from '@/lib/admin-auth'
+import { getAdminEdition, findEditionByYear } from '@/lib/editions/admin'
 
 const UPLOAD_DIR = path.join(process.cwd(), 'public', 'images', 'gallery')
 
@@ -40,10 +41,12 @@ async function syncFilesWithDatabase() {
 
     // Add new files to database
     if (newFiles.length > 0) {
-      const mediaToCreate = newFiles.map(file => {
-        // Try to extract edition from filename (e.g., IMG20240419... -> 2024)
+      const fallbackEdition = await getAdminEdition()
+      const mediaToCreate = await Promise.all(newFiles.map(async file => {
+        // Try to extract edition from filename (e.g., IMG20240419... -> 2024),
+        // otherwise attach the photo to the edition being managed
         const yearMatch = file.match(/(\d{4})/)
-        const edition = yearMatch ? yearMatch[1] : new Date().getFullYear().toString()
+        const edition = (yearMatch && await findEditionByYear(yearMatch[1])) || fallbackEdition
 
         // Clean up filename for caption
         const caption = file
@@ -54,12 +57,12 @@ async function syncFilesWithDatabase() {
 
         return {
           imageUrl: `/images/gallery/${file}`,
-          caption: caption || `Photo ${edition}`,
-          edition,
+          caption: caption || `Photo ${edition.year}`,
+          editionId: edition.id,
           category: 'Général',
-          altText: `Photo ${edition}`,
+          altText: `Photo ${edition.year}`,
         }
-      })
+      }))
 
       await prisma.media.createMany({
         data: mediaToCreate,
@@ -105,13 +108,16 @@ export async function GET(request: NextRequest) {
       await syncFilesWithDatabase()
     }
 
-    const media = await prisma.media.findMany({
+    const rows = await prisma.media.findMany({
       orderBy: [
-        { edition: 'desc' },
+        { edition: { year: 'desc' } },
         { displayOrder: 'asc' },
         { createdAt: 'desc' },
       ],
+      include: { edition: { select: { year: true } } },
     })
+    // Le client manipule l'année de l'édition sous forme de chaîne ("2024", "2025"...)
+    const media = rows.map(({ edition, ...m }) => ({ ...m, edition: String(edition.year) }))
 
     return NextResponse.json(media)
   } catch (error) {
@@ -134,10 +140,10 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData()
     const file = formData.get('file') as File | null
     const caption = formData.get('caption') as string || ''
-    const edition = formData.get('edition') as string || new Date().getFullYear().toString()
-    // L'année entre dans le nom du fichier écrit sur le disque : 4 chiffres uniquement
-    if (!/^\d{4}$/.test(edition)) {
-      return NextResponse.json({ error: 'Édition invalide' }, { status: 400 })
+    const editionYear = formData.get('edition') as string | null
+    const edition = editionYear ? await findEditionByYear(editionYear) : await getAdminEdition()
+    if (!edition) {
+      return NextResponse.json({ error: `L'édition ${editionYear} n'existe pas` }, { status: 400 })
     }
     const category = formData.get('category') as string || 'Général'
 
@@ -167,8 +173,8 @@ export async function POST(request: NextRequest) {
     const timestamp = Date.now()
     const randomStr = Math.random().toString(36).substring(2, 8)
     // Extension dérivée du type MIME validé (jamais du nom fourni par le client)
-    const ext = ({ 'image/png': 'png', 'image/webp': 'webp' } as Record<string, string>)[file.type] ?? 'jpg'
-    const filename = `${edition}_${timestamp}_${randomStr}.${ext}`
+    const ext = { 'image/png': 'png', 'image/webp': 'webp' }[file.type] ?? 'jpg'
+    const filename = `${edition.year}_${timestamp}_${randomStr}.${ext}`
     const filepath = path.join(UPLOAD_DIR, filename)
 
     // Write file to disk
@@ -181,13 +187,13 @@ export async function POST(request: NextRequest) {
       data: {
         imageUrl: `/images/gallery/${filename}`,
         caption,
-        edition,
+        editionId: edition.id,
         category,
-        altText: caption || `Photo ${edition}`,
+        altText: caption || `Photo ${edition.year}`,
       },
     })
 
-    return NextResponse.json(media, { status: 201 })
+    return NextResponse.json({ ...media, edition: String(edition.year) }, { status: 201 })
   } catch (error) {
     console.error('Error uploading media:', error)
     return NextResponse.json({ error: 'Failed to upload media' }, { status: 500 })

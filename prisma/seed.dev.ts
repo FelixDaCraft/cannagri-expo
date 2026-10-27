@@ -110,6 +110,26 @@ async function main() {
   // ============================================================================
   console.log('⚙️  Creating site settings...')
 
+  // Édition de référence : toutes les données de démonstration y sont rattachées
+  const edition = await prisma.edition.upsert({
+    where: { year: 2026 },
+    update: {},
+    create: {
+      year: 2026,
+      status: 'ACTIVE',
+      startAt: new Date('2026-03-28T08:00:00Z'), // 9h00 heure de Paris
+      endAt: new Date('2026-03-28T18:00:00Z'),   // 19h00 heure de Paris
+      venueName: "L'Agronaute",
+      address: '2 Rue du Sénégal, 44200 Nantes',
+      city: 'Nantes',
+      posterUrl: '/images/affiche-2026.png',
+      ticketingOpenAt: new Date('2026-01-15T00:00:00Z'),
+      ticketingCloseAt: new Date('2026-03-27T23:00:00Z'),
+      standardTicketPrice: 15,
+      flexTicketPrice: 25,
+    },
+  })
+
   await prisma.siteSettings.upsert({
     where: { id: 'site_settings' },
     update: {},
@@ -169,9 +189,10 @@ async function main() {
   const createdStands: { [key: number]: { id: string } } = {}
   for (const stand of standsData) {
     const created = await prisma.stand.upsert({
-      where: { number: stand.number },
+      where: { editionId_number: { editionId: edition.id, number: stand.number } },
       update: { status: stand.status },
       create: {
+        editionId: edition.id,
         number: stand.number,
         code: String(stand.number),
         surfaceM2: stand.surfaceM2,
@@ -298,9 +319,9 @@ Découvrez nos innovations exclusives lors du salon, notamment notre nouvelle ga
 
   for (const sponsor of sponsors) {
     await prisma.sponsor.upsert({
-      where: { slug: sponsor.slug },
+      where: { editionId_slug: { editionId: edition.id, slug: sponsor.slug } },
       update: {},
-      create: sponsor,
+      create: { ...sponsor, editionId: edition.id },
     })
   }
   console.log(`   ✓ ${sponsors.length} sponsors created`)
@@ -458,9 +479,9 @@ Découvrez nos innovations exclusives lors du salon, notamment notre nouvelle ga
 
   for (const event of events) {
     await prisma.event.upsert({
-      where: { slug: event.slug },
+      where: { editionId_slug: { editionId: edition.id, slug: event.slug } },
       update: {},
-      create: event,
+      create: { ...event, editionId: edition.id },
     })
   }
   console.log(`   ✓ ${events.length} events created`)
@@ -520,7 +541,7 @@ Découvrez nos innovations exclusives lors du salon, notamment notre nouvelle ga
     const created = await prisma.order.upsert({
       where: { orderNumber: order.orderNumber },
       update: {},
-      create: order,
+      create: { ...order, editionId: edition.id },
     })
     createdOrders[order.orderNumber] = created
   }
@@ -574,7 +595,7 @@ Découvrez nos innovations exclusives lors du salon, notamment notre nouvelle ga
     await prisma.ticket.upsert({
       where: { qrCodeData: ticket.qrCodeData },
       update: {},
-      create: ticket,
+      create: { ...ticket, editionId: edition.id },
     })
   }
   console.log(`   ✓ ${tickets.length} tickets created`)
@@ -585,19 +606,25 @@ Découvrez nos innovations exclusives lors du salon, notamment notre nouvelle ga
   console.log('📸 Creating media entries...')
 
   const media = [
-    { imageUrl: '/images/gallery/conf-2024-1.jpg', caption: 'Conférence d\'ouverture 2024', edition: '2024', category: 'Conférences', displayOrder: 1 },
-    { imageUrl: '/images/gallery/conf-2024-2.jpg', caption: 'Table ronde réglementation', edition: '2024', category: 'Conférences', displayOrder: 2 },
-    { imageUrl: '/images/gallery/stands-2024-1.jpg', caption: 'Vue d\'ensemble des stands', edition: '2024', category: 'Stands', displayOrder: 3 },
-    { imageUrl: '/images/gallery/stands-2024-2.jpg', caption: 'Stand CBD Premium', edition: '2024', category: 'Stands', displayOrder: 4 },
-    { imageUrl: '/images/gallery/cup-2024-1.jpg', caption: 'Platinum CBD Cup - Remise des prix', edition: '2024', category: 'Platinum CBD Cup', displayOrder: 5 },
-    { imageUrl: '/images/gallery/cup-2024-2.jpg', caption: 'Gagnant catégorie Indoor', edition: '2024', category: 'Platinum CBD Cup', displayOrder: 6 },
-    { imageUrl: '/images/gallery/networking-2024.jpg', caption: 'Session networking', edition: '2024', category: 'Networking', displayOrder: 7 },
-    { imageUrl: '/images/gallery/public-2024.jpg', caption: 'Visiteurs au salon', edition: '2024', category: 'Ambiance', displayOrder: 8 },
+    { imageUrl: '/images/gallery/conf-2024-1.jpg', caption: 'Conférence d\'ouverture 2024', category: 'Conférences', displayOrder: 1 },
+    { imageUrl: '/images/gallery/conf-2024-2.jpg', caption: 'Table ronde réglementation', category: 'Conférences', displayOrder: 2 },
+    { imageUrl: '/images/gallery/stands-2024-1.jpg', caption: 'Vue d\'ensemble des stands', category: 'Stands', displayOrder: 3 },
+    { imageUrl: '/images/gallery/stands-2024-2.jpg', caption: 'Stand CBD Premium', category: 'Stands', displayOrder: 4 },
+    { imageUrl: '/images/gallery/cup-2024-1.jpg', caption: 'Platinum CBD Cup - Remise des prix', category: 'Platinum CBD Cup', displayOrder: 5 },
+    { imageUrl: '/images/gallery/cup-2024-2.jpg', caption: 'Gagnant catégorie Indoor', category: 'Platinum CBD Cup', displayOrder: 6 },
+    { imageUrl: '/images/gallery/networking-2024.jpg', caption: 'Session networking', category: 'Networking', displayOrder: 7 },
+    { imageUrl: '/images/gallery/public-2024.jpg', caption: 'Visiteurs au salon', category: 'Ambiance', displayOrder: 8 },
   ]
 
+  // Photos de l'édition 2024, archivée
+  const edition2024 = await prisma.edition.upsert({
+    where: { year: 2024 },
+    update: {},
+    create: { year: 2024, status: 'ARCHIVED' },
+  })
   for (const item of media) {
     await prisma.media.create({
-      data: item,
+      data: { ...item, editionId: edition2024.id },
     })
   }
   console.log(`   ✓ ${media.length} media entries created`)

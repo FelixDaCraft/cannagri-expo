@@ -9,6 +9,8 @@ jest.mock('nodemailer', () => ({
 
 // Get the mock for assertions
 import nodemailer from 'nodemailer'
+
+const testEdition = { year: 2026, dateLabel: '28 mars 2026', venueName: "L'Agronaute", city: 'Nantes' }
 const mockSendMail = (nodemailer.createTransport() as any).sendMail
 
 describe('sendTicketEmail', () => {
@@ -18,6 +20,7 @@ describe('sendTicketEmail', () => {
 
   it('should send ticket email successfully', async () => {
     await sendTicketEmail({
+      edition: testEdition,
       to: 'test@example.com',
       customerName: 'John Doe',
       orderNumber: 'CAE-123456',
@@ -31,6 +34,7 @@ describe('sendTicketEmail', () => {
 
   it('should include customer name in email HTML', async () => {
     await sendTicketEmail({
+      edition: testEdition,
       to: 'test@example.com',
       customerName: 'Marie Dupont',
       orderNumber: 'CAE-789',
@@ -42,6 +46,7 @@ describe('sendTicketEmail', () => {
 
   it('should include order number in email HTML', async () => {
     await sendTicketEmail({
+      edition: testEdition,
       to: 'test@example.com',
       customerName: 'Test User',
       orderNumber: 'CAE-ORDER-456',
@@ -55,6 +60,7 @@ describe('sendTicketEmail', () => {
     const pdfBuffer = Buffer.from('fake-pdf-content')
 
     await sendTicketEmail({
+      edition: testEdition,
       to: 'test@example.com',
       customerName: 'Test User',
       orderNumber: 'CAE-123',
@@ -69,6 +75,7 @@ describe('sendTicketEmail', () => {
 
   it('should not include attachments when PDF is not provided', async () => {
     await sendTicketEmail({
+      edition: testEdition,
       to: 'test@example.com',
       customerName: 'Test User',
       orderNumber: 'CAE-123',
@@ -80,6 +87,7 @@ describe('sendTicketEmail', () => {
 
   it('should send stand booking confirmation email', async () => {
     await sendTicketEmail({
+      edition: testEdition,
       to: 'pro@example.com',
       customerName: 'Entreprise ABC',
       orderNumber: 'CAE-STAND-001',
@@ -96,6 +104,7 @@ describe('sendTicketEmail', () => {
 
   it('should handle single stand in stand booking', async () => {
     await sendTicketEmail({
+      edition: testEdition,
       to: 'pro@example.com',
       customerName: 'Entreprise XYZ',
       orderNumber: 'CAE-STAND-002',
@@ -112,6 +121,7 @@ describe('sendTicketEmail', () => {
 
     await expect(
       sendTicketEmail({
+        edition: testEdition,
         to: 'test@example.com',
         customerName: 'Test User',
         orderNumber: 'CAE-123',
@@ -152,6 +162,7 @@ describe('sendNewsletterConfirmation', () => {
 describe('Email HTML Templates', () => {
   it('should include event location in ticket email', async () => {
     await sendTicketEmail({
+      edition: testEdition,
       to: 'test@example.com',
       customerName: 'Test',
       orderNumber: 'CAE-123',
@@ -164,6 +175,7 @@ describe('Email HTML Templates', () => {
 
   it('should include event date in ticket email', async () => {
     await sendTicketEmail({
+      edition: testEdition,
       to: 'test@example.com',
       customerName: 'Test',
       orderNumber: 'CAE-123',
@@ -175,6 +187,7 @@ describe('Email HTML Templates', () => {
 
   it('should include presentation instructions in ticket email', async () => {
     await sendTicketEmail({
+      edition: testEdition,
       to: 'test@example.com',
       customerName: 'Test',
       orderNumber: 'CAE-123',
@@ -187,6 +200,7 @@ describe('Email HTML Templates', () => {
 
   it('should include next steps in stand booking email', async () => {
     await sendTicketEmail({
+      edition: testEdition,
       to: 'pro@example.com',
       customerName: 'Test Pro',
       orderNumber: 'CAE-STAND-001',
@@ -203,6 +217,7 @@ describe('Email HTML Templates', () => {
   it('should mention invoice when invoicePdfBuffer is provided', async () => {
     const mockInvoice = Buffer.from('mock invoice pdf')
     await sendTicketEmail({
+      edition: testEdition,
       to: 'pro@example.com',
       customerName: 'Test Pro',
       orderNumber: 'CAE-STAND-001',
@@ -219,5 +234,26 @@ describe('Email HTML Templates', () => {
         content: mockInvoice,
       })
     )
+  })
+})
+
+describe("sendTicketEmail - informations de l'édition", () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+
+  it("affiche la date et le lieu de l'édition du billet, pas ceux de la configuration", async () => {
+    await sendTicketEmail({
+      edition: { year: 2027, dateLabel: '10 avril 2027', venueName: 'Parc des Expositions', city: 'Rennes' },
+      to: 'test@example.com',
+      customerName: 'John Doe',
+      orderNumber: 'CAE-2027',
+    })
+
+    const html = mockSendMail.mock.calls[0][0].html
+    expect(html).toContain('10 avril 2027')
+    expect(html).toContain('Parc des Expositions, Rennes')
+    expect(html).toContain('2027')
+    expect(html).not.toContain('28 mars 2026')
   })
 })

@@ -6,8 +6,10 @@ import { useSearchParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { Button, Input } from '@/components/ui'
 import { siteConfig } from '@/config/site'
+import { useEdition } from '@/components/editions'
 
 export default function ContactPage() {
+  const edition = useEdition()
   const t = useTranslations('contact')
   const tc = useTranslations('common')
   const searchParams = useSearchParams()
@@ -118,9 +120,9 @@ export default function ContactPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                     <div>
-                      <p className="font-medium text-forest">{siteConfig.event.location}</p>
-                      <p className="text-sm text-forest/70">{siteConfig.event.address}</p>
-                      <p className="text-sm text-forest/70">{siteConfig.event.city}</p>
+                      <p className="font-medium text-forest">{edition.venueName}</p>
+                      <p className="text-sm text-forest/70">{edition.address}</p>
+                      <p className="text-sm text-forest/70">{edition.city}</p>
                     </div>
                   </div>
 

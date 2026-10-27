@@ -5,7 +5,7 @@ import { motion } from 'motion/react'
 import { useTranslations } from 'next-intl'
 import { Card, CardContent, Button } from '@/components/ui'
 import { Spotlight, FloatingParticles } from '@/components/ui/aceternity'
-import { siteConfig } from '@/config/site'
+import { useEdition } from '@/components/editions'
 
 const featureKeys = ['exhibition', 'conferences', 'cup', 'networking', 'innovations', 'documentation']
 
@@ -43,6 +43,7 @@ const featureIcons: Record<string, React.ReactNode> = {
 }
 
 export default function PresentationPage() {
+  const edition = useEdition()
   const t = useTranslations('event')
 
   const stats = [
@@ -110,8 +111,8 @@ export default function PresentationPage() {
             <div className="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-cream/50">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/images/affiche-2026.png"
-                alt="Cann'Agri Expo 2026 - Affiche officielle"
+                src={edition.posterUrl ?? '/images/logo.PNG'}
+                alt={`Cann'Agri Expo ${edition.year} - Affiche officielle`}
                 className="w-full h-auto"
               />
             </div>
@@ -124,7 +125,7 @@ export default function PresentationPage() {
               className="absolute -top-4 -right-4 md:-top-6 md:-right-6"
             >
               <div className="bg-terracotta text-cream px-4 py-2 rounded-full font-heading font-bold text-sm md:text-base shadow-lg transform rotate-12">
-                {t('edition', { year: siteConfig.event.year })}
+                {t('edition', { year: edition.year })}
               </div>
             </motion.div>
           </motion.div>
@@ -152,7 +153,7 @@ export default function PresentationPage() {
                 {t('about.p2')}
               </p>
               <p>
-                {t('about.p3', { year: siteConfig.event.year })}
+                {t('about.p3', { year: edition.year })}
               </p>
             </motion.div>
           </div>
@@ -262,7 +263,7 @@ export default function PresentationPage() {
               </svg>
             </motion.div>
             <h2 className="text-2xl sm:text-3xl font-heading font-bold text-heading mb-4">
-              {t('cta.title', { date: siteConfig.event.date })}
+              {t('cta.title', { date: edition.dateLabel ?? '' })}
             </h2>
             <p className="text-body/70 max-w-2xl mx-auto mb-8">
               {t('cta.description')}

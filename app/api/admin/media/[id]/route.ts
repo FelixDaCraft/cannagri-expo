@@ -4,6 +4,7 @@ import { existsSync } from 'fs'
 import path from 'path'
 import { prisma } from '@/lib/prisma'
 import { checkAdminAuth, unauthorizedResponse } from '@/lib/admin-auth'
+import { findEditionByYear } from '@/lib/editions/admin'
 
 // DELETE - Remove media
 export async function DELETE(
@@ -62,17 +63,28 @@ export async function PATCH(
     const body = await request.json()
     const { caption, edition, category, displayOrder } = body
 
+    // L'édition est transmise sous forme d'année ("2025")
+    let editionId: string | undefined
+    if (edition !== undefined) {
+      const target = await findEditionByYear(edition)
+      if (!target) {
+        return NextResponse.json({ error: `L'édition ${edition} n'existe pas` }, { status: 400 })
+      }
+      editionId = target.id
+    }
+
     const media = await prisma.media.update({
       where: { id },
       data: {
         ...(caption !== undefined && { caption }),
-        ...(edition !== undefined && { edition }),
+        ...(editionId !== undefined && { editionId }),
         ...(category !== undefined && { category }),
         ...(displayOrder !== undefined && { displayOrder }),
       },
+      include: { edition: { select: { year: true } } },
     })
 
-    return NextResponse.json(media)
+    return NextResponse.json({ ...media, edition: String(media.edition.year) })
   } catch (error) {
     console.error('Error updating media:', error)
     return NextResponse.json({ error: 'Failed to update media' }, { status: 500 })

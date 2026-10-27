@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { getActiveEdition } from '@/lib/editions'
 import { checkRateLimit, getClientIP, RATE_LIMIT_PRESETS } from '@/lib/rate-limit'
 
 export async function POST(request: NextRequest) {
@@ -28,7 +29,9 @@ export async function POST(request: NextRequest) {
       where: { code: code.trim().toUpperCase() },
     })
 
-    if (!promoCode) {
+    // Un code promo ne vaut que pour l'édition pour laquelle il a été créé
+    const edition = await getActiveEdition()
+    if (!promoCode || promoCode.editionId !== edition.id) {
       return NextResponse.json(
         { error: 'Code promo invalide' },
         { status: 404 }

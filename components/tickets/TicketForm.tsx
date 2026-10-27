@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { Button, Input, Card, CardContent, Badge } from '@/components/ui'
 import { siteConfig } from '@/config/site'
 import { formatPrice } from '@/lib/utils'
+import { useEdition } from '@/components/editions'
 
 interface TicketOption {
   type: 'standard' | 'flex'
@@ -16,22 +17,25 @@ interface TicketOption {
   supportMessage?: string
 }
 
-const ticketOptions: TicketOption[] = [
-  {
-    type: 'standard',
-    name: siteConfig.tickets.standard.name,
-    price: siteConfig.tickets.standard.price,
-    description: siteConfig.tickets.standard.description,
-  },
-  {
-    type: 'flex',
-    name: siteConfig.tickets.flex.name,
-    price: siteConfig.tickets.flex.price,
-    description: siteConfig.tickets.flex.description,
-    isRecommended: true,
-    supportMessage: 'Votre soutien nous permet d\'organiser de plus beaux événements !',
-  },
-]
+// Les prix viennent de l'édition en ligne (le serveur les recalcule de toute façon)
+function getTicketOptions(prices: { standardTicketPrice: number; flexTicketPrice: number }): TicketOption[] {
+  return [
+    {
+      type: 'standard',
+      name: siteConfig.tickets.standard.name,
+      price: prices.standardTicketPrice,
+      description: siteConfig.tickets.standard.description,
+    },
+    {
+      type: 'flex',
+      name: siteConfig.tickets.flex.name,
+      price: prices.flexTicketPrice,
+      description: siteConfig.tickets.flex.description,
+      isRecommended: true,
+      supportMessage: 'Votre soutien nous permet d\'organiser de plus beaux événements !',
+    },
+  ]
+}
 
 const oauthProviders = [
   {
@@ -70,6 +74,7 @@ interface Attendee {
 
 export function TicketForm() {
   const { data: session, status } = useSession()
+  const ticketOptions = getTicketOptions(useEdition())
   // Quantities for each ticket type
   const [ticketQuantities, setTicketQuantities] = useState<Record<'standard' | 'flex', number>>({
     standard: 0,

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { getActiveEdition } from '@/lib/editions'
 
 interface Translations {
   en?: string
@@ -24,8 +25,10 @@ interface Exhibitor {
 export async function GET() {
   try {
     // Fetch all sold/reserved stands with linked PRO accounts or Sponsors
+    const edition = await getActiveEdition()
     const stands = await prisma.stand.findMany({
       where: {
+        editionId: edition.id,
         status: {
           in: ['SOLD', 'RESERVED'],
         },

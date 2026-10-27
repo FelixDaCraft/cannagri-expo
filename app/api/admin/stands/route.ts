@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { checkAdminAuth, unauthorizedResponse } from '@/lib/admin-auth'
+import { getAdminEdition } from '@/lib/editions/admin'
 
 // Configuration des 36 stands - NUMÉROTATION SENS HORAIRE
 // Association non soumise à la TVA - Prix net
@@ -69,7 +70,9 @@ export async function GET(request: NextRequest) {
       return unauthorizedResponse()
     }
 
+    const edition = await getAdminEdition()
     const stands = await prisma.stand.findMany({
+      where: { editionId: edition.id },
       orderBy: [
         { number: 'asc' },
       ],
@@ -121,6 +124,7 @@ export async function GET(request: NextRequest) {
     // Fetch sponsors without a stand assigned (for dropdown selection)
     const sponsors = await prisma.sponsor.findMany({
       where: {
+        editionId: edition.id,
         isActive: true,
       },
       select: {
@@ -176,9 +180,10 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Check if number already exists
-    const existingStand = await prisma.stand.findUnique({
-      where: { number: parseInt(number) }
+    // Check if number already exists in this edition
+    const edition = await getAdminEdition()
+    const existingStand = await prisma.stand.findFirst({
+      where: { editionId: edition.id, number: parseInt(number) }
     })
 
     if (existingStand) {
@@ -190,6 +195,7 @@ export async function POST(request: NextRequest) {
 
     const stand = await prisma.stand.create({
       data: {
+        editionId: edition.id,
         number: parseInt(number),
         code: String(number),
         surfaceM2: parseFloat(surfaceM2),
@@ -278,8 +284,8 @@ export async function PUT(request: NextRequest) {
 
     // If changing number, check it's not already in use
     if (number !== undefined && number !== existingStand.number) {
-      const numberExists = await prisma.stand.findUnique({
-        where: { number: parseInt(number) }
+      const numberExists = await prisma.stand.findFirst({
+        where: { editionId: existingStand.editionId, number: parseInt(number) }
       })
       if (numberExists) {
         return NextResponse.json(
@@ -309,9 +315,12 @@ export async function PUT(request: NextRequest) {
           // First check if the sponsor already has another stand
           const sponsorWithStand = await tx.sponsor.findUnique({
             where: { id: newSponsorId },
-            select: { standId: true, name: true }
+            select: { standId: true, name: true, editionId: true }
           })
-          if (sponsorWithStand?.standId && sponsorWithStand.standId !== id) {
+          if (!sponsorWithStand || sponsorWithStand.editionId !== existingStand.editionId) {
+            throw new Error(`Ce sponsor n'appartient pas à cette édition`)
+          }
+          if (sponsorWithStand.standId && sponsorWithStand.standId !== id) {
             throw new Error(`Ce sponsor a déjà un stand attribué`)
           }
           // Update the sponsor to point to this stand
@@ -478,15 +487,19 @@ export async function PATCH(request: NextRequest) {
     const body = await request.json()
     const { action } = body
 
+    // Les opérations en masse ne touchent que le plan de l'édition gérée
+    const edition = await getAdminEdition()
+
     if (action === 'initialize') {
-      // Delete all existing stands
-      await prisma.stand.deleteMany({})
+      // Delete all existing stands of this edition
+      await prisma.stand.deleteMany({ where: { editionId: edition.id } })
 
       // Create all 40 stands
       // Association non soumise à TVA - mobilier et électricité inclus
       for (const stand of defaultStandsConfig) {
         await prisma.stand.create({
           data: {
+            editionId: edition.id,
             number: stand.number,
             code: String(stand.number),
             surfaceM2: stand.surfaceM2,
@@ -508,6 +521,7 @@ export async function PATCH(request: NextRequest) {
       }
 
       const allStands = await prisma.stand.findMany({
+        where: { editionId: edition.id },
         orderBy: [{ number: 'asc' }]
       })
 
@@ -522,12 +536,13 @@ export async function PATCH(request: NextRequest) {
     if (action === 'add_missing_stands') {
       let created = 0
       for (const stand of defaultStandsConfig) {
-        const existing = await prisma.stand.findUnique({
-          where: { number: stand.number }
+        const existing = await prisma.stand.findFirst({
+          where: { editionId: edition.id, number: stand.number }
         })
         if (!existing) {
           await prisma.stand.create({
             data: {
+              editionId: edition.id,
               number: stand.number,
               code: String(stand.number),
               surfaceM2: stand.surfaceM2,
@@ -554,6 +569,7 @@ export async function PATCH(request: NextRequest) {
       for (const stand of defaultStandsConfig) {
         await prisma.stand.updateMany({
           where: {
+            editionId: edition.id,
             number: stand.number,
             OR: [{ row: 0 }, { col: 0 }]
           },
@@ -565,6 +581,7 @@ export async function PATCH(request: NextRequest) {
       }
 
       const allStands = await prisma.stand.findMany({
+        where: { editionId: edition.id },
         orderBy: [{ number: 'asc' }]
       })
 
@@ -578,6 +595,7 @@ export async function PATCH(request: NextRequest) {
     // Mettre à jour tous les stands avec les nouveaux tarifs
     if (action === 'update_prices') {
       const result = await prisma.stand.updateMany({
+        where: { editionId: edition.id },
         data: {
           surfaceM2: 4,
           priceHT: 150,

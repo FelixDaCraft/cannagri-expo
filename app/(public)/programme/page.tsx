@@ -1,32 +1,11 @@
-import { prisma } from '@/lib/prisma'
+import { getActiveEdition } from '@/lib/editions'
+import { getEditionEvents } from '@/lib/editions/content'
 import { cookies } from 'next/headers'
 import ProgrammeClient from './ProgrammeClient'
-import { Translations } from '@/lib/translation'
 
-interface Speaker {
-  id: string
-  name: string
-  title: string
-  company: string
-  photo: string
-  bio: string
-}
-
-async function getEvents() {
+async function getEvents(editionId: string) {
   try {
-    const events = await prisma.event.findMany({
-      orderBy: [
-        { startAt: 'asc' },
-        { displayOrder: 'asc' },
-      ],
-    })
-    // Transform Prisma JsonValue speakers to typed Speaker[]
-    return events.map(event => ({
-      ...event,
-      speakers: Array.isArray(event.speakers) ? (event.speakers as unknown as Speaker[]) : [],
-      titleTranslations: event.titleTranslations as Translations | null,
-      descriptionTranslations: event.descriptionTranslations as Translations | null,
-    }))
+    return await getEditionEvents(editionId)
   } catch (error) {
     console.error('Error fetching events:', error)
     return []
@@ -34,7 +13,8 @@ async function getEvents() {
 }
 
 export default async function ProgrammePage() {
-  const events = await getEvents()
+  const edition = await getActiveEdition()
+  const events = await getEvents(edition.id)
   const cookieStore = await cookies()
   const locale = cookieStore.get('NEXT_LOCALE')?.value || 'fr'
   return <ProgrammeClient events={events} locale={locale} />

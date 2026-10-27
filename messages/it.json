@@ -53,6 +53,7 @@
     "exhibitors": "Espositori",
     "photoGallery": "Galleria Foto",
     "practicalInfo": "Info pratiche",
+    "pastEditions": "Edizioni precedenti",
     "sponsoring": "Sponsoring",
     "contact": "Contatto",
     "proSpace": "Area Pro",
@@ -65,7 +66,7 @@
       "title": "CANN'AGRI",
       "titleHighlight": "EXPO",
       "subtitle": "La fiera di riferimento della canapa CBD",
-      "edition": "Edizione 2026",
+      "edition": "Edizione {year}",
       "buyTicket": "Acquista il mio biglietto",
       "practicalInfo": "Info Pratiche",
       "discover": "Scopri"

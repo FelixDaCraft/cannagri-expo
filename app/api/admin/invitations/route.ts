@@ -5,6 +5,8 @@ import { generateQRCodeData } from '@/lib/utils'
 import { generateQRCode } from '@/lib/qrcode'
 import { generateTicketPDF } from '@/lib/pdf'
 import { sendTicketEmail } from '@/lib/email'
+import { getAdminEdition } from '@/lib/editions/admin'
+import { toEditionSummary } from '@/lib/editions/format'
 
 // GET /api/admin/invitations - List all complimentary tickets
 export async function GET() {
@@ -12,8 +14,9 @@ export async function GET() {
     const session = await checkFullAdminAuth()
     if (!session) return unauthorizedResponse()
 
+    const edition = await getAdminEdition()
     const tickets = await prisma.ticket.findMany({
-      where: { isComplimentary: true },
+      where: { isComplimentary: true, editionId: edition.id },
       orderBy: { createdAt: 'desc' },
     })
 
@@ -44,6 +47,8 @@ export async function POST(request: NextRequest) {
     }
 
     const validType: 'STANDARD' | 'FLEX' = ticketType === 'FLEX' ? 'FLEX' : 'STANDARD'
+    const edition = await getAdminEdition()
+    const editionSummary = toEditionSummary(edition)
 
     // Generate QR code
     const qrData = generateQRCodeData('INVITE', Date.now().toString())
@@ -60,12 +65,13 @@ export async function POST(request: NextRequest) {
         status: 'PAID',
         isComplimentary: true,
         invitedBy: session.user.id,
+        editionId: edition.id,
       },
     })
 
     // Fetch sponsors for PDF
     const sponsors = await prisma.sponsor.findMany({
-      where: { isActive: true, logoUrl: { not: null } },
+      where: { editionId: edition.id, isActive: true, logoUrl: { not: null } },
       orderBy: [{ type: 'asc' }],
     })
 
@@ -77,10 +83,12 @@ export async function POST(request: NextRequest) {
       orderNumber: 'INVITATION',
       qrCodeImage,
       sponsors,
+      edition: editionSummary,
     })
 
     // Send email
     await sendTicketEmail({
+      edition: editionSummary,
       to: customerEmail,
       customerName,
       orderNumber: 'INVITATION',

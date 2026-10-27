@@ -1,6 +1,7 @@
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib'
 import { siteConfig } from '@/config/site'
 import type { Sponsor, SponsorType } from '@/types'
+import type { EditionSummary } from '@/lib/editions/format'
 import * as fs from 'fs'
 import * as path from 'path'
 
@@ -11,6 +12,7 @@ interface TicketPDFData {
   orderNumber: string
   qrCodeImage: string // Base64 data URL
   sponsors?: Sponsor[] // Active sponsors with logos
+  edition: EditionSummary // Édition du billet (date et lieu imprimés)
 }
 
 // Tailles des logos des sponsors dans le PDF (en points)
@@ -94,7 +96,7 @@ export async function generateTicketPDF(data: TicketPDFData): Promise<Buffer> {
   })
 
   // Event info
-  page.drawText(`${siteConfig.event.date} - ${siteConfig.event.location}, ${siteConfig.event.city}`, {
+  page.drawText(`${data.edition.dateLabel ?? data.edition.year} - ${data.edition.venueName ?? ''}, ${data.edition.city ?? ''}`, {
     x: titleX,
     y: height - 130,
     size: 12,

@@ -1,9 +1,8 @@
-# Cann'Agri Expo 2026
+# Cann'Agri Expo
 
 Plateforme web complète de gestion d'événements pour le salon professionnel Cann'Agri Expo - le rendez-vous des professionnels du chanvre CBD en France.
 
-**Date de l'événement:** 28 Mars 2026
-**Lieu:** L'Agronaute, Nantes
+Date, lieu et tarifs dépendent de l'édition en ligne : voir [Éditions](#éditions-changement-dannée).
 
 ---
 
@@ -416,6 +415,21 @@ Le projet utilise une bibliothèque de composants custom basée sur Tailwind CSS
 | GET/POST | `/api/admin/pros` | Gestion comptes pro |
 
 ---
+
+## Éditions (changement d'année)
+
+Chaque salon annuel est une **édition** (modèle `Edition`). Sponsors, programme, stands, commandes, billets, codes promo et photos sont rattachés à une édition. Une seule édition est **en ligne** (`ACTIVE`) : c'est elle que présente le site public (date, lieu, affiche, tarifs, infos pratiques). Les éditions passées sont **archivées** et consultables sur `/editions/[année]`.
+
+### Lancer une nouvelle édition
+
+1. **Administration > Éditions > Nouvelle édition** : année, date et horaires (heure de Paris), lieu, tarifs, période de billetterie, infos pratiques. Choisir de reprendre le plan de stands d'une édition précédente (stands remis libres) ou de partir d'un plan vide. L'édition est créée en **brouillon**, invisible du public.
+2. Sélectionner l'édition dans le menu **Édition gérée** (barre du haut de l'admin) pour y saisir sponsors, programme, stands et codes promo pendant que l'édition précédente reste en ligne.
+3. Déposer l'affiche dans `public/images/` (ex. `affiche-2027.png`, à commiter) et renseigner son chemin dans l'édition.
+4. **Mettre en ligne** : la nouvelle édition devient active, la précédente est archivée. Les billets de l'ancienne édition sont refusés au contrôle d'entrée.
+
+### Migration des données existantes (une seule fois)
+
+Le schéma est appliqué à la main (pas de `prisma migrate`). Le script `prisma/manual-migrations/2026-10-27_editions.sql` crée l'édition 2026 et y rattache toutes les données existantes ; voir l'en-tête du fichier (sauvegarde `pg_dump` obligatoire avant).
 
 ## Déploiement
 

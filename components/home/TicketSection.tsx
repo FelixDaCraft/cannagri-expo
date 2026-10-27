@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { motion } from 'motion/react'
 import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui'
-import { siteConfig } from '@/config/site'
+import { useEdition } from '@/components/editions'
 
 interface TicketType {
   id: string
@@ -131,6 +131,7 @@ function TicketCard({ ticket, quantity, onQuantityChange, t }: {
 }
 
 export function TicketSection() {
+  const edition = useEdition()
   const t = useTranslations('home.tickets')
   const [quantities, setQuantities] = useState<Record<string, number>>({
     standard: 0,
@@ -169,7 +170,7 @@ export function TicketSection() {
             {t('title')}
           </h2>
           <p className="text-forest/70 max-w-2xl mx-auto">
-            {t('subtitle', { date: siteConfig.event.date, location: siteConfig.event.location, city: siteConfig.event.city })}
+            {t('subtitle', { date: edition.dateLabel ?? '', location: edition.venueName ?? '', city: edition.city ?? '' })}
           </p>
         </motion.div>
 

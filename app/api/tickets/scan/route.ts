@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { parseQRCodeData, extractQRCodeFromUrl } from '@/lib/qrcode'
 import { checkAdminAuth, unauthorizedResponse } from '@/lib/admin-auth'
+import { getActiveEdition } from '@/lib/editions'
 
 /**
  * POST /api/tickets/scan
@@ -73,6 +74,16 @@ export async function POST(request: NextRequest) {
         valid: false,
         error: 'Billet introuvable',
         message: 'Ce billet n\'existe pas dans notre systeme'
+      })
+    }
+
+    // Un billet n'ouvre l'entrée que pour son édition
+    const activeEdition = await getActiveEdition()
+    if (ticket.editionId !== activeEdition.id) {
+      return NextResponse.json({
+        valid: false,
+        error: 'Billet d\'une autre edition',
+        message: 'Ce billet ne concerne pas l\'edition en cours'
       })
     }
 

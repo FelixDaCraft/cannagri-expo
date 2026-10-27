@@ -1,12 +1,14 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'motion/react'
 import { useTranslations } from 'next-intl'
 import { Card, CardContent, Button } from '@/components/ui'
 import { Spotlight, FloatingParticles } from '@/components/ui/aceternity'
 import { siteConfig } from '@/config/site'
+import { useEdition } from '@/components/editions'
+import type { EditionView } from '@/lib/editions/format'
 
 interface InfosPratiques {
   eventDate: string
@@ -22,18 +24,20 @@ interface InfosPratiques {
   contactPhone: string
 }
 
-const defaultInfos: InfosPratiques = {
-  eventDate: siteConfig.event.date,
-  eventTime: '9h00 - 19h00',
-  eventLocation: siteConfig.event.location,
-  eventAddress: '2 Rue du Sénégal',
-  eventCity: siteConfig.event.city,
-  accessTransport: 'Bus lignes 5, C1, C6, C20 arrêt Basse Île (5 min). Navibus arrêt Trentemoult - Roquios (2 min). Tramway ligne 2/3, arrêt Vincent Gâche (22 min).',
-  accessParking: 'Parking gratuit sur le site de l\'Agronaute. Parking Île de Nantes (payant) à proximité.',
-  accessInfo: 'Le lieu est accessible aux personnes à mobilité réduite.',
-  ticketInfo: 'Les billets sont disponibles en ligne. Présentez votre QR code à l\'entrée.',
-  contactEmail: siteConfig.contact.email,
-  contactPhone: siteConfig.contact.phone,
+function infosFromEdition(edition: EditionView): InfosPratiques {
+  return {
+    eventDate: edition.dateLabel ?? '',
+    eventTime: edition.hoursLabel ?? '',
+    eventLocation: edition.venueName ?? '',
+    eventAddress: edition.address ?? '',
+    eventCity: edition.city ?? '',
+    accessTransport: edition.accessTransport ?? '',
+    accessParking: edition.accessParking ?? '',
+    accessInfo: edition.accessInfo ?? 'Le lieu est accessible aux personnes à mobilité réduite.',
+    ticketInfo: edition.ticketInfo ?? 'Les billets sont disponibles en ligne. Présentez votre QR code à l\'entrée.',
+    contactEmail: siteConfig.contact.email,
+    contactPhone: siteConfig.contact.phone,
+  }
 }
 
 // Composant Accordéon
@@ -91,20 +95,8 @@ function Accordion({
 
 export default function InfosPratiquesPage() {
   const t = useTranslations('practicalInfo')
-  const [infos, setInfos] = useState<InfosPratiques>(defaultInfos)
-
-  useEffect(() => {
-    fetch('/api/admin/infos-pratiques')
-      .then(res => res.json())
-      .then(data => {
-        if (data && !data.error) {
-          setInfos({ ...defaultInfos, ...data })
-        }
-      })
-      .catch(() => {
-        // Use default infos
-      })
-  }, [])
+  const infos = infosFromEdition(useEdition())
+  const mapQuery = [infos.eventLocation, infos.eventAddress].filter(Boolean).join(', ')
 
   return (
     <div className="min-h-screen bg-cream">
@@ -181,7 +173,8 @@ export default function InfosPratiquesPage() {
               <Card variant="elevated" className="overflow-hidden h-full">
                 <div className="aspect-[4/3] md:aspect-video bg-sage/20 relative">
                   <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2711.2!2d-1.5418!3d47.1958!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4805c6e8a8a8a8a8%3A0x1234567890abcdef!2s2%20Rue%20du%20S%C3%A9n%C3%A9gal%2C%2044200%20Nantes!5e0!3m2!1sfr!2sfr!4v1703187600000"
+                    src={`https://www.google.com/maps?q=${encodeURIComponent(mapQuery)}&output=embed`}
+                    title={`Plan d'accès - ${infos.eventLocation}`}
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}
@@ -193,7 +186,7 @@ export default function InfosPratiquesPage() {
                 </div>
                 <div className="p-3 bg-white border-t border-sage/10">
                   <a
-                    href="https://www.google.com/maps/dir/?api=1&destination=2+Rue+du+Sénégal,44200+Nantes"
+                    href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(mapQuery)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -257,203 +250,33 @@ export default function InfosPratiquesPage() {
             className="space-y-3"
           >
             {/* Transports & Itinéraires */}
-            <Accordion
-              title={t('access.transport')}
-              defaultOpen={true}
-              icon={
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-                </svg>
-              }
-            >
-              <div className="space-y-4">
-                {/* Arrêts à proximité */}
-                <div>
-                  <h4 className="text-xs font-semibold text-forest uppercase tracking-wide mb-2">Arrêts à proximité</h4>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-3 p-2 bg-sage/5 rounded-lg">
-                      <div className="flex flex-wrap gap-1">
-                        <span className="inline-flex items-center justify-center w-6 h-6 bg-blue-600 text-white text-[10px] font-bold rounded">5</span>
-                        <span className="inline-flex items-center justify-center w-6 h-6 bg-blue-600 text-white text-[10px] font-bold rounded">C1</span>
-                        <span className="inline-flex items-center justify-center w-6 h-6 bg-blue-600 text-white text-[10px] font-bold rounded">C6</span>
-                        <span className="inline-flex items-center justify-center w-7 h-6 bg-blue-600 text-white text-[10px] font-bold rounded">C20</span>
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-xs font-medium text-heading">Bus</p>
-                        <p className="text-[10px] text-body/70">Arrêt Basse Île</p>
-                      </div>
-                      <span className="text-xs font-semibold text-forest">5 min</span>
-                    </div>
-                    <div className="flex items-center gap-3 p-2 bg-sage/5 rounded-lg">
-                      <span className="inline-flex items-center justify-center w-6 h-6 bg-purple-600 text-white text-[10px] font-bold rounded">N</span>
-                      <div className="flex-1">
-                        <p className="text-xs font-medium text-heading">Navibus</p>
-                        <p className="text-[10px] text-body/70">Arrêt Trentemoult - Roquios</p>
-                      </div>
-                      <span className="text-xs font-semibold text-forest">2 min</span>
-                    </div>
-                    <div className="flex items-center gap-3 p-2 bg-sage/5 rounded-lg">
-                      <span className="inline-flex items-center justify-center w-6 h-6 bg-green-600 text-white text-[10px] font-bold rounded">2/3</span>
-                      <div className="flex-1">
-                        <p className="text-xs font-medium text-heading">Tramway</p>
-                        <p className="text-[10px] text-body/70">Arrêt Vincent Gâche</p>
-                      </div>
-                      <span className="text-xs font-semibold text-forest">22 min</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Itinéraires */}
-                <div>
-                  <h4 className="text-xs font-semibold text-forest uppercase tracking-wide mb-2">Itinéraires</h4>
-                  <div className="space-y-2">
-                    {/* Depuis Gare Sud */}
-                    <div className="relative overflow-hidden rounded-lg border border-sage/20 bg-gradient-to-br from-white to-sage/5">
-                      <div className="absolute top-0 left-0 w-1 h-full bg-forest"></div>
-                      <div className="p-2.5 pl-4">
-                        <div className="flex items-center gap-2 mb-1.5">
-                          <div className="flex-1">
-                            <p className="text-xs font-semibold text-heading">Depuis Gare Sud de Nantes</p>
-                          </div>
-                          <span className="text-xs font-bold text-forest">~15 min</span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                          <span className="inline-flex items-center justify-center w-5 h-5 bg-blue-600 text-white text-[10px] font-bold rounded">5</span>
-                          <span className="text-[10px] text-body/70">Busway direction Hangar à Bananes</span>
-                          <svg className="w-2.5 h-2.5 text-body/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                          </svg>
-                          <span className="text-[10px] font-medium text-heading">Basse Île</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Depuis Aéroport */}
-                    <div className="relative overflow-hidden rounded-lg border border-sage/20 bg-gradient-to-br from-white to-sage/5">
-                      <div className="absolute top-0 left-0 w-1 h-full bg-forest"></div>
-                      <div className="p-2.5 pl-4">
-                        <div className="flex items-center gap-2 mb-2">
-                          <div className="flex-1">
-                            <p className="text-xs font-semibold text-heading">Depuis Aéroport Nantes Atlantique</p>
-                          </div>
-                        </div>
-                        <div className="space-y-1.5">
-                          {/* Option rapide */}
-                          <div className="flex items-center gap-2 p-1.5 bg-forest/5 rounded border border-forest/10">
-                            <span className="px-1.5 py-0.5 bg-forest text-white text-[8px] font-bold rounded">RAPIDE</span>
-                            <div className="flex flex-wrap items-center gap-1 flex-1">
-                              <span className="text-[10px] text-body/70">Navette</span>
-                              <svg className="w-2 h-2 text-body/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                              </svg>
-                              <span className="text-[10px] text-body/70">Gare</span>
-                              <svg className="w-2 h-2 text-body/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                              </svg>
-                              <span className="inline-flex items-center justify-center w-4 h-4 bg-blue-600 text-white text-[8px] font-bold rounded">5</span>
-                              <svg className="w-2 h-2 text-body/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                              </svg>
-                              <span className="text-[10px] font-medium">Basse Île</span>
-                            </div>
-                            <div className="text-right">
-                              <span className="text-[10px] font-bold text-forest">~35 min</span>
-                              <p className="text-[8px] text-body/50">10€</p>
-                            </div>
-                          </div>
-                          {/* Option éco */}
-                          <div className="flex items-center gap-2 p-1.5 bg-sage/5 rounded border border-sage/20">
-                            <span className="px-1.5 py-0.5 bg-sage text-forest text-[8px] font-bold rounded">ÉCO</span>
-                            <div className="flex flex-wrap items-center gap-1 flex-1">
-                              <span className="inline-flex items-center justify-center w-4 h-4 bg-blue-600 text-white text-[8px] font-bold rounded">48</span>
-                              <svg className="w-2 h-2 text-body/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                              </svg>
-                              <span className="inline-flex items-center justify-center w-4 h-4 bg-green-600 text-white text-[8px] font-bold rounded">3</span>
-                              <svg className="w-2 h-2 text-body/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                              </svg>
-                              <span className="inline-flex items-center justify-center w-4 h-4 bg-blue-600 text-white text-[8px] font-bold rounded">C1</span>
-                              <svg className="w-2 h-2 text-body/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                              </svg>
-                              <span className="text-[10px] font-medium">Basse Île</span>
-                            </div>
-                            <div className="text-right">
-                              <span className="text-[10px] font-bold text-forest">~45 min</span>
-                              <p className="text-[8px] text-body/50">1,70€</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Accordion>
+            {infos.accessTransport && (
+              <Accordion
+                title={t('access.transport')}
+                defaultOpen={true}
+                icon={
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                  </svg>
+                }
+              >
+                <p className="text-body/70 whitespace-pre-line">{infos.accessTransport}</p>
+              </Accordion>
+            )}
 
             {/* Parking */}
-            <Accordion
-              title={t('access.parking')}
-              icon={
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
-                </svg>
-              }
-            >
-              <div className="space-y-4">
-                {/* Parking gratuit */}
-                <div>
-                  <h4 className="text-xs font-semibold text-forest uppercase tracking-wide mb-2">Parking gratuit</h4>
-                  <div className="flex items-center gap-3 p-2 bg-green-50 border border-green-200 rounded-lg">
-                    <span className="inline-flex items-center justify-center w-6 h-6 bg-green-600 text-white text-[10px] font-bold rounded">P</span>
-                    <div className="flex-1">
-                      <p className="text-xs font-medium text-heading">Parking L&apos;Agronaute</p>
-                      <p className="text-[10px] text-green-700">Places disponibles sur le site</p>
-                    </div>
-                    <span className="text-xs font-semibold text-green-600">Sur place</span>
-                  </div>
-                </div>
-
-                {/* Parkings payants */}
-                <div>
-                  <h4 className="text-xs font-semibold text-forest uppercase tracking-wide mb-2">Parkings à proximité</h4>
-                  <div className="space-y-2">
-                    {/* Zone jaune */}
-                    <div className="relative overflow-hidden rounded-lg border border-sage/20 bg-gradient-to-br from-white to-sage/5">
-                      <div className="absolute top-0 left-0 w-1 h-full bg-amber-500"></div>
-                      <div className="p-2.5 pl-4">
-                        <div className="flex items-center gap-2 mb-1.5">
-                          <div className="flex-1">
-                            <p className="text-xs font-semibold text-heading">Stationnement voirie - Zone jaune</p>
-                          </div>
-                          <span className="text-[10px] text-body/60">Île de Nantes</span>
-                        </div>
-                        <div className="flex flex-wrap gap-x-3 gap-y-1 text-[10px]">
-                          <span className="text-body/70"><span className="font-medium">Horaires :</span> 9h-12h / 14h-19h (lun-sam)</span>
-                          <span className="text-body/70"><span className="font-medium">Tarif :</span> 0,30€/15min</span>
-                          <span className="text-green-600"><span className="font-medium">Gratuit :</span> 12h-14h, soirs, dim.</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Hangar à Bananes */}
-                    <div className="relative overflow-hidden rounded-lg border border-sage/20 bg-gradient-to-br from-white to-sage/5">
-                      <div className="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
-                      <div className="p-2.5 pl-4">
-                        <div className="flex items-center gap-2">
-                          <div className="flex-1">
-                            <p className="text-xs font-semibold text-heading">Parking Hangar à Bananes</p>
-                            <p className="text-[10px] text-body/70"><span className="font-medium">Tarif :</span> ~2€/heure</p>
-                          </div>
-                          <span className="text-xs font-semibold text-forest">10 min</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Accordion>
+            {infos.accessParking && (
+              <Accordion
+                title={t('access.parking')}
+                icon={
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                  </svg>
+                }
+              >
+                <p className="text-body/70 whitespace-pre-line">{infos.accessParking}</p>
+              </Accordion>
+            )}
 
             {/* Accessibilité */}
             <Accordion

@@ -3,6 +3,8 @@
  */
 import { generateTicketPDF, generateInvoicePDF } from '@/lib/pdf'
 
+const testEdition = { year: 2026, dateLabel: '28 mars 2026', venueName: "L'Agronaute", city: 'Nantes' }
+
 // Create a real base64 PNG image for testing (1x1 transparent pixel)
 const createTestQRCodeImage = () => {
   // Minimal valid PNG base64 (1x1 transparent pixel)
@@ -13,6 +15,7 @@ const createTestQRCodeImage = () => {
 describe('generateTicketPDF', () => {
   it('should generate a valid PDF buffer', async () => {
     const pdfBuffer = await generateTicketPDF({
+      edition: testEdition,
       ticketId: 'TKT-001',
       customerName: 'John Doe',
       ticketType: 'STANDARD',
@@ -26,6 +29,7 @@ describe('generateTicketPDF', () => {
 
   it('should generate valid PDF format', async () => {
     const pdfBuffer = await generateTicketPDF({
+      edition: testEdition,
       ticketId: 'TKT-002',
       customerName: 'Jane Doe',
       ticketType: 'FLEX',
@@ -43,6 +47,7 @@ describe('generateTicketPDF', () => {
 
     for (const ticketType of ticketTypes) {
       const pdfBuffer = await generateTicketPDF({
+        edition: testEdition,
         ticketId: `TKT-${ticketType}`,
         customerName: 'Type Test',
         ticketType,
@@ -60,6 +65,7 @@ describe('generateTicketPDF', () => {
 
   it('should handle special characters in customer name', async () => {
     const pdfBuffer = await generateTicketPDF({
+      edition: testEdition,
       ticketId: 'TKT-SPECIAL',
       customerName: 'Jean-Pierre Martin',
       ticketType: 'STANDARD',
@@ -73,6 +79,7 @@ describe('generateTicketPDF', () => {
 
   it('should handle long customer names', async () => {
     const pdfBuffer = await generateTicketPDF({
+      edition: testEdition,
       ticketId: 'TKT-LONG',
       customerName: 'Jean Pierre de la Fontaine Dupont',
       ticketType: 'STANDARD',
@@ -86,6 +93,7 @@ describe('generateTicketPDF', () => {
 
   it('should generate PDF without QR code image', async () => {
     const pdfBuffer = await generateTicketPDF({
+      edition: testEdition,
       ticketId: 'TKT-NOQR',
       customerName: 'No QR User',
       ticketType: 'STANDARD',
@@ -102,6 +110,7 @@ describe('generateTicketPDF', () => {
 
   it('should generate different sizes for different ticket types', async () => {
     const baseInput = {
+      edition: testEdition,
       ticketId: 'TKT-SIZE',
       customerName: 'Size Test',
       orderNumber: 'CAE-SIZE',
@@ -217,6 +226,7 @@ describe('generateInvoicePDF', () => {
 describe('PDF Integration', () => {
   it('should generate consistent PDF sizes for same input', async () => {
     const input = {
+      edition: testEdition,
       ticketId: 'TKT-CONSISTENT',
       customerName: 'Consistent User',
       ticketType: 'STANDARD',
@@ -233,6 +243,7 @@ describe('PDF Integration', () => {
 
   it('should generate different PDFs for different ticket types', async () => {
     const baseInput = {
+      edition: testEdition,
       ticketId: 'TKT-DIFF',
       customerName: 'Diff User',
       orderNumber: 'CAE-DIFF',
@@ -248,6 +259,7 @@ describe('PDF Integration', () => {
 
   it('should produce valid PDF header for tickets', async () => {
     const pdfBuffer = await generateTicketPDF({
+      edition: testEdition,
       ticketId: 'TKT-HEADER',
       customerName: 'Header Test',
       ticketType: 'STANDARD',

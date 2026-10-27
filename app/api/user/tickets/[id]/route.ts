@@ -4,6 +4,7 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { generateTicketPDF } from '@/lib/pdf'
 import { generateQRCode } from '@/lib/qrcode'
+import { toEditionSummary } from '@/lib/editions/format'
 
 // GET /api/user/tickets/[id] - Download a specific ticket PDF
 export async function GET(
@@ -33,6 +34,7 @@ export async function GET(
     const ticket = await prisma.ticket.findUnique({
       where: { id },
       include: {
+        edition: true,
         order: {
           select: {
             orderNumber: true,
@@ -60,6 +62,7 @@ export async function GET(
     // Get active sponsors for the PDF
     const sponsors = await prisma.sponsor.findMany({
       where: {
+        editionId: ticket.editionId,
         isActive: true,
         logoUrl: { not: null },
       },
@@ -79,6 +82,7 @@ export async function GET(
       orderNumber: ticket.order.orderNumber,
       qrCodeImage,
       sponsors,
+      edition: toEditionSummary(ticket.edition),
     })
 
     // Return the PDF as a downloadable file

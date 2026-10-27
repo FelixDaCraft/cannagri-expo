@@ -80,8 +80,8 @@ export async function PATCH(
 
     // Check if new slug conflicts with another sponsor
     if (slug && slug !== existingSponsor.slug) {
-      const slugConflict = await prisma.sponsor.findUnique({
-        where: { slug },
+      const slugConflict = await prisma.sponsor.findFirst({
+        where: { editionId: existingSponsor.editionId, slug },
       })
       if (slugConflict) {
         return NextResponse.json(
@@ -97,6 +97,13 @@ export async function PATCH(
 
     // Si un nouveau stand est sélectionné, vérifier qu'il est disponible
     if (newStandId && newStandId !== oldStandId) {
+      const newStand = await prisma.stand.findUnique({ where: { id: newStandId } })
+      if (!newStand || newStand.editionId !== existingSponsor.editionId) {
+        return NextResponse.json(
+          { error: 'Stand non trouvé dans cette édition' },
+          { status: 400 }
+        )
+      }
       const standAlreadyAssigned = await prisma.sponsor.findFirst({
         where: {
           standId: newStandId,

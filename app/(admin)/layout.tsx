@@ -2,6 +2,9 @@ import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
 import { authOptions } from '@/lib/auth'
 import { AdminSidebar } from './AdminSidebar'
+import { EditionSwitcher } from './EditionSwitcher'
+import { prisma } from '@/lib/prisma'
+import { getAdminEdition } from '@/lib/editions/admin'
 
 export default async function AdminLayout({
   children,
@@ -21,6 +24,11 @@ export default async function AdminLayout({
     redirect('/?error=unauthorized')
   }
 
+  const [editions, currentEdition] = await Promise.all([
+    prisma.edition.findMany({ orderBy: { year: 'desc' }, select: { id: true, year: true, status: true } }),
+    getAdminEdition(),
+  ])
+
   // Role labels for display
   const roleLabels: Record<string, string> = {
     SUPER_ADMIN: 'Super Admin',
@@ -39,7 +47,9 @@ export default async function AdminLayout({
           {/* Mobile menu button - handled by AdminSidebar */}
           <div id="mobile-menu-button" />
 
-          <div className="flex-1" />
+          <div className="flex-1 flex justify-center lg:justify-start">
+            <EditionSwitcher editions={editions} currentId={currentEdition.id} />
+          </div>
 
           {/* User menu */}
           <div className="flex items-center gap-3">

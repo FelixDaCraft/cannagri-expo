@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { getActiveEdition } from '@/lib/editions'
 import { checkAdminAuth, unauthorizedResponse } from '@/lib/admin-auth'
 import { getVivaWalletOrder } from '@/lib/vivawallet'
 
@@ -9,7 +10,9 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const status = searchParams.get('status')
 
-    const where = status ? { status: status as any } : {}
+    // Plan de l'édition présentée sur le site
+    const edition = await getActiveEdition()
+    const where = { editionId: edition.id, ...(status ? { status: status as any } : {}) }
 
     const stands = await prisma.stand.findMany({
       where,

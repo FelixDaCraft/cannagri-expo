@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer'
 import { siteConfig } from '@/config/site'
+import type { EditionSummary } from '@/lib/editions/format'
 
 // Create reusable transporter
 const transporter = nodemailer.createTransport({
@@ -27,13 +28,14 @@ interface SendTicketEmailOptions {
   isStandBooking?: boolean
   standCodes?: string[]
   invoicePdfBuffer?: Buffer // Invoice PDF attachment
+  edition: EditionSummary // Édition concernée par la commande
 }
 
 /**
  * Send ticket email with PDF attachment(s)
  */
 export async function sendTicketEmail(options: SendTicketEmailOptions): Promise<void> {
-  const { to, customerName, orderNumber, pdfBuffer, tickets, isStandBooking, standCodes, invoicePdfBuffer } = options
+  const { to, customerName, orderNumber, pdfBuffer, tickets, isStandBooking, standCodes, invoicePdfBuffer, edition } = options
 
   const ticketCount = tickets?.length || (pdfBuffer ? 1 : 0)
 
@@ -45,8 +47,8 @@ export async function sendTicketEmail(options: SendTicketEmailOptions): Promise<
 
   const hasInvoice = !!invoicePdfBuffer
   const html = isStandBooking
-    ? generateStandConfirmationHTML(customerName, orderNumber, standCodes || [], hasInvoice)
-    : generateTicketEmailHTML(customerName, orderNumber, tickets, hasInvoice)
+    ? generateStandConfirmationHTML(customerName, orderNumber, standCodes || [], edition, hasInvoice)
+    : generateTicketEmailHTML(customerName, orderNumber, tickets, edition, hasInvoice)
 
   // Build attachments array
   let attachments: Array<{ filename: string; content: Buffer; contentType: string }> = []
@@ -99,7 +101,7 @@ const ticketTypeLabels: Record<string, string> = {
   FLEX: 'Flex',
 }
 
-function generateTicketEmailHTML(customerName: string, orderNumber: string, tickets?: TicketAttachment[], hasInvoice: boolean = true): string {
+function generateTicketEmailHTML(customerName: string, orderNumber: string, tickets: TicketAttachment[] | undefined, edition: EditionSummary, hasInvoice: boolean = true): string {
   const ticketCount = tickets?.length || 1
   const ticketWord = ticketCount > 1 ? 'e-billets sont' : 'e-billet est'
   const ticketWordSimple = ticketCount > 1 ? 'billets' : 'billet'
@@ -165,7 +167,7 @@ function generateTicketEmailHTML(customerName: string, orderNumber: string, tick
                   <strong>Date</strong>
                 </td>
                 <td style="padding: 10px 0; border-bottom: 1px solid #E8E2D1; text-align: right;">
-                  ${siteConfig.event.date}
+                  ${edition.dateLabel ?? edition.year}
                 </td>
               </tr>
               <tr>
@@ -173,7 +175,7 @@ function generateTicketEmailHTML(customerName: string, orderNumber: string, tick
                   <strong>Lieu</strong>
                 </td>
                 <td style="padding: 10px 0; border-bottom: 1px solid #E8E2D1; text-align: right;">
-                  ${siteConfig.event.location}, ${siteConfig.event.city}
+                  ${edition.venueName ?? ''}, ${edition.city ?? ''}
                 </td>
               </tr>
             </table>
@@ -193,7 +195,7 @@ function generateTicketEmailHTML(customerName: string, orderNumber: string, tick
         <tr>
           <td style="background-color: #2E4A33; padding: 20px 30px; text-align: center;">
             <p style="color: #A4B494; margin: 0; font-size: 12px;">
-              ${siteConfig.name} - ${siteConfig.event.year}<br>
+              ${siteConfig.name} - ${edition.year}<br>
               ${siteConfig.contact.email}
             </p>
           </td>
@@ -204,7 +206,7 @@ function generateTicketEmailHTML(customerName: string, orderNumber: string, tick
   `
 }
 
-function generateStandConfirmationHTML(customerName: string, orderNumber: string, standCodes: string[], hasInvoice: boolean = true): string {
+function generateStandConfirmationHTML(customerName: string, orderNumber: string, standCodes: string[], edition: EditionSummary, hasInvoice: boolean = true): string {
   return `
     <!DOCTYPE html>
     <html lang="fr">
@@ -261,7 +263,7 @@ function generateStandConfirmationHTML(customerName: string, orderNumber: string
         <tr>
           <td style="background-color: #2E4A33; padding: 20px 30px; text-align: center;">
             <p style="color: #A4B494; margin: 0; font-size: 12px;">
-              ${siteConfig.name} - ${siteConfig.event.year}<br>
+              ${siteConfig.name} - ${edition.year}<br>
               ${siteConfig.contact.email}
             </p>
           </td>
@@ -359,7 +361,7 @@ export async function sendTeamInvitation(options: SendTeamInvitationOptions): Pr
             <tr>
               <td style="background-color: #2E4A33; padding: 20px 30px; text-align: center;">
                 <p style="color: #A4B494; margin: 0; font-size: 12px;">
-                  ${siteConfig.name} - ${siteConfig.event.year}<br>
+                  ${siteConfig.name}<br>
                   ${siteConfig.contact.email}
                 </p>
               </td>
@@ -434,7 +436,7 @@ export async function sendSponsorBrochure(options: SendSponsorBrochureOptions): 
         <tr>
           <td style="background-color: #2E4A33; padding: 20px 30px; text-align: center;">
             <p style="color: #A4B494; margin: 0; font-size: 12px;">
-              ${siteConfig.name} - ${siteConfig.event.year}<br>
+              ${siteConfig.name}<br>
               ${siteConfig.contact.email}
             </p>
           </td>
@@ -592,7 +594,7 @@ export async function sendPasswordResetEmail(options: SendPasswordResetEmailOpti
             <tr>
               <td style="background-color: #2E4A33; padding: 20px 30px; text-align: center;">
                 <p style="color: #A4B494; margin: 0; font-size: 12px;">
-                  ${siteConfig.name} - ${siteConfig.event.year}<br>
+                  ${siteConfig.name}<br>
                   ${siteConfig.contact.email}
                 </p>
               </td>
@@ -684,7 +686,7 @@ export async function sendVerificationEmail(options: SendVerificationEmailOption
             <tr>
               <td style="background-color: #2E4A33; padding: 20px 30px; text-align: center;">
                 <p style="color: #A4B494; margin: 0; font-size: 12px;">
-                  ${siteConfig.name} - ${siteConfig.event.year}<br>
+                  ${siteConfig.name}<br>
                   ${siteConfig.contact.email}
                 </p>
               </td>

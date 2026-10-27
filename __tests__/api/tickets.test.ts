@@ -9,12 +9,18 @@ jest.mock('@/lib/prisma', () => ({
   prisma: mockPrisma,
 }))
 
-// Session admin simulée
+// Session admin et édition simulées
 const mockCheckAdminAuth = jest.fn()
 jest.mock('@/lib/admin-auth', () => ({
   checkAdminAuth: () => mockCheckAdminAuth(),
   unauthorizedResponse: () =>
     new (require('next/server').NextResponse)(JSON.stringify({ error: 'Non autorisé' }), { status: 401 }),
+}))
+jest.mock('@/lib/editions/admin', () => ({
+  getAdminEdition: jest.fn().mockResolvedValue({ id: 'ed-active', year: 2027 }),
+}))
+jest.mock('@/lib/editions', () => ({
+  getActiveEdition: jest.fn().mockResolvedValue({ id: 'ed-active', year: 2027 }),
 }))
 
 import { GET, POST } from '@/app/api/tickets/route'
@@ -30,6 +36,15 @@ describe('GET /api/tickets', () => {
     const response = await GET(new NextRequest('http://localhost:3000/api/tickets'))
     expect(response.status).toBe(401)
     expect(mockPrisma.ticket.findMany).not.toHaveBeenCalled()
+  })
+
+  it("ne liste que les billets de l'édition gérée", async () => {
+    ;(mockPrisma.ticket.findMany as jest.Mock).mockResolvedValue([])
+    ;(mockPrisma.ticket.count as jest.Mock).mockResolvedValue(0)
+    await GET(new NextRequest('http://localhost:3000/api/tickets'))
+    expect(mockPrisma.ticket.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { editionId: 'ed-active' } })
+    )
   })
 
   it('should return tickets with pagination', async () => {
@@ -80,7 +95,7 @@ describe('GET /api/tickets', () => {
 
     expect(mockPrisma.ticket.findMany).toHaveBeenCalledWith(
       expect.objectContaining({
-        where: { status: 'PAID' },
+        where: { editionId: 'ed-active', status: 'PAID' },
       })
     )
   })
@@ -132,9 +147,24 @@ describe('POST /api/tickets (validate ticket)', () => {
     expect(mockPrisma.ticket.update).not.toHaveBeenCalled()
   })
 
+  it("refuse un billet d'une autre édition sans le marquer utilisé", async () => {
+    ;(mockPrisma.ticket.findUnique as jest.Mock).mockResolvedValue({
+      id: 'old', editionId: 'ed-2026', status: 'PAID', qrCodeData: 'CANNAGRI-old',
+    })
+    const request = new NextRequest('http://localhost:3000/api/tickets', {
+      method: 'POST',
+      body: JSON.stringify({ qrCodeData: 'CANNAGRI-old' }),
+    })
+    const data = await (await POST(request)).json()
+    expect(data.valid).toBe(false)
+    expect(data.error).toBe('Ce billet concerne une autre édition')
+    expect(mockPrisma.ticket.update).not.toHaveBeenCalled()
+  })
+
   it('should validate a paid ticket successfully', async () => {
     const mockTicket = {
       id: 'ticket-1',
+      editionId: 'ed-active',
       customerName: 'John Doe',
       ticketType: 'STANDARD',
       status: 'PAID',
@@ -201,6 +231,7 @@ describe('POST /api/tickets (validate ticket)', () => {
     const usedAt = new Date()
     const mockTicket = {
       id: 'ticket-1',
+      editionId: 'ed-active',
       status: 'USED',
       scannedAt: usedAt,
       qrCodeData: 'CANNAGRI-order123-ticket456-1234567890',
@@ -226,6 +257,7 @@ describe('POST /api/tickets (validate ticket)', () => {
   it('should reject unpaid ticket', async () => {
     const mockTicket = {
       id: 'ticket-1',
+      editionId: 'ed-active',
       status: 'PENDING',
       qrCodeData: 'CANNAGRI-order123-ticket456-1234567890',
     }
@@ -250,6 +282,7 @@ describe('POST /api/tickets (validate ticket)', () => {
   it('should record scanner identity when provided', async () => {
     const mockTicket = {
       id: 'ticket-1',
+      editionId: 'ed-active',
       customerName: 'Test User',
       ticketType: 'STANDARD',
       status: 'PAID',

@@ -140,9 +140,9 @@ const defaultNavItems: NavItem[] = [
     ),
   },
   {
-    id: 'infos-pratiques',
-    label: 'Infos Pratiques',
-    href: '/admin/infos-pratiques',
+    id: 'editions',
+    label: 'Éditions',
+    href: '/admin/editions',
     roles: ADMIN_ONLY_ROLES,
     icon: (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

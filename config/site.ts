@@ -5,15 +5,8 @@ export const siteConfig = {
   description: "Le salon de référence des professionnels du chanvre CBD en France",
   url: process.env.NEXT_PUBLIC_APP_URL || "https://cannagri-expo.fr",
 
-  // Event info
-  event: {
-    date: "28 Mars 2026",
-    dateISO: "2026-03-28",
-    location: "L'Agronaute",
-    city: "Nantes",
-    address: "2 Rue du Sénégal, 44200 Nantes",
-    year: "2026",
-  },
+  // Date, lieu, affiche et tarifs dépendent de l'édition : voir le modèle Edition
+  // (administration > Éditions) et lib/editions.
 
   // Contact
   contact: {
@@ -30,8 +23,8 @@ export const siteConfig = {
 
   // SEO
   seo: {
-    title: "Cann'Agri Expo 2026 | Salon Professionnel du Chanvre CBD",
-    description: "Le rendez-vous incontournable des professionnels du chanvre CBD. 28 mars 2026 - L'Agronaute, Nantes. Exposants, conférences, Platinum CBD Cup.",
+    title: "Cann'Agri Expo | Salon Professionnel du Chanvre CBD",
+    description: "Le rendez-vous incontournable des professionnels du chanvre CBD en France. Exposants, conférences, Platinum CBD Cup.",
     keywords: [
       "CBD",
       "chanvre",
@@ -45,16 +38,14 @@ export const siteConfig = {
     ],
   },
 
-  // Ticket prices (in EUR)
+  // Formules de billets (prix : voir l'édition)
   tickets: {
     standard: {
       name: "Billet Standard",
-      price: 15,
       description: "Accès au salon toute la journée",
     },
     flex: {
       name: "Billet Flex",
-      price: 25,
       description: "Soutenez l'association et ses futurs événements",
     },
   },

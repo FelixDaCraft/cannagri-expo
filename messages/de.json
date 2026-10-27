@@ -53,6 +53,7 @@
     "exhibitors": "Aussteller",
     "photoGallery": "Fotogalerie",
     "practicalInfo": "Praktische Infos",
+    "pastEditions": "Frühere Ausgaben",
     "sponsoring": "Sponsoring",
     "contact": "Kontakt",
     "proSpace": "Pro-Bereich",
@@ -65,7 +66,7 @@
       "title": "CANN'AGRI",
       "titleHighlight": "EXPO",
       "subtitle": "Die Referenzmesse für CBD-Hanf",
-      "edition": "Ausgabe 2026",
+      "edition": "Ausgabe {year}",
       "buyTicket": "Mein Ticket kaufen",
       "practicalInfo": "Praktische Infos",
       "discover": "Entdecken"

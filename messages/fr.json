@@ -54,6 +54,7 @@
     "exhibitors": "Exposants",
     "photoGallery": "Galerie Photo",
     "practicalInfo": "Infos pratiques",
+    "pastEditions": "Éditions passées",
     "sponsoring": "Sponsoring",
     "contact": "Contact",
     "proSpace": "Espace Pro",
@@ -66,7 +67,7 @@
       "title": "CANN'AGRI",
       "titleHighlight": "EXPO",
       "subtitle": "Le salon de référence du chanvre CBD",
-      "edition": "Édition 2026",
+      "edition": "Édition {year}",
       "buyTicket": "Acheter mon billet",
       "practicalInfo": "Infos Pratiques",
       "discover": "Découvrir"
@@ -148,7 +149,7 @@
       "subtitle": "Un programme riche avec des intervenants de qualité pour comprendre les enjeux de la filière chanvre CBD.",
       "comingSoon": "À venir",
       "programComingSoonTitle": "Programme à venir",
-      "programComingSoonDescription": "Le programme détaillé de l'édition 2026 sera bientôt disponible. Conférences, tables rondes et ateliers seront animés par des experts reconnus de la filière chanvre CBD.",
+      "programComingSoonDescription": "Le programme détaillé de l'édition {year} sera bientôt disponible. Conférences, tables rondes et ateliers seront animés par des experts reconnus de la filière chanvre CBD.",
       "viewFullProgram": "Voir le programme",
       "stats": {
         "conferences": "Conférences",

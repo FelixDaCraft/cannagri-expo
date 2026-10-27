@@ -5,8 +5,8 @@ import { authOptions } from '@/lib/auth'
 import { generateOrderNumber } from '@/lib/utils'
 import { createVivaWalletOrder } from '@/lib/vivawallet'
 import { checkRateLimit, getClientIP, RATE_LIMIT_PRESETS } from '@/lib/rate-limit'
-import { siteConfig } from '@/config/site'
-import { buildTicketItems, TicketItemsError, type TicketItem } from '@/lib/ticket-items'
+import { getActiveEdition, isTicketingOpen } from '@/lib/editions'
+import { buildTicketItems, TicketItemsError, type TicketItem } from '@/lib/editions/tickets'
 
 // Check if Viva Wallet is configured
 const isVivaWalletEnabled = !!(
@@ -44,6 +44,9 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Toute commande est rattachée à l'édition présentée sur le site
+    const edition = await getActiveEdition()
+
     let amount = 0
     let amountHT = 0
     let ticketItems: TicketItem[] = []
@@ -52,12 +55,16 @@ export async function POST(request: NextRequest) {
     let stand: { id: string; code: string; surfaceM2: number; priceHT: number; status: string } | null = null
 
     if (type === 'VISITOR_TICKET') {
-      // Les prix viennent de la configuration serveur, jamais du navigateur
+      if (!isTicketingOpen(edition)) {
+        return NextResponse.json(
+          { error: 'La billetterie de cette édition est fermée' },
+          { status: 400 }
+        )
+      }
+
+      // Les prix viennent de l'édition, jamais du navigateur
       try {
-        ticketItems = buildTicketItems(items, {
-          standardTicketPrice: siteConfig.tickets.standard.price,
-          flexTicketPrice: siteConfig.tickets.flex.price,
-        })
+        ticketItems = buildTicketItems(items, edition)
       } catch (error) {
         if (error instanceof TicketItemsError) {
           return NextResponse.json({ error: error.message }, { status: 400 })
@@ -108,17 +115,20 @@ export async function POST(request: NextRequest) {
       }
 
       // Try to find stand by ID first, then by code
-      stand = await prisma.stand.findUnique({
-        where: { id: items.standId },
-        select: { id: true, code: true, surfaceM2: true, priceHT: true, status: true }
-      })
+      // (garde explicite : Prisma ignore un filtre `id: undefined`)
+      stand = typeof items.standId === 'string'
+        ? await prisma.stand.findFirst({
+            where: { id: items.standId, editionId: edition.id },
+            select: { id: true, code: true, surfaceM2: true, priceHT: true, status: true }
+          })
+        : null
 
       // If not found by ID, try by code (for interactive plan which uses stand numbers)
       if (!stand && items?.standCode) {
         // Extract number from "Stand X" format
         const standNumber = items.standCode.replace(/\D/g, '')
         stand = await prisma.stand.findFirst({
-          where: { code: standNumber },
+          where: { code: standNumber, editionId: edition.id },
           select: { id: true, code: true, surfaceM2: true, priceHT: true, status: true }
         })
       }
@@ -147,7 +157,7 @@ export async function POST(request: NextRequest) {
           where: { code: promoCodeInput.trim().toUpperCase() },
         })
 
-        if (!promoCode || !promoCode.isActive) {
+        if (!promoCode || !promoCode.isActive || promoCode.editionId !== edition.id) {
           return NextResponse.json(
             { error: 'Code promo invalide ou inactif' },
             { status: 400 }
@@ -213,6 +223,7 @@ export async function POST(request: NextRequest) {
       return tx.order.create({
         data: {
           orderNumber: generateOrderNumber(),
+          editionId: edition.id,
           type,
           amount,
           amountHT,

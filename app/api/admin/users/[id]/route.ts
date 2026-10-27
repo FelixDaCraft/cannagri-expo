@@ -198,12 +198,18 @@ export async function DELETE(
 
     // Libérer les stands associés
     if (existingUser.stands.length > 0) {
+      // Les stands des éditions en cours redeviennent libres ;
+      // ceux des éditions archivées sont seulement détachés du compte supprimé
       await prisma.stand.updateMany({
-        where: { proId: params.id },
+        where: { proId: params.id, edition: { status: { not: 'ARCHIVED' } } },
         data: {
           proId: null,
           status: 'FREE',
         },
+      })
+      await prisma.stand.updateMany({
+        where: { proId: params.id },
+        data: { proId: null },
       })
     }
 

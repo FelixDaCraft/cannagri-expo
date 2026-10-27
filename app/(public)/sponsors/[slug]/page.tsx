@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation'
 import { cookies } from 'next/headers'
 import { Card, CardContent, Badge, Button } from '@/components/ui'
 import { prisma } from '@/lib/prisma'
+import { getActiveEdition } from '@/lib/editions'
 
 interface PageProps {
   params: { slug: string }
@@ -105,8 +106,9 @@ const pageTranslations = {
 
 async function getSponsor(slug: string) {
   try {
-    const sponsor = await prisma.sponsor.findUnique({
-      where: { slug, isActive: true },
+    const edition = await getActiveEdition()
+    const sponsor = await prisma.sponsor.findFirst({
+      where: { editionId: edition.id, slug, isActive: true },
       include: { stand: true },
     })
     return sponsor
