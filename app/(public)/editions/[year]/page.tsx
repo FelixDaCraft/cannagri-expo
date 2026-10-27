@@ -3,12 +3,8 @@ import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { cache } from 'react'
 import { editionService, formatEditionDate, formatEventTime } from '@/lib/editions'
-import {
-  getEditionEvents,
-  getEditionExhibitorNames,
-  getEditionMedia,
-  getEditionSponsors,
-} from '@/lib/editions/content'
+import { getEditionEvents, getEditionMedia, getEditionSponsors } from '@/lib/editions/content'
+import { getEditionExhibitors } from '@/lib/editions/exhibitors'
 
 interface PageProps {
   params: { year: string }
@@ -38,7 +34,7 @@ export default async function EditionArchivePage({ params }: PageProps) {
   const [events, sponsors, exhibitors, media] = await Promise.all([
     getEditionEvents(edition.id),
     getEditionSponsors(edition.id),
-    getEditionExhibitorNames(edition.id),
+    getEditionExhibitors(edition.id),
     getEditionMedia(edition.id),
   ])
 
@@ -84,10 +80,45 @@ export default async function EditionArchivePage({ params }: PageProps) {
       </section>
 
       <div className="container-custom py-12 space-y-16">
-        {/* Programme */}
+        {/* Stands présents */}
+        {exhibitors.length > 0 && (
+          <section aria-labelledby="stands">
+            <h2 id="stands" className="text-3xl font-heading font-bold text-heading mb-6">
+              Stands présents <span className="text-body/50 text-xl">({exhibitors.length})</span>
+            </h2>
+            <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {exhibitors.map((exhibitor) => (
+                <li key={`${exhibitor.standNumber}-${exhibitor.id}`} className="flex gap-4 rounded-xl border border-sage/20 bg-white p-4">
+                  {exhibitor.logoUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={exhibitor.logoUrl} alt="" className="h-14 w-14 shrink-0 rounded-lg object-contain" />
+                  ) : (
+                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-sage/15 font-heading font-bold text-forest">
+                      {exhibitor.name.charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                  <div className="min-w-0">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-terracotta">Stand {exhibitor.standNumber}</p>
+                    {exhibitor.websiteUrl ? (
+                      <a href={exhibitor.websiteUrl} target="_blank" rel="noopener noreferrer" className="font-semibold text-forest hover:underline">
+                        {exhibitor.name}
+                      </a>
+                    ) : (
+                      <p className="font-semibold text-heading">{exhibitor.name}</p>
+                    )}
+                    <p className="text-xs text-body/60">{exhibitor.categoryLabel}</p>
+                    {exhibitor.description && <p className="mt-1 text-sm text-body/70 line-clamp-2">{exhibitor.description}</p>}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {/* Conférences */}
         {events.length > 0 && (
-          <section aria-labelledby="programme">
-            <h2 id="programme" className="text-3xl font-heading font-bold text-heading mb-6">Programme</h2>
+          <section aria-labelledby="conferences">
+            <h2 id="conferences" className="text-3xl font-heading font-bold text-heading mb-6">Conférences et programme</h2>
             <ol className="divide-y divide-sage/20 rounded-2xl border border-sage/20 bg-white">
               {events.map((event) => {
                 const speakers = event.speakers.length
@@ -112,10 +143,10 @@ export default async function EditionArchivePage({ params }: PageProps) {
           </section>
         )}
 
-        {/* Partenaires */}
+        {/* Sponsors */}
         {sponsors.length > 0 && (
-          <section aria-labelledby="partenaires">
-            <h2 id="partenaires" className="text-3xl font-heading font-bold text-heading mb-6">Partenaires</h2>
+          <section aria-labelledby="sponsors">
+            <h2 id="sponsors" className="text-3xl font-heading font-bold text-heading mb-6">Sponsors et partenaires</h2>
             <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
               {sponsors.map((sponsor) => (
                 <li key={sponsor.id} className="flex flex-col items-center justify-center gap-2 rounded-xl border border-sage/20 bg-white p-4 text-center">
@@ -131,20 +162,6 @@ export default async function EditionArchivePage({ params }: PageProps) {
                     <span className="text-sm font-semibold text-heading">{sponsor.name}</span>
                   )}
                 </li>
-              ))}
-            </ul>
-          </section>
-        )}
-
-        {/* Exposants */}
-        {exhibitors.length > 0 && (
-          <section aria-labelledby="exposants">
-            <h2 id="exposants" className="text-3xl font-heading font-bold text-heading mb-6">
-              Exposants <span className="text-body/50 text-xl">({exhibitors.length})</span>
-            </h2>
-            <ul className="columns-2 md:columns-3 gap-6 text-body/80">
-              {exhibitors.map((name) => (
-                <li key={name} className="py-1 break-inside-avoid">{name}</li>
               ))}
             </ul>
           </section>

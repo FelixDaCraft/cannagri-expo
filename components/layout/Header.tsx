@@ -23,7 +23,8 @@ function LogoFallback() {
   )
 }
 
-export function Header() {
+/** `showPastEditions` : affiche « Éditions passées » dans le menu principal s'il existe des archives publiées */
+export function Header({ showPastEditions = false }: { showPastEditions?: boolean }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
@@ -67,9 +68,9 @@ export function Header() {
         { label: tNav('exhibitors'), href: "/exposants" },
         { label: tNav('photoGallery'), href: "/mediatheque" },
         { label: tNav('practicalInfo'), href: "/infos-pratiques" },
-        { label: tNav('pastEditions'), href: "/editions" },
       ],
     },
+    ...(showPastEditions ? [{ label: tNav('pastEditions'), href: "/editions" }] : []),
     { label: tNav('sponsoring'), href: "/sponsoring" },
     { label: tNav('contact'), href: "/contact" },
     {
@@ -80,7 +81,7 @@ export function Header() {
         { label: tNav('bookStand'), href: "/pro/plan" },
       ],
     },
-  ], [tNav])
+  ], [tNav, showPastEditions])
 
   // Vérifier si l'utilisateur est un PRO validé ou un ADMIN
   const canAccessProSpace = useMemo(() => {

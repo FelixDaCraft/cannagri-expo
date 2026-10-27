@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 }
 
 export default async function EditionsArchivePage() {
-  const editions = await editionService.listArchived()
+  const editions = await editionService.listPublishedArchives()
 
   return (
     <div className="min-h-screen bg-cream">

@@ -52,11 +52,11 @@ export function TicketConfirmation({
             </div>
             <div className="flex justify-between py-2 border-b border-gray-100">
               <span className="text-body/70">Date de l&apos;événement</span>
-              <span className="font-semibold">{edition.dateLabel}</span>
+              <span className="font-semibold">{edition.dateDisplay}</span>
             </div>
             <div className="flex justify-between py-2">
               <span className="text-body/70">Lieu</span>
-              <span className="font-semibold">{edition.venueName}, {edition.city}</span>
+              <span className="font-semibold">{edition.venueDisplay}</span>
             </div>
           </div>
         </CardContent>

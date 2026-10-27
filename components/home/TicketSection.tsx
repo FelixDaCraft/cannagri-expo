@@ -170,7 +170,9 @@ export function TicketSection() {
             {t('title')}
           </h2>
           <p className="text-forest/70 max-w-2xl mx-auto">
-            {t('subtitle', { date: edition.dateLabel ?? '', location: edition.venueName ?? '', city: edition.city ?? '' })}
+            {edition.dateLabel && edition.venueName
+              ? t('subtitle', { date: edition.dateLabel, location: edition.venueName, city: edition.city ?? '' })
+              : `Cann'Agri Expo ${edition.year} : date et lieu à venir.`}
           </p>
         </motion.div>
 

@@ -120,7 +120,7 @@ export default function ContactPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                     <div>
-                      <p className="font-medium text-forest">{edition.venueName}</p>
+                      <p className="font-medium text-forest">{edition.venueName ?? 'Lieu à venir'}</p>
                       <p className="text-sm text-forest/70">{edition.address}</p>
                       <p className="text-sm text-forest/70">{edition.city}</p>
                     </div>

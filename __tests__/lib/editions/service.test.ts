@@ -15,6 +15,7 @@ function makeDb() {
       findFirst: jest.fn(),
       findUnique: jest.fn(),
       findMany: jest.fn(),
+      count: jest.fn(),
       create: jest.fn(),
       update: jest.fn(),
       updateMany: jest.fn(),
@@ -111,24 +112,39 @@ describe('EditionService', () => {
     })
   })
 
+  const PUBLISHED_ARCHIVE = {
+    status: 'ARCHIVED',
+    OR: [{ events: { some: {} } }, { sponsors: { some: {} } }, { stands: { some: { status: 'SOLD' } } }],
+  }
+
   describe('getPublicByYear', () => {
-    it('ne renvoie pas une édition en brouillon', async () => {
+    it("ne renvoie que l'édition en ligne ou une archive avec du contenu (jamais un brouillon)", async () => {
       db.edition.findFirst.mockResolvedValue(null)
       await expect(service.getPublicByYear(2027)).resolves.toBeNull()
       expect(db.edition.findFirst).toHaveBeenCalledWith({
-        where: { year: 2027, status: { in: ['ACTIVE', 'ARCHIVED'] } },
+        where: { year: 2027, OR: [{ status: 'ACTIVE' }, PUBLISHED_ARCHIVE] },
       })
     })
   })
 
-  describe('listArchived', () => {
-    it('liste les éditions archivées de la plus récente à la plus ancienne', async () => {
+  describe('listPublishedArchives', () => {
+    it('liste les archives qui ont des conférences, sponsors ou stands, de la plus récente à la plus ancienne', async () => {
       db.edition.findMany.mockResolvedValue([])
-      await service.listArchived()
+      await service.listPublishedArchives()
       expect(db.edition.findMany).toHaveBeenCalledWith({
-        where: { status: 'ARCHIVED' },
+        where: PUBLISHED_ARCHIVE,
         orderBy: { year: 'desc' },
       })
+    })
+  })
+
+  describe('hasPublishedArchives', () => {
+    it("indique s'il existe au moins une archive à montrer (lien du menu)", async () => {
+      db.edition.count.mockResolvedValue(0)
+      await expect(service.hasPublishedArchives()).resolves.toBe(false)
+      db.edition.count.mockResolvedValue(2)
+      await expect(service.hasPublishedArchives()).resolves.toBe(true)
+      expect(db.edition.count).toHaveBeenCalledWith({ where: PUBLISHED_ARCHIVE })
     })
   })
 
@@ -227,12 +243,11 @@ describe('EditionService', () => {
       expect(archiveOrder).toBeLessThan(activateOrder)
     })
 
-    it('refuse une édition sans date ni lieu', async () => {
+    it("autorise une édition dont la date et le lieu sont encore à venir", async () => {
       db.edition.findUnique.mockResolvedValue({ id: 'e27', year: 2027, status: 'DRAFT', startAt: null, venueName: null })
-      await expect(service.activate('e27')).rejects.toThrow(
-        "Renseignez la date et le lieu avant d'activer l'édition"
-      )
-      expect(db.edition.updateMany).not.toHaveBeenCalled()
+      db.edition.update.mockResolvedValue({ id: 'e27', status: 'ACTIVE' })
+      await service.activate('e27')
+      expect(db.edition.update).toHaveBeenCalledWith({ where: { id: 'e27' }, data: { status: 'ACTIVE' } })
     })
 
     it('ne fait rien si elle est déjà active', async () => {
@@ -244,6 +259,47 @@ describe('EditionService', () => {
     it('refuse une édition inconnue', async () => {
       db.edition.findUnique.mockResolvedValue(null)
       await expect(service.activate('nope')).rejects.toBeInstanceOf(EditionValidationError)
+    })
+  })
+
+  describe('archive', () => {
+    it('archive directement un brouillon', async () => {
+      db.edition.findUnique.mockResolvedValue({ id: 'e27', year: 2027, status: 'DRAFT' })
+      db.edition.update.mockResolvedValue({ id: 'e27', status: 'ARCHIVED' })
+      await service.archive('e27')
+      expect(db.edition.update).toHaveBeenCalledWith({ where: { id: 'e27' }, data: { status: 'ARCHIVED' } })
+    })
+
+    it("exige un remplaçant pour archiver l'édition en ligne (le site doit toujours en présenter une)", async () => {
+      db.edition.findUnique.mockResolvedValue({ id: 'e26', year: 2026, status: 'ACTIVE' })
+      await expect(service.archive('e26')).rejects.toThrow("Choisissez l'édition qui la remplace en ligne")
+      expect(db.edition.update).not.toHaveBeenCalled()
+    })
+
+    it("archive l'édition en ligne et met son remplaçant en ligne, dans une transaction", async () => {
+      db.edition.findUnique.mockImplementation(({ where }: { where: { id: string } }) =>
+        Promise.resolve(where.id === 'e26' ? { id: 'e26', year: 2026, status: 'ACTIVE' } : { id: 'e27', year: 2027, status: 'DRAFT' })
+      )
+      db.edition.update.mockResolvedValue({})
+      await service.archive('e26', { successorId: 'e27' })
+      expect(db.$transaction).toHaveBeenCalled()
+      expect(db.edition.update).toHaveBeenCalledWith({ where: { id: 'e26' }, data: { status: 'ARCHIVED' } })
+      expect(db.edition.update).toHaveBeenCalledWith({ where: { id: 'e27' }, data: { status: 'ACTIVE' } })
+    })
+
+    it('refuse un remplaçant inconnu ou identique', async () => {
+      db.edition.findUnique.mockImplementation(({ where }: { where: { id: string } }) =>
+        Promise.resolve(where.id === 'e26' ? { id: 'e26', year: 2026, status: 'ACTIVE' } : null)
+      )
+      await expect(service.archive('e26', { successorId: 'nope' })).rejects.toBeInstanceOf(EditionValidationError)
+      await expect(service.archive('e26', { successorId: 'e26' })).rejects.toBeInstanceOf(EditionValidationError)
+      expect(db.edition.update).not.toHaveBeenCalled()
+    })
+
+    it('ne fait rien pour une édition déjà archivée', async () => {
+      db.edition.findUnique.mockResolvedValue({ id: 'e24', year: 2024, status: 'ARCHIVED' })
+      await service.archive('e24')
+      expect(db.edition.update).not.toHaveBeenCalled()
     })
   })
 

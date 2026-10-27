@@ -42,18 +42,3 @@ export function getEditionMedia(editionId: string) {
   })
 }
 
-/** Noms des exposants d'une édition (stands vendus), pour la page d'archive. */
-export async function getEditionExhibitorNames(editionId: string): Promise<string[]> {
-  const stands = await prisma.stand.findMany({
-    where: { editionId, status: 'SOLD' },
-    select: {
-      exhibitorName: true,
-      pro: { select: { companyName: true } },
-      sponsor: { select: { name: true } },
-    },
-  })
-  const names = stands
-    .map((s) => s.sponsor?.name || s.exhibitorName || s.pro?.companyName)
-    .filter((name): name is string => Boolean(name))
-  return Array.from(new Set(names)).sort((a, b) => a.localeCompare(b, 'fr'))
-}

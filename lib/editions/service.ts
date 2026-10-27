@@ -89,6 +89,15 @@ function isUniqueViolation(error: unknown): boolean {
 
 type EditionDb = Pick<PrismaClient, 'edition' | 'stand' | '$transaction'>
 
+/**
+ * Une édition archivée n'est montrée au public que si elle a vraiment été gérée
+ * sur le site (conférences, sponsors ou stands vendus) : pas d'archive « photos seules ».
+ */
+const PUBLISHED_ARCHIVE = {
+  status: 'ARCHIVED',
+  OR: [{ events: { some: {} } }, { sponsors: { some: {} } }, { stands: { some: { status: 'SOLD' } } }],
+} satisfies Prisma.EditionWhereInput
+
 export function createEditionService(db: EditionDb) {
   async function getActive(): Promise<Edition> {
     const edition = await db.edition.findFirst({ where: { status: 'ACTIVE' } })
@@ -96,13 +105,17 @@ export function createEditionService(db: EditionDb) {
     return edition
   }
 
-  /** Édition visible du public (active ou archivée). Les brouillons restent privés. */
+  /** Édition visible du public (en ligne, ou archive publiée). Les brouillons restent privés. */
   function getPublicByYear(year: number): Promise<Edition | null> {
-    return db.edition.findFirst({ where: { year, status: { in: ['ACTIVE', 'ARCHIVED'] } } })
+    return db.edition.findFirst({ where: { year, OR: [{ status: 'ACTIVE' }, PUBLISHED_ARCHIVE] } })
   }
 
-  function listArchived(): Promise<Edition[]> {
-    return db.edition.findMany({ where: { status: 'ARCHIVED' }, orderBy: { year: 'desc' } })
+  function listPublishedArchives(): Promise<Edition[]> {
+    return db.edition.findMany({ where: PUBLISHED_ARCHIVE, orderBy: { year: 'desc' } })
+  }
+
+  async function hasPublishedArchives(): Promise<boolean> {
+    return (await db.edition.count({ where: PUBLISHED_ARCHIVE })) > 0
   }
 
   function listAll(): Promise<Edition[]> {
@@ -172,12 +185,35 @@ export function createEditionService(db: EditionDb) {
     return db.$transaction(async (tx) => {
       const edition = await tx.edition.findUnique({ where: { id } })
       if (!edition) throw new EditionValidationError(['Édition introuvable'])
+      // Date et lieu peuvent rester « à venir » : le site l'affiche et la billetterie reste fermée
       if (edition.status === 'ACTIVE') return edition
-      if (!edition.startAt || !edition.venueName) {
-        throw new EditionValidationError(["Renseignez la date et le lieu avant d'activer l'édition"])
-      }
       await tx.edition.updateMany({ where: { status: 'ACTIVE' }, data: { status: 'ARCHIVED' } })
       return tx.edition.update({ where: { id }, data: { status: 'ACTIVE' } })
+    })
+  }
+
+  /**
+   * Archive une édition. Le site devant toujours présenter une édition en ligne,
+   * archiver l'édition en ligne exige de désigner celle qui la remplace.
+   */
+  async function archive(id: string, { successorId }: { successorId?: string } = {}): Promise<Edition> {
+    return db.$transaction(async (tx) => {
+      const edition = await tx.edition.findUnique({ where: { id } })
+      if (!edition) throw new EditionValidationError(['Édition introuvable'])
+      if (edition.status === 'ARCHIVED') return edition
+
+      if (edition.status === 'ACTIVE') {
+        if (!successorId) {
+          throw new EditionValidationError(["Choisissez l'édition qui la remplace en ligne"])
+        }
+        const successor = successorId === id ? null : await tx.edition.findUnique({ where: { id: successorId } })
+        if (!successor) throw new EditionValidationError(["L'édition de remplacement est introuvable"])
+        const archived = await tx.edition.update({ where: { id }, data: { status: 'ARCHIVED' } })
+        await tx.edition.update({ where: { id: successor.id }, data: { status: 'ACTIVE' } })
+        return archived
+      }
+
+      return tx.edition.update({ where: { id }, data: { status: 'ARCHIVED' } })
     })
   }
 
@@ -206,7 +242,10 @@ export function createEditionService(db: EditionDb) {
     })
   }
 
-  return { getActive, getPublicByYear, listArchived, listAll, create, update, activate, deleteDraft }
+  return {
+    getActive, getPublicByYear, listPublishedArchives, hasPublishedArchives, listAll,
+    create, update, activate, archive, deleteDraft,
+  }
 }
 
 export type EditionService = ReturnType<typeof createEditionService>

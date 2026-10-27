@@ -72,8 +72,8 @@ describe('isTicketingOpen', () => {
     expect(isTicketingOpen(edition, new Date('2026-03-28T08:00:00Z'))).toBe(false)
   })
 
-  it("est ouverte quand aucune borne n'est définie", () => {
-    expect(isTicketingOpen({ ticketingOpenAt: null, ticketingCloseAt: null }, new Date())).toBe(true)
+  it("reste fermée tant que l'ouverture n'est pas programmée (édition « à venir »)", () => {
+    expect(isTicketingOpen({ ticketingOpenAt: null, ticketingCloseAt: null }, new Date())).toBe(false)
   })
 })
 
@@ -106,6 +106,8 @@ describe('toEditionView', () => {
     expect(view.ticketingOpenAt).toBeNull()
     expect(view.dateLabel).toBe('28 mars 2026')
     expect(view.hoursLabel).toBe('9h00 - 19h00')
+    expect(view.dateDisplay).toBe('28 mars 2026')
+    expect(view.venueDisplay).toBe("L'Agronaute, Nantes")
     expect(view).not.toHaveProperty('createdAt')
     expect(() => JSON.stringify(view)).not.toThrow()
   })
@@ -114,5 +116,19 @@ describe('toEditionView', () => {
 describe('formatEventTime', () => {
   it("affiche l'heure de Paris d'un créneau du programme", () => {
     expect(formatEventTime(new Date('2026-03-28T09:30:00Z'))).toBe('10h30')
+  })
+})
+
+describe('toEditionView - édition « à venir »', () => {
+  it('affiche « Date à venir » et « Lieu à venir » tant que rien n\'est fixé', () => {
+    const view = toEditionView({
+      id: 'e27', year: 2027, status: 'ACTIVE', startAt: null, endAt: null, venueName: null, address: null,
+      city: null, posterUrl: null, ticketingOpenAt: null, ticketingCloseAt: null, standardTicketPrice: 15,
+      flexTicketPrice: 25, accessTransport: null, accessParking: null, accessInfo: null, ticketInfo: null,
+      archiveSummary: null, createdAt: new Date(), updatedAt: new Date(),
+    })
+    expect(view.dateDisplay).toBe('Date à venir')
+    expect(view.venueDisplay).toBe('Lieu à venir')
+    expect(view.dateLabel).toBeNull()
   })
 })

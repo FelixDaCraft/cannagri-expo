@@ -59,7 +59,8 @@ export function isTicketingOpen(
 ): boolean {
   const openAt = toDate(edition.ticketingOpenAt)
   const closeAt = toDate(edition.ticketingCloseAt)
-  if (openAt && now < openAt) return false
+  // Pas de vente tant que l'ouverture n'est pas programmée
+  if (!openAt || now < openAt) return false
   if (closeAt && now > closeAt) return false
   return true
 }
@@ -89,6 +90,9 @@ export interface EditionView {
   archiveSummary: string | null
   dateLabel: string | null
   hoursLabel: string | null
+  /** Libellés prêts à afficher, avec repli « à venir » */
+  dateDisplay: string
+  venueDisplay: string
 }
 
 const iso = (d: Date | null) => (d ? d.toISOString() : null)
@@ -115,6 +119,8 @@ export function toEditionView(edition: Edition): EditionView {
     archiveSummary: edition.archiveSummary,
     dateLabel: formatEditionDate(edition.startAt),
     hoursLabel: formatEditionHours(edition.startAt, edition.endAt),
+    dateDisplay: formatEditionDate(edition.startAt) ?? 'Date à venir',
+    venueDisplay: [edition.venueName, edition.city].filter(Boolean).join(', ') || 'Lieu à venir',
   }
 }
 

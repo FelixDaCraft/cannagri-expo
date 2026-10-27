@@ -79,6 +79,8 @@ function toForm(edition: Edition): FormState {
   }
 }
 
+const NEW_SUCCESSOR = '__new__'
+
 const textareaClass =
   'w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-forest text-sm'
 
@@ -91,6 +93,8 @@ export default function EditionsPage() {
   const [editing, setEditing] = useState<Edition | null>(null)
   const [form, setForm] = useState<FormState>(emptyForm)
   const [saving, setSaving] = useState(false)
+  // Remplaçant choisi pour archiver l'édition en ligne : id d'un brouillon, ou NEW_SUCCESSOR
+  const [successor, setSuccessor] = useState('')
 
   const fetchEditions = useCallback(async () => {
     try {
@@ -123,6 +127,7 @@ export default function EditionsPage() {
 
   const openEdit = (edition: Edition) => {
     setEditing(edition)
+    setSuccessor(editions.find((e) => e.status === 'DRAFT')?.id ?? NEW_SUCCESSOR)
     setForm(toForm(edition))
     setError('')
     setShowForm(true)
@@ -167,6 +172,43 @@ export default function EditionsPage() {
       return
     }
     await fetchEditions()
+  }
+
+  const nextYear = Math.max(...editions.map((e) => e.year), new Date().getFullYear()) + 1
+
+  const handleArchive = async (edition: Edition) => {
+    let body: Record<string, unknown> = {}
+    let message = `Archiver l'édition ${edition.year} ?`
+    if (edition.status === 'ACTIVE') {
+      const draft = editions.find((e) => e.id === successor)
+      const successorYear = draft ? draft.year : nextYear
+      body = draft ? { successorId: draft.id } : { createSuccessorYear: nextYear }
+      message =
+        `Archiver l'édition ${edition.year} ?\n\n` +
+        `Elle sera consultable dans « Éditions passées » et l'édition ${successorYear} passera en ligne` +
+        (draft ? '.' : ' avec date et lieu « à venir » (billetterie fermée).') +
+        `\nLes billets ${edition.year} ne seront plus acceptés à l'entrée.`
+    }
+    if (!confirm(message)) return
+
+    setSaving(true)
+    try {
+      const res = await fetch(`/api/admin/editions/${edition.id}/archive`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        setError(data.error || "Erreur lors de l'archivage")
+        return
+      }
+      setShowForm(false)
+      // L'édition gérée et l'édition en ligne ont pu changer : rechargement complet
+      window.location.reload()
+    } finally {
+      setSaving(false)
+    }
   }
 
   const handleDelete = async (edition: Edition) => {
@@ -253,7 +295,7 @@ export default function EditionsPage() {
                   <Button size="sm" variant="outline" onClick={() => openEdit(edition)}>
                     Modifier
                   </Button>
-                  {edition.status === 'ARCHIVED' && (
+                  {edition.status === 'ARCHIVED' && edition._count.events + edition._count.sponsors + edition._count.stands > 0 && (
                     <Link href={`/editions/${edition.year}`} target="_blank">
                       <Button size="sm" variant="outline">Voir l&apos;archive</Button>
                     </Link>
@@ -342,6 +384,37 @@ export default function EditionsPage() {
                 placeholder="Ex : 1 200 visiteurs, 35 exposants, 8 conférences..." />
             </div>
           </fieldset>
+
+          {editing && (
+            <fieldset className="space-y-3 rounded-lg border border-gray-200 p-4">
+              <legend className="font-semibold text-gray-900 px-1">Statut de l&apos;édition</legend>
+              {editing.status === 'ARCHIVED' ? (
+                <p className="text-sm text-gray-600">
+                  Édition archivée. Elle apparaît dans « Éditions passées » dès qu&apos;elle contient des conférences,
+                  des sponsors ou des stands vendus.
+                </p>
+              ) : (
+                <>
+                  <p className="text-sm text-gray-600">
+                    {editing.status === 'ACTIVE'
+                      ? "Édition en ligne. Pour l'archiver, choisissez celle qui la remplace sur le site."
+                      : 'Brouillon. Archivez-le pour le ranger avec les éditions passées.'}
+                  </p>
+                  {editing.status === 'ACTIVE' && (
+                    <select value={successor} onChange={(e) => setSuccessor(e.target.value)} className={textareaClass}>
+                      {editions.filter((e) => e.status === 'DRAFT').map((e) => (
+                        <option key={e.id} value={e.id}>Mettre en ligne le brouillon {e.year}</option>
+                      ))}
+                      <option value={NEW_SUCCESSOR}>Créer l&apos;édition {nextYear} (date et lieu à venir)</option>
+                    </select>
+                  )}
+                  <Button type="button" variant="outline" onClick={() => handleArchive(editing)} disabled={saving}>
+                    Archiver l&apos;édition {editing.year}
+                  </Button>
+                </>
+              )}
+            </fieldset>
+          )}
 
           {!editing && (
             <fieldset className="space-y-2">

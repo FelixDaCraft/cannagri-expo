@@ -263,7 +263,7 @@ export default function PresentationPage() {
               </svg>
             </motion.div>
             <h2 className="text-2xl sm:text-3xl font-heading font-bold text-heading mb-4">
-              {t('cta.title', { date: edition.dateLabel ?? '' })}
+              {t('cta.title', { date: edition.dateDisplay })}
             </h2>
             <p className="text-body/70 max-w-2xl mx-auto mb-8">
               {t('cta.description')}

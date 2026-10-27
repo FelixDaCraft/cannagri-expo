@@ -80,7 +80,7 @@ export function CountdownTimer({ variant = 'default' }: CountdownTimerProps) {
   }, [edition.startAt])
 
   const title = `Cann'Agri Expo ${edition.year}`
-  const location = `${edition.venueName}, ${edition.city}, France`
+  const location = `${edition.venueDisplay}, France`
   // Sans heure de fin connue, l'événement est supposé durer 10 heures
   const startIcs = edition.startAt ? toIcsDateTime(edition.startAt) : ''
   const endIcs = edition.endAt
@@ -92,7 +92,7 @@ export function CountdownTimer({ variant = 'default' }: CountdownTimerProps) {
   const handleAddToCalendar = () => {
     const eventTitle = encodeURIComponent(title)
     const eventDetails = encodeURIComponent(
-      `Le salon de référence du chanvre CBD - ${edition.venueName}, ${edition.city}`
+      `Le salon de référence du chanvre CBD - ${edition.venueDisplay}`
     )
     const eventLocation = encodeURIComponent(location)
 
@@ -123,6 +123,9 @@ END:VCALENDAR`
     document.body.removeChild(link)
     URL.revokeObjectURL(url)
   }
+
+  // Pas de compte à rebours tant que la date de l'édition n'est pas fixée
+  if (!edition.startAt) return null
 
   // Hero variant - compact inline display
   if (variant === 'hero') {
@@ -188,10 +191,10 @@ END:VCALENDAR`
             Save the date
           </span>
           <h2 className="text-3xl md:text-4xl font-heading font-bold text-forest mb-2">
-            {edition.dateLabel}
+            {edition.dateDisplay}
           </h2>
           <p className="text-forest/70">
-            {edition.venueName}, {edition.city}
+            {edition.venueDisplay}
           </p>
         </motion.div>
 
