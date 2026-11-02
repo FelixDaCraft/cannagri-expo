@@ -455,49 +455,56 @@
     }
   },
   "tickets": {
-    "title": "Ticketverkauf",
-    "subtitle": "Reservieren Sie Ihren Platz für die Referenzmesse für CBD-Hanf",
-    "selectTicket": "Wählen Sie Ihr Ticket",
-    "quantity": "Menge",
-    "total": "Gesamt",
-    "checkout": "Zur Zahlung",
-    "features": {
-      "eTicket": {
-        "title": "Sofort-E-Ticket",
-        "description": "Erhalten Sie Ihr QR-Code-Ticket sofort nach der Zahlung per E-Mail."
-      },
-      "securePayment": {
-        "title": "Sichere Zahlung",
-        "description": "100% sichere Transaktionen mit 3D-Secure-Protokoll."
-      },
-      "priorityAccess": {
-        "title": "Prioritärer Zugang",
-        "description": "Überspringen Sie die Warteschlangen mit Ihrem QR-Code zum Scannen."
-      }
+    "metaTitle": "Tickets",
+    "title": "Tickets",
+    "dateTba": "Datum folgt",
+    "question": "Eine Frage? Schreiben Sie uns an",
+    "closed": {
+      "title": "Bald im Verkauf",
+      "text": "Der Ticketverkauf für die Cann'Agri Expo {year} startet in Kürze. Zwei Varianten, derselbe Tag:",
+      "standard": "Standard-Ticket",
+      "flex": "Flex-Ticket (mit Unterstützung für den Verein)",
+      "practicalInfo": "Praktische Infos",
+      "contact": "Kontakt"
     },
-    "contactQuestion": "Eine Frage? Kontaktieren Sie uns unter",
     "form": {
-      "attendees": "Teilnehmer",
-      "attendee": "Teilnehmer",
-      "firstName": "Vorname",
-      "lastName": "Nachname",
-      "email": "E-Mail",
-      "addAttendee": "Teilnehmer hinzufügen",
-      "removeAttendee": "Entfernen"
-    },
-    "payment": {
-      "title": "Zahlung",
-      "secure": "Sichere Zahlung",
-      "processing": "Verarbeitung...",
-      "success": "Zahlung erfolgreich!",
-      "error": "Zahlungsfehler"
-    },
-    "confirmation": {
-      "title": "Bestätigung",
-      "thankYou": "Danke für Ihre Bestellung!",
-      "emailSent": "Eine Bestätigungs-E-Mail mit Ihren Tickets wurde gesendet.",
-      "orderNumber": "Bestellnummer",
-      "downloadTickets": "Tickets herunterladen"
+      "step1": "1. Tickets wählen",
+      "step2": "2. Namen der Teilnehmer",
+      "step3": "3. Ihre Kontaktdaten",
+      "flexDescription": "Gleicher Zugang wie das Standard-Ticket, davon {amount} zur Unterstützung des Vereins.",
+      "reassurance": "E-Ticket mit QR-Code per E-Mail · sichere 3D-Secure-Zahlung · kein Konto nötig",
+      "attendeesHint": "Jedes Ticket ist personalisiert: Der Name steht auf dem Ticket und wird am Eingang geprüft.",
+      "attendee": "Teilnehmer {number}",
+      "attendeePlaceholder": "Vor- und Nachname",
+      "loggedInAs": "Angemeldet als <strong>{email}</strong>: Ihre Tickets finden Sie auch unter „Meine Tickets“.",
+      "noAccount": "Kein Konto nötig: Die Tickets werden an diese E-Mail-Adresse gesendet.",
+      "haveAccount": "Ich habe bereits ein Konto",
+      "buyerName": "Vor- und Nachname",
+      "buyerEmail": "E-Mail",
+      "buyerEmailHint": "Ihre E-Tickets und Ihre Rechnung kommen hierhin.",
+      "buyerPhone": "Telefon",
+      "optional": "(optional)",
+      "honeypot": "Nicht ausfüllen",
+      "terms": "Ich akzeptiere die <cgv>Allgemeinen Verkaufsbedingungen</cgv>. Tickets sind weder umtauschbar noch erstattungsfähig, außer bei Absage der Veranstaltung.",
+      "privacy": "Ihre Daten werden nur verwendet, um Ihnen Tickets und Rechnung zu senden.",
+      "privacyLink": "Datenschutzerklärung",
+      "pay": "{total} bezahlen",
+      "payShort": "Bezahlen",
+      "redirecting": "Weiterleitung zur Zahlung…",
+      "summary": "Übersicht",
+      "total": "Gesamt inkl. MwSt.",
+      "summaryNote": "Sichere Zahlung über Viva Wallet. Ein personalisiertes E-Ticket pro Teilnehmer.",
+      "selectTickets": "Wählen Sie Ihre Tickets",
+      "count": "{count, plural, one {# Ticket} other {# Tickets}}",
+      "errors": {
+        "noTicket": "Wählen Sie mindestens ein Ticket.",
+        "attendeeName": "Geben Sie den Namen jedes Teilnehmers an.",
+        "terms": "Bitte akzeptieren Sie die Allgemeinen Verkaufsbedingungen, um fortzufahren.",
+        "invalid": "Einige Angaben sind ungültig: Prüfen Sie Namen, E-Mail-Adresse und Telefonnummer.",
+        "tooMany": "Zu viele Versuche. Bitte warten Sie einige Minuten.",
+        "generic": "Die Zahlung konnte nicht gestartet werden. Versuchen Sie es gleich noch einmal.",
+        "network": "Keine Verbindung. Prüfen Sie Ihr Netzwerk und versuchen Sie es erneut."
+      }
     }
   },
   "programme": {

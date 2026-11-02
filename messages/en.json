@@ -456,49 +456,56 @@
     }
   },
   "tickets": {
+    "metaTitle": "Tickets",
     "title": "Tickets",
-    "subtitle": "Book your seat for the reference CBD hemp exhibition",
-    "selectTicket": "Choose your ticket",
-    "quantity": "Quantity",
-    "total": "Total",
-    "checkout": "Proceed to payment",
-    "features": {
-      "eTicket": {
-        "title": "Instant e-ticket",
-        "description": "Receive your QR code ticket by email immediately after payment."
-      },
-      "securePayment": {
-        "title": "Secure payment",
-        "description": "100% secure transactions with 3D Secure protocol."
-      },
-      "priorityAccess": {
-        "title": "Priority access",
-        "description": "Skip the queues with your QR code to scan."
-      }
+    "dateTba": "Date to be announced",
+    "question": "A question? Write to us at",
+    "closed": {
+      "title": "On sale soon",
+      "text": "Tickets for Cann'Agri Expo {year} will go on sale soon. Two options, the same day:",
+      "standard": "Standard ticket",
+      "flex": "Flex ticket (includes support for the association)",
+      "practicalInfo": "Practical info",
+      "contact": "Contact us"
     },
-    "contactQuestion": "Have a question? Contact us at",
     "form": {
-      "attendees": "Attendees",
-      "attendee": "Attendee",
-      "firstName": "First name",
-      "lastName": "Last name",
-      "email": "Email",
-      "addAttendee": "Add attendee",
-      "removeAttendee": "Remove"
-    },
-    "payment": {
-      "title": "Payment",
-      "secure": "Secure payment",
-      "processing": "Processing...",
-      "success": "Payment successful!",
-      "error": "Payment error"
-    },
-    "confirmation": {
-      "title": "Confirmation",
-      "thankYou": "Thank you for your order!",
-      "emailSent": "A confirmation email with your tickets has been sent.",
-      "orderNumber": "Order number",
-      "downloadTickets": "Download tickets"
+      "step1": "1. Choose your tickets",
+      "step2": "2. Attendee names",
+      "step3": "3. Your details",
+      "flexDescription": "Same access as the Standard ticket, including {amount} to support the association.",
+      "reassurance": "E-ticket with QR code sent by email · 3D Secure payment · no account needed",
+      "attendeesHint": "Each ticket is personal: the name is printed on the ticket and checked at the entrance.",
+      "attendee": "Attendee {number}",
+      "attendeePlaceholder": "First and last name",
+      "loggedInAs": "Signed in as <strong>{email}</strong>: your tickets will also be in “My tickets”.",
+      "noAccount": "No account needed: tickets are sent to this email address.",
+      "haveAccount": "I already have an account",
+      "buyerName": "Full name",
+      "buyerEmail": "Email",
+      "buyerEmailHint": "Your e-tickets and invoice will be sent here.",
+      "buyerPhone": "Phone",
+      "optional": "(optional)",
+      "honeypot": "Do not fill in",
+      "terms": "I accept the <cgv>terms and conditions of sale</cgv>. Tickets can be neither exchanged nor refunded, unless the event is cancelled.",
+      "privacy": "Your details are only used to send you your tickets and invoice.",
+      "privacyLink": "Privacy policy",
+      "pay": "Pay {total}",
+      "payShort": "Pay",
+      "redirecting": "Redirecting to payment…",
+      "summary": "Order summary",
+      "total": "Total incl. VAT",
+      "summaryNote": "Secure payment by Viva Wallet. One personal e-ticket per attendee.",
+      "selectTickets": "Choose your tickets",
+      "count": "{count, plural, one {# ticket} other {# tickets}}",
+      "errors": {
+        "noTicket": "Choose at least one ticket.",
+        "attendeeName": "Enter the name of each attendee.",
+        "terms": "Please accept the terms and conditions of sale to continue.",
+        "invalid": "Some details are invalid: check the names, email address and phone number.",
+        "tooMany": "Too many attempts. Please wait a few minutes before trying again.",
+        "generic": "The payment could not start. Please try again in a moment.",
+        "network": "Connection failed. Check your network and try again."
+      }
     }
   },
   "programme": {

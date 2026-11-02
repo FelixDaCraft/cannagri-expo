@@ -3,9 +3,12 @@
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
-import { Button, Card, CardContent, Badge } from '@/components/ui'
-import { siteConfig } from '@/config/site'
+import { useTranslations } from 'next-intl'
 import { useEdition } from '@/components/editions'
+import { Ticket } from '@/components/ui/Ticket'
+import { QuantityPicker } from '@/components/ui/QuantityPicker'
+import { buttonClasses } from '@/components/ui/ButtonLink'
+import { cn } from '@/lib/utils'
 import { HONEYPOT_FIELD } from '@/lib/checkout'
 import {
   formatTicketPrice,
@@ -16,36 +19,7 @@ import {
 
 type TicketType = keyof TicketSelection
 
-interface TicketOption {
-  type: TicketType
-  name: string
-  price: number
-  description: string
-  badge?: string
-}
-
-// Les prix viennent de l'édition en ligne (le serveur les recalcule de toute façon)
-function getTicketOptions(prices: { standardTicketPrice: number; flexTicketPrice: number }): TicketOption[] {
-  const support = prices.flexTicketPrice - prices.standardTicketPrice
-  return [
-    {
-      type: 'standard',
-      name: siteConfig.tickets.standard.name,
-      price: prices.standardTicketPrice,
-      description: siteConfig.tickets.standard.description,
-    },
-    {
-      type: 'flex',
-      name: siteConfig.tickets.flex.name,
-      price: prices.flexTicketPrice,
-      description:
-        support > 0
-          ? `Les mêmes accès que le Standard, dont ${formatTicketPrice(support)} de soutien à l'association`
-          : siteConfig.tickets.flex.description,
-      badge: 'Soutien',
-    },
-  ]
-}
+const TICKET_TYPES = ['standard', 'flex'] as const
 
 interface Attendee {
   ticketType: TicketType
@@ -61,14 +35,15 @@ function syncAttendees(prev: Attendee[], quantities: TicketSelection): Attendee[
   })
 }
 
-const inputClasses =
-  'w-full px-4 py-3 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-forest focus:border-transparent'
-
 const FORM_ID = 'ticket-form'
 
 export function TicketForm({ initialSelection }: { initialSelection?: TicketSelection }) {
   const { data: session } = useSession()
-  const ticketOptions = getTicketOptions(useEdition())
+  const t = useTranslations('tickets.form')
+  const tt = useTranslations('home.tickets')
+  const edition = useEdition()
+  const prices: TicketSelection = { standard: edition.standardTicketPrice, flex: edition.flexTicketPrice }
+  const ticketName = (type: TicketType) => tt(`${type}.name`)
 
   const [quantities, setQuantities] = useState<TicketSelection>(initialSelection ?? { standard: 0, flex: 0 })
   const [attendees, setAttendees] = useState<Attendee[]>(() =>
@@ -81,8 +56,7 @@ export function TicketForm({ initialSelection }: { initialSelection?: TicketSele
   const [error, setError] = useState('')
 
   const totalQuantity = quantities.standard + quantities.flex
-  const total = ticketOptions.reduce((sum, ticket) => sum + ticket.price * quantities[ticket.type], 0)
-  const getTicketOption = (type: TicketType) => ticketOptions.find((t) => t.type === type)!
+  const total = TICKET_TYPES.reduce((sum, type) => sum + prices[type] * quantities[type], 0)
 
   useEffect(() => {
     setAttendees((prev) => syncAttendees(prev, quantities))
@@ -98,10 +72,10 @@ export function TicketForm({ initialSelection }: { initialSelection?: TicketSele
     }))
   }, [session])
 
-  const changeQuantity = (type: TicketType, delta: number) => {
+  const setQuantity = (type: TicketType, value: number) => {
     setError('')
     setQuantities((prev) => {
-      const next = Math.max(0, Math.min(MAX_TICKETS_PER_TYPE, prev[type] + delta))
+      const next = Math.max(0, Math.min(MAX_TICKETS_PER_TYPE, value))
       const other = type === 'standard' ? prev.flex : prev.standard
       if (next + other > MAX_TICKETS_PER_ORDER) return prev
       return { ...prev, [type]: next }
@@ -111,15 +85,15 @@ export function TicketForm({ initialSelection }: { initialSelection?: TicketSele
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (totalQuantity === 0) {
-      setError('Choisissez au moins un billet')
+      setError(t('errors.noTicket'))
       return
     }
     if (attendees.some((a) => !a.name.trim())) {
-      setError('Indiquez le nom de chaque participant')
+      setError(t('errors.attendeeName'))
       return
     }
     if (!acceptTerms) {
-      setError('Vous devez accepter les conditions générales de vente')
+      setError(t('errors.terms'))
       return
     }
 
@@ -149,104 +123,74 @@ export function TicketForm({ initialSelection }: { initialSelection?: TicketSele
       })
 
       const data = await response.json().catch(() => ({}))
-      if (!response.ok) throw new Error(data.error || 'Une erreur est survenue, veuillez réessayer.')
-
-      if (data.checkoutUrl) {
+      if (response.ok && data.checkoutUrl) {
         window.location.href = data.checkoutUrl
         return
       }
-      throw new Error('Une erreur est survenue, veuillez réessayer.')
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Une erreur est survenue, veuillez réessayer.')
+      // Les messages du serveur sont en français : on affiche un message traduit selon le cas
+      setError(t(response.status === 429 ? 'errors.tooMany' : response.status === 400 ? 'errors.invalid' : 'errors.generic'))
+      setIsLoading(false)
+    } catch {
+      setError(t('errors.network'))
       setIsLoading(false)
     }
   }
 
   const selectionQuery = `standard=${quantities.standard}&flex=${quantities.flex}`
   const loginHref = `/connexion?callbackUrl=${encodeURIComponent(`/billetterie?${selectionQuery}`)}`
-  const ticketCountLabel = `${totalQuantity} billet${totalQuantity > 1 ? 's' : ''}`
+  const ticketCountLabel = t('count', { count: totalQuantity })
+  const price = (amount: number) => formatTicketPrice(amount)
+  const sectionTitle = 'font-condensed text-[1.75rem] font-semibold leading-tight text-forest'
+  const linkClass = 'font-medium text-forest underline decoration-forest/40 underline-offset-4 hover:decoration-mint'
 
   return (
-    <form id={FORM_ID} onSubmit={handleSubmit} className="grid lg:grid-cols-3 gap-8">
-      <div className="lg:col-span-2 space-y-10 min-w-0">
+    <form id={FORM_ID} onSubmit={handleSubmit} className="grid gap-10 lg:grid-cols-3">
+      <div className="min-w-0 space-y-12 lg:col-span-2">
         {/* 1. Choix des billets */}
         <section aria-labelledby="ticket-choice-title">
-          <h2 id="ticket-choice-title" className="text-2xl font-heading font-bold text-heading mb-4">
-            1. Choisissez vos billets
-          </h2>
-          <div className="space-y-4">
-            {ticketOptions.map((ticket) => {
-              const qty = quantities[ticket.type]
-              return (
-                <Card
-                  key={ticket.type}
-                  variant={qty > 0 ? 'bordered' : 'default'}
-                  className={`transition-all ${qty > 0 ? 'ring-2 ring-forest border-forest' : ''}`}
-                >
-                  <CardContent>
-                    <div className="flex items-center gap-4">
-                      <div className="flex-1 min-w-0">
-                        <div className="flex flex-wrap items-center gap-2 mb-1">
-                          <h3 className="text-lg font-heading font-semibold text-heading">{ticket.name}</h3>
-                          {ticket.badge && (
-                            <Badge variant="terracotta" className="text-xs">
-                              {ticket.badge}
-                            </Badge>
-                          )}
-                        </div>
-                        <p className="text-2xl font-bold text-forest mb-1">{formatTicketPrice(ticket.price)}</p>
-                        <p className="text-sm text-body/80">{ticket.description}</p>
-                      </div>
-                      <div className="flex items-center gap-1 flex-shrink-0" role="group" aria-label={`Quantité ${ticket.name}`}>
-                        <button
-                          type="button"
-                          className="w-11 h-11 rounded-lg border border-gray-300 bg-white text-xl leading-none flex items-center justify-center hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-forest disabled:opacity-40"
-                          onClick={() => changeQuantity(ticket.type, -1)}
-                          disabled={qty === 0}
-                          aria-label={`Retirer un ${ticket.name}`}
-                        >
-                          −
-                        </button>
-                        <output className="text-xl font-semibold w-8 text-center" aria-live="polite">
-                          {qty}
-                        </output>
-                        <button
-                          type="button"
-                          className="w-11 h-11 rounded-lg border border-gray-300 bg-white text-xl leading-none flex items-center justify-center hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-forest disabled:opacity-40"
-                          onClick={() => changeQuantity(ticket.type, 1)}
-                          disabled={qty >= MAX_TICKETS_PER_TYPE}
-                          aria-label={`Ajouter un ${ticket.name}`}
-                        >
-                          +
-                        </button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              )
-            })}
+          <h2 id="ticket-choice-title" className={sectionTitle}>{t('step1')}</h2>
+          <div className="mt-5 space-y-6">
+            {TICKET_TYPES.map((type) => (
+              <Ticket
+                key={type}
+                as="div"
+                className={cn('w-full', quantities[type] > 0 && 'outline outline-[3px] outline-offset-4 outline-mint')}
+                name={ticketName(type)}
+                price={prices[type]}
+                unit={tt('unit')}
+                tone={type === 'flex' ? 'flex' : 'night'}
+                tag={type === 'flex' ? tt('flex.tag') : undefined}
+                description={
+                  type === 'flex' && prices.flex > prices.standard
+                    ? t('flexDescription', { amount: price(prices.flex - prices.standard) })
+                    : tt(`${type}.description`)
+                }
+                meta={tt('meta')}
+              >
+                <QuantityPicker
+                  name={ticketName(type)}
+                  value={quantities[type]}
+                  onChange={(value) => setQuantity(type, value)}
+                  max={Math.min(MAX_TICKETS_PER_TYPE, MAX_TICKETS_PER_ORDER - (totalQuantity - quantities[type]))}
+                />
+              </Ticket>
+            ))}
           </div>
+          <p className="mt-5 font-condensed text-lg font-medium text-ink">{t('reassurance')}</p>
         </section>
 
         {totalQuantity > 0 && (
           <>
             {/* 2. Participants */}
             <section aria-labelledby="attendees-title">
-              <h2 id="attendees-title" className="text-2xl font-heading font-bold text-heading mb-2">
-                2. Nom des participants
-              </h2>
-              <p className="text-sm text-body/80 mb-4">
-                Chaque billet est nominatif : le nom est imprimé sur le billet et vérifié à l&apos;entrée.
-              </p>
-              <div className="space-y-3">
+              <h2 id="attendees-title" className={sectionTitle}>{t('step2')}</h2>
+              <p className="mb-5 mt-2 text-base text-ink">{t('attendeesHint')}</p>
+              <div className="space-y-4">
                 {attendees.map((attendee, index) => (
                   <div key={`${attendee.ticketType}-${index}`}>
-                    <label
-                      htmlFor={`attendee-name-${index}`}
-                      className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-1"
-                    >
-                      Participant {index + 1}
-                      <span className="text-body/60 font-normal">· {getTicketOption(attendee.ticketType).name}</span>
+                    <label htmlFor={`attendee-name-${index}`} className="field-label">
+                      {t('attendee', { number: index + 1 })}{' '}
+                      <span className="font-body text-base font-normal text-ink">· {ticketName(attendee.ticketType)}</span>
                     </label>
                     <input
                       type="text"
@@ -260,8 +204,8 @@ export function TicketForm({ initialSelection }: { initialSelection?: TicketSele
                         next[index] = { ...next[index], name: e.target.value }
                         setAttendees(next)
                       }}
-                      placeholder="Prénom et nom"
-                      className={inputClasses}
+                      placeholder={t('attendeePlaceholder')}
+                      className="field-input"
                       required
                     />
                   </div>
@@ -271,26 +215,18 @@ export function TicketForm({ initialSelection }: { initialSelection?: TicketSele
 
             {/* 3. Coordonnées */}
             <section aria-labelledby="buyer-title">
-              <h2 id="buyer-title" className="text-2xl font-heading font-bold text-heading mb-2">
-                3. Vos coordonnées
-              </h2>
+              <h2 id="buyer-title" className={sectionTitle}>{t('step3')}</h2>
               {session?.user ? (
-                <p className="text-sm text-body/80 mb-4">
-                  Connecté en tant que <strong>{session.user.email}</strong> : vos billets seront aussi dans « Mes billets ».
-                </p>
+                <p className="mb-5 mt-2 text-base text-ink">{t.rich('loggedInAs', { email: session.user.email ?? '', strong: (chunks) => <strong className="text-forest">{chunks}</strong> })}</p>
               ) : (
-                <p className="text-sm text-body/80 mb-4">
-                  Pas besoin de compte : les billets sont envoyés à cette adresse e-mail.{' '}
-                  <Link href={loginHref} className="text-forest font-medium underline underline-offset-2">
-                    J&apos;ai déjà un compte
-                  </Link>
+                <p className="mb-5 mt-2 text-base text-ink">
+                  {t('noAccount')}{' '}
+                  <Link href={loginHref} className={linkClass}>{t('haveAccount')}</Link>
                 </p>
               )}
-              <div className="grid sm:grid-cols-2 gap-4">
+              <div className="grid gap-5 sm:grid-cols-2">
                 <div className="sm:col-span-2">
-                  <label htmlFor="buyer-name" className="block text-sm font-medium text-gray-700 mb-1">
-                    Nom et prénom
-                  </label>
+                  <label htmlFor="buyer-name" className="field-label">{t('buyerName')}</label>
                   <input
                     type="text"
                     id="buyer-name"
@@ -300,14 +236,12 @@ export function TicketForm({ initialSelection }: { initialSelection?: TicketSele
                     minLength={2}
                     maxLength={100}
                     onChange={(e) => setBuyer({ ...buyer, name: e.target.value })}
-                    className={inputClasses}
+                    className="field-input"
                     required
                   />
                 </div>
                 <div>
-                  <label htmlFor="buyer-email" className="block text-sm font-medium text-gray-700 mb-1">
-                    E-mail
-                  </label>
+                  <label htmlFor="buyer-email" className="field-label">{t('buyerEmail')}</label>
                   <input
                     type="email"
                     id="buyer-email"
@@ -317,17 +251,15 @@ export function TicketForm({ initialSelection }: { initialSelection?: TicketSele
                     value={buyer.email}
                     maxLength={254}
                     onChange={(e) => setBuyer({ ...buyer, email: e.target.value })}
-                    className={inputClasses}
+                    className="field-input"
                     aria-describedby="buyer-email-hint"
                     required
                   />
-                  <p id="buyer-email-hint" className="text-xs text-body/70 mt-1">
-                    Vos e-billets et votre facture arrivent ici.
-                  </p>
+                  <p id="buyer-email-hint" className="field-hint">{t('buyerEmailHint')}</p>
                 </div>
                 <div>
-                  <label htmlFor="buyer-phone" className="block text-sm font-medium text-gray-700 mb-1">
-                    Téléphone <span className="text-body/60 font-normal">(facultatif)</span>
+                  <label htmlFor="buyer-phone" className="field-label">
+                    {t('buyerPhone')} <span className="font-body text-base font-normal text-ink">{t('optional')}</span>
                   </label>
                   <input
                     type="tel"
@@ -338,14 +270,14 @@ export function TicketForm({ initialSelection }: { initialSelection?: TicketSele
                     value={buyer.phone}
                     maxLength={30}
                     onChange={(e) => setBuyer({ ...buyer, phone: e.target.value })}
-                    className={inputClasses}
+                    className="field-input"
                   />
                 </div>
               </div>
 
               {/* Champ piège : invisible et ignoré par les humains, rempli par les robots */}
-              <div aria-hidden="true" className="absolute -left-[9999px] w-px h-px overflow-hidden">
-                <label htmlFor="ticket-website">Ne pas remplir</label>
+              <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
+                <label htmlFor="ticket-website">{t('honeypot')}</label>
                 <input
                   type="text"
                   id="ticket-website"
@@ -357,93 +289,86 @@ export function TicketForm({ initialSelection }: { initialSelection?: TicketSele
                 />
               </div>
 
-              <label className="mt-6 flex items-start gap-3 text-sm text-body cursor-pointer">
+              <label className="mt-6 flex cursor-pointer items-start gap-3 text-base text-forest">
                 <input
                   type="checkbox"
                   name="acceptTerms"
                   checked={acceptTerms}
                   onChange={(e) => setAcceptTerms(e.target.checked)}
-                  className="mt-0.5 h-5 w-5 flex-shrink-0 rounded border-gray-400 text-forest focus:ring-forest"
+                  className="mt-0.5 h-6 w-6 flex-shrink-0 rounded border-forest/50 accent-forest"
                   required
                 />
                 <span>
-                  J&apos;accepte les{' '}
-                  <Link href="/cgv" target="_blank" className="text-forest font-medium underline underline-offset-2">
-                    conditions générales de vente
-                  </Link>
-                  . Les billets ne sont ni échangeables ni remboursables, sauf annulation de l&apos;événement.
+                  {t.rich('terms', {
+                    cgv: (chunks) => <Link href="/cgv" target="_blank" className={linkClass}>{chunks}</Link>,
+                  })}
                 </span>
               </label>
-              <p className="mt-3 text-xs text-body/70">
-                Vos coordonnées servent uniquement à vous envoyer vos billets et votre facture.{' '}
-                <Link href="/confidentialite" className="underline underline-offset-2">
-                  Politique de confidentialité
-                </Link>
+              <p className="mt-3 text-base text-ink">
+                {t('privacy')}{' '}
+                <Link href="/confidentialite" className={linkClass}>{t('privacyLink')}</Link>
               </p>
             </section>
 
-            {error && (
-              <div role="alert" className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
-                {error}
-              </div>
-            )}
+            {error && <p role="alert" className="notice-error">{error}</p>}
 
-            <Button type="submit" size="lg" className="w-full hidden lg:inline-flex" isLoading={isLoading}>
-              Payer {formatTicketPrice(total)}
-            </Button>
+            <button
+              type="submit"
+              disabled={isLoading}
+              aria-busy={isLoading || undefined}
+              className={cn(buttonClasses({ size: 'lg' }), 'hidden w-full disabled:opacity-60 lg:inline-flex')}
+            >
+              {isLoading ? t('redirecting') : t('pay', { total: price(total) })}
+            </button>
           </>
         )}
       </div>
 
       {/* Récapitulatif (ordinateur) */}
-      <aside className="hidden lg:block lg:col-span-1" aria-label="Récapitulatif de la commande">
-        <Card variant="bordered" className="sticky top-24">
-          <CardContent>
-            <h3 className="text-xl font-heading font-semibold text-heading mb-4">Récapitulatif</h3>
-            {totalQuantity > 0 ? (
-              <>
-                <div className="space-y-3 mb-4">
-                  {ticketOptions.map((ticket) => {
-                    const qty = quantities[ticket.type]
-                    if (qty === 0) return null
-                    return (
-                      <div key={ticket.type} className="flex justify-between gap-4">
-                        <span className="text-body/80">
-                          {ticket.name} × {qty}
-                        </span>
-                        <span>{formatTicketPrice(ticket.price * qty)}</span>
-                      </div>
-                    )
-                  })}
+      <aside className="hidden lg:col-span-1 lg:block" aria-label={t('summary')}>
+        <div className="sticky top-24 rounded-2xl border-2 border-forest bg-cream-100 p-6">
+          <h2 className="font-condensed text-2xl font-semibold text-forest">{t('summary')}</h2>
+          {totalQuantity > 0 ? (
+            <>
+              <dl className="mt-4 space-y-3">
+                {TICKET_TYPES.filter((type) => quantities[type] > 0).map((type) => (
+                  <div key={type} className="flex justify-between gap-4 text-ink">
+                    <dt>{ticketName(type)} × {quantities[type]}</dt>
+                    <dd className="font-medium text-forest">{price(prices[type] * quantities[type])}</dd>
+                  </div>
+                ))}
+                <div className="flex justify-between border-t border-forest/15 pt-4 font-condensed text-2xl font-semibold text-forest">
+                  <dt>{t('total')}</dt>
+                  <dd>{price(total)}</dd>
                 </div>
-                <div className="border-t border-gray-200 pt-4 flex justify-between text-lg font-semibold">
-                  <span>Total TTC</span>
-                  <span className="text-forest">{formatTicketPrice(total)}</span>
-                </div>
-                <p className="mt-4 text-sm text-body/70">
-                  Paiement sécurisé par Viva Wallet. Un e-billet nominatif par participant.
-                </p>
-              </>
-            ) : (
-              <p className="text-body/70 text-center py-8">Sélectionnez vos billets</p>
-            )}
-          </CardContent>
-        </Card>
+              </dl>
+              <p className="mt-4 text-base text-ink">{t('summaryNote')}</p>
+            </>
+          ) : (
+            <p className="py-8 text-center text-ink">{t('selectTickets')}</p>
+          )}
+        </div>
       </aside>
 
       {/* Barre de paiement fixe (mobile et tablette) */}
       {totalQuantity > 0 && (
-        <div className="lg:hidden fixed inset-x-0 bottom-0 z-40 border-t border-forest/15 bg-white/95 backdrop-blur shadow-[0_-4px_16px_rgba(29,43,58,0.12)] pb-[env(safe-area-inset-bottom)]">
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-cream/10 bg-forest pb-[env(safe-area-inset-bottom)] text-cream lg:hidden">
           <div className="container-custom flex items-center justify-between gap-3 py-3">
-            <p className="text-sm text-body min-w-0" aria-live="polite">
+            <p className="min-w-0 font-condensed text-xl" aria-live="polite">
               <span className="font-semibold">{ticketCountLabel}</span>
               <span aria-hidden="true"> · </span>
-              <span className="sr-only">, total </span>
-              <span className="font-bold text-forest">{formatTicketPrice(total)}</span>
+              <span className="sr-only">, {t('total')} </span>
+              <span className="font-semibold text-mint">{price(total)}</span>
             </p>
-            <Button type="submit" form={FORM_ID} isLoading={isLoading} className="min-h-[44px] flex-shrink-0">
-              Payer
-            </Button>
+            <button
+              type="submit"
+              form={FORM_ID}
+              disabled={isLoading}
+              aria-busy={isLoading || undefined}
+              className={cn(buttonClasses({ size: 'sm' }), 'flex-shrink-0 disabled:opacity-60')}
+            >
+              {isLoading ? t('redirecting') : t('payShort')}
+            </button>
           </div>
         </div>
       )}

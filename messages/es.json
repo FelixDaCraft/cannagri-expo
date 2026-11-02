@@ -455,49 +455,56 @@
     }
   },
   "tickets": {
+    "metaTitle": "Entradas",
     "title": "Entradas",
-    "subtitle": "Reserva tu lugar para la feria de referencia del cáñamo CBD",
-    "selectTicket": "Elige tu entrada",
-    "quantity": "Cantidad",
-    "total": "Total",
-    "checkout": "Proceder al pago",
-    "features": {
-      "eTicket": {
-        "title": "E-ticket instantáneo",
-        "description": "Recibe tu entrada con código QR por email inmediatamente después del pago."
-      },
-      "securePayment": {
-        "title": "Pago seguro",
-        "description": "Transacciones 100% seguras con protocolo 3D Secure."
-      },
-      "priorityAccess": {
-        "title": "Acceso prioritario",
-        "description": "Salta las colas con tu código QR para escanear."
-      }
+    "dateTba": "Fecha por anunciar",
+    "question": "¿Alguna pregunta? Escríbanos a",
+    "closed": {
+      "title": "Pronto a la venta",
+      "text": "La venta de entradas para Cann'Agri Expo {year} se abrirá próximamente. Dos opciones, el mismo día:",
+      "standard": "Entrada Standard",
+      "flex": "Entrada Flex (con apoyo a la asociación)",
+      "practicalInfo": "Información práctica",
+      "contact": "Contactar"
     },
-    "contactQuestion": "¿Tienes alguna pregunta? Contáctanos en",
     "form": {
-      "attendees": "Asistentes",
-      "attendee": "Asistente",
-      "firstName": "Nombre",
-      "lastName": "Apellido",
-      "email": "Email",
-      "addAttendee": "Añadir asistente",
-      "removeAttendee": "Eliminar"
-    },
-    "payment": {
-      "title": "Pago",
-      "secure": "Pago seguro",
-      "processing": "Procesando...",
-      "success": "¡Pago exitoso!",
-      "error": "Error de pago"
-    },
-    "confirmation": {
-      "title": "Confirmación",
-      "thankYou": "¡Gracias por tu pedido!",
-      "emailSent": "Se ha enviado un email de confirmación con tus entradas.",
-      "orderNumber": "Número de pedido",
-      "downloadTickets": "Descargar entradas"
+      "step1": "1. Elija sus entradas",
+      "step2": "2. Nombre de los asistentes",
+      "step3": "3. Sus datos",
+      "flexDescription": "El mismo acceso que la Standard, con {amount} de apoyo a la asociación.",
+      "reassurance": "Entrada electrónica con código QR enviada por correo · pago seguro 3D Secure · sin crear una cuenta",
+      "attendeesHint": "Cada entrada es nominativa: el nombre se imprime en la entrada y se comprueba en el acceso.",
+      "attendee": "Asistente {number}",
+      "attendeePlaceholder": "Nombre y apellidos",
+      "loggedInAs": "Sesión iniciada como <strong>{email}</strong>: sus entradas también estarán en «Mis entradas».",
+      "noAccount": "No hace falta cuenta: las entradas se envían a esta dirección de correo.",
+      "haveAccount": "Ya tengo una cuenta",
+      "buyerName": "Nombre y apellidos",
+      "buyerEmail": "Correo electrónico",
+      "buyerEmailHint": "Sus entradas y su factura llegarán aquí.",
+      "buyerPhone": "Teléfono",
+      "optional": "(opcional)",
+      "honeypot": "No rellenar",
+      "terms": "Acepto las <cgv>condiciones generales de venta</cgv>. Las entradas no se pueden cambiar ni reembolsar, salvo cancelación del evento.",
+      "privacy": "Sus datos solo sirven para enviarle las entradas y la factura.",
+      "privacyLink": "Política de privacidad",
+      "pay": "Pagar {total}",
+      "payShort": "Pagar",
+      "redirecting": "Redirigiendo al pago…",
+      "summary": "Resumen",
+      "total": "Total IVA incluido",
+      "summaryNote": "Pago seguro con Viva Wallet. Una entrada nominativa por asistente.",
+      "selectTickets": "Elija sus entradas",
+      "count": "{count, plural, one {# entrada} other {# entradas}}",
+      "errors": {
+        "noTicket": "Elija al menos una entrada.",
+        "attendeeName": "Indique el nombre de cada asistente.",
+        "terms": "Acepte las condiciones generales de venta para continuar.",
+        "invalid": "Algunos datos no son válidos: revise los nombres, el correo y el teléfono.",
+        "tooMany": "Demasiados intentos. Espere unos minutos antes de volver a intentarlo.",
+        "generic": "No se ha podido iniciar el pago. Inténtelo de nuevo en un momento.",
+        "network": "No hay conexión. Compruebe su red e inténtelo de nuevo."
+      }
     }
   },
   "programme": {

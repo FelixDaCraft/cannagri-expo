@@ -4,59 +4,13 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import { Ticket } from '@/components/ui/Ticket'
+import { QuantityPicker } from '@/components/ui/QuantityPicker'
 import { Reveal } from '@/components/ui/Reveal'
 import { buttonClasses } from '@/components/ui/ButtonLink'
 import { useEdition } from '@/components/editions'
-import { buildTicketingHref, clampTicketQuantity, MAX_TICKETS_PER_TYPE, type TicketQuantities } from '@/lib/home/tickets'
+import { buildTicketingHref, clampTicketQuantity, type TicketQuantities } from '@/lib/home/tickets'
 
 type TicketKind = keyof TicketQuantities
-
-function QuantityPicker({
-  name,
-  value,
-  onChange,
-  t,
-}: {
-  name: string
-  value: number
-  onChange: (value: number) => void
-  t: ReturnType<typeof useTranslations>
-}) {
-  const btn =
-    'inline-flex h-11 w-11 items-center justify-center rounded-full border border-cream/40 text-cream transition-colors hover:border-cream hover:bg-cream/10 disabled:opacity-40 disabled:hover:bg-transparent'
-  return (
-    <div className="flex items-center gap-3 font-condensed">
-      <span className="text-lg font-medium text-cream">{t('quantity')}</span>
-      <div className="flex items-center gap-1">
-        <button
-          type="button"
-          className={btn}
-          onClick={() => onChange(value - 1)}
-          disabled={value <= 0}
-          aria-label={t('decrease', { name })}
-        >
-          <svg aria-hidden="true" className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeWidth={2.5} d="M5 12h14" />
-          </svg>
-        </button>
-        <output aria-live="polite" aria-label={t('quantityOf', { name })} className="w-9 text-center text-2xl font-semibold tabular-nums">
-          {value}
-        </output>
-        <button
-          type="button"
-          className={btn}
-          onClick={() => onChange(value + 1)}
-          disabled={value >= MAX_TICKETS_PER_TYPE}
-          aria-label={t('increase', { name })}
-        >
-          <svg aria-hidden="true" className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeWidth={2.5} d="M12 5v14M5 12h14" />
-          </svg>
-        </button>
-      </div>
-    </div>
-  )
-}
 
 /**
  * Deux vrais tickets (Standard et Flex) avec choix de la quantité.
@@ -106,7 +60,7 @@ export function TicketSection() {
                 description={t(`${kind}.description`)}
                 meta={t('meta')}
               >
-                <QuantityPicker name={t(`${kind}.name`)} value={quantities[kind]} onChange={(v) => update(kind, v)} t={t} />
+                <QuantityPicker name={t(`${kind}.name`)} value={quantities[kind]} onChange={(v) => update(kind, v)} />
               </Ticket>
             </Reveal>
           ))}
