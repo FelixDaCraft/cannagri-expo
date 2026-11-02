@@ -211,7 +211,7 @@ export function Header({ showPastEditions = false }: { showPastEditions?: boolea
       </a>
       <div className="container-custom flex h-16 items-center gap-3 lg:h-[72px]">
         {/* Logo d'origine + nom du salon */}
-        <Link href="/" className="flex shrink-0 items-center gap-2.5 rounded-lg" aria-label={`${siteConfig.name}, ${t('home')}`}>
+        <Link href="/" className="flex min-h-[44px] shrink-0 items-center gap-2.5 rounded-lg" aria-label={`${siteConfig.name}, ${t('home')}`}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/images/logo-96.png" alt="" width={44} height={44} className="h-10 w-10 lg:h-11 lg:w-11" />
           <span className="font-display text-[1.375rem] leading-none text-cream xl:text-[1.625rem]">
