@@ -33,6 +33,8 @@ export default function MesBilletsPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
   const [downloadingId, setDownloadingId] = useState<string | null>(null)
+  const [needsVerification, setNeedsVerification] = useState(false)
+  const [resendState, setResendState] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -51,6 +53,10 @@ export default function MesBilletsPage() {
       const response = await fetch('/api/user/tickets')
       const data = await response.json()
 
+      if (response.status === 403 && data.code === 'EMAIL_NOT_VERIFIED') {
+        setNeedsVerification(true)
+        return
+      }
       if (!response.ok) {
         throw new Error(data.error || 'Erreur lors de la récupération des billets')
       }
@@ -60,6 +66,16 @@ export default function MesBilletsPage() {
       setError(err instanceof Error ? err.message : 'Une erreur est survenue')
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const resendVerification = async () => {
+    setResendState('sending')
+    try {
+      const response = await fetch('/api/auth/resend-verification', { method: 'POST' })
+      setResendState(response.ok ? 'sent' : 'error')
+    } catch {
+      setResendState('error')
     }
   }
 
@@ -130,7 +146,34 @@ export default function MesBilletsPage() {
           </div>
         )}
 
-        {tickets.length === 0 ? (
+        {needsVerification ? (
+          <Card>
+            <CardContent className="py-10 text-center max-w-xl mx-auto">
+              <h2 className="text-xl font-heading font-semibold text-heading mb-2">
+                Vérifiez votre adresse e-mail
+              </h2>
+              <p className="text-body/80 mb-6">
+                Pour protéger vos billets, ils s&apos;affichent ici une fois l&apos;adresse{' '}
+                <strong className="break-all">{session?.user?.email}</strong> vérifiée. Vous les avez aussi reçus par
+                e-mail après l&apos;achat.
+              </p>
+              {resendState === 'sent' ? (
+                <p role="status" className="text-forest font-medium">
+                  Lien envoyé : ouvrez l&apos;e-mail et cliquez sur le lien, puis revenez sur cette page.
+                </p>
+              ) : (
+                <Button onClick={resendVerification} isLoading={resendState === 'sending'}>
+                  Recevoir le lien de vérification
+                </Button>
+              )}
+              {resendState === 'error' && (
+                <p role="alert" className="mt-4 text-sm text-red-700">
+                  L&apos;envoi n&apos;a pas abouti. Réessayez dans quelques minutes.
+                </p>
+              )}
+            </CardContent>
+          </Card>
+        ) : tickets.length === 0 ? (
           <Card>
             <CardContent className="text-center py-12">
               <svg

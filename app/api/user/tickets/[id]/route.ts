@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { getVerifiedAccountEmail, EMAIL_NOT_VERIFIED } from '@/lib/account-email'
 import { generateTicketPDF } from '@/lib/pdf'
 import { generateQRCode } from '@/lib/qrcode'
 import { toEditionSummary } from '@/lib/editions/format'
@@ -30,6 +31,11 @@ export async function GET(
       )
     }
 
+    const email = await getVerifiedAccountEmail(session.user.id)
+    if (!email) {
+      return NextResponse.json(EMAIL_NOT_VERIFIED, { status: 403 })
+    }
+
     // Get the ticket and verify ownership
     const ticket = await prisma.ticket.findUnique({
       where: { id },
@@ -52,7 +58,7 @@ export async function GET(
     }
 
     // Verify the ticket belongs to the current user
-    if (ticket.order.customerEmail !== session.user.email) {
+    if (ticket.order.customerEmail.toLowerCase() !== email) {
       return NextResponse.json(
         { error: 'Accès non autorisé à ce billet' },
         { status: 403 }

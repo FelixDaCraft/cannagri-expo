@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { getVerifiedAccountEmail, EMAIL_NOT_VERIFIED } from '@/lib/account-email'
 
 // GET /api/user/tickets - Get current user's tickets
 export async function GET() {
@@ -23,11 +24,16 @@ export async function GET() {
       )
     }
 
-    // Get user's tickets through their orders (by email)
+    const email = await getVerifiedAccountEmail(session.user.id)
+    if (!email) {
+      return NextResponse.json(EMAIL_NOT_VERIFIED, { status: 403 })
+    }
+
+    // Billets des commandes passées avec cette adresse, avec ou sans compte
     const tickets = await prisma.ticket.findMany({
       where: {
         order: {
-          customerEmail: session.user.email,
+          customerEmail: { equals: email, mode: 'insensitive' },
         },
         status: {
           in: ['PAID', 'USED'],
