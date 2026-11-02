@@ -38,7 +38,7 @@ export function getEditionMedia(editionId: string) {
   return prisma.media.findMany({
     where: { editionId },
     orderBy: [{ displayOrder: 'asc' }, { createdAt: 'desc' }],
-    select: { id: true, imageUrl: true, caption: true, category: true, altText: true },
+    select: { id: true, imageUrl: true, thumbnailUrl: true, caption: true, category: true, altText: true },
   })
 }
 

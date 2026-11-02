@@ -736,5 +736,27 @@
     "viewer": "Visor de fotos",
     "photo": "foto",
     "position": "{index} de {total}"
+  },
+  "editions": {
+    "metaTitle": "Ediciones anteriores",
+    "title": "Ediciones anteriores",
+    "subtitle": "Programa, patrocinadores, expositores y fotos de las ediciones anteriores de Cann'Agri Expo.",
+    "empty": "Todavía no hay ninguna edición archivada.",
+    "edition": "Edición {year}",
+    "see": "Volver a ver esta edición",
+    "notFound": "Edición no encontrada",
+    "metaDescription": "Reviva Cann'Agri Expo {year}: programa, patrocinadores, expositores y fotos.",
+    "archived": "Edición anterior",
+    "nextEdition": "Descubrir la próxima edición",
+    "allEditions": "Todas las ediciones",
+    "posterAlt": "Cartel de Cann'Agri Expo {year}",
+    "program": "El programa",
+    "stands": "Los {count} stands",
+    "sponsors": "Patrocinadores y socios",
+    "photos": "Fotos",
+    "newTab": "(nueva pestaña)",
+    "noContent": "Los contenidos de esta edición no están disponibles.",
+    "recapTitle": "La edición {year} en resumen",
+    "recap": "El {date} en {place}: {stands, plural, =0 {} one {# stand, } other {# stands, }}{events, plural, =0 {un día de encuentros} one {# momento destacado en el programa} other {# momentos destacados en el programa}}."
   }
 }

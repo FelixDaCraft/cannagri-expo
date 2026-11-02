@@ -736,5 +736,27 @@
     "viewer": "Fotobetrachter",
     "photo": "Foto",
     "position": "{index} von {total}"
+  },
+  "editions": {
+    "metaTitle": "Vergangene Ausgaben",
+    "title": "Vergangene Ausgaben",
+    "subtitle": "Programm, Partner, Aussteller und Fotos der bisherigen Ausgaben der Cann'Agri Expo.",
+    "empty": "Noch keine archivierte Ausgabe.",
+    "edition": "Ausgabe {year}",
+    "see": "Diese Ausgabe ansehen",
+    "notFound": "Ausgabe nicht gefunden",
+    "metaDescription": "Erleben Sie die Cann'Agri Expo {year} noch einmal: Programm, Partner, Aussteller und Fotos.",
+    "archived": "Vergangene Ausgabe",
+    "nextEdition": "Zur nächsten Ausgabe",
+    "allEditions": "Alle Ausgaben",
+    "posterAlt": "Plakat der Cann'Agri Expo {year}",
+    "program": "Das Programm",
+    "stands": "Die {count} Stände",
+    "sponsors": "Sponsoren und Partner",
+    "photos": "Fotos",
+    "newTab": "(neuer Tab)",
+    "noContent": "Die Inhalte dieser Ausgabe sind nicht verfügbar.",
+    "recapTitle": "Die Ausgabe {year} im Überblick",
+    "recap": "Am {date} in {place}: {stands, plural, =0 {} one {# Stand, } other {# Stände, }}{events, plural, =0 {ein Tag voller Begegnungen} one {# Programmpunkt} other {# Programmpunkte}}."
   }
 }

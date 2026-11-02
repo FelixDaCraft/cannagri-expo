@@ -800,5 +800,27 @@
     "viewer": "Photo viewer",
     "photo": "photo",
     "position": "{index} of {total}"
+  },
+  "editions": {
+    "metaTitle": "Past editions",
+    "title": "Past editions",
+    "subtitle": "Programme, partners, exhibitors and photos from previous editions of Cann'Agri Expo.",
+    "empty": "No archived edition yet.",
+    "edition": "{year} edition",
+    "see": "Look back at this edition",
+    "notFound": "Edition not found",
+    "metaDescription": "Relive Cann'Agri Expo {year}: programme, partners, exhibitors and photos.",
+    "archived": "Past edition",
+    "nextEdition": "Discover the next edition",
+    "allEditions": "All editions",
+    "posterAlt": "Cann'Agri Expo {year} poster",
+    "program": "The programme",
+    "stands": "The {count} stands",
+    "sponsors": "Sponsors and partners",
+    "photos": "Photos",
+    "newTab": "(new tab)",
+    "noContent": "The content of this edition is not available.",
+    "recapTitle": "{year} at a glance",
+    "recap": "On {date} at {place}: {stands, plural, =0 {} one {# stand, } other {# stands, }}{events, plural, =0 {a day of meetings} one {# programme highlight} other {# programme highlights}}."
   }
 }
