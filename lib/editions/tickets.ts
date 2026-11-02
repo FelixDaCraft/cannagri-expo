@@ -87,3 +87,14 @@ export function parseTicketSelection(params: SelectionParams): TicketSelection {
   const flex = Math.min(readQuantity(params, 'flex'), MAX_TICKETS_PER_ORDER - standard)
   return { standard, flex }
 }
+
+/** « 15 € » pour un montant rond, « 12,50 € » sinon. */
+export function formatTicketPrice(amount: number): string {
+  const whole = Number.isInteger(amount)
+  return new Intl.NumberFormat('fr-FR', {
+    style: 'currency',
+    currency: 'EUR',
+    minimumFractionDigits: whole ? 0 : 2,
+    maximumFractionDigits: whole ? 0 : 2,
+  }).format(amount)
+}

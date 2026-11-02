@@ -1,6 +1,7 @@
 import {
   buildTicketItems,
   parseTicketSelection,
+  formatTicketPrice,
   TicketItemsError,
   MAX_TICKETS_PER_ORDER,
   MAX_TICKETS_PER_TYPE,
@@ -94,5 +95,16 @@ describe('parseTicketSelection', () => {
     expect(parseTicketSelection(params('standard=999')).standard).toBe(MAX_TICKETS_PER_TYPE)
     const both = parseTicketSelection(params(`standard=${MAX_TICKETS_PER_TYPE}&flex=${MAX_TICKETS_PER_TYPE}`))
     expect(both.standard + both.flex).toBeLessThanOrEqual(MAX_TICKETS_PER_ORDER)
+  })
+})
+
+describe('formatTicketPrice', () => {
+  it('affiche les montants ronds sans centimes', () => {
+    expect(formatTicketPrice(15).replace(/\s/g, ' ')).toBe('15 €')
+    expect(formatTicketPrice(1250).replace(/\s/g, ' ')).toBe('1 250 €')
+  })
+
+  it('garde les centimes quand il y en a', () => {
+    expect(formatTicketPrice(12.5).replace(/\s/g, ' ')).toBe('12,50 €')
   })
 })
