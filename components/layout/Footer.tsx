@@ -1,10 +1,12 @@
 'use client'
 
 import Link from 'next/link'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { siteConfig } from '@/config/site'
 import { useEdition } from '@/components/editions'
 import { shortHoursRange } from '@/lib/home/format'
+import { formatEditionDate } from '@/lib/editions/format'
+import { SocialIcons } from './SocialIcons'
 
 const linkClass =
   'inline-flex min-h-[44px] items-center text-cream/75 transition-colors hover:text-cream md:min-h-[32px]'
@@ -23,6 +25,7 @@ export function Footer() {
   const tNav = useTranslations('nav')
   const tFooter = useTranslations('footer')
   const edition = useEdition()
+  const locale = useLocale()
 
   const salonLinks = [
     { label: tNav('ourVision'), href: '/evenement' },
@@ -38,12 +41,6 @@ export function Footer() {
     { label: tFooter('legal.cgv'), href: '/cgv' },
   ]
 
-  const socials = [
-    { label: 'Instagram', href: siteConfig.social.instagram },
-    { label: 'Facebook', href: siteConfig.social.facebook },
-    { label: 'LinkedIn', href: siteConfig.social.linkedin },
-  ]
-
   return (
     <footer className="bg-forest-600 text-cream/75">
       <div className="container-custom pb-10 pt-14 md:pt-16">
@@ -55,6 +52,9 @@ export function Footer() {
               <span className="font-display text-[1.75rem] leading-none text-cream">{siteConfig.name}</span>
             </Link>
             <p className="mt-4 max-w-[24em] text-base leading-relaxed">{tFooter('description')}</p>
+            <div className="mt-5">
+              <SocialIcons labelTemplate={(network) => tFooter('socialLabel', { network })} />
+            </div>
           </div>
 
           <FooterColumn title={tFooter('salon')}>
@@ -70,7 +70,7 @@ export function Footer() {
           <FooterColumn title={tFooter('visit')}>
             <li className="py-1.5 md:py-1">{edition.venueDisplay}</li>
             <li className="py-1.5 md:py-1">
-              {edition.dateDisplay}
+              {formatEditionDate(edition.startAt, locale) ?? edition.dateDisplay}
               {edition.hoursLabel && <span className="block">{shortHoursRange(edition.hoursLabel)}</span>}
             </li>
             <li>
@@ -96,13 +96,6 @@ export function Footer() {
                 {tFooter('contactForm')}
               </Link>
             </li>
-            {socials.map((s) => (
-              <li key={s.label}>
-                <a href={s.href} target="_blank" rel="noopener noreferrer" className={linkClass}>
-                  {s.label}
-                </a>
-              </li>
-            ))}
           </FooterColumn>
         </div>
 

@@ -271,7 +271,7 @@
       "p3": "Wir sehen uns am {date} in {venue} zur 5. Ausgabe: Ausstellerstände, Vorträge und zum Abschluss die Preisverleihung des Platinum CBD Cup."
     },
     "stats": {
-      "title": "Die letzte Ausgabe in Zahlen",
+      "title": "Die Ausgabe 2026 in Zahlen",
       "exhibitors": "Aussteller",
       "visitors": "Besucher",
       "conferences": "Vorträge"
@@ -830,7 +830,8 @@
     "copyright": "© {year} Cann'Agri Expo. Alle Rechte vorbehalten.",
     "salon": "Die Messe",
     "visit": "Anreise",
-    "contactForm": "Kontaktformular"
+    "contactForm": "Kontaktformular",
+    "socialLabel": "Cann'Agri Expo auf {network} (neuer Tab)"
   },
   "errors": {
     "404": {

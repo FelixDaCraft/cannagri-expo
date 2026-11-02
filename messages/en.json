@@ -271,7 +271,7 @@
       "p3": "Join us on {date} at {venue} for the 5th edition: exhibitor stands, talks and, to close the day, the Platinum CBD Cup awards."
     },
     "stats": {
-      "title": "Our latest edition in numbers",
+      "title": "The 2026 edition in numbers",
       "exhibitors": "exhibitors",
       "visitors": "visitors",
       "conferences": "talks"
@@ -830,7 +830,8 @@
     "copyright": "© {year} Cann'Agri Expo. All rights reserved.",
     "salon": "The show",
     "visit": "Getting there",
-    "contactForm": "Contact form"
+    "contactForm": "Contact form",
+    "socialLabel": "Cann'Agri Expo on {network} (new tab)"
   },
   "errors": {
     "404": {
