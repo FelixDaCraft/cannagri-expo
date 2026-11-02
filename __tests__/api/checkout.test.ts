@@ -42,6 +42,11 @@ jest.mock('@/lib/rate-limit', () => ({
   RATE_LIMIT_PRESETS: { PAYMENT: { limit: 10, windowSeconds: 60 } },
 }))
 
+const mockNewsletter = jest.fn()
+jest.mock('@/lib/newsletter', () => ({
+  requestSubscriptionQuietly: (...args: unknown[]) => mockNewsletter(...args),
+}))
+
 process.env.VIVA_WALLET_MERCHANT_ID = 'merchant'
 process.env.VIVA_WALLET_API_KEY = 'key'
 
@@ -97,6 +102,24 @@ describe('POST /api/payment/checkout : billets sans compte', () => {
       { type: 'FLEX', price: 25, quantity: 1, attendeeName: 'Bruno Martin' },
     ])
     expect(mockCreateVivaWalletOrder).toHaveBeenCalledWith(expect.objectContaining({ amount: 4000 }))
+  })
+
+  it("enregistre la date et la version des CGV acceptées sur la commande", async () => {
+    const before = Date.now()
+    await checkout(guestOrder)
+    const { data } = mockPrisma.order.create.mock.calls[0][0]
+    expect(data.termsAcceptedAt).toBeInstanceOf(Date)
+    expect(data.termsAcceptedAt.getTime()).toBeGreaterThanOrEqual(before)
+    expect(data.termsVersion).toMatch(/^\d{4}-\d{2} https?:\/\/.+\/cgv$/)
+  })
+
+  it("n'inscrit à la newsletter que si la case facultative est cochée", async () => {
+    await checkout(guestOrder)
+    expect(mockNewsletter).not.toHaveBeenCalled()
+    await checkout({ ...guestOrder, customer: { ...guestOrder.customer, newsletter: 'true' } })
+    expect(mockNewsletter).not.toHaveBeenCalled()
+    await checkout({ ...guestOrder, customer: { ...guestOrder.customer, newsletter: true } })
+    expect(mockNewsletter).toHaveBeenCalledWith({ email: 'alice@example.fr', name: 'Alice Martin', source: 'billetterie' })
   })
 
   it('ignore un montant envoyé par le navigateur', async () => {

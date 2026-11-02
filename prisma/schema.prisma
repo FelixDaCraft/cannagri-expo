@@ -314,6 +314,10 @@ model Order {
   // Notes
   notes           String?      @db.Text
 
+  // Preuve d'acceptation des CGV (date et version des CGV acceptées au moment de la commande)
+  termsAcceptedAt DateTime?
+  termsVersion    String?
+
   tickets         Ticket[]
   stands          Stand[]
 
@@ -497,10 +501,21 @@ model NewsletterSubscriber {
   id            String    @id @default(cuid())
   email         String    @unique
   name          String?
-  isActive      Boolean   @default(true)
+  // Actif uniquement après confirmation (double opt-in) ; les inscrits d'avant 2026-11 restent actifs
+  isActive      Boolean   @default(false)
 
   subscribedAt  DateTime  @default(now())
   unsubscribedAt DateTime?
+
+  // Double opt-in : jeton envoyé par e-mail, valable 7 jours
+  confirmToken          String?   @unique
+  confirmTokenExpiresAt DateTime?
+  confirmedAt           DateTime?
+  // Désinscription en un clic (lien dans chaque e-mail)
+  unsubscribeToken      String    @unique
+  // Origine de l'inscription : footer, programme, billetterie, inscription
+  source                String?
+  locale                String?
 }
 
 // ============ CONTACT / DEMANDES ============

@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
 import { randomBytes } from 'crypto'
 import { prisma } from '@/lib/prisma'
+import { requestSubscriptionQuietly } from '@/lib/newsletter'
+import { normalizeEmail } from '@/lib/checkout'
 import { checkRateLimit, getClientIP, RATE_LIMIT_PRESETS } from '@/lib/rate-limit'
 import { sendVerificationEmail } from '@/lib/email'
 
@@ -109,21 +111,9 @@ export async function POST(request: NextRequest) {
       }
     })
 
-    // If newsletter opt-in, add to subscribers
-    if (newsletter) {
-      await prisma.newsletterSubscriber.upsert({
-        where: { email: email.toLowerCase() },
-        update: {
-          name,
-          isActive: true,
-          unsubscribedAt: null,
-        },
-        create: {
-          email: email.toLowerCase(),
-          name,
-          isActive: true,
-        }
-      })
+    // Newsletter : double opt-in, l'inscription n'est active qu'après le clic de confirmation
+    if (newsletter === true) {
+      await requestSubscriptionQuietly({ email: normalizeEmail(email), name, source: 'inscription' })
     }
 
     // Create verification token and send email

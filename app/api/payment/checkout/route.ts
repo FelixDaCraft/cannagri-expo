@@ -7,7 +7,8 @@ import { createVivaWalletOrder } from '@/lib/vivawallet'
 import { checkRateLimit, getClientIP, RATE_LIMIT_PRESETS } from '@/lib/rate-limit'
 import { getActiveEdition, isTicketingOpen } from '@/lib/editions'
 import { buildTicketItems, TicketItemsError, type TicketItem } from '@/lib/editions/tickets'
-import { parseVisitorCustomer, CheckoutValidationError, normalizeEmail } from '@/lib/checkout'
+import { requestSubscriptionQuietly } from '@/lib/newsletter'
+import { parseVisitorCustomer, CheckoutValidationError, normalizeEmail, termsAcceptance } from '@/lib/checkout'
 
 // Check if Viva Wallet is configured
 const isVivaWalletEnabled = !!(
@@ -51,6 +52,10 @@ export async function POST(request: NextRequest) {
     }
     const { type, items, promoCode: promoCodeInput } = body
     let { customer } = body
+    // Preuve d'acceptation des CGV : la case est vérifiée avant toute normalisation des coordonnées
+    const terms = termsAcceptance(customer?.acceptTerms)
+    // Case facultative « Recevoir les nouvelles du salon » (décochée par défaut)
+    const wantsNewsletter = type === 'VISITOR_TICKET' && customer?.newsletter === true
 
     if (type === 'VISITOR_TICKET') {
       // Billets : aucun compte requis, les coordonnées sont validées strictement
@@ -271,6 +276,7 @@ export async function POST(request: NextRequest) {
           companyAddress: customer.address || null,
           promoCodeId,
           discountAmount,
+          ...terms,
           // Store ticket details for webhook processing
           notes: type === 'VISITOR_TICKET' ? JSON.stringify(ticketItems) : null,
         }
@@ -359,6 +365,11 @@ export async function POST(request: NextRequest) {
         { error: 'Erreur lors de la création du paiement. Veuillez réessayer.' },
         { status: 500 }
       )
+    }
+
+    // Double opt-in : un e-mail de confirmation part, l'inscription n'est active qu'après le clic
+    if (wantsNewsletter) {
+      await requestSubscriptionQuietly({ email: customer.email, name: customer.name, source: 'billetterie' })
     }
 
     return NextResponse.json({

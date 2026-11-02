@@ -1,3 +1,4 @@
+import { randomBytes } from 'crypto'
 /**
  * Seed script for DEVELOPMENT environment
  * Creates complete test data for dev.cannagri-expo.eu
@@ -645,7 +646,12 @@ Découvrez nos innovations exclusives lors du salon, notamment notre nouvelle ga
     await prisma.newsletterSubscriber.upsert({
       where: { email: sub.email },
       update: {},
-      create: sub,
+      create: {
+        ...sub,
+        confirmedAt: sub.isActive ? new Date() : null,
+        unsubscribeToken: randomBytes(32).toString('base64url'),
+        source: 'autre',
+      },
     })
   }
   console.log(`   ✓ ${subscribers.length} newsletter subscribers created`)

@@ -496,26 +496,82 @@ L'équipe ${siteConfig.name}`
 }
 
 /**
- * Send newsletter subscription confirmation
+ * Newsletter : lien de confirmation (double opt-in) et lien de désinscription
  */
-export async function sendNewsletterConfirmation(email: string): Promise<void> {
+interface SendNewsletterConfirmationOptions {
+  to: string
+  confirmUrl: string
+  unsubscribeUrl: string
+}
+
+export async function sendNewsletterConfirmation(options: SendNewsletterConfirmationOptions): Promise<void> {
+  const { to, confirmUrl, unsubscribeUrl } = options
+  const unsubscribeApi = unsubscribeUrl.replace('/newsletter/desinscription?', '/api/newsletter/unsubscribe?')
   await transporter.sendMail({
     from: `"${siteConfig.name}" <${process.env.EMAIL_FROM}>`,
-    to: email,
-    subject: `Bienvenue dans la newsletter ${siteConfig.name}`,
+    replyTo: siteConfig.contact.email,
+    to,
+    subject: `Confirmez votre inscription aux nouvelles de ${siteConfig.name}`,
+    headers: {
+      'List-Unsubscribe': `<${unsubscribeApi}>, <mailto:${siteConfig.contact.email}?subject=D%C3%A9sinscription>`,
+      'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+    },
     html: `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h1 style="color: #1D2B3A;">Merci pour votre inscription !</h1>
-        <p>Vous êtes maintenant inscrit à la newsletter ${siteConfig.name}.</p>
-        <p>Vous recevrez en avant-première :</p>
-        <ul>
-          <li>Les actualités du salon</li>
-          <li>Les annonces des exposants</li>
-          <li>Les informations sur le programme</li>
-        </ul>
-        <p>À très bientôt !</p>
-        <p style="color: #C9A04A;">L'équipe ${siteConfig.name}</p>
-      </div>
+      <!DOCTYPE html>
+      <html lang="fr">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Confirmez votre inscription</title>
+      </head>
+      <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #F4EAD5;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; background-color: #FFFFFF;">
+          <tr>
+            <td style="background-color: #1D2B3A; padding: 30px; text-align: center;">
+              <h1 style="color: #FFFFFF; margin: 0; font-size: 28px;">${siteConfig.name}</h1>
+              <p style="color: #C9A04A; margin: 10px 0 0 0;">LES NOUVELLES DU SALON</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 40px 30px;">
+              <h2 style="color: #1D2B3A; margin: 0 0 20px 0;">Encore un clic</h2>
+              <p style="color: #333333; line-height: 1.6;">
+                Vous avez demandé à recevoir les nouvelles de ${siteConfig.name} : ouverture de la billetterie,
+                programme, exposants. Confirmez votre adresse pour finaliser l'inscription.
+              </p>
+              <div style="text-align: center; margin: 30px 0;">
+                <a href="${confirmUrl}" style="display: inline-block; background-color: #C9A04A; color: #1D2B3A; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold;">
+                  Confirmer mon inscription
+                </a>
+              </div>
+              <div style="background-color: #F4EAD5; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                <p style="color: #1D2B3A; margin: 0; font-size: 14px;">
+                  <strong>Ce lien est valable 7 jours.</strong><br>
+                  Si vous n'êtes pas à l'origine de cette demande, ignorez cet e-mail : vous ne recevrez rien.
+                </p>
+              </div>
+              <hr style="border: none; border-top: 1px solid #E8E2D1; margin: 30px 0;">
+              <p style="color: #666666; font-size: 12px;">
+                Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :<br>
+                <a href="${confirmUrl}" style="color: #1D2B3A; word-break: break-all;">${confirmUrl}</a>
+              </p>
+              <p style="color: #666666; font-size: 12px;">
+                Vous pourrez vous désinscrire à tout moment :
+                <a href="${unsubscribeUrl}" style="color: #1D2B3A;">se désinscrire</a>.
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td style="background-color: #1D2B3A; padding: 20px 30px; text-align: center;">
+              <p style="color: #C9A04A; margin: 0; font-size: 12px;">
+                ${siteConfig.name}<br>
+                ${siteConfig.contact.email}
+              </p>
+            </td>
+          </tr>
+        </table>
+      </body>
+      </html>
     `,
   })
 }

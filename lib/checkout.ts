@@ -1,3 +1,5 @@
+import { siteConfig } from '@/config/site'
+
 /**
  * Validation des coordonnées de l'acheteur d'une commande de billets.
  * Un compte n'est pas nécessaire : tout ce qui vient du navigateur est vérifié ici.
@@ -23,6 +25,11 @@ export interface VisitorCustomer {
 
 /** Nom du champ piège, invisible pour un humain : un robot qui le remplit est refusé. */
 export const HONEYPOT_FIELD = 'website'
+
+/** Adresse e-mail au format attendu (après normalisation) */
+export function isValidEmail(email: string): boolean {
+  return email.length <= MAX_EMAIL_LENGTH && EMAIL_PATTERN.test(email)
+}
 
 export function normalizeEmail(value: string): string {
   return value.trim().toLowerCase()
@@ -59,4 +66,20 @@ export function parseVisitorCustomer(raw: unknown): VisitorCustomer {
   }
 
   return { name, email, phone }
+}
+
+/**
+ * Version des CGV en vigueur (à changer à chaque modification de la page /cgv) et adresse
+ * de la page : enregistrées sur la commande comme preuve d'acceptation.
+ */
+export const CGV_VERSION = '2025-12'
+export const CGV_URL = `${siteConfig.url.replace(/\/$/, '')}/cgv`
+
+/** Champs de la commande qui prouvent l'acceptation des CGV (vide si elles n'ont pas été acceptées) */
+export function termsAcceptance(
+  accepted: unknown,
+  now: Date = new Date()
+): { termsAcceptedAt?: Date; termsVersion?: string } {
+  if (accepted !== true) return {}
+  return { termsAcceptedAt: now, termsVersion: `${CGV_VERSION} ${CGV_URL}` }
 }

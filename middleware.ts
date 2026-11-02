@@ -28,6 +28,9 @@ const PROTECTED_API_ROUTES = [
 // Routes that receive external webhooks (exempt from origin check)
 const WEBHOOK_ROUTES = [
   '/api/payment/webhook',
+  // Désinscription en un clic envoyée par les messageries (RFC 8058) : sans en-tête Origin,
+  // protégée par son jeton secret
+  '/api/newsletter/unsubscribe',
 ]
 
 /**

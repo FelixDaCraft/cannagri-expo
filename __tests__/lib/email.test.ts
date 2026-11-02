@@ -131,31 +131,38 @@ describe('sendTicketEmail', () => {
 })
 
 describe('sendNewsletterConfirmation', () => {
+  const options = {
+    to: 'subscriber@example.com',
+    confirmUrl: 'https://cannagri-expo.eu/newsletter/confirmer?token=conf',
+    unsubscribeUrl: 'https://cannagri-expo.eu/newsletter/desinscription?token=unsub',
+  }
+
   beforeEach(() => {
     jest.clearAllMocks()
   })
 
-  it('should send newsletter confirmation email', async () => {
-    await sendNewsletterConfirmation('subscriber@example.com')
+  it('envoie le lien de confirmation (double opt-in)', async () => {
+    await sendNewsletterConfirmation(options)
 
     expect(mockSendMail).toHaveBeenCalledTimes(1)
     const callArgs = mockSendMail.mock.calls[0][0]
     expect(callArgs.to).toBe('subscriber@example.com')
-    expect(callArgs.subject).toContain('newsletter')
+    expect(callArgs.subject).toContain('Confirmez')
+    expect(callArgs.html).toContain(options.confirmUrl)
   })
 
-  it('should include welcome message in HTML', async () => {
-    await sendNewsletterConfirmation('subscriber@example.com')
+  it('propose la désinscription dans le message et dans les en-têtes (un clic)', async () => {
+    await sendNewsletterConfirmation(options)
 
     const callArgs = mockSendMail.mock.calls[0][0]
-    expect(callArgs.html).toContain('Merci pour votre inscription')
+    expect(callArgs.html).toContain(options.unsubscribeUrl)
+    expect(callArgs.headers['List-Unsubscribe']).toContain('/api/newsletter/unsubscribe?token=unsub')
+    expect(callArgs.headers['List-Unsubscribe-Post']).toBe('List-Unsubscribe=One-Click')
   })
 
-  it('should include information about updates', async () => {
-    await sendNewsletterConfirmation('subscriber@example.com')
-
-    const callArgs = mockSendMail.mock.calls[0][0]
-    expect(callArgs.html).toContain('actualités')
+  it('répond à l’adresse de contact du salon', async () => {
+    await sendNewsletterConfirmation(options)
+    expect(mockSendMail.mock.calls[0][0].replyTo).toBe('hello@cannagri-expo.eu')
   })
 })
 

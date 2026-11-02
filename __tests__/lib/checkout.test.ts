@@ -1,4 +1,4 @@
-import { parseVisitorCustomer, CheckoutValidationError } from '@/lib/checkout'
+import { parseVisitorCustomer, CheckoutValidationError, termsAcceptance, CGV_VERSION, CGV_URL } from '@/lib/checkout'
 
 const valid = { name: 'Alice Martin', email: 'Alice@Example.fr', acceptTerms: true }
 
@@ -36,5 +36,21 @@ describe('parseVisitorCustomer', () => {
 
   it('refuse un formulaire dont le champ piège est rempli (robot)', () => {
     expect(() => parseVisitorCustomer({ ...valid, website: 'http://spam.example' })).toThrow(CheckoutValidationError)
+  })
+})
+
+describe('termsAcceptance', () => {
+  it('horodate l’acceptation et note la version et l’adresse des CGV', () => {
+    const now = new Date('2027-01-15T10:00:00Z')
+    expect(termsAcceptance(true, now)).toEqual({
+      termsAcceptedAt: now,
+      termsVersion: `${CGV_VERSION} ${CGV_URL}`,
+    })
+  })
+
+  it('ne renvoie rien sans acceptation explicite', () => {
+    expect(termsAcceptance(false)).toEqual({})
+    expect(termsAcceptance(undefined)).toEqual({})
+    expect(termsAcceptance('true')).toEqual({})
   })
 })
