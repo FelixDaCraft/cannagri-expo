@@ -501,38 +501,32 @@
     }
   },
   "programme": {
+    "metaTitle": "Programm",
     "title": "Programm",
-    "subtitle": "Ein Tag voller Konferenzen, Workshops und Networking",
+    "subtitle": "Vorträge, Gesprächsrunden und die Preisverleihung des Platinum CBD Cup.",
     "types": {
-      "all": "Alle",
-      "CONFERENCE": "Konferenz",
+      "CONFERENCE": "Vortrag",
       "WORKSHOP": "Workshop",
       "CEREMONY": "Zeremonie",
       "BREAK": "Pause",
       "NETWORKING": "Networking"
     },
-    "filters": {
-      "all": "Alle",
-      "conference": "Konferenz",
-      "workshop": "Workshop",
-      "ceremony": "Zeremonie"
-    },
-    "platinumCup": {
-      "title": "Platinum CBD Cup",
-      "description": "Der Referenzwettbewerb, der die besten CBD-Sorten des Jahres auszeichnet. Nehmen Sie an der Verkostung teil und stimmen Sie für Ihre Favoriten!"
-    },
-    "emptyState": {
-      "title": "Programm kommt bald",
-      "description": "Das detaillierte Programm wird bald verfügbar sein. Besuchen Sie uns bald wieder!",
-      "newsletterHint": "Abonnieren Sie unseren Newsletter, um über die Veröffentlichung des Programms informiert zu werden."
-    },
     "badges": {
-      "highlighted": "Highlight-Event",
+      "highlighted": "Höhepunkt",
       "mustSee": "Nicht verpassen"
     },
+    "emptyState": {
+      "title": "In Vorbereitung",
+      "description": "Die Vorträge und Gesprächsrunden {year} werden gerade geplant. Hier der bereits bekannte Ablauf des Tages; die Details werden hier veröffentlicht, sobald sie feststehen.",
+      "previous": "Programm {year} ansehen",
+      "knownTitle": "Ablauf des Tages"
+    },
+    "stayInformed": {
+      "title": "Auf dem Laufenden bleiben",
+      "text": "Erhalten Sie eine E-Mail, sobald das vollständige Programm veröffentlicht ist."
+    },
     "footer": {
-      "disclaimer": "Das Programm kann Änderungen unterliegen.",
-      "downloadPdf": "Vollständiges Programm (PDF) - Bald"
+      "disclaimer": "Änderungen am Programm sind möglich."
     }
   },
   "auth": {

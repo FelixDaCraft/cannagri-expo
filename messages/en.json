@@ -502,38 +502,32 @@
     }
   },
   "programme": {
-    "title": "Program",
-    "subtitle": "A day full of conferences, workshops and networking",
+    "metaTitle": "Programme",
+    "title": "Programme",
+    "subtitle": "Talks, round tables and the Platinum CBD Cup awards.",
     "types": {
-      "all": "All",
-      "CONFERENCE": "Conference",
+      "CONFERENCE": "Talk",
       "WORKSHOP": "Workshop",
       "CEREMONY": "Ceremony",
       "BREAK": "Break",
       "NETWORKING": "Networking"
     },
-    "filters": {
-      "all": "All",
-      "conference": "Conference",
-      "workshop": "Workshop",
-      "ceremony": "Ceremony"
-    },
-    "platinumCup": {
-      "title": "Platinum CBD Cup",
-      "description": "The reference competition that rewards the best CBD varieties of the year. Participate in the tasting and vote for your favorites!"
+    "badges": {
+      "highlighted": "Highlight",
+      "mustSee": "Not to be missed"
     },
     "emptyState": {
-      "title": "Program coming soon",
-      "description": "The detailed program will be available soon. Come back to see us soon!",
-      "newsletterHint": "Subscribe to our newsletter to be informed when the program is published."
+      "title": "In the works",
+      "description": "The {year} talks and round tables are being scheduled. Here is what we already know about the day; the full details will be published here as soon as they are confirmed.",
+      "previous": "See the {year} programme",
+      "knownTitle": "Outline of the day"
     },
-    "badges": {
-      "highlighted": "Featured event",
-      "mustSee": "Must see"
+    "stayInformed": {
+      "title": "Stay informed",
+      "text": "Get an email as soon as the full programme is published."
     },
     "footer": {
-      "disclaimer": "The program may be subject to changes.",
-      "downloadPdf": "Full program (PDF) - Coming soon"
+      "disclaimer": "The programme may still change."
     }
   },
   "auth": {

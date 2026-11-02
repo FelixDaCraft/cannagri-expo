@@ -502,38 +502,32 @@
     }
   },
   "programme": {
+    "metaTitle": "Programme",
     "title": "Programme",
-    "subtitle": "Une journée riche en conférences, ateliers et networking",
+    "subtitle": "Conférences, tables rondes et remise des prix de la Platinum CBD Cup.",
     "types": {
-      "all": "Tous",
       "CONFERENCE": "Conférence",
       "WORKSHOP": "Atelier",
       "CEREMONY": "Cérémonie",
       "BREAK": "Pause",
-      "NETWORKING": "Networking"
-    },
-    "filters": {
-      "all": "Tous",
-      "conference": "Conférence",
-      "workshop": "Atelier",
-      "ceremony": "Cérémonie"
-    },
-    "platinumCup": {
-      "title": "Platinum CBD Cup",
-      "description": "Le concours de référence qui récompense les meilleures variétés CBD de l'année. Participez à la dégustation et votez pour vos favoris !"
-    },
-    "emptyState": {
-      "title": "Programme à venir",
-      "description": "Le programme détaillé de l'événement sera bientôt disponible. Revenez nous voir prochainement !",
-      "newsletterHint": "Inscrivez-vous à notre newsletter pour être informé de la publication du programme."
+      "NETWORKING": "Rencontres"
     },
     "badges": {
-      "highlighted": "Événement phare",
+      "highlighted": "Temps fort",
       "mustSee": "À ne pas manquer"
     },
+    "emptyState": {
+      "title": "En préparation",
+      "description": "Les conférences et tables rondes de {year} sont en cours de programmation. Voici le déroulé déjà connu de la journée ; le détail sera publié ici dès qu'il sera arrêté.",
+      "previous": "Voir le programme de {year}",
+      "knownTitle": "Déroulé de la journée"
+    },
+    "stayInformed": {
+      "title": "Restez informé",
+      "text": "Recevez un e-mail dès que le programme complet est publié."
+    },
     "footer": {
-      "disclaimer": "Le programme peut être sujet à modifications.",
-      "downloadPdf": "Programme complet (PDF) - Bientôt"
+      "disclaimer": "Le programme peut encore évoluer."
     }
   },
   "auth": {

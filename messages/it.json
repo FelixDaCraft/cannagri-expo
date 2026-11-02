@@ -501,38 +501,32 @@
     }
   },
   "programme": {
+    "metaTitle": "Programma",
     "title": "Programma",
-    "subtitle": "Una giornata ricca di conferenze, workshop e networking",
+    "subtitle": "Conferenze, tavole rotonde e premiazione della Platinum CBD Cup.",
     "types": {
-      "all": "Tutti",
       "CONFERENCE": "Conferenza",
-      "WORKSHOP": "Workshop",
+      "WORKSHOP": "Laboratorio",
       "CEREMONY": "Cerimonia",
       "BREAK": "Pausa",
       "NETWORKING": "Networking"
     },
-    "filters": {
-      "all": "Tutti",
-      "conference": "Conferenza",
-      "workshop": "Workshop",
-      "ceremony": "Cerimonia"
-    },
-    "platinumCup": {
-      "title": "Platinum CBD Cup",
-      "description": "Il concorso di riferimento che premia le migliori varietà di CBD dell'anno. Partecipa alla degustazione e vota per i tuoi preferiti!"
-    },
-    "emptyState": {
-      "title": "Programma in arrivo",
-      "description": "Il programma dettagliato sarà disponibile presto. Torna a trovarci presto!",
-      "newsletterHint": "Iscriviti alla nostra newsletter per essere informato quando il programma sarà pubblicato."
-    },
     "badges": {
-      "highlighted": "Evento in evidenza",
+      "highlighted": "Momento clou",
       "mustSee": "Da non perdere"
     },
+    "emptyState": {
+      "title": "In preparazione",
+      "description": "Le conferenze e le tavole rotonde del {year} sono in fase di programmazione. Ecco lo svolgimento già noto della giornata; i dettagli saranno pubblicati qui appena definiti.",
+      "previous": "Vedi il programma del {year}",
+      "knownTitle": "Svolgimento della giornata"
+    },
+    "stayInformed": {
+      "title": "Restate aggiornati",
+      "text": "Ricevete un'e-mail non appena il programma completo sarà pubblicato."
+    },
     "footer": {
-      "disclaimer": "Il programma potrebbe essere soggetto a modifiche.",
-      "downloadPdf": "Programma completo (PDF) - Presto"
+      "disclaimer": "Il programma può ancora cambiare."
     }
   },
   "auth": {
