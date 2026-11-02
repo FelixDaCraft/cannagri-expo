@@ -312,22 +312,48 @@
     }
   },
   "practicalInfo": {
-    "title": "Infos Pratiques",
-    "subtitle": "Tout ce que vous devez savoir pour préparer votre visite à Cann'Agri Expo",
-    "dateLocation": {
-      "title": "Date & Lieu",
-      "date": "Date",
-      "location": "Lieu"
-    },
-    "access": {
-      "title": "Comment venir ?",
-      "transport": "Transports en commun",
-      "parking": "Parking",
-      "accessibility": "Accessibilité"
+    "metaTitle": "Infos pratiques",
+    "title": "Infos pratiques",
+    "subtitle": "Horaires, prix, accès, parking : tout pour préparer votre venue.",
+    "when": "Quand",
+    "hours": "Horaires",
+    "where": "Où",
+    "tba": "À venir",
+    "newTab": "(nouvel onglet)",
+    "venuePhotoAlt": "La façade de L'Agronaute à Nantes, avec le nom du lieu peint en vert sur le bardage",
+    "blocks": {
+      "hoursPrices": {
+        "title": "Horaires et prix",
+        "schedule": "Le {date}, {hours}.",
+        "scheduleTba": "Date et horaires à venir.",
+        "standard": "Billet Standard",
+        "flex": "Billet Flex",
+        "flexNote": "(mêmes accès, dont {amount} de soutien à l'association)",
+        "terms": "Billets nominatifs, non remboursables."
+      },
+      "access": {
+        "title": "Accès",
+        "directions": "Calculer mon itinéraire"
+      },
+      "parking": {
+        "title": "Parking",
+        "tba": "Informations sur le stationnement à venir."
+      },
+      "onSite": {
+        "title": "Sur place",
+        "stands": "Les stands des exposants toute la journée",
+        "talks": "Des conférences et tables rondes",
+        "food": "Des food trucks pour se restaurer",
+        "cup": "En clôture, la remise des prix de la Platinum CBD Cup"
+      },
+      "accessibility": {
+        "title": "Accessibilité",
+        "tba": "Informations sur l'accessibilité à venir.",
+        "contact": "Un besoin particulier ? Écrivez-nous avant votre venue, nous vous répondrons."
+      }
     },
     "tickets": {
-      "title": "Billetterie",
-      "buyButton": "Acheter mes billets"
+      "buyButton": "Acheter mon billet"
     },
     "contact": {
       "title": "Contact"
@@ -337,8 +363,8 @@
     },
     "professional": {
       "title": "Vous êtes professionnel ?",
-      "description": "Réservez votre stand et exposez vos produits lors du salon.",
-      "button": "Devenir exposant"
+      "description": "Stands et partenariats : demandez la plaquette avec les offres et les tarifs.",
+      "button": "Demander la plaquette"
     }
   },
   "contact": {

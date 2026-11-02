@@ -311,33 +311,59 @@
     }
   },
   "practicalInfo": {
-    "title": "Informazioni Pratiche",
-    "subtitle": "Tutto quello che devi sapere per preparare la tua visita a Cann'Agri Expo",
-    "dateLocation": {
-      "title": "Data & Luogo",
-      "date": "Data",
-      "location": "Luogo"
-    },
-    "access": {
-      "title": "Come arrivare?",
-      "transport": "Trasporti pubblici",
-      "parking": "Parcheggio",
-      "accessibility": "Accessibilità"
+    "metaTitle": "Informazioni pratiche",
+    "title": "Info pratiche",
+    "subtitle": "Orari, prezzi, come arrivare, parcheggio: tutto per preparare la vostra visita.",
+    "when": "Quando",
+    "hours": "Orari",
+    "where": "Dove",
+    "tba": "Da definire",
+    "newTab": "(nuova scheda)",
+    "venuePhotoAlt": "La facciata de L'Agronaute a Nantes, con il nome del luogo dipinto in verde sul rivestimento",
+    "blocks": {
+      "hoursPrices": {
+        "title": "Orari e prezzi",
+        "schedule": "Il {date}, {hours}.",
+        "scheduleTba": "Data e orari da definire.",
+        "standard": "Biglietto Standard",
+        "flex": "Biglietto Flex",
+        "flexNote": "(stesso accesso, di cui {amount} a sostegno dell'associazione)",
+        "terms": "Biglietti nominativi, non rimborsabili."
+      },
+      "access": {
+        "title": "Come arrivare",
+        "directions": "Calcola il percorso"
+      },
+      "parking": {
+        "title": "Parcheggio",
+        "tba": "Informazioni sul parcheggio in arrivo."
+      },
+      "onSite": {
+        "title": "Sul posto",
+        "stands": "Gli stand degli espositori per tutta la giornata",
+        "talks": "Conferenze e tavole rotonde",
+        "food": "Food truck per mangiare",
+        "cup": "In chiusura, la premiazione della Platinum CBD Cup"
+      },
+      "accessibility": {
+        "title": "Accessibilità",
+        "tba": "Informazioni sull'accessibilità in arrivo.",
+        "contact": "Esigenze particolari? Scriveteci prima della visita, vi risponderemo."
+      }
     },
     "tickets": {
-      "title": "Biglietteria",
-      "buyButton": "Acquista i miei biglietti"
+      "buyButton": "Acquista il biglietto"
     },
     "contact": {
-      "title": "Contatto"
+      "title": "Contatti"
     },
     "social": {
-      "title": "Seguici"
+      "title": "Seguiteci"
     },
     "professional": {
-      "title": "Sei un professionista?",
-      "description": "Prenota il tuo stand ed esponi i tuoi prodotti alla fiera.",
-      "button": "Diventa espositore"
+      "title": "Siete professionisti?",
+      "description": "Stand e partnership: richiedete la brochure con le offerte e le tariffe.",
+      "button": "Richiedi la brochure"
     }
   },
   "contact": {

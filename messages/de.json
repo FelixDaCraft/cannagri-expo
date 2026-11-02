@@ -311,22 +311,48 @@
     }
   },
   "practicalInfo": {
-    "title": "Praktische Informationen",
-    "subtitle": "Alles, was Sie wissen müssen, um Ihren Besuch bei Cann'Agri Expo vorzubereiten",
-    "dateLocation": {
-      "title": "Datum & Ort",
-      "date": "Datum",
-      "location": "Ort"
-    },
-    "access": {
-      "title": "Anfahrt",
-      "transport": "Öffentliche Verkehrsmittel",
-      "parking": "Parkplatz",
-      "accessibility": "Barrierefreiheit"
+    "metaTitle": "Praktische Infos",
+    "title": "Praktische Infos",
+    "subtitle": "Öffnungszeiten, Preise, Anreise, Parken: alles, um Ihren Besuch vorzubereiten.",
+    "when": "Wann",
+    "hours": "Öffnungszeiten",
+    "where": "Wo",
+    "tba": "Folgt",
+    "newTab": "(neuer Tab)",
+    "venuePhotoAlt": "Die Fassade von L'Agronaute in Nantes, mit dem Namen des Ortes in Grün auf die Verkleidung gemalt",
+    "blocks": {
+      "hoursPrices": {
+        "title": "Öffnungszeiten und Preise",
+        "schedule": "Am {date}, {hours}.",
+        "scheduleTba": "Datum und Öffnungszeiten folgen.",
+        "standard": "Standard-Ticket",
+        "flex": "Flex-Ticket",
+        "flexNote": "(gleicher Zugang, davon {amount} zur Unterstützung des Vereins)",
+        "terms": "Tickets sind personalisiert und nicht erstattungsfähig."
+      },
+      "access": {
+        "title": "Anreise",
+        "directions": "Route berechnen"
+      },
+      "parking": {
+        "title": "Parken",
+        "tba": "Informationen zum Parken folgen."
+      },
+      "onSite": {
+        "title": "Vor Ort",
+        "stands": "Ausstellerstände den ganzen Tag",
+        "talks": "Vorträge und Gesprächsrunden",
+        "food": "Foodtrucks zur Verpflegung",
+        "cup": "Zum Abschluss die Preisverleihung des Platinum CBD Cup"
+      },
+      "accessibility": {
+        "title": "Barrierefreiheit",
+        "tba": "Informationen zur Barrierefreiheit folgen.",
+        "contact": "Besondere Bedürfnisse? Schreiben Sie uns vor Ihrem Besuch, wir antworten Ihnen."
+      }
     },
     "tickets": {
-      "title": "Eintrittskarten",
-      "buyButton": "Meine Tickets kaufen"
+      "buyButton": "Ticket kaufen"
     },
     "contact": {
       "title": "Kontakt"
@@ -335,9 +361,9 @@
       "title": "Folgen Sie uns"
     },
     "professional": {
-      "title": "Sind Sie ein Profi?",
-      "description": "Buchen Sie Ihren Stand und stellen Sie Ihre Produkte auf der Messe aus.",
-      "button": "Aussteller werden"
+      "title": "Sie sind Fachbesucher oder Aussteller?",
+      "description": "Stände und Partnerschaften: Fordern Sie die Broschüre mit Angeboten und Preisen an.",
+      "button": "Broschüre anfordern"
     }
   },
   "contact": {

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, type ElementType, type ReactNode, type CSSProperties } from 'react'
+import { useEffect, useRef, type ElementType, type ReactNode, type CSSProperties, type HTMLAttributes } from 'react'
 
 declare global {
   interface Window {
@@ -8,7 +8,7 @@ declare global {
   }
 }
 
-interface RevealProps {
+interface RevealProps extends Omit<HTMLAttributes<HTMLElement>, 'children' | 'className' | 'style'> {
   children: ReactNode
   /** Décalage en millisecondes, pour faire entrer les éléments d'un groupe l'un après l'autre */
   delay?: number
@@ -22,7 +22,7 @@ interface RevealProps {
  * Le contenu est rendu visible côté serveur : seul l'attribut posé sur <html> par
  * `revealBootScript` le masque, en attendant que l'élément entre à l'écran.
  */
-export function Reveal({ children, delay = 0, as: Tag = 'div', className, style }: RevealProps) {
+export function Reveal({ children, delay = 0, as: Tag = 'div', className, style, ...rest }: RevealProps) {
   const ref = useRef<HTMLElement>(null)
 
   useEffect(() => {
@@ -50,6 +50,7 @@ export function Reveal({ children, delay = 0, as: Tag = 'div', className, style 
 
   return (
     <Tag
+      {...rest}
       ref={ref}
       data-reveal=""
       className={className}

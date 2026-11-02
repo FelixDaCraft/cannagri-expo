@@ -312,22 +312,48 @@
     }
   },
   "practicalInfo": {
-    "title": "Practical Information",
-    "subtitle": "Everything you need to know to prepare your visit to Cann'Agri Expo",
-    "dateLocation": {
-      "title": "Date & Venue",
-      "date": "Date",
-      "location": "Venue"
-    },
-    "access": {
-      "title": "How to get there?",
-      "transport": "Public transport",
-      "parking": "Parking",
-      "accessibility": "Accessibility"
+    "metaTitle": "Practical info",
+    "title": "Practical info",
+    "subtitle": "Opening hours, prices, getting there, parking: everything you need to plan your visit.",
+    "when": "When",
+    "hours": "Opening hours",
+    "where": "Where",
+    "tba": "To be announced",
+    "newTab": "(new tab)",
+    "venuePhotoAlt": "The front of L'Agronaute in Nantes, with the venue's name painted in green on the cladding",
+    "blocks": {
+      "hoursPrices": {
+        "title": "Opening hours and prices",
+        "schedule": "On {date}, {hours}.",
+        "scheduleTba": "Date and opening hours to be announced.",
+        "standard": "Standard ticket",
+        "flex": "Flex ticket",
+        "flexNote": "(same access, including {amount} to support the association)",
+        "terms": "Tickets are personal and non-refundable."
+      },
+      "access": {
+        "title": "Getting there",
+        "directions": "Get directions"
+      },
+      "parking": {
+        "title": "Parking",
+        "tba": "Parking information to be announced."
+      },
+      "onSite": {
+        "title": "On site",
+        "stands": "Exhibitor stands all day long",
+        "talks": "Talks and round tables",
+        "food": "Food trucks for lunch and snacks",
+        "cup": "To close the day, the Platinum CBD Cup awards"
+      },
+      "accessibility": {
+        "title": "Accessibility",
+        "tba": "Accessibility information to be announced.",
+        "contact": "Any specific needs? Write to us before your visit and we will get back to you."
+      }
     },
     "tickets": {
-      "title": "Tickets",
-      "buyButton": "Buy my tickets"
+      "buyButton": "Buy my ticket"
     },
     "contact": {
       "title": "Contact"
@@ -337,8 +363,8 @@
     },
     "professional": {
       "title": "Are you a professional?",
-      "description": "Book your stand and exhibit your products at the exhibition.",
-      "button": "Become an exhibitor"
+      "description": "Stands and partnerships: request the brochure with our offers and rates.",
+      "button": "Request the brochure"
     }
   },
   "contact": {

@@ -135,3 +135,14 @@ export function toEditionSummary(edition: Edition): EditionSummary {
     city: edition.city,
   }
 }
+
+/**
+ * Adresse complète sans doublon de ville : « 2 Rue du Sénégal, 44200 Nantes » et non
+ * « …, 44200 Nantes, Nantes » (constat n°15).
+ */
+export function formatVenueAddress(address: string | null, city: string | null): string | null {
+  const parts = [address?.trim(), city?.trim()].filter((part): part is string => Boolean(part))
+  if (parts.length < 2) return parts[0] ?? null
+  const [street, town] = parts
+  return street.toLocaleLowerCase('fr').includes(town.toLocaleLowerCase('fr')) ? street : `${street}, ${town}`
+}

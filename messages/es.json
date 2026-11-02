@@ -311,33 +311,59 @@
     }
   },
   "practicalInfo": {
-    "title": "Información Práctica",
-    "subtitle": "Todo lo que necesitas saber para preparar tu visita a Cann'Agri Expo",
-    "dateLocation": {
-      "title": "Fecha y Lugar",
-      "date": "Fecha",
-      "location": "Lugar"
-    },
-    "access": {
-      "title": "¿Cómo llegar?",
-      "transport": "Transporte público",
-      "parking": "Aparcamiento",
-      "accessibility": "Accesibilidad"
+    "metaTitle": "Información práctica",
+    "title": "Info práctica",
+    "subtitle": "Horarios, precios, cómo llegar, aparcamiento: todo para preparar su visita.",
+    "when": "Cuándo",
+    "hours": "Horario",
+    "where": "Dónde",
+    "tba": "Por anunciar",
+    "newTab": "(nueva pestaña)",
+    "venuePhotoAlt": "La fachada de L'Agronaute en Nantes, con el nombre del lugar pintado en verde sobre el revestimiento",
+    "blocks": {
+      "hoursPrices": {
+        "title": "Horario y precios",
+        "schedule": "El {date}, {hours}.",
+        "scheduleTba": "Fecha y horario por anunciar.",
+        "standard": "Entrada Standard",
+        "flex": "Entrada Flex",
+        "flexNote": "(mismo acceso, con {amount} de apoyo a la asociación)",
+        "terms": "Entradas nominativas y no reembolsables."
+      },
+      "access": {
+        "title": "Cómo llegar",
+        "directions": "Calcular mi ruta"
+      },
+      "parking": {
+        "title": "Aparcamiento",
+        "tba": "Información sobre el aparcamiento por anunciar."
+      },
+      "onSite": {
+        "title": "En el lugar",
+        "stands": "Los stands de los expositores durante todo el día",
+        "talks": "Conferencias y mesas redondas",
+        "food": "Food trucks para comer",
+        "cup": "Como cierre, la entrega de premios de la Platinum CBD Cup"
+      },
+      "accessibility": {
+        "title": "Accesibilidad",
+        "tba": "Información sobre accesibilidad por anunciar.",
+        "contact": "¿Alguna necesidad especial? Escríbanos antes de su visita y le responderemos."
+      }
     },
     "tickets": {
-      "title": "Taquilla",
-      "buyButton": "Comprar mis entradas"
+      "buyButton": "Comprar mi entrada"
     },
     "contact": {
       "title": "Contacto"
     },
     "social": {
-      "title": "Síguenos"
+      "title": "Síganos"
     },
     "professional": {
-      "title": "¿Eres profesional?",
-      "description": "Reserva tu stand y expón tus productos en la feria.",
-      "button": "Convertirse en expositor"
+      "title": "¿Es usted profesional?",
+      "description": "Stands y patrocinios: solicite el dossier con las ofertas y las tarifas.",
+      "button": "Solicitar el dossier"
     }
   },
   "contact": {
