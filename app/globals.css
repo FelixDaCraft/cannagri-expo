@@ -30,6 +30,13 @@
     @apply bg-cream text-body font-body;
   }
 
+  /* Contour de focus du site : or cerclé de bleu nuit, visible sur fond crème comme sur bleu nuit */
+  :focus-visible {
+    outline: 3px solid #C9A04A;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 2px #1D2B3A;
+  }
+
   h1, h2, h3, h4, h5, h6 {
     @apply font-heading text-heading;
   }
@@ -107,6 +114,42 @@
   }
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+}
+
+@layer components {
+  /* Lien « Aller au contenu » : invisible jusqu'au premier appui sur Tab */
+  .skip-link {
+    @apply fixed left-4 top-2 z-[60] -translate-y-24 rounded-[10px] bg-mint px-4 py-3 font-condensed text-lg font-semibold text-forest;
+  }
+  .skip-link:focus {
+    @apply translate-y-0;
+  }
+
+  /* Lien texte souligné (« Infos pratiques », « Voir toute la galerie ») */
+  .link-underline {
+    @apply inline-flex min-h-[44px] items-center font-condensed text-xl font-medium leading-none underline decoration-1 underline-offset-[6px] transition-colors hover:decoration-mint;
+  }
+}
+
+/*
+ * Apparitions au défilement (composant Reveal). Le contenu n'est masqué que si
+ * l'attribut data-reveal-on a été posé sur <html> par le script de démarrage.
+ */
+[data-reveal] {
+  transition: opacity 500ms cubic-bezier(.22, 1, .36, 1), transform 500ms cubic-bezier(.22, 1, .36, 1);
+}
+html[data-reveal-on] [data-reveal]:not([data-shown]) {
+  opacity: 0;
+  transform: translateY(14px);
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    transition: none;
+  }
+  html[data-reveal-on] [data-reveal]:not([data-shown]) {
+    opacity: 1;
+    transform: none;
   }
 }
 

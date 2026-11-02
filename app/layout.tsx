@@ -1,18 +1,38 @@
 import type { Metadata } from 'next'
-import { Open_Sans, Roboto_Slab } from 'next/font/google'
+import { Barlow, Barlow_Condensed, Chewy, Modak } from 'next/font/google'
 import { siteConfig } from '@/config/site'
 import { Providers } from '@/components/Providers'
+import { getLocale } from 'next-intl/server'
+import { revealBootScript } from '@/lib/reveal'
 import './globals.css'
 
-const openSans = Open_Sans({
+// Polices de l'affiche des 5 ans : Modak (logo-titre et grands titres), Chewy (une annotation
+// par écran), Barlow Condensed (infos, surtitres, boutons) et Barlow (texte courant)
+const modak = Modak({
+  weight: '400',
   subsets: ['latin'],
-  variable: '--font-open-sans',
+  variable: '--font-modak',
   display: 'swap',
 })
 
-const robotoSlab = Roboto_Slab({
+const chewy = Chewy({
+  weight: '400',
   subsets: ['latin'],
-  variable: '--font-roboto-slab',
+  variable: '--font-chewy',
+  display: 'swap',
+})
+
+const barlowCondensed = Barlow_Condensed({
+  weight: ['500', '600', '700'],
+  subsets: ['latin'],
+  variable: '--font-barlow-condensed',
+  display: 'swap',
+})
+
+const barlow = Barlow({
+  weight: ['400', '500', '600'],
+  subsets: ['latin'],
+  variable: '--font-barlow',
   display: 'swap',
 })
 
@@ -26,8 +46,8 @@ export const metadata: Metadata = {
   keywords: siteConfig.seo.keywords,
   authors: [{ name: siteConfig.name }],
   icons: {
-    icon: '/images/logo.PNG',
-    shortcut: '/images/logo.PNG',
+    icon: '/images/logo-96.png',
+    shortcut: '/images/logo-96.png',
     apple: '/images/logo.PNG',
   },
   openGraph: {
@@ -49,13 +69,23 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  // Langue déclarée = langue affichée (lecteurs d'écran, constat n°33)
+  const locale = await getLocale()
   return (
-    <html lang="fr" className={`${openSans.variable} ${robotoSlab.variable}`}>
+    <html
+      lang={locale}
+      className={`${modak.variable} ${chewy.variable} ${barlowCondensed.variable} ${barlow.variable}`}
+      suppressHydrationWarning
+    >
+      <head>
+        {/* Apparitions au défilement : activées avant l'affichage pour éviter tout clignotement */}
+        <script dangerouslySetInnerHTML={{ __html: revealBootScript }} />
+      </head>
       <body className="min-h-screen flex flex-col">
         <Providers>
           {children}

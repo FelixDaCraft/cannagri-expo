@@ -96,13 +96,26 @@ const config: Config = {
           800: '#5C4A22',
           900: '#382D15',
         },
+        // Vert mascotte assombri : fond du billet Flex, texte crème lisible (4,7:1)
+        'mascot-deep': '#4A714D',
+        // Brun encre des textes courants sur crème (contraste 8,9:1)
+        ink: '#4A4236',
+        // Or foncé, lisible sur crème (texte d'accent, 4,6:1)
+        'gold-ink': '#80621F',
         // Textes
         body: '#333333',
         heading: '#1D2B3A',
       },
       fontFamily: {
-        heading: ['var(--font-roboto-slab)', 'Roboto Slab', 'serif'],
-        body: ['var(--font-open-sans)', 'Open Sans', 'sans-serif'],
+        // Modak : logo-titre et grands titres (titres courts, la police est très large)
+        display: ['var(--font-modak)', 'Modak', 'cursive'],
+        // Chewy : une seule annotation par écran (« fête ses 5 ans »)
+        accent: ['var(--font-chewy)', 'Chewy', 'cursive'],
+        // Barlow Condensed : dates, horaires, prix, surtitres, boutons
+        condensed: ['var(--font-barlow-condensed)', 'Barlow Condensed', 'sans-serif'],
+        // Noms historiques conservés pour les pages intérieures
+        heading: ['var(--font-barlow-condensed)', 'Barlow Condensed', 'sans-serif'],
+        body: ['var(--font-barlow)', 'Barlow', 'sans-serif'],
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
