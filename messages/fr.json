@@ -10,7 +10,7 @@
     "logout": "Déconnexion",
     "myAccount": "Mon compte",
     "myTickets": "Mes billets",
-    "myStands": "Mes Stands",
+    "myStands": "Mes stands",
     "admin": "Administration",
     "user": "Utilisateur",
     "buyTickets": "Acheter des billets",
@@ -25,7 +25,7 @@
     "error": "Erreur",
     "success": "Succès",
     "required": "Requis",
-    "optional": "Optionnel",
+    "optional": "Facultatif",
     "yes": "Oui",
     "no": "Non",
     "back": "Retour",
@@ -111,7 +111,7 @@
           "alt": "Stand d'accessoires en 2024"
         }
       },
-      "statsCaption": "La dernière édition en chiffres",
+      "statsCaption": "L'édition 2026 en chiffres",
       "stats": {
         "exhibitors": "exposants",
         "visitors": "visiteurs",
@@ -165,7 +165,7 @@
         "bronze": "Logo"
       },
       "becomePartner": "Devenez Partenaire",
-      "becomePartnerSubtitle": "Associez votre marque au salon de référence du chanvre CBD",
+      "becomePartnerSubtitle": "Associez votre marque au salon professionnel du cannabis CBD",
       "discoverOffers": "Découvrir nos offres"
     },
     "program": {
@@ -816,7 +816,7 @@
     }
   },
   "footer": {
-    "description": "Salon professionnel du cannabis CBD, organisé à Nantes par une association.",
+    "description": "Salon professionnel du cannabis CBD.",
     "quickLinks": "Liens rapides",
     "contact": "Contact",
     "followUs": "Suivez-nous",

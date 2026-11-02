@@ -43,15 +43,16 @@
     "yourEmail": "Ihre E-Mail",
     "allRightsReserved": "Alle Rechte vorbehalten.",
     "errorOccurred": "Ein Fehler ist aufgetreten",
-    "question": "Eine Frage?"
+    "question": "Eine Frage?",
+    "myStands": "Meine Stände"
   },
   "nav": {
     "ourVision": "Unsere Vision",
     "theEvent": "Die Veranstaltung",
-    "event": "The event",
+    "event": "Die Veranstaltung",
     "program": "Programm",
     "exhibitors": "Aussteller",
-    "photoGallery": "Gallery",
+    "photoGallery": "Galerie",
     "practicalInfo": "Praktische Infos",
     "pastEditions": "Frühere Ausgaben",
     "sponsoring": "Sponsoring",
@@ -60,85 +61,85 @@
     "becomeExhibitor": "Aussteller werden",
     "bookStand": "Stand buchen",
     "cgv": "AGB",
-    "skipToContent": "Skip to content",
-    "mainNav": "Main navigation",
-    "openMenu": "Open menu",
-    "closeMenu": "Close menu"
+    "skipToContent": "Zum Inhalt springen",
+    "mainNav": "Hauptnavigation",
+    "openMenu": "Menü öffnen",
+    "closeMenu": "Menü schließen"
   },
   "home": {
     "hero": {
-      "anniversary": "turns 5",
-      "when": "When",
-      "hours": "Opening hours",
-      "where": "Where",
-      "dateValue": "Saturday {date}",
-      "buyTicket": "Buy my ticket",
-      "practicalInfo": "Practical info",
-      "tagline": "The trade show for CBD cannabis",
-      "mascotAlt": "The Cann'Agri Expo mascot, a cannabis bud in a party hat holding up a trophy",
+      "anniversary": "wird 5 Jahre alt",
+      "when": "Wann",
+      "hours": "Öffnungszeiten",
+      "where": "Wo",
+      "dateValue": "Samstag, {date}",
+      "buyTicket": "Ticket kaufen",
+      "practicalInfo": "Praktische Infos",
+      "tagline": "Die Fachmesse für Cannabis-CBD",
+      "mascotAlt": "Das Maskottchen der Cann'Agri Expo, eine Cannabisblüte mit Partyhut, die einen Pokal hochhält",
       "countdown": {
-        "label": "Doors open in",
-        "summary": "{days, plural, one {# day} other {# days}}",
-        "days": "days",
-        "hours": "hours",
+        "label": "Einlass in",
+        "summary": "{days, plural, one {# Tag} other {# Tage}}",
+        "days": "Tage",
+        "hours": "Stunden",
         "minutes": "min",
         "seconds": "s"
       }
     },
     "pillars": {
-      "title": "The whole industry under one roof",
-      "subtitle": "Growers, equipment makers, speakers and shops: the people behind CBD cannabis in France and Europe, together for one day in Nantes.",
+      "title": "Die ganze Branche unter einem Dach",
+      "subtitle": "Erzeuger, Hersteller von Zubehör, Referenten und Geschäfte: die Menschen hinter Cannabis-CBD in Frankreich und Europa, einen Tag lang vereint in Nantes.",
       "items": {
         "producers": {
-          "title": "CBD growers",
-          "description": "French and European growers, flowers on the table",
-          "alt": "CBD flowers on display at a grower’s stand in 2024"
+          "title": "CBD-Erzeuger",
+          "description": "Französische und europäische Erzeuger, Blüten auf dem Tisch",
+          "alt": "CBD-Blüten am Stand eines Erzeugers im Jahr 2024"
         },
         "growing": {
-          "title": "Growing equipment",
-          "description": "Equipment and demonstrations",
-          "alt": "Growing equipment demonstration at a stand in 2024"
+          "title": "Anbauzubehör",
+          "description": "Ausrüstung und Vorführungen",
+          "alt": "Vorführung von Anbauzubehör an einem Stand im Jahr 2024"
         },
         "talks": {
-          "title": "Talks",
-          "description": "Regulation and market",
-          "alt": "Panel discussion on the Cann'Agri stage in 2024"
+          "title": "Vorträge",
+          "description": "Regulierung und Markt",
+          "alt": "Gesprächsrunde auf der Cann'Agri-Bühne im Jahr 2024"
         },
         "lifestyle": {
-          "title": "Lifestyle and food",
-          "description": "Wellbeing, food, accessories",
-          "alt": "Accessories stand in 2024"
+          "title": "Lifestyle und Food",
+          "description": "Wohlbefinden, Lebensmittel, Zubehör",
+          "alt": "Zubehörstand im Jahr 2024"
         }
       },
-      "statsCaption": "The last edition in numbers",
+      "statsCaption": "Die Ausgabe 2026 in Zahlen",
       "stats": {
-        "exhibitors": "exhibitors",
-        "visitors": "visitors",
-        "conferences": "talks"
+        "exhibitors": "Aussteller",
+        "visitors": "Besucher",
+        "conferences": "Vorträge"
       }
     },
     "tickets": {
-      "title": "Grab your ticket",
-      "intro": "Two tickets, the same day. Flex costs €{extra} more, which goes to the association that runs the show.",
+      "title": "Hol dir dein Ticket",
+      "intro": "Zwei Tickets, derselbe Tag. Das Flex-Ticket kostet {extra} € mehr, die an den Verein gehen, der die Messe organisiert.",
       "unit": "euros",
-      "meta": "Visitor badge · e-ticket by email",
+      "meta": "Besucherausweis · E-Ticket per E-Mail",
       "standard": {
-        "name": "Standard ticket",
-        "description": "Entry for the whole day: stands, talks and the awards ceremony."
+        "name": "Standard-Ticket",
+        "description": "Eintritt für den ganzen Tag: Stände, Vorträge und Preisverleihung."
       },
       "flex": {
-        "name": "Flex ticket",
-        "tag": "thanks",
-        "description": "The same entry, with a boost for the association and future editions."
+        "name": "Flex-Ticket",
+        "tag": "danke",
+        "description": "Der gleiche Eintritt, mit einer Unterstützung für den Verein und die nächsten Ausgaben."
       },
-      "quantity": "Quantity",
-      "quantityOf": "Number of {name}s",
-      "decrease": "Remove one {name}",
-      "increase": "Add one {name}",
-      "choose": "Choose my tickets",
-      "continue": "{count, plural, one {Continue with # ticket} other {Continue with # tickets}} · €{total}",
-      "conditions": "Named tickets, non-refundable · Secure payment ·",
-      "cgv": "Terms of sale"
+      "quantity": "Anzahl",
+      "quantityOf": "Anzahl {name}",
+      "decrease": "Ein {name} entfernen",
+      "increase": "Ein {name} hinzufügen",
+      "choose": "Tickets wählen",
+      "continue": "{count, plural, one {Weiter mit # Ticket} other {Weiter mit # Tickets}} · {total} €",
+      "conditions": "Personalisierte Tickets, nicht erstattungsfähig · Sichere Zahlung ·",
+      "cgv": "AGB"
     },
     "sponsors": {
       "featured": "Im Fokus",
@@ -164,35 +165,35 @@
         "bronze": "Logo"
       },
       "becomePartner": "Partner werden",
-      "becomePartnerSubtitle": "Verbinden Sie Ihre Marke mit der Referenzmesse für CBD-Hanf",
+      "becomePartnerSubtitle": "Verbinden Sie Ihre Marke mit der Fachmesse für Cannabis-CBD",
       "discoverOffers": "Unsere Angebote entdecken"
     },
     "program": {
-      "title": "The programme",
-      "intro": "The {year} talks and panels are being prepared. The full programme will be published as soon as it is final.",
-      "viewFullProgram": "See the programme page",
-      "morning": "Morning",
-      "evening": "Evening",
-      "allDay": "All day",
-      "endOfDay": "Late afternoon",
+      "title": "Das Programm",
+      "intro": "Die Vorträge und Gesprächsrunden {year} sind in Vorbereitung. Das vollständige Programm wird veröffentlicht, sobald es feststeht.",
+      "viewFullProgram": "Zur Programmseite",
+      "morning": "Vormittag",
+      "evening": "Abend",
+      "allDay": "Ganztägig",
+      "endOfDay": "Am späten Nachmittag",
       "rows": {
         "opening": {
-          "title": "Doors open",
-          "detail": "Stands open all day"
+          "title": "Einlass",
+          "detail": "Stände den ganzen Tag geöffnet"
         },
         "talks": {
-          "title": "Talks and panels",
-          "detail": "Speakers announced soon"
+          "title": "Vorträge und Gesprächsrunden",
+          "detail": "Referenten werden bald bekannt gegeben"
         },
         "cup": {
           "title": "Platinum CBD Cup",
-          "detail": "Awards on the Cann'Agri stage"
+          "detail": "Preisverleihung auf der Cann'Agri-Bühne"
         },
         "closing": {
-          "title": "Closing"
+          "title": "Ende"
         }
       },
-      "note": "Detailed timings to come"
+      "note": "Genaue Zeiten folgen"
     },
     "newsletter": {
       "title": "Bleiben Sie informiert",
@@ -203,29 +204,29 @@
       "error": "Ein Fehler ist aufgetreten"
     },
     "menu": {
-      "title": "What's on",
+      "title": "Auf dem Programm",
       "items": {
-        "producers": "Grower stands",
-        "shops": "Shops",
-        "growing": "Growing equipment",
-        "fertilizers": "Fertilisers",
-        "smoking": "Smoking accessories",
-        "talks": "Talks",
-        "tattoo": "Tattoo artists",
-        "food": "Food trucks"
+        "producers": "Erzeugerstände",
+        "shops": "Geschäfte",
+        "growing": "Anbauzubehör",
+        "fertilizers": "Dünger",
+        "smoking": "Raucherzubehör",
+        "talks": "Vorträge",
+        "tattoo": "Tätowierer",
+        "food": "Foodtrucks"
       },
-      "cup": "And to close the day, the Platinum CBD Cup awards",
-      "posterAlt": "Official Cann'Agri Expo {year} poster, the 5th edition"
+      "cup": "Und zum Abschluss die Preisverleihung des Platinum CBD Cup",
+      "posterAlt": "Offizielles Plakat der Cann'Agri Expo {year}, der 5. Ausgabe"
     },
     "gallery": {
-      "title": "Memories from past editions",
-      "titleYear": "Memories from {year}",
-      "viewAll": "See the full gallery"
+      "title": "Erinnerungen an vergangene Ausgaben",
+      "titleYear": "Erinnerungen an {year}",
+      "viewAll": "Ganze Galerie ansehen"
     },
     "pro": {
-      "title": "Exhibit or sponsor",
-      "text": "Stands and partnerships {year}: get the brochure with offers and prices.",
-      "cta": "Request the brochure"
+      "title": "Ausstellen oder sponsern",
+      "text": "Stände und Partnerschaften {year}: Erhalten Sie die Broschüre mit Angeboten und Preisen.",
+      "cta": "Broschüre anfordern"
     }
   },
   "exhibitors": {
@@ -815,21 +816,21 @@
     }
   },
   "footer": {
-    "description": "The trade show for CBD cannabis, organised in Nantes by a non-profit association.",
+    "description": "Die Fachmesse für Cannabis-CBD.",
     "quickLinks": "Schnelllinks",
     "contact": "Kontakt",
     "followUs": "Folgen Sie uns",
     "legal": {
       "title": "Rechtliche Informationen",
-      "privacy": "Datenschutz",
-      "terms": "Legal notice",
+      "privacy": "Datenschutzerklärung",
+      "terms": "Impressum",
       "cgv": "AGB",
       "cookies": "Cookie-Verwaltung"
     },
     "copyright": "© {year} Cann'Agri Expo. Alle Rechte vorbehalten.",
-    "salon": "The show",
-    "visit": "Getting there",
-    "contactForm": "Contact form"
+    "salon": "Die Messe",
+    "visit": "Anreise",
+    "contactForm": "Kontaktformular"
   },
   "errors": {
     "404": {

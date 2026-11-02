@@ -100,7 +100,7 @@ export default async function ProPage() {
             Devenez Exposant
           </h1>
           <p className="text-lg text-body/70 max-w-2xl mx-auto">
-            Rejoignez le salon de référence du chanvre CBD et présentez vos produits
+            Rejoignez le salon professionnel du cannabis CBD et présentez vos produits
             à une audience professionnelle qualifiée.
           </p>
         </div>

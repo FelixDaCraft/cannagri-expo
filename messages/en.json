@@ -10,7 +10,7 @@
     "logout": "Logout",
     "myAccount": "My account",
     "myTickets": "My tickets",
-    "myStands": "My Stands",
+    "myStands": "My stands",
     "admin": "Administration",
     "user": "User",
     "buyTickets": "Buy tickets",
@@ -75,7 +75,7 @@
       "dateValue": "Saturday {date}",
       "buyTicket": "Buy my ticket",
       "practicalInfo": "Practical info",
-      "tagline": "The trade show for CBD cannabis",
+      "tagline": "The professional cannabis CBD trade show",
       "mascotAlt": "The Cann'Agri Expo mascot, a cannabis bud in a party hat holding up a trophy",
       "countdown": {
         "label": "Doors open in",
@@ -111,7 +111,7 @@
           "alt": "Accessories stand in 2024"
         }
       },
-      "statsCaption": "The last edition in numbers",
+      "statsCaption": "The 2026 edition in numbers",
       "stats": {
         "exhibitors": "exhibitors",
         "visitors": "visitors",
@@ -133,7 +133,7 @@
         "description": "The same entry, with a boost for the association and future editions."
       },
       "quantity": "Quantity",
-      "quantityOf": "Number of {name}s",
+      "quantityOf": "Number of {name}",
       "decrease": "Remove one {name}",
       "increase": "Add one {name}",
       "choose": "Choose my tickets",
@@ -165,7 +165,7 @@
         "bronze": "Logo"
       },
       "becomePartner": "Become a Partner",
-      "becomePartnerSubtitle": "Associate your brand with the reference CBD hemp exhibition",
+      "becomePartnerSubtitle": "Associate your brand with the professional cannabis CBD trade show",
       "discoverOffers": "Discover our offers"
     },
     "program": {
@@ -816,7 +816,7 @@
     }
   },
   "footer": {
-    "description": "The trade show for CBD cannabis, organised in Nantes by a non-profit association.",
+    "description": "The professional cannabis CBD trade show.",
     "quickLinks": "Quick links",
     "contact": "Contact",
     "followUs": "Follow us",
