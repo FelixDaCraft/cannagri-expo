@@ -61,10 +61,10 @@ export function LanguageSwitcher({
       <div ref={dropdownRef} className={cn('relative', className)}>
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg hover:bg-white/10 transition-colors"
+          className="flex min-h-[44px] items-center gap-1.5 rounded-lg px-2 text-cream transition-colors hover:bg-white/10"
           aria-expanded={isOpen}
           aria-haspopup="listbox"
-          title={localeNames[currentLocale]}
+          aria-label={`Langue : ${localeNames[currentLocale]}`}
         >
           <Flag locale={currentLocale} size={24} />
           <svg
@@ -85,7 +85,7 @@ export function LanguageSwitcher({
                   <button
                     onClick={() => handleLocaleChange(locale)}
                     className={cn(
-                      'w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors',
+                      'flex min-h-[44px] w-full items-center gap-3 px-4 py-2.5 text-left text-forest transition-colors',
                       currentLocale === locale
                         ? 'bg-forest/10'
                         : 'hover:bg-gray-50'
@@ -96,7 +96,7 @@ export function LanguageSwitcher({
                     <Flag locale={locale} size={24} />
                     <span className={cn(
                       'text-sm',
-                      currentLocale === locale ? 'text-forest font-medium' : 'text-gray-700'
+                      currentLocale === locale ? 'text-forest font-medium' : 'text-ink'
                     )}>
                       {localeNames[locale]}
                     </span>
@@ -147,16 +147,18 @@ export function LanguageSwitcher({
             key={locale}
             onClick={() => handleLocaleChange(locale)}
             className={cn(
-              'px-3 py-2 rounded-lg transition-colors',
+              'min-h-[44px] min-w-[44px] rounded-lg px-3 py-2 transition-colors',
+              theme === 'dark' ? 'text-cream' : 'text-forest',
               currentLocale === locale
                 ? theme === 'dark'
                   ? 'bg-white/20 ring-2 ring-white/50'
-                  : 'bg-forest'
+                  : 'bg-forest text-cream'
                 : theme === 'dark'
                   ? 'hover:bg-white/10'
                   : 'hover:bg-gray-100'
             )}
-            title={localeNames[locale]}
+            aria-label={localeNames[locale]}
+            aria-pressed={currentLocale === locale}
           >
             <Flag locale={locale} size={24} />
           </button>

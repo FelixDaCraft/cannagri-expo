@@ -1,6 +1,7 @@
 'use client'
 
 import { useTranslations } from 'next-intl'
+import { OFFICIAL_FIGURES } from '@/config/figures'
 import { Reveal } from '@/components/ui/Reveal'
 import { cn } from '@/lib/utils'
 
@@ -12,12 +13,8 @@ const PILLARS = [
   { key: 'lifestyle', image: '/images/piliers/lifestyle.jpg', width: 800, height: 400 },
 ] as const
 
-// Chiffres officiels de la dernière édition (à reprendre partout à l'identique)
-const STATS = [
-  { key: 'exhibitors', value: '34' },
-  { key: 'visitors', value: '700-800' },
-  { key: 'conferences', value: '3' },
-] as const
+// Chiffres officiels de la dernière édition (config/figures.ts)
+const STATS = OFFICIAL_FIGURES
 
 const tileLayout = [
   'col-span-2 h-60 md:col-span-1 md:row-span-2 md:h-auto',

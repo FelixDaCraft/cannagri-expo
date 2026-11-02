@@ -259,56 +259,57 @@
     "contactUs": "Contact us"
   },
   "event": {
-    "badge": "The leading CBD hemp trade show",
-    "title": "Presentation",
-    "subtitle": "The must-attend event for CBD hemp professionals",
+    "metaTitle": "About the show",
+    "title": "The show",
+    "lead": "The professional cannabis CBD trade show in western France: one day in Nantes for the whole industry.",
+    "dateTba": "date to be announced",
+    "posterAlt": "Official poster of Cann'Agri Expo {year}",
     "about": {
       "title": "What is Cann'Agri Expo?",
-      "p1": "Cann'Agri Expo is the first professional trade show dedicated to the CBD hemp industry in Western France. Held in Nantes, this event brings together producers, distributors, processors and industry experts for a day rich in exchanges and discoveries.",
-      "p2": "Our goal is to create a privileged meeting space for all industry players: farmers, laboratories, specialized shops, and innovative project leaders in the hemp wellness sector.",
-      "p3": "The {year} edition promises to be exceptional with around thirty exhibitors, conferences led by renowned experts, and the prestigious Platinum CBD Cup ceremony."
+      "annotation": "turns 5",
+      "p1": "Cann'Agri Expo is the professional trade show for the cannabis CBD industry in western France. For one day in Nantes, growers, distributors, processors, shops and industry experts meet to talk business and discover what's new.",
+      "p2": "The show is run by a non-profit association. Its aim: to give every player in the industry a place to meet, from farmers to laboratories, from specialist shops to project founders.",
+      "p3": "Join us on {date} at {venue} for the 5th edition: exhibitor stands, talks and, to close the day, the Platinum CBD Cup awards."
     },
     "stats": {
-      "title": "Cann'Agri Expo in numbers",
-      "exhibitors": "Exhibitors",
-      "visitors": "Expected visitors",
-      "companies": "Companies present",
-      "conferences": "Conferences"
+      "title": "Our latest edition in numbers",
+      "exhibitors": "exhibitors",
+      "visitors": "visitors",
+      "conferences": "talks"
     },
     "features": {
-      "title": "What awaits you",
+      "title": "What to expect",
       "exhibition": {
-        "title": "Exhibition Space",
-        "description": "Discover our exhibitors' stands: CBD producers, cultivation equipment, wellness products, cosmetics, food and more."
+        "title": "The stands",
+        "description": "CBD growers, growing equipment, wellness products, cosmetics, food, accessories: the whole industry, stand after stand."
       },
       "conferences": {
-        "title": "Conferences & Round Tables",
-        "description": "Attend expert presentations on regulations, market trends, technical innovations and industry prospects."
+        "title": "Talks and round tables",
+        "description": "Industry speakers discuss regulation, market trends, growing techniques and the future of the sector."
       },
       "cup": {
         "title": "Platinum CBD Cup",
-        "description": "The competition that rewards the best CBD products of the year. A jury of experts evaluates and awards the most innovative creations."
+        "description": "The competition that rewards the year's best CBD products. A jury of professionals judges and awards the finest creations. Awards ceremony at the end of the day."
       },
       "networking": {
-        "title": "Networking",
-        "description": "Connect with industry professionals, expand your network and discover new partnership opportunities."
+        "title": "Business meetings",
+        "description": "Talk with industry professionals, grow your network and find new partners."
       },
       "innovations": {
-        "title": "Innovations",
-        "description": "Discover the latest technological advances, new varieties and innovations shaping the future of the hemp industry."
+        "title": "What's new",
+        "description": "New strains, new products, new techniques: what will shape the industry tomorrow."
       },
       "documentation": {
-        "title": "Documentation",
-        "description": "Leave with valuable resources, guides and contacts to grow your business in the CBD hemp sector."
+        "title": "Resources",
+        "description": "Leave with contacts, advice and documentation to grow your business."
       }
     },
     "cta": {
-      "title": "Join us on {date}",
-      "description": "Don't miss this unique opportunity to meet key players in the CBD hemp industry and participate in the sector's flagship event.",
-      "bookTicket": "Book my ticket",
+      "title": "See you on {date}",
+      "description": "A day to meet the people behind cannabis CBD, and to celebrate the show's 5th birthday together.",
+      "bookTicket": "Buy my ticket",
       "practicalInfo": "Practical info"
-    },
-    "edition": "{year} Edition"
+    }
   },
   "practicalInfo": {
     "title": "Practical Information",

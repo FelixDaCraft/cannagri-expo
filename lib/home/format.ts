@@ -27,6 +27,12 @@ const OPTIMIZED_POSTERS: Record<string, Required<PosterImage>> = {
     width: 880,
     height: 1237,
   },
+  '/images/affiche-2026.png': {
+    src: '/images/affiche-2026-880.webp',
+    srcSet: '/images/affiche-2026-560.webp 560w, /images/affiche-2026-880.webp 880w',
+    width: 880,
+    height: 1245,
+  },
 }
 
 export function optimizedPoster(posterUrl: string | null): PosterImage | null {

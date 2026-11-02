@@ -28,6 +28,10 @@ describe('optimizedPoster', () => {
     })
   })
 
+  it('sert aussi la version allégée de l’affiche 2026', () => {
+    expect(optimizedPoster('/images/affiche-2026.png')?.src).toBe('/images/affiche-2026-880.webp')
+  })
+
   it('garde l’affiche d’origine sinon', () => {
     expect(optimizedPoster('/images/autre.png')).toEqual({ src: '/images/autre.png' })
     expect(optimizedPoster(null)).toBeNull()

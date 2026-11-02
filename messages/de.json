@@ -258,56 +258,57 @@
     "contactUs": "Kontaktieren Sie uns"
   },
   "event": {
-    "badge": "Die führende CBD-Hanf-Messe",
-    "title": "Präsentation",
-    "subtitle": "Das Pflicht-Event für CBD-Hanf-Profis",
+    "metaTitle": "Über die Messe",
+    "title": "Die Messe",
+    "lead": "Die Fachmesse für Cannabis-CBD im Westen Frankreichs: ein Tag in Nantes für die ganze Branche.",
+    "dateTba": "Datum folgt",
+    "posterAlt": "Offizielles Plakat der Cann'Agri Expo {year}",
     "about": {
-      "title": "Was ist Cann'Agri Expo?",
-      "p1": "Cann'Agri Expo ist die erste Fachmesse für die CBD-Hanfindustrie in Westfrankreich. Diese in Nantes stattfindende Veranstaltung bringt Produzenten, Distributoren, Verarbeiter und Branchenexperten zu einem Tag voller Austausch und Entdeckungen zusammen.",
-      "p2": "Unser Ziel ist es, einen privilegierten Treffpunkt für alle Branchenakteure zu schaffen: Landwirte, Labore, Fachgeschäfte und innovative Projektträger im Bereich Hanf-Wellness.",
-      "p3": "Die Ausgabe {year} verspricht außergewöhnlich zu werden mit rund dreißig Ausstellern, Konferenzen renommierter Experten und der prestigeträchtigen Platinum CBD Cup Zeremonie."
+      "title": "Was ist die Cann'Agri Expo?",
+      "annotation": "wird 5 Jahre alt",
+      "p1": "Die Cann'Agri Expo ist die Fachmesse der Cannabis-CBD-Branche im Westen Frankreichs. Einen Tag lang treffen sich in Nantes Erzeuger, Händler, Verarbeiter, Fachgeschäfte und Branchenexperten, um sich auszutauschen und Neuheiten zu entdecken.",
+      "p2": "Die Messe wird von einem gemeinnützigen Verein organisiert. Ihr Ziel: allen Akteuren der Branche einen Treffpunkt zu bieten, von Landwirten bis zu Laboren, von Fachgeschäften bis zu Gründern.",
+      "p3": "Wir sehen uns am {date} in {venue} zur 5. Ausgabe: Ausstellerstände, Vorträge und zum Abschluss die Preisverleihung des Platinum CBD Cup."
     },
     "stats": {
-      "title": "Cann'Agri Expo in Zahlen",
+      "title": "Die letzte Ausgabe in Zahlen",
       "exhibitors": "Aussteller",
-      "visitors": "Erwartete Besucher",
-      "companies": "Anwesende Unternehmen",
-      "conferences": "Konferenzen"
+      "visitors": "Besucher",
+      "conferences": "Vorträge"
     },
     "features": {
       "title": "Was Sie erwartet",
       "exhibition": {
-        "title": "Ausstellungsbereich",
-        "description": "Entdecken Sie die Stände unserer Aussteller: CBD-Produzenten, Anbauausrüstung, Wellness-Produkte, Kosmetik, Lebensmittel und mehr."
+        "title": "Die Stände",
+        "description": "CBD-Erzeuger, Anbauzubehör, Wellnessprodukte, Kosmetik, Lebensmittel, Zubehör: die ganze Branche, Stand für Stand."
       },
       "conferences": {
-        "title": "Konferenzen & Podiumsdiskussionen",
-        "description": "Nehmen Sie an Expertenpräsentationen zu Vorschriften, Markttrends, technischen Innovationen und Branchenperspektiven teil."
+        "title": "Vorträge und Gesprächsrunden",
+        "description": "Referenten aus der Branche sprechen über Regulierung, Markttrends, Anbautechniken und die Zukunft des Sektors."
       },
       "cup": {
         "title": "Platinum CBD Cup",
-        "description": "Der Wettbewerb, der die besten CBD-Produkte des Jahres auszeichnet. Eine Expertenjury bewertet und prämiert die innovativsten Kreationen."
+        "description": "Der Wettbewerb, der die besten CBD-Produkte des Jahres auszeichnet. Eine Fachjury bewertet und prämiert die besten Kreationen. Preisverleihung am Ende des Tages."
       },
       "networking": {
-        "title": "Networking",
-        "description": "Vernetzen Sie sich mit Branchenprofis, erweitern Sie Ihr Netzwerk und entdecken Sie neue Partnerschaftsmöglichkeiten."
+        "title": "Geschäftskontakte",
+        "description": "Tauschen Sie sich mit Fachleuten aus, erweitern Sie Ihr Netzwerk und finden Sie neue Partner."
       },
       "innovations": {
-        "title": "Innovationen",
-        "description": "Entdecken Sie die neuesten technologischen Fortschritte, neue Sorten und Innovationen, die die Zukunft der Hanfindustrie gestalten."
+        "title": "Neuheiten",
+        "description": "Neue Sorten, neue Produkte, neue Techniken: was die Branche von morgen prägt."
       },
       "documentation": {
-        "title": "Dokumentation",
-        "description": "Nehmen Sie wertvolle Ressourcen, Leitfäden und Kontakte mit, um Ihr Geschäft im CBD-Hanfsektor auszubauen."
+        "title": "Ressourcen",
+        "description": "Nehmen Sie Kontakte, Tipps und Unterlagen mit, um Ihr Geschäft weiterzuentwickeln."
       }
     },
     "cta": {
-      "title": "Besuchen Sie uns am {date}",
-      "description": "Verpassen Sie nicht diese einzigartige Gelegenheit, wichtige Akteure der CBD-Hanfindustrie zu treffen und am Flaggschiff-Event der Branche teilzunehmen.",
-      "bookTicket": "Mein Ticket buchen",
+      "title": "Wir sehen uns am {date}",
+      "description": "Ein Tag, um die Menschen hinter Cannabis-CBD kennenzulernen und gemeinsam den 5. Geburtstag der Messe zu feiern.",
+      "bookTicket": "Ticket kaufen",
       "practicalInfo": "Praktische Infos"
-    },
-    "edition": "Ausgabe {year}"
+    }
   },
   "practicalInfo": {
     "title": "Praktische Informationen",

@@ -259,56 +259,57 @@
     "contactUs": "Nous contacter"
   },
   "event": {
-    "badge": "Le salon de référence du chanvre CBD",
-    "title": "Présentation",
-    "subtitle": "Le rendez-vous incontournable des professionnels du chanvre CBD",
+    "metaTitle": "Présentation du salon",
+    "title": "Le salon",
+    "lead": "Le salon professionnel du cannabis CBD dans l'Ouest : une journée à Nantes pour toute la filière.",
+    "dateTba": "date à venir",
+    "posterAlt": "Affiche officielle de Cann'Agri Expo {year}",
     "about": {
       "title": "Cann'Agri Expo, c'est quoi ?",
-      "p1": "Cann'Agri Expo est le premier salon professionnel dédié à la filière chanvre CBD en région Ouest. Organisé à Nantes, cet événement rassemble producteurs, distributeurs, transformateurs et experts du secteur pour une journée riche en échanges et découvertes.",
-      "p2": "Notre objectif est de créer un espace de rencontre privilégié entre tous les acteurs de la filière : agriculteurs, laboratoires, boutiques spécialisées, et porteurs de projets innovants dans le domaine du chanvre bien-être.",
-      "p3": "L'édition {year} promet d'être exceptionnelle avec une trentaine d'exposants, des conférences animées par des experts reconnus, et la prestigieuse cérémonie de la Platinum CBD Cup."
+      "annotation": "fête ses 5 ans",
+      "p1": "Cann'Agri Expo est le salon professionnel de la filière cannabis CBD dans l'Ouest. Pendant une journée à Nantes, producteurs, distributeurs, transformateurs, boutiques et experts du secteur se retrouvent pour échanger et découvrir les nouveautés.",
+      "p2": "Le salon est organisé par une association. Son but : offrir un lieu de rencontre à tous les acteurs de la filière, des agriculteurs aux laboratoires, des boutiques spécialisées aux porteurs de projets.",
+      "p3": "Rendez-vous le {date} à {venue} pour la 5e édition : des stands d'exposants, des conférences et, en clôture, la remise des prix de la Platinum CBD Cup."
     },
     "stats": {
-      "title": "Cann'Agri Expo en chiffres",
-      "exhibitors": "Exposants",
-      "visitors": "Visiteurs attendus",
-      "companies": "Entreprises présentes",
-      "conferences": "Conférences"
+      "title": "La dernière édition en chiffres",
+      "exhibitors": "exposants",
+      "visitors": "visiteurs",
+      "conferences": "conférences"
     },
     "features": {
       "title": "Ce qui vous attend",
       "exhibition": {
-        "title": "Espace Exposition",
-        "description": "Découvrez les stands de nos exposants : producteurs CBD, équipements de culture, produits bien-être, cosmétiques, alimentaire et plus encore."
+        "title": "Les stands",
+        "description": "Producteurs de CBD, matériel de culture, produits de bien-être, cosmétiques, alimentation, accessoires : la filière au complet, stand après stand."
       },
       "conferences": {
-        "title": "Conférences & Tables Rondes",
-        "description": "Assistez aux interventions d'experts sur la réglementation, les tendances du marché, les innovations techniques et les perspectives de la filière."
+        "title": "Conférences et tables rondes",
+        "description": "Des intervenants du secteur parlent réglementation, tendances du marché, techniques de culture et avenir de la filière."
       },
       "cup": {
         "title": "Platinum CBD Cup",
-        "description": "La compétition qui récompense les meilleurs produits CBD de l'année. Un jury d'experts évalue et prime les créations les plus innovantes."
+        "description": "La compétition qui récompense les meilleurs produits CBD de l'année. Un jury de professionnels évalue et prime les meilleures créations. Remise des prix en fin de journée."
       },
       "networking": {
-        "title": "Networking",
-        "description": "Échangez avec les professionnels du secteur, développez votre réseau et découvrez de nouvelles opportunités de partenariats."
+        "title": "Rencontres professionnelles",
+        "description": "Échangez avec les professionnels du secteur, développez votre réseau et trouvez de nouveaux partenaires."
       },
       "innovations": {
-        "title": "Innovations",
-        "description": "Découvrez les dernières avancées technologiques, les nouvelles variétés et les innovations qui façonnent l'avenir de la filière chanvre."
+        "title": "Nouveautés",
+        "description": "Nouvelles variétés, nouveaux produits, nouvelles techniques : ce qui fera la filière demain."
       },
       "documentation": {
-        "title": "Documentation",
-        "description": "Repartez avec des ressources, guides et contacts précieux pour développer votre activité dans le secteur du chanvre CBD."
+        "title": "Ressources",
+        "description": "Repartez avec des contacts, des conseils et de la documentation pour développer votre activité."
       }
     },
     "cta": {
-      "title": "Rejoignez-nous le {date}",
-      "description": "Ne manquez pas cette occasion unique de rencontrer les acteurs clés de la filière chanvre CBD et de participer à l'événement de référence du secteur.",
-      "bookTicket": "Réserver mon billet",
+      "title": "Rendez-vous le {date}",
+      "description": "Une journée pour rencontrer celles et ceux qui font le cannabis CBD, et fêter ensemble les 5 ans du salon.",
+      "bookTicket": "Acheter mon billet",
       "practicalInfo": "Infos pratiques"
-    },
-    "edition": "Édition {year}"
+    }
   },
   "practicalInfo": {
     "title": "Infos Pratiques",

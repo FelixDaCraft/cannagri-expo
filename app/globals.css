@@ -254,3 +254,10 @@ html[data-reveal-on] [data-reveal]:not([data-shown]) {
 .animate-gentle-spin {
   animation: gentle-spin 4s ease-in-out infinite;
 }
+
+@layer components {
+  /* Titre de section en Modak (pages intérieures) : court, sur une ou deux lignes */
+  .title-display {
+    @apply font-display text-[2.75rem] font-normal leading-[.9] text-forest md:text-[3.75rem] text-balance;
+  }
+}

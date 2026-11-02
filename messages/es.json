@@ -258,56 +258,57 @@
     "contactUs": "Contáctanos"
   },
   "event": {
-    "badge": "La feria líder de cáñamo CBD",
-    "title": "Presentación",
-    "subtitle": "La cita imprescindible para profesionales del cáñamo CBD",
+    "metaTitle": "Presentación de la feria",
+    "title": "La feria",
+    "lead": "La feria profesional del cannabis CBD en el oeste de Francia: un día en Nantes para todo el sector.",
+    "dateTba": "fecha por anunciar",
+    "posterAlt": "Cartel oficial de Cann'Agri Expo {year}",
     "about": {
       "title": "¿Qué es Cann'Agri Expo?",
-      "p1": "Cann'Agri Expo es la primera feria profesional dedicada a la industria del cáñamo CBD en el oeste de Francia. Celebrada en Nantes, este evento reúne a productores, distribuidores, transformadores y expertos del sector para un día rico en intercambios y descubrimientos.",
-      "p2": "Nuestro objetivo es crear un espacio de encuentro privilegiado para todos los actores del sector: agricultores, laboratorios, tiendas especializadas y líderes de proyectos innovadores en el sector del bienestar del cáñamo.",
-      "p3": "La edición {year} promete ser excepcional con una treintena de expositores, conferencias dirigidas por expertos reconocidos y la prestigiosa ceremonia de la Platinum CBD Cup."
+      "annotation": "cumple 5 años",
+      "p1": "Cann'Agri Expo es la feria profesional del sector del cannabis CBD en el oeste de Francia. Durante un día en Nantes, productores, distribuidores, transformadores, tiendas y expertos del sector se reúnen para intercambiar y descubrir las novedades.",
+      "p2": "La feria la organiza una asociación. Su objetivo: ofrecer un lugar de encuentro a todos los actores del sector, desde los agricultores hasta los laboratorios, desde las tiendas especializadas hasta los emprendedores.",
+      "p3": "Cita el {date} en {venue} para la 5.ª edición: stands de expositores, conferencias y, como cierre, la entrega de premios de la Platinum CBD Cup."
     },
     "stats": {
-      "title": "Cann'Agri Expo en cifras",
-      "exhibitors": "Expositores",
-      "visitors": "Visitantes esperados",
-      "companies": "Empresas presentes",
-      "conferences": "Conferencias"
+      "title": "La última edición en cifras",
+      "exhibitors": "expositores",
+      "visitors": "visitantes",
+      "conferences": "conferencias"
     },
     "features": {
-      "title": "Lo que te espera",
+      "title": "Lo que le espera",
       "exhibition": {
-        "title": "Espacio de Exposición",
-        "description": "Descubre los stands de nuestros expositores: productores de CBD, equipos de cultivo, productos de bienestar, cosméticos, alimentación y más."
+        "title": "Los stands",
+        "description": "Productores de CBD, material de cultivo, productos de bienestar, cosmética, alimentación, accesorios: todo el sector, stand tras stand."
       },
       "conferences": {
-        "title": "Conferencias y Mesas Redondas",
-        "description": "Asiste a presentaciones de expertos sobre regulaciones, tendencias del mercado, innovaciones técnicas y perspectivas del sector."
+        "title": "Conferencias y mesas redondas",
+        "description": "Ponentes del sector hablan de normativa, tendencias del mercado, técnicas de cultivo y el futuro del sector."
       },
       "cup": {
         "title": "Platinum CBD Cup",
-        "description": "La competición que premia los mejores productos CBD del año. Un jurado de expertos evalúa y premia las creaciones más innovadoras."
+        "description": "El concurso que premia los mejores productos CBD del año. Un jurado de profesionales evalúa y premia las mejores creaciones. Entrega de premios al final del día."
       },
       "networking": {
-        "title": "Networking",
-        "description": "Conecta con profesionales del sector, amplía tu red y descubre nuevas oportunidades de colaboración."
+        "title": "Encuentros profesionales",
+        "description": "Converse con profesionales del sector, amplíe su red y encuentre nuevos socios."
       },
       "innovations": {
-        "title": "Innovaciones",
-        "description": "Descubre los últimos avances tecnológicos, nuevas variedades e innovaciones que dan forma al futuro de la industria del cáñamo."
+        "title": "Novedades",
+        "description": "Nuevas variedades, nuevos productos, nuevas técnicas: lo que marcará el sector del mañana."
       },
       "documentation": {
-        "title": "Documentación",
-        "description": "Llévate recursos valiosos, guías y contactos para hacer crecer tu negocio en el sector del cáñamo CBD."
+        "title": "Recursos",
+        "description": "Llévese contactos, consejos y documentación para hacer crecer su negocio."
       }
     },
     "cta": {
-      "title": "Únete a nosotros el {date}",
-      "description": "No pierdas esta oportunidad única de conocer a los actores clave de la industria del cáñamo CBD y participar en el evento insignia del sector.",
-      "bookTicket": "Reservar mi entrada",
-      "practicalInfo": "Info práctica"
-    },
-    "edition": "Edición {year}"
+      "title": "Nos vemos el {date}",
+      "description": "Un día para conocer a quienes hacen el cannabis CBD y celebrar juntos los 5 años de la feria.",
+      "bookTicket": "Comprar mi entrada",
+      "practicalInfo": "Información práctica"
+    }
   },
   "practicalInfo": {
     "title": "Información Práctica",

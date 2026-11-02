@@ -258,56 +258,57 @@
     "contactUs": "Contattaci"
   },
   "event": {
-    "badge": "La fiera leader della canapa CBD",
-    "title": "Presentazione",
-    "subtitle": "L'appuntamento imperdibile per i professionisti della canapa CBD",
+    "metaTitle": "Presentazione della fiera",
+    "title": "La fiera",
+    "lead": "La fiera professionale della cannabis CBD nell'Ovest della Francia: una giornata a Nantes per tutta la filiera.",
+    "dateTba": "data da definire",
+    "posterAlt": "Locandina ufficiale di Cann'Agri Expo {year}",
     "about": {
-      "title": "Cos'è Cann'Agri Expo?",
-      "p1": "Cann'Agri Expo è la prima fiera professionale dedicata all'industria della canapa CBD nella Francia occidentale. Organizzato a Nantes, questo evento riunisce produttori, distributori, trasformatori ed esperti del settore per una giornata ricca di scambi e scoperte.",
-      "p2": "Il nostro obiettivo è creare uno spazio d'incontro privilegiato per tutti gli attori del settore: agricoltori, laboratori, negozi specializzati e leader di progetti innovativi nel settore del benessere della canapa.",
-      "p3": "L'edizione {year} promette di essere eccezionale con una trentina di espositori, conferenze guidate da esperti rinomati e la prestigiosa cerimonia della Platinum CBD Cup."
+      "title": "Che cos'è Cann'Agri Expo?",
+      "annotation": "compie 5 anni",
+      "p1": "Cann'Agri Expo è la fiera professionale della filiera della cannabis CBD nell'Ovest della Francia. Per una giornata a Nantes, produttori, distributori, trasformatori, negozi ed esperti del settore si incontrano per confrontarsi e scoprire le novità.",
+      "p2": "La fiera è organizzata da un'associazione. Il suo obiettivo: offrire un luogo d'incontro a tutti gli attori della filiera, dagli agricoltori ai laboratori, dai negozi specializzati a chi avvia nuovi progetti.",
+      "p3": "Appuntamento il {date} a {venue} per la 5ª edizione: stand degli espositori, conferenze e, in chiusura, la premiazione della Platinum CBD Cup."
     },
     "stats": {
-      "title": "Cann'Agri Expo in numeri",
-      "exhibitors": "Espositori",
-      "visitors": "Visitatori attesi",
-      "companies": "Aziende presenti",
-      "conferences": "Conferenze"
+      "title": "L'ultima edizione in cifre",
+      "exhibitors": "espositori",
+      "visitors": "visitatori",
+      "conferences": "conferenze"
     },
     "features": {
-      "title": "Cosa ti aspetta",
+      "title": "Cosa vi aspetta",
       "exhibition": {
-        "title": "Area Espositiva",
-        "description": "Scopri gli stand dei nostri espositori: produttori CBD, attrezzature di coltivazione, prodotti benessere, cosmetici, alimentari e altro."
+        "title": "Gli stand",
+        "description": "Produttori di CBD, attrezzatura per la coltivazione, prodotti per il benessere, cosmetici, alimentari, accessori: tutta la filiera, stand dopo stand."
       },
       "conferences": {
-        "title": "Conferenze e Tavole Rotonde",
-        "description": "Partecipa alle presentazioni di esperti su normative, tendenze di mercato, innovazioni tecniche e prospettive del settore."
+        "title": "Conferenze e tavole rotonde",
+        "description": "Relatori del settore parlano di normativa, tendenze di mercato, tecniche di coltivazione e futuro della filiera."
       },
       "cup": {
         "title": "Platinum CBD Cup",
-        "description": "La competizione che premia i migliori prodotti CBD dell'anno. Una giuria di esperti valuta e premia le creazioni più innovative."
+        "description": "Il concorso che premia i migliori prodotti CBD dell'anno. Una giuria di professionisti valuta e premia le migliori creazioni. Premiazione a fine giornata."
       },
       "networking": {
-        "title": "Networking",
-        "description": "Connettiti con i professionisti del settore, espandi la tua rete e scopri nuove opportunità di partnership."
+        "title": "Incontri professionali",
+        "description": "Confrontatevi con i professionisti del settore, ampliate la vostra rete e trovate nuovi partner."
       },
       "innovations": {
-        "title": "Innovazioni",
-        "description": "Scopri gli ultimi progressi tecnologici, le nuove varietà e le innovazioni che plasmano il futuro dell'industria della canapa."
+        "title": "Novità",
+        "description": "Nuove varietà, nuovi prodotti, nuove tecniche: ciò che farà la filiera di domani."
       },
       "documentation": {
-        "title": "Documentazione",
-        "description": "Porta con te risorse preziose, guide e contatti per far crescere la tua attività nel settore della canapa CBD."
+        "title": "Risorse",
+        "description": "Ripartite con contatti, consigli e documentazione per sviluppare la vostra attività."
       }
     },
     "cta": {
-      "title": "Unisciti a noi il {date}",
-      "description": "Non perdere questa opportunità unica di incontrare i protagonisti dell'industria della canapa CBD e partecipare all'evento di riferimento del settore.",
-      "bookTicket": "Prenota il mio biglietto",
-      "practicalInfo": "Info pratiche"
-    },
-    "edition": "Edizione {year}"
+      "title": "Appuntamento il {date}",
+      "description": "Una giornata per incontrare chi fa la cannabis CBD e festeggiare insieme i 5 anni della fiera.",
+      "bookTicket": "Acquista il biglietto",
+      "practicalInfo": "Informazioni pratiche"
+    }
   },
   "practicalInfo": {
     "title": "Informazioni Pratiche",
