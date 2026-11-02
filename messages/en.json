@@ -368,47 +368,48 @@
     }
   },
   "contact": {
-    "title": "Contact Us",
-    "subtitle": "A question about the exhibition, stands or partnerships? Our team is at your disposal.",
+    "metaTitle": "Contact",
+    "title": "Contact",
+    "subtitle": "A question about the show, tickets, stands or partnerships? Write to us and we'll get back to you.",
     "types": {
       "general": "General question",
-      "press": "Press / Media",
-      "sponsor": "Partnership / Sponsoring",
-      "exhibitor": "Become an exhibitor"
+      "press": "Press and media",
+      "sponsor": "Partnership and sponsorship",
+      "exhibitor": "Becoming an exhibitor"
     },
     "form": {
-      "type": "Request type",
+      "title": "Write to us",
+      "required": "All fields are required unless marked otherwise.",
+      "type": "Type of request",
       "name": "Name",
-      "namePlaceholder": "Your name",
       "email": "Email",
-      "emailPlaceholder": "your@email.com",
+      "emailPlaceholder": "you@example.com",
       "phone": "Phone",
-      "phonePlaceholder": "06 12 34 56 78",
       "company": "Company",
-      "companyPlaceholder": "Your company name",
+      "optional": "(optional)",
       "subject": "Subject",
-      "subjectPlaceholder": "Subject of your message",
       "message": "Message",
-      "messagePlaceholder": "Your message...",
       "send": "Send message",
-      "sending": "Sending...",
-      "success": "Message sent!",
-      "successMessage": "We have received your message and will respond as soon as possible.",
+      "sending": "Sending…",
+      "success": "Message sent",
+      "successMessage": "We have received your message and will reply as soon as possible.",
       "sendAnother": "Send another message",
-      "error": "Error sending message",
-      "connectionError": "Connection error. Please try again.",
-      "privacyNotice": "By submitting this form, you accept our",
+      "error": "Your message could not be sent. Please try again in a moment or email us.",
+      "invalid": "Please check the fields: name, a valid email address, subject and message are required.",
+      "connectionError": "Connection failed. Check your network and try again.",
+      "privacyNotice": "Your details are only used to reply to you. See our",
       "privacyPolicy": "privacy policy"
     },
     "info": {
-      "title": "Information",
+      "title": "Contact details",
       "email": "Email",
       "phone": "Phone",
-      "address": "Address"
+      "address": "Show address"
     },
     "press": {
-      "title": "Press & Media",
-      "description": "Journalists and media, contact our press service for accreditations and interviews."
+      "title": "Press and media",
+      "description": "Journalists and media: accreditations, interviews, visuals. Write to us and tell us which outlet you work for.",
+      "mailSubject": "Press request"
     }
   },
   "sponsoring": {

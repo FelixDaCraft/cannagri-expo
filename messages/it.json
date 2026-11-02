@@ -367,47 +367,48 @@
     }
   },
   "contact": {
-    "title": "Contattaci",
-    "subtitle": "Una domanda sulla fiera, sugli stand o sulle partnership? Il nostro team è a vostra disposizione.",
+    "metaTitle": "Contatti",
+    "title": "Contatti",
+    "subtitle": "Una domanda sulla fiera, i biglietti, gli stand o le partnership? Scriveteci, vi risponderemo.",
     "types": {
       "general": "Domanda generale",
-      "press": "Stampa / Media",
-      "sponsor": "Partnership / Sponsoring",
+      "press": "Stampa e media",
+      "sponsor": "Partnership e sponsorizzazione",
       "exhibitor": "Diventare espositore"
     },
     "form": {
+      "title": "Scriveteci",
+      "required": "Tutti i campi sono obbligatori, salvo indicazione contraria.",
       "type": "Tipo di richiesta",
       "name": "Nome",
-      "namePlaceholder": "Il vostro nome",
-      "email": "Email",
-      "emailPlaceholder": "vostra@email.com",
+      "email": "E-mail",
+      "emailPlaceholder": "voi@esempio.it",
       "phone": "Telefono",
-      "phonePlaceholder": "06 12 34 56 78",
       "company": "Azienda",
-      "companyPlaceholder": "Nome della vostra azienda",
+      "optional": "(facoltativo)",
       "subject": "Oggetto",
-      "subjectPlaceholder": "Oggetto del vostro messaggio",
       "message": "Messaggio",
-      "messagePlaceholder": "Il vostro messaggio...",
-      "send": "Invia messaggio",
-      "sending": "Invio in corso...",
-      "success": "Messaggio inviato!",
-      "successMessage": "Abbiamo ricevuto il vostro messaggio e risponderemo il prima possibile.",
+      "send": "Invia il messaggio",
+      "sending": "Invio in corso…",
+      "success": "Messaggio inviato",
+      "successMessage": "Abbiamo ricevuto il vostro messaggio e vi risponderemo al più presto.",
       "sendAnother": "Invia un altro messaggio",
-      "error": "Errore nell'invio del messaggio",
-      "connectionError": "Errore di connessione. Si prega di riprovare.",
-      "privacyNotice": "Inviando questo modulo, accetti la nostra",
-      "privacyPolicy": "politica sulla privacy"
+      "error": "Non è stato possibile inviare il messaggio. Riprovate tra un attimo o scriveteci via e-mail.",
+      "invalid": "Controllate i campi: nome, un indirizzo e-mail valido, oggetto e messaggio sono obbligatori.",
+      "connectionError": "Connessione non riuscita. Controllate la rete e riprovate.",
+      "privacyNotice": "I vostri dati servono solo a rispondervi. Consultate la nostra",
+      "privacyPolicy": "informativa sulla privacy"
     },
     "info": {
-      "title": "Informazioni",
-      "email": "Email",
+      "title": "Recapiti",
+      "email": "E-mail",
       "phone": "Telefono",
-      "address": "Indirizzo"
+      "address": "Indirizzo della fiera"
     },
     "press": {
-      "title": "Stampa e Media",
-      "description": "Giornalisti e media, contattate il nostro servizio stampa per accrediti e interviste."
+      "title": "Stampa e media",
+      "description": "Giornalisti e media: accrediti, interviste, immagini. Scriveteci indicando la vostra testata.",
+      "mailSubject": "Richiesta stampa"
     }
   },
   "sponsoring": {

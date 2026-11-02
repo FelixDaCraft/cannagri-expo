@@ -368,47 +368,48 @@
     }
   },
   "contact": {
-    "title": "Contactez-nous",
-    "subtitle": "Une question sur le salon, les stands ou les partenariats ? Notre équipe est à votre disposition.",
+    "metaTitle": "Contact",
+    "title": "Contact",
+    "subtitle": "Une question sur le salon, les billets, les stands ou les partenariats ? Écrivez-nous, nous vous répondons.",
     "types": {
       "general": "Question générale",
-      "press": "Presse / Média",
-      "sponsor": "Partenariat / Sponsoring",
+      "press": "Presse et médias",
+      "sponsor": "Partenariat et sponsoring",
       "exhibitor": "Devenir exposant"
     },
     "form": {
+      "title": "Nous écrire",
+      "required": "Tous les champs sont obligatoires, sauf mention contraire.",
       "type": "Type de demande",
       "name": "Nom",
-      "namePlaceholder": "Votre nom",
-      "email": "Email",
-      "emailPlaceholder": "votre@email.com",
+      "email": "E-mail",
+      "emailPlaceholder": "vous@exemple.fr",
       "phone": "Téléphone",
-      "phonePlaceholder": "06 12 34 56 78",
       "company": "Société",
-      "companyPlaceholder": "Nom de votre société",
+      "optional": "(facultatif)",
       "subject": "Sujet",
-      "subjectPlaceholder": "Objet de votre message",
       "message": "Message",
-      "messagePlaceholder": "Votre message...",
       "send": "Envoyer le message",
-      "sending": "Envoi en cours...",
-      "success": "Message envoyé !",
-      "successMessage": "Nous avons bien reçu votre message et vous répondrons dans les plus brefs délais.",
+      "sending": "Envoi en cours…",
+      "success": "Message envoyé",
+      "successMessage": "Nous avons bien reçu votre message et vous répondrons au plus vite.",
       "sendAnother": "Envoyer un autre message",
-      "error": "Erreur lors de l'envoi du message",
-      "connectionError": "Erreur de connexion. Veuillez réessayer.",
-      "privacyNotice": "En soumettant ce formulaire, vous acceptez notre",
+      "error": "Le message n'a pas pu être envoyé. Réessayez dans un instant ou écrivez-nous par e-mail.",
+      "invalid": "Vérifiez les champs : le nom, une adresse e-mail valide, le sujet et le message sont nécessaires.",
+      "connectionError": "Connexion impossible. Vérifiez votre réseau et réessayez.",
+      "privacyNotice": "Vos coordonnées servent uniquement à vous répondre. Voir notre",
       "privacyPolicy": "politique de confidentialité"
     },
     "info": {
-      "title": "Informations",
-      "email": "Email",
+      "title": "Coordonnées",
+      "email": "E-mail",
       "phone": "Téléphone",
-      "address": "Adresse"
+      "address": "Adresse du salon"
     },
     "press": {
-      "title": "Presse & Médias",
-      "description": "Journalistes et médias, contactez notre service presse pour les accréditations et interviews."
+      "title": "Presse et médias",
+      "description": "Journalistes et médias : accréditations, interviews, visuels. Écrivez-nous en précisant votre média.",
+      "mailSubject": "Demande presse"
     }
   },
   "sponsoring": {

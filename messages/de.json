@@ -367,47 +367,48 @@
     }
   },
   "contact": {
-    "title": "Kontaktieren Sie uns",
-    "subtitle": "Eine Frage zur Messe, zu den Ständen oder zu Partnerschaften? Unser Team steht Ihnen zur Verfügung.",
+    "metaTitle": "Kontakt",
+    "title": "Kontakt",
+    "subtitle": "Eine Frage zur Messe, zu Tickets, Ständen oder Partnerschaften? Schreiben Sie uns, wir antworten Ihnen.",
     "types": {
       "general": "Allgemeine Frage",
-      "press": "Presse / Medien",
-      "sponsor": "Partnerschaft / Sponsoring",
+      "press": "Presse und Medien",
+      "sponsor": "Partnerschaft und Sponsoring",
       "exhibitor": "Aussteller werden"
     },
     "form": {
+      "title": "Schreiben Sie uns",
+      "required": "Alle Felder sind Pflichtfelder, sofern nicht anders angegeben.",
       "type": "Art der Anfrage",
       "name": "Name",
-      "namePlaceholder": "Ihr Name",
       "email": "E-Mail",
-      "emailPlaceholder": "ihre@email.com",
+      "emailPlaceholder": "sie@beispiel.de",
       "phone": "Telefon",
-      "phonePlaceholder": "06 12 34 56 78",
       "company": "Unternehmen",
-      "companyPlaceholder": "Ihr Firmenname",
+      "optional": "(optional)",
       "subject": "Betreff",
-      "subjectPlaceholder": "Betreff Ihrer Nachricht",
       "message": "Nachricht",
-      "messagePlaceholder": "Ihre Nachricht...",
       "send": "Nachricht senden",
-      "sending": "Wird gesendet...",
-      "success": "Nachricht gesendet!",
-      "successMessage": "Wir haben Ihre Nachricht erhalten und werden schnellstmöglich antworten.",
+      "sending": "Wird gesendet…",
+      "success": "Nachricht gesendet",
+      "successMessage": "Wir haben Ihre Nachricht erhalten und antworten so schnell wie möglich.",
       "sendAnother": "Weitere Nachricht senden",
-      "error": "Fehler beim Senden der Nachricht",
-      "connectionError": "Verbindungsfehler. Bitte versuchen Sie es erneut.",
-      "privacyNotice": "Mit dem Absenden dieses Formulars akzeptieren Sie unsere",
-      "privacyPolicy": "Datenschutzrichtlinie"
+      "error": "Ihre Nachricht konnte nicht gesendet werden. Versuchen Sie es gleich noch einmal oder schreiben Sie uns eine E-Mail.",
+      "invalid": "Bitte prüfen Sie die Felder: Name, eine gültige E-Mail-Adresse, Betreff und Nachricht sind erforderlich.",
+      "connectionError": "Keine Verbindung. Prüfen Sie Ihr Netzwerk und versuchen Sie es erneut.",
+      "privacyNotice": "Ihre Daten werden nur verwendet, um Ihnen zu antworten. Siehe unsere",
+      "privacyPolicy": "Datenschutzerklärung"
     },
     "info": {
-      "title": "Informationen",
+      "title": "Kontaktdaten",
       "email": "E-Mail",
       "phone": "Telefon",
-      "address": "Adresse"
+      "address": "Adresse der Messe"
     },
     "press": {
-      "title": "Presse & Medien",
-      "description": "Journalisten und Medien, kontaktieren Sie unseren Pressedienst für Akkreditierungen und Interviews."
+      "title": "Presse und Medien",
+      "description": "Journalisten und Medien: Akkreditierungen, Interviews, Bildmaterial. Schreiben Sie uns und nennen Sie Ihr Medium.",
+      "mailSubject": "Presseanfrage"
     }
   },
   "sponsoring": {

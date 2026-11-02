@@ -367,47 +367,48 @@
     }
   },
   "contact": {
-    "title": "Contáctenos",
-    "subtitle": "¿Una pregunta sobre la feria, los stands o las asociaciones? Nuestro equipo está a su disposición.",
+    "metaTitle": "Contacto",
+    "title": "Contacto",
+    "subtitle": "¿Alguna pregunta sobre la feria, las entradas, los stands o los patrocinios? Escríbanos y le responderemos.",
     "types": {
       "general": "Pregunta general",
-      "press": "Prensa / Medios",
-      "sponsor": "Asociación / Patrocinio",
-      "exhibitor": "Convertirse en expositor"
+      "press": "Prensa y medios",
+      "sponsor": "Patrocinio",
+      "exhibitor": "Ser expositor"
     },
     "form": {
+      "title": "Escríbanos",
+      "required": "Todos los campos son obligatorios, salvo que se indique lo contrario.",
       "type": "Tipo de solicitud",
       "name": "Nombre",
-      "namePlaceholder": "Su nombre",
-      "email": "Email",
-      "emailPlaceholder": "su@email.com",
+      "email": "Correo electrónico",
+      "emailPlaceholder": "usted@ejemplo.es",
       "phone": "Teléfono",
-      "phonePlaceholder": "06 12 34 56 78",
       "company": "Empresa",
-      "companyPlaceholder": "Nombre de su empresa",
+      "optional": "(opcional)",
       "subject": "Asunto",
-      "subjectPlaceholder": "Asunto de su mensaje",
       "message": "Mensaje",
-      "messagePlaceholder": "Su mensaje...",
-      "send": "Enviar mensaje",
-      "sending": "Enviando...",
-      "success": "¡Mensaje enviado!",
-      "successMessage": "Hemos recibido su mensaje y responderemos lo antes posible.",
+      "send": "Enviar el mensaje",
+      "sending": "Enviando…",
+      "success": "Mensaje enviado",
+      "successMessage": "Hemos recibido su mensaje y le responderemos lo antes posible.",
       "sendAnother": "Enviar otro mensaje",
-      "error": "Error al enviar el mensaje",
-      "connectionError": "Error de conexión. Por favor, inténtelo de nuevo.",
-      "privacyNotice": "Al enviar este formulario, acepta nuestra",
+      "error": "No se ha podido enviar el mensaje. Inténtelo de nuevo en un momento o escríbanos por correo.",
+      "invalid": "Revise los campos: el nombre, un correo electrónico válido, el asunto y el mensaje son obligatorios.",
+      "connectionError": "No hay conexión. Compruebe su red e inténtelo de nuevo.",
+      "privacyNotice": "Sus datos solo sirven para responderle. Consulte nuestra",
       "privacyPolicy": "política de privacidad"
     },
     "info": {
-      "title": "Información",
-      "email": "Email",
+      "title": "Datos de contacto",
+      "email": "Correo electrónico",
       "phone": "Teléfono",
-      "address": "Dirección"
+      "address": "Dirección de la feria"
     },
     "press": {
-      "title": "Prensa y Medios",
-      "description": "Periodistas y medios, contacten con nuestro servicio de prensa para acreditaciones y entrevistas."
+      "title": "Prensa y medios",
+      "description": "Periodistas y medios: acreditaciones, entrevistas, imágenes. Escríbanos indicando su medio.",
+      "mailSubject": "Solicitud de prensa"
     }
   },
   "sponsoring": {
