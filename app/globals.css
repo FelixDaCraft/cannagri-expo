@@ -281,3 +281,29 @@ html[data-reveal-on] [data-reveal]:not([data-shown]) {
     @apply rounded-[10px] border border-mascot-deep/40 bg-terracotta-50 px-4 py-3 text-base text-forest;
   }
 }
+
+@layer components {
+  /* Texte des pages légales : sections bien séparées, titres ancrés sous le header fixe */
+  .legal-prose {
+    @apply text-[1.0625rem] leading-relaxed text-ink;
+  }
+  .legal-prose h2 {
+    @apply mt-14 scroll-mt-24 border-t-2 border-forest pt-5 font-condensed text-[1.75rem] font-semibold leading-tight text-forest first:mt-0;
+  }
+  .legal-prose h3 {
+    @apply mt-8 font-condensed text-xl font-semibold text-forest;
+  }
+  .legal-prose p,
+  .legal-prose ul {
+    @apply mt-4;
+  }
+  .legal-prose ul {
+    @apply list-disc space-y-2 pl-5 marker:text-gold-ink;
+  }
+  .legal-prose strong {
+    @apply font-semibold text-forest;
+  }
+  .legal-prose a {
+    @apply font-medium text-forest underline decoration-forest/40 underline-offset-4 hover:decoration-mint;
+  }
+}
