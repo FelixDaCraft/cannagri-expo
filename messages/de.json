@@ -466,7 +466,8 @@
       "standard": "Standard-Ticket",
       "flex": "Flex-Ticket (mit Unterstützung für den Verein)",
       "practicalInfo": "Praktische Infos",
-      "contact": "Kontakt"
+      "contact": "Kontakt",
+      "notify": "Lassen Sie sich benachrichtigen, sobald der Ticketverkauf startet:"
     },
     "form": {
       "step1": "1. Tickets wählen",
@@ -531,7 +532,7 @@
     },
     "stayInformed": {
       "title": "Auf dem Laufenden bleiben",
-      "text": "Erhalten Sie eine E-Mail, sobald das vollständige Programm veröffentlicht ist."
+      "text": "Erhalten Sie eine E-Mail, sobald das vollständige Programm veröffentlicht ist, und danach weitere Neuigkeiten zur Messe."
     },
     "footer": {
       "disclaimer": "Änderungen am Programm sind möglich."
@@ -975,5 +976,49 @@
       "help": "Brauchen Sie Hilfe? Schreiben Sie uns an"
     },
     "metaTitle": "Zahlung"
+  },
+  "newsletter": {
+    "label": "Neuigkeiten zur Messe erhalten",
+    "placeholder": "sie@beispiel.de",
+    "submit": "Anmelden",
+    "sending": "Wird gesendet…",
+    "honeypot": "Nicht ausfüllen",
+    "consent": "Ich bin einverstanden, Neuigkeiten zur Cann'Agri Expo per E-Mail zu erhalten (Tickets, Programm, Aussteller). Abmeldung jederzeit mit einem Klick. Siehe <link>Datenschutzerklärung</link>.",
+    "sent": "Fast geschafft: Wir haben Ihnen eine E-Mail geschickt. Klicken Sie auf den Link darin, um Ihre Anmeldung zu bestätigen.",
+    "ticketOptIn": "Neuigkeiten zur Messe per E-Mail erhalten (optional, Bestätigung per E-Mail, Abmeldung mit einem Klick)",
+    "errors": {
+      "consent": "Kreuzen Sie das Kästchen an, um unseren E-Mails zuzustimmen.",
+      "invalid": "Bitte prüfen Sie Ihre E-Mail-Adresse.",
+      "tooMany": "Zu viele Anfragen. Versuchen Sie es in einigen Minuten erneut.",
+      "generic": "Die Anmeldung ist fehlgeschlagen. Versuchen Sie es gleich noch einmal."
+    },
+    "confirm": {
+      "eyebrow": "Newsletter",
+      "title": "Anmeldung bestätigen",
+      "loading": "Wir bestätigen Ihre Anmeldung…",
+      "doneTitle": "Anmeldung bestätigt",
+      "doneText": "Danke! Sie erhalten Neuigkeiten zur Messe: Tickets, Programm, Aussteller. Jede E-Mail enthält einen Abmeldelink.",
+      "errorTitle": "Bestätigung nicht möglich",
+      "invalid": "Dieser Link ist ungültig oder wurde bereits verwendet.",
+      "expired": "Dieser Link ist abgelaufen (er gilt 7 Tage). Melden Sie sich erneut an, um einen neuen zu erhalten.",
+      "error": "Die Bestätigung ist fehlgeschlagen. Versuchen Sie es gleich noch einmal.",
+      "again": "Erneut anmelden",
+      "home": "Zur Startseite"
+    },
+    "unsubscribe": {
+      "eyebrow": "Newsletter",
+      "title": "Abmelden",
+      "text": "Sie erhalten dann keine Neuigkeiten der Cann'Agri Expo mehr. Sie können sich jederzeit wieder anmelden.",
+      "cta": "Abmeldung bestätigen",
+      "loading": "Abmeldung läuft…",
+      "doneTitle": "Sie sind abgemeldet",
+      "doneText": "Ihre Adresse wurde aus der Liste entfernt. Sie erhalten keine Informations-E-Mails mehr.",
+      "errorTitle": "Abmeldung nicht möglich",
+      "invalid": "Dieser Link ist ungültig. Schreiben Sie an hello@cannagri-expo.eu, wir melden Sie ab.",
+      "expired": "Dieser Link ist nicht mehr gültig.",
+      "error": "Die Abmeldung ist fehlgeschlagen. Versuchen Sie es gleich noch einmal.",
+      "again": "Zur Programmseite",
+      "home": "Zur Startseite"
+    }
   }
 }

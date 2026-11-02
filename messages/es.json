@@ -466,7 +466,8 @@
       "standard": "Entrada Standard",
       "flex": "Entrada Flex (con apoyo a la asociación)",
       "practicalInfo": "Información práctica",
-      "contact": "Contactar"
+      "contact": "Contactar",
+      "notify": "Reciba un aviso cuando se abra la venta de entradas:"
     },
     "form": {
       "step1": "1. Elija sus entradas",
@@ -531,7 +532,7 @@
     },
     "stayInformed": {
       "title": "Manténgase informado",
-      "text": "Reciba un correo en cuanto se publique el programa completo."
+      "text": "Reciba un correo en cuanto se publique el programa completo y, después, el resto de novedades de la feria."
     },
     "footer": {
       "disclaimer": "El programa todavía puede cambiar."
@@ -975,5 +976,49 @@
       "help": "¿Necesita ayuda? Escríbanos a"
     },
     "metaTitle": "Pago"
+  },
+  "newsletter": {
+    "label": "Recibir las novedades de la feria",
+    "placeholder": "usted@ejemplo.es",
+    "submit": "Suscribirme",
+    "sending": "Enviando…",
+    "honeypot": "No rellenar",
+    "consent": "Acepto recibir por correo las novedades de Cann'Agri Expo (entradas, programa, expositores). Baja en un clic en cualquier momento. Consulte la <link>política de privacidad</link>.",
+    "sent": "Casi listo: le hemos enviado un correo. Haga clic en el enlace que contiene para confirmar su suscripción.",
+    "ticketOptIn": "Recibir las novedades de la feria por correo (opcional, confirmación por correo, baja en un clic)",
+    "errors": {
+      "consent": "Marque la casilla para aceptar recibir nuestros correos.",
+      "invalid": "Revise su dirección de correo.",
+      "tooMany": "Demasiadas solicitudes. Inténtelo de nuevo en unos minutos.",
+      "generic": "No se ha podido completar la suscripción. Inténtelo de nuevo en un momento."
+    },
+    "confirm": {
+      "eyebrow": "Newsletter",
+      "title": "Confirmación de la suscripción",
+      "loading": "Estamos confirmando su suscripción…",
+      "doneTitle": "Suscripción confirmada",
+      "doneText": "¡Gracias! Recibirá las novedades de la feria: entradas, programa, expositores. Cada correo incluye un enlace para darse de baja.",
+      "errorTitle": "No se ha podido confirmar",
+      "invalid": "Este enlace no es válido o ya se ha utilizado.",
+      "expired": "Este enlace ha caducado (es válido 7 días). Suscríbase de nuevo para recibir otro.",
+      "error": "No se ha podido confirmar. Inténtelo de nuevo en un momento.",
+      "again": "Suscribirme de nuevo",
+      "home": "Volver al inicio"
+    },
+    "unsubscribe": {
+      "eyebrow": "Newsletter",
+      "title": "Darse de baja",
+      "text": "Dejará de recibir las novedades de Cann'Agri Expo. Podrá volver a suscribirse en cualquier momento.",
+      "cta": "Confirmar la baja",
+      "loading": "Procesando la baja…",
+      "doneTitle": "Se ha dado de baja",
+      "doneText": "Su dirección se ha eliminado de la lista. Ya no recibirá nuestros correos informativos.",
+      "errorTitle": "No se ha podido dar de baja",
+      "invalid": "Este enlace no es válido. Escríbanos a hello@cannagri-expo.eu y le daremos de baja.",
+      "expired": "Este enlace ya no es válido.",
+      "error": "No se ha podido procesar la baja. Inténtelo de nuevo en un momento.",
+      "again": "Ver la página del programa",
+      "home": "Volver al inicio"
+    }
   }
 }

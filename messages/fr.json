@@ -466,7 +466,8 @@
       "standard": "Billet Standard",
       "flex": "Billet Flex (dont soutien à l'association)",
       "practicalInfo": "Infos pratiques",
-      "contact": "Nous contacter"
+      "contact": "Nous contacter",
+      "notify": "Soyez prévenu de l'ouverture de la billetterie :"
     },
     "form": {
       "step1": "1. Choisissez vos billets",
@@ -531,7 +532,7 @@
     },
     "stayInformed": {
       "title": "Restez informé",
-      "text": "Recevez un e-mail dès que le programme complet est publié."
+      "text": "Recevez un e-mail dès que le programme complet est publié, puis les autres nouvelles du salon."
     },
     "footer": {
       "disclaimer": "Le programme peut encore évoluer."
@@ -975,5 +976,49 @@
       "help": "Besoin d'aide ? Écrivez-nous à"
     },
     "metaTitle": "Paiement"
+  },
+  "newsletter": {
+    "label": "Recevoir les nouvelles du salon",
+    "placeholder": "vous@exemple.fr",
+    "submit": "M'inscrire",
+    "sending": "Envoi…",
+    "honeypot": "Ne pas remplir",
+    "consent": "J'accepte de recevoir par e-mail les nouvelles de Cann'Agri Expo (billetterie, programme, exposants). Désinscription en un clic à tout moment. Voir la <link>politique de confidentialité</link>.",
+    "sent": "C'est presque fini : nous vous avons envoyé un e-mail. Cliquez sur le lien qu'il contient pour confirmer votre inscription.",
+    "ticketOptIn": "Recevoir les nouvelles du salon par e-mail (facultatif, confirmation par e-mail, désinscription en un clic)",
+    "errors": {
+      "consent": "Cochez la case pour accepter de recevoir nos e-mails.",
+      "invalid": "Vérifiez votre adresse e-mail.",
+      "tooMany": "Trop de demandes. Réessayez dans quelques minutes.",
+      "generic": "L'inscription n'a pas abouti. Réessayez dans un instant."
+    },
+    "confirm": {
+      "eyebrow": "Newsletter",
+      "title": "Confirmation de l'inscription",
+      "loading": "Nous confirmons votre inscription…",
+      "doneTitle": "Inscription confirmée",
+      "doneText": "Merci ! Vous recevrez les nouvelles du salon : ouverture de la billetterie, programme, exposants. Chaque e-mail contient un lien de désinscription.",
+      "errorTitle": "Confirmation impossible",
+      "invalid": "Ce lien n'est pas valide ou a déjà été utilisé.",
+      "expired": "Ce lien a expiré (il est valable 7 jours). Inscrivez-vous à nouveau pour en recevoir un autre.",
+      "error": "La confirmation n'a pas abouti. Réessayez dans un instant.",
+      "again": "M'inscrire à nouveau",
+      "home": "Retour à l'accueil"
+    },
+    "unsubscribe": {
+      "eyebrow": "Newsletter",
+      "title": "Se désinscrire",
+      "text": "Vous ne recevrez plus les nouvelles de Cann'Agri Expo. Vous pourrez vous réinscrire à tout moment.",
+      "cta": "Confirmer la désinscription",
+      "loading": "Désinscription en cours…",
+      "doneTitle": "Vous êtes désinscrit",
+      "doneText": "Votre adresse a été retirée de la liste. Vous ne recevrez plus nos e-mails d'information.",
+      "errorTitle": "Désinscription impossible",
+      "invalid": "Ce lien n'est pas valide. Écrivez-nous à hello@cannagri-expo.eu et nous vous désinscrirons.",
+      "expired": "Ce lien n'est plus valide.",
+      "error": "La désinscription n'a pas abouti. Réessayez dans un instant.",
+      "again": "Voir la page Programme",
+      "home": "Retour à l'accueil"
+    }
   }
 }

@@ -2,16 +2,30 @@ import nodemailer from 'nodemailer'
 import { siteConfig } from '@/config/site'
 import type { EditionSummary } from '@/lib/editions/format'
 
+// En développement sans serveur SMTP, les e-mails sont écrits dans la console au lieu d'être envoyés
+const useConsoleTransport = !process.env.SMTP_HOST && process.env.NODE_ENV !== 'production'
+
 // Create reusable transporter
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: parseInt(process.env.SMTP_PORT || '587'),
-  secure: process.env.SMTP_PORT === '465',
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASSWORD,
-  },
-})
+const transporter = useConsoleTransport
+  ? nodemailer.createTransport({ jsonTransport: true })
+  : nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: parseInt(process.env.SMTP_PORT || '587'),
+      secure: process.env.SMTP_PORT === '465',
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASSWORD,
+      },
+    })
+
+if (useConsoleTransport) {
+  const send = transporter.sendMail.bind(transporter)
+  transporter.sendMail = (async (mail: Parameters<typeof send>[0]) => {
+    const html = typeof mail.html === 'string' ? mail.html : ''
+    console.info(`[e-mail de développement] à ${mail.to} : ${mail.subject}\n  liens : ${(html.match(/href="([^"]+)"/g) || []).join(' ')}`)
+    return send(mail)
+  }) as typeof transporter.sendMail
+}
 
 interface TicketAttachment {
   attendeeName: string

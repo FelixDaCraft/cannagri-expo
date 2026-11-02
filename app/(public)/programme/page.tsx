@@ -8,6 +8,7 @@ import { shortHour } from '@/lib/home/format'
 import { getTranslatedText } from '@/lib/translation'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Reveal } from '@/components/ui/Reveal'
+import { NewsletterForm } from '@/components/newsletter/NewsletterForm'
 
 export const dynamic = 'force-dynamic'
 
@@ -122,11 +123,14 @@ export default async function ProgrammePage() {
         </div>
       </div>
 
-      {/* Restez informé : le formulaire d'inscription arrive avec la newsletter */}
-      <section id="restez-informe" className="border-t border-forest/10 bg-cream text-forest" aria-labelledby="news-title">
-        <Reveal className="container-custom py-14 md:py-16">
-          <h2 id="news-title" className="title-display">{t('stayInformed.title')}</h2>
-          <p className="mt-3 max-w-[34em] text-lg leading-relaxed text-ink">{t('stayInformed.text')}</p>
+      {/* Restez informé : inscription directe, confirmation par e-mail (constat n°18) */}
+      <section id="restez-informe" className="scroll-mt-24 border-t border-forest/10 bg-cream text-forest" aria-labelledby="news-title">
+        <Reveal className="container-custom grid items-start gap-8 py-14 md:py-16 lg:grid-cols-2 lg:gap-16">
+          <div>
+            <h2 id="news-title" className="title-display">{t('stayInformed.title')}</h2>
+            <p className="mt-3 max-w-[34em] text-lg leading-relaxed text-ink">{t('stayInformed.text')}</p>
+          </div>
+          <NewsletterForm source="programme" />
         </Reveal>
       </section>
     </>

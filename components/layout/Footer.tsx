@@ -7,6 +7,7 @@ import { useEdition } from '@/components/editions'
 import { shortHoursRange } from '@/lib/home/format'
 import { formatEditionDate } from '@/lib/editions/format'
 import { SocialIcons } from './SocialIcons'
+import { NewsletterForm } from '@/components/newsletter/NewsletterForm'
 
 const linkClass =
   'inline-flex min-h-[44px] items-center text-cream/75 transition-colors hover:text-cream md:min-h-[32px]'
@@ -54,6 +55,9 @@ export function Footer() {
             <p className="mt-4 max-w-[24em] text-base leading-relaxed">{tFooter('description')}</p>
             <div className="mt-5">
               <SocialIcons labelTemplate={(network) => tFooter('socialLabel', { network })} />
+            </div>
+            <div className="mt-8 max-w-[28rem]">
+              <NewsletterForm source="footer" tone="night" />
             </div>
           </div>
 

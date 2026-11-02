@@ -41,6 +41,7 @@ export function TicketForm({ initialSelection }: { initialSelection?: TicketSele
   const { data: session } = useSession()
   const t = useTranslations('tickets.form')
   const tt = useTranslations('home.tickets')
+  const tn = useTranslations('newsletter')
   const edition = useEdition()
   const prices: TicketSelection = { standard: edition.standardTicketPrice, flex: edition.flexTicketPrice }
   const ticketName = (type: TicketType) => tt(`${type}.name`)
@@ -51,6 +52,7 @@ export function TicketForm({ initialSelection }: { initialSelection?: TicketSele
   )
   const [buyer, setBuyer] = useState({ name: '', email: '', phone: '' })
   const [acceptTerms, setAcceptTerms] = useState(false)
+  const [newsletter, setNewsletter] = useState(false)
   const [honeypot, setHoneypot] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
@@ -117,6 +119,7 @@ export function TicketForm({ initialSelection }: { initialSelection?: TicketSele
             email: buyer.email.trim(),
             phone: buyer.phone.trim(),
             acceptTerms,
+            newsletter,
             [HONEYPOT_FIELD]: honeypot,
           },
         }),
@@ -303,6 +306,16 @@ export function TicketForm({ initialSelection }: { initialSelection?: TicketSele
                     cgv: (chunks) => <Link href="/cgv" target="_blank" className={linkClass}>{chunks}</Link>,
                   })}
                 </span>
+              </label>
+              <label className="mt-4 flex cursor-pointer items-start gap-3 text-base text-forest">
+                <input
+                  type="checkbox"
+                  name="newsletter"
+                  checked={newsletter}
+                  onChange={(e) => setNewsletter(e.target.checked)}
+                  className="mt-0.5 h-6 w-6 flex-shrink-0 rounded border-forest/50 accent-forest"
+                />
+                <span>{tn('ticketOptIn')}</span>
               </label>
               <p className="mt-3 text-base text-ink">
                 {t('privacy')}{' '}

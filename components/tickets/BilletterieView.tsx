@@ -6,6 +6,7 @@ import { siteConfig } from '@/config/site'
 import { useEdition } from '@/components/editions'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { ButtonLink } from '@/components/ui/ButtonLink'
+import { NewsletterForm } from '@/components/newsletter/NewsletterForm'
 import { formatEditionDate, isTicketingOpen } from '@/lib/editions/format'
 import type { TicketSelection } from '@/lib/editions/tickets'
 
@@ -46,6 +47,10 @@ export function BilletterieView({ initialSelection }: { initialSelection: Ticket
             <div className="mt-8 flex flex-wrap gap-3">
               <ButtonLink href="/infos-pratiques">{t('closed.practicalInfo')}</ButtonLink>
               <ButtonLink href="/contact" tone="outline-night">{t('closed.contact')}</ButtonLink>
+            </div>
+            <div className="mt-12 border-t-2 border-forest pt-6">
+              <p className="mb-4 text-lg text-ink">{t('closed.notify')}</p>
+              <NewsletterForm source="billetterie" />
             </div>
           </div>
         </div>

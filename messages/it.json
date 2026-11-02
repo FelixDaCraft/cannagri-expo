@@ -466,7 +466,8 @@
       "standard": "Biglietto Standard",
       "flex": "Biglietto Flex (con sostegno all'associazione)",
       "practicalInfo": "Info pratiche",
-      "contact": "Contattateci"
+      "contact": "Contattateci",
+      "notify": "Siate avvisati dell'apertura della biglietteria:"
     },
     "form": {
       "step1": "1. Scegliete i biglietti",
@@ -531,7 +532,7 @@
     },
     "stayInformed": {
       "title": "Restate aggiornati",
-      "text": "Ricevete un'e-mail non appena il programma completo sarà pubblicato."
+      "text": "Ricevete un'e-mail appena il programma completo sarà pubblicato, poi le altre novità della fiera."
     },
     "footer": {
       "disclaimer": "Il programma può ancora cambiare."
@@ -975,5 +976,49 @@
       "help": "Serve aiuto? Scriveteci a"
     },
     "metaTitle": "Pagamento"
+  },
+  "newsletter": {
+    "label": "Ricevi le novità della fiera",
+    "placeholder": "voi@esempio.it",
+    "submit": "Iscrivimi",
+    "sending": "Invio…",
+    "honeypot": "Non compilare",
+    "consent": "Accetto di ricevere via e-mail le novità di Cann'Agri Expo (biglietteria, programma, espositori). Disiscrizione in un clic in qualsiasi momento. Vedi l'<link>informativa sulla privacy</link>.",
+    "sent": "Quasi fatto: vi abbiamo inviato un'e-mail. Cliccate sul link che contiene per confermare l'iscrizione.",
+    "ticketOptIn": "Ricevere le novità della fiera via e-mail (facoltativo, conferma via e-mail, disiscrizione in un clic)",
+    "errors": {
+      "consent": "Spuntate la casella per accettare di ricevere le nostre e-mail.",
+      "invalid": "Controllate il vostro indirizzo e-mail.",
+      "tooMany": "Troppe richieste. Riprovate tra qualche minuto.",
+      "generic": "L'iscrizione non è riuscita. Riprovate tra un attimo."
+    },
+    "confirm": {
+      "eyebrow": "Newsletter",
+      "title": "Conferma dell'iscrizione",
+      "loading": "Stiamo confermando la vostra iscrizione…",
+      "doneTitle": "Iscrizione confermata",
+      "doneText": "Grazie! Riceverete le novità della fiera: biglietteria, programma, espositori. Ogni e-mail contiene un link per disiscriversi.",
+      "errorTitle": "Conferma impossibile",
+      "invalid": "Questo link non è valido o è già stato utilizzato.",
+      "expired": "Questo link è scaduto (è valido 7 giorni). Iscrivetevi di nuovo per riceverne un altro.",
+      "error": "La conferma non è riuscita. Riprovate tra un attimo.",
+      "again": "Iscrivimi di nuovo",
+      "home": "Torna alla home"
+    },
+    "unsubscribe": {
+      "eyebrow": "Newsletter",
+      "title": "Disiscriversi",
+      "text": "Non riceverete più le novità di Cann'Agri Expo. Potrete iscrivervi di nuovo in qualsiasi momento.",
+      "cta": "Conferma la disiscrizione",
+      "loading": "Disiscrizione in corso…",
+      "doneTitle": "Disiscrizione effettuata",
+      "doneText": "Il vostro indirizzo è stato rimosso dall'elenco. Non riceverete più le nostre e-mail informative.",
+      "errorTitle": "Disiscrizione impossibile",
+      "invalid": "Questo link non è valido. Scriveteci a hello@cannagri-expo.eu e vi disiscriveremo.",
+      "expired": "Questo link non è più valido.",
+      "error": "La disiscrizione non è riuscita. Riprovate tra un attimo.",
+      "again": "Vai alla pagina Programma",
+      "home": "Torna alla home"
+    }
   }
 }

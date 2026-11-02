@@ -466,7 +466,8 @@
       "standard": "Standard ticket",
       "flex": "Flex ticket (includes support for the association)",
       "practicalInfo": "Practical info",
-      "contact": "Contact us"
+      "contact": "Contact us",
+      "notify": "Be the first to know when tickets go on sale:"
     },
     "form": {
       "step1": "1. Choose your tickets",
@@ -531,7 +532,7 @@
     },
     "stayInformed": {
       "title": "Stay informed",
-      "text": "Get an email as soon as the full programme is published."
+      "text": "Get an email as soon as the full programme is published, then the rest of the show news."
     },
     "footer": {
       "disclaimer": "The programme may still change."
@@ -975,5 +976,49 @@
       "help": "Need help? Write to us at"
     },
     "metaTitle": "Payment"
+  },
+  "newsletter": {
+    "label": "Get news about the show",
+    "placeholder": "you@example.com",
+    "submit": "Sign me up",
+    "sending": "Sending…",
+    "honeypot": "Do not fill in",
+    "consent": "I agree to receive news about Cann'Agri Expo by email (tickets, programme, exhibitors). One-click unsubscribe at any time. See the <link>privacy policy</link>.",
+    "sent": "Almost done: we've sent you an email. Click the link inside to confirm your subscription.",
+    "ticketOptIn": "Get news about the show by email (optional, confirmed by email, one-click unsubscribe)",
+    "errors": {
+      "consent": "Tick the box to agree to receive our emails.",
+      "invalid": "Please check your email address.",
+      "tooMany": "Too many requests. Please try again in a few minutes.",
+      "generic": "Subscription failed. Please try again in a moment."
+    },
+    "confirm": {
+      "eyebrow": "Newsletter",
+      "title": "Confirming your subscription",
+      "loading": "We're confirming your subscription…",
+      "doneTitle": "Subscription confirmed",
+      "doneText": "Thank you! You'll get news about the show: tickets, programme, exhibitors. Every email includes an unsubscribe link.",
+      "errorTitle": "Confirmation failed",
+      "invalid": "This link is not valid or has already been used.",
+      "expired": "This link has expired (it is valid for 7 days). Sign up again to receive a new one.",
+      "error": "The confirmation failed. Please try again in a moment.",
+      "again": "Sign up again",
+      "home": "Back to home"
+    },
+    "unsubscribe": {
+      "eyebrow": "Newsletter",
+      "title": "Unsubscribe",
+      "text": "You will no longer receive news from Cann'Agri Expo. You can sign up again at any time.",
+      "cta": "Confirm unsubscribe",
+      "loading": "Unsubscribing…",
+      "doneTitle": "You're unsubscribed",
+      "doneText": "Your address has been removed from the list. You will no longer receive our news emails.",
+      "errorTitle": "Unsubscribe failed",
+      "invalid": "This link is not valid. Write to hello@cannagri-expo.eu and we'll unsubscribe you.",
+      "expired": "This link is no longer valid.",
+      "error": "Unsubscribing failed. Please try again in a moment.",
+      "again": "See the programme page",
+      "home": "Back to home"
+    }
   }
 }
