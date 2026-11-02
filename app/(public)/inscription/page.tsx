@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -25,6 +25,14 @@ export default function RegisterPage() {
     acceptTerms: false,
     acceptNewsletter: false,
   })
+
+  // Après un achat de billets sans compte : /inscription?email=… pré-remplit l'adresse
+  useEffect(() => {
+    const email = new URLSearchParams(window.location.search).get('email')
+    if (email && email.length <= 254) {
+      setFormData((prev) => (prev.email ? prev : { ...prev, email }))
+    }
+  }, [])
 
   const businessTypeLabels = {
     PRODUCTEURS: t('businessTypes.PRODUCTEURS'),

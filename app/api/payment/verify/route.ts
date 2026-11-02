@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
 
     // Local simulation mode only (completely bypasses Viva Wallet)
     // This is for local testing without any Viva Wallet interaction
-    if (process.env.VIVA_WALLET_LOCAL_SIMULATION === 'true') {
+    if (process.env.VIVA_WALLET_LOCAL_SIMULATION === 'true' && process.env.NODE_ENV !== 'production') {
       await processSuccessfulPayment(order.id)
 
       order = await prisma.order.findUnique({

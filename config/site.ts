@@ -2,15 +2,15 @@ import { NavItem } from '@/types'
 
 export const siteConfig = {
   name: "Cann'Agri Expo",
-  description: "Le salon de référence des professionnels du chanvre CBD en France",
-  url: process.env.NEXT_PUBLIC_APP_URL || "https://cannagri-expo.fr",
+  description: "Le salon professionnel du cannabis CBD à Nantes",
+  url: process.env.NEXT_PUBLIC_APP_URL || "https://cannagri-expo.eu",
 
   // Date, lieu, affiche et tarifs dépendent de l'édition : voir le modèle Edition
   // (administration > Éditions) et lib/editions.
 
   // Contact
   contact: {
-    email: "hello@cannagri-expo.fr",
+    email: "hello@cannagri-expo.eu",
     phone: "+33 6 26 73 55 97",
   },
 
@@ -23,8 +23,8 @@ export const siteConfig = {
 
   // SEO
   seo: {
-    title: "Cann'Agri Expo | Salon Professionnel du Chanvre CBD",
-    description: "Le rendez-vous incontournable des professionnels du chanvre CBD en France. Exposants, conférences, Platinum CBD Cup.",
+    title: "Cann'Agri Expo | Salon professionnel du cannabis CBD",
+    description: "Le salon professionnel du cannabis CBD à Nantes : producteurs, matériel de culture, conférences et remise des prix de la Platinum CBD Cup.",
     keywords: [
       "CBD",
       "chanvre",
@@ -78,7 +78,7 @@ export const navigation: NavItem[] = [
 export const footerLinks = {
   about: {
     title: "À Propos",
-    content: "Cann'Agri Expo est le salon de référence des professionnels du chanvre CBD en France. Retrouvez producteurs, distributeurs et experts pour une journée d'échanges et de découvertes.",
+    content: "Cann'Agri Expo est le salon professionnel du cannabis CBD à Nantes. Retrouvez producteurs, distributeurs et experts pour une journée d'échanges et de découvertes.",
   },
   navigation: {
     title: "Navigation",
@@ -101,28 +101,32 @@ export const pillars = [
   {
     title: "Producteurs CBD",
     image: "/images/piliers/producteurs.jpg",
-    description: "Rencontrez les cultivateurs et producteurs de chanvre CBD français et européens.",
+    alt: "Fleurs de CBD exposées par un producteur en 2024",
+    description: "Cultivateurs français et européens, fleurs sur table.",
     icon: "leaf",
     link: "/exposants?category=producteur",
   },
   {
-    title: "Matériel de Culture",
+    title: "Matériel de culture",
     image: "/images/piliers/materiel.jpg",
-    description: "Découvrez les dernières innovations en équipement et technologie de culture.",
+    alt: "Démonstration de matériel de culture sur un stand en 2024",
+    description: "Équipement et démonstrations.",
     icon: "settings",
     link: "/exposants?category=materiel",
   },
   {
     title: "Conférences",
     image: "/images/piliers/conferences.jpg",
-    description: "Assistez aux interventions d'experts sur la réglementation et les tendances du marché.",
+    alt: "Table ronde sur la scène Cann'Agri en 2024",
+    description: "Réglementation et marché.",
     icon: "mic",
     link: "/programme",
   },
   {
-    title: "Lifestyle & Food",
+    title: "Lifestyle et food",
     image: "/images/piliers/lifestyle.jpg",
-    description: "Explorez les produits CBD pour le bien-être et l'alimentation.",
+    alt: "Stand d'accessoires en 2024",
+    description: "Bien-être, alimentation, accessoires.",
     icon: "heart",
     link: "/exposants?category=lifestyle",
   },

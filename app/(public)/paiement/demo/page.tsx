@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { Button, Card, CardContent } from '@/components/ui'
+import { formatTicketPrice } from '@/lib/editions/tickets'
 
 // Only allow this page in demo mode
 const DEMO_MODE_ENABLED = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
@@ -14,22 +15,21 @@ export default function DemoPaymentPage() {
   const orderId = searchParams.get('orderId')
   const amount = searchParams.get('amount')
 
-  // Redirect to home if demo mode is disabled
+  const [processing, setProcessing] = useState(false)
+  const [cardNumber, setCardNumber] = useState('4111 1111 1111 1111')
+  const [expiry, setExpiry] = useState('12/28')
+  const [cvv, setCvv] = useState('123')
+
+  // Hors mode démo, retour à l'accueil (les hooks restent appelés dans le même ordre)
   useEffect(() => {
     if (!DEMO_MODE_ENABLED) {
       router.replace('/')
     }
   }, [router])
 
-  // Don't render anything if demo mode is disabled
   if (!DEMO_MODE_ENABLED) {
     return null
   }
-
-  const [processing, setProcessing] = useState(false)
-  const [cardNumber, setCardNumber] = useState('4111 1111 1111 1111')
-  const [expiry, setExpiry] = useState('12/28')
-  const [cvv, setCvv] = useState('123')
 
   const handlePayment = async (success: boolean) => {
     setProcessing(true)
@@ -45,9 +45,9 @@ export default function DemoPaymentPage() {
         body: JSON.stringify({ orderId }),
       })
 
-      router.push(`/paiement/succes?orderId=${orderId}&demo=true`)
+      router.push(`/paiement/succes?orderId=${encodeURIComponent(orderId ?? '')}&demo=true`)
     } else {
-      router.push(`/paiement/echec?orderId=${orderId}&reason=declined`)
+      router.push(`/paiement/echec?orderId=${encodeURIComponent(orderId ?? '')}&reason=declined`)
     }
   }
 
@@ -56,7 +56,7 @@ export default function DemoPaymentPage() {
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
         <Card>
           <CardContent className="p-8 text-center">
-            <p className="text-red-600">Erreur: Aucune commande specifiee</p>
+            <p className="text-red-600">Erreur : aucune commande indiquée</p>
           </CardContent>
         </Card>
       </div>
@@ -65,10 +65,10 @@ export default function DemoPaymentPage() {
 
   return (
     <div className="min-h-screen bg-gray-100 py-8">
-      <div className="max-w-md mx-auto">
+      <div className="max-w-md mx-auto px-4">
         {/* Demo Warning */}
         <div className="bg-amber-50 border border-amber-300 text-amber-800 px-4 py-3 rounded-lg mb-4 text-sm text-center">
-          MODE DEMONSTRATION - Aucun paiement reel
+          Mode démonstration : aucun paiement réel
         </div>
 
         <Card className="shadow-xl">
@@ -76,7 +76,7 @@ export default function DemoPaymentPage() {
             {/* Header */}
             <div className="bg-[#1D2B3A] text-white p-6 rounded-t-lg">
               <div className="flex items-center justify-between mb-4">
-                <span className="text-sm opacity-80">Paiement securise</span>
+                <span className="text-sm opacity-80">Paiement sécurisé</span>
                 <div className="flex gap-2">
                   <div className="w-10 h-6 bg-white rounded flex items-center justify-center">
                     <span className="text-[#1a1f71] text-xs font-bold">VISA</span>
@@ -87,18 +87,19 @@ export default function DemoPaymentPage() {
                 </div>
               </div>
               <div className="text-3xl font-bold">
-                {amount ? `${(parseInt(amount) / 100).toFixed(2)} EUR` : '-- EUR'}
+                {amount && /^\d+$/.test(amount) ? formatTicketPrice(parseInt(amount, 10) / 100) : '— €'}
               </div>
-              <div className="text-sm opacity-80 mt-1">Cann Agri Expo</div>
+              <div className="text-sm opacity-80 mt-1">Cann&apos;Agri Expo</div>
             </div>
 
             {/* Form */}
             <div className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Numero de carte
+                <label htmlFor="demo-card" className="block text-sm font-medium text-gray-700 mb-1">
+                  Numéro de carte
                 </label>
                 <input
+                  id="demo-card"
                   type="text"
                   autoComplete="cc-number"
                   value={cardNumber}
@@ -110,10 +111,11 @@ export default function DemoPaymentPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Date expiration
+                  <label htmlFor="demo-expiry" className="block text-sm font-medium text-gray-700 mb-1">
+                    Date d&apos;expiration
                   </label>
                   <input
+                    id="demo-expiry"
                     type="text"
                     autoComplete="cc-exp"
                     value={expiry}
@@ -123,10 +125,11 @@ export default function DemoPaymentPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="demo-cvv" className="block text-sm font-medium text-gray-700 mb-1">
                     CVV
                   </label>
                   <input
+                    id="demo-cvv"
                     type="text"
                     autoComplete="cc-csc"
                     value={cvv}
@@ -144,23 +147,25 @@ export default function DemoPaymentPage() {
                   disabled={processing}
                   className="w-full bg-[#1D2B3A] hover:bg-[#131C25] text-white py-3"
                 >
-                  {processing ? 'Traitement...' : 'Payer maintenant'}
+                  {processing ? 'Traitement…' : 'Payer maintenant'}
                 </Button>
 
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     onClick={() => handlePayment(true)}
                     disabled={processing}
-                    className="px-4 py-2 bg-green-100 text-green-700 rounded-lg text-sm hover:bg-green-200 transition"
+                    type="button"
+                    className="min-h-[44px] px-4 py-2 bg-green-100 text-green-700 rounded-lg text-sm hover:bg-green-200 transition"
                   >
-                    Simuler SUCCES
+                    Simuler un succès
                   </button>
                   <button
                     onClick={() => handlePayment(false)}
                     disabled={processing}
-                    className="px-4 py-2 bg-red-100 text-red-700 rounded-lg text-sm hover:bg-red-200 transition"
+                    type="button"
+                    className="min-h-[44px] px-4 py-2 bg-red-100 text-red-700 rounded-lg text-sm hover:bg-red-200 transition"
                   >
-                    Simuler ECHEC
+                    Simuler un échec
                   </button>
                 </div>
               </div>
@@ -172,7 +177,7 @@ export default function DemoPaymentPage() {
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
-                Paiement simule - Mode test
+                Paiement simulé (mode test)
               </div>
             </div>
           </CardContent>
@@ -180,7 +185,7 @@ export default function DemoPaymentPage() {
 
         {/* Info */}
         <div className="mt-4 text-center text-sm text-gray-500">
-          <p>Commande: {orderId}</p>
+          <p className="break-all">Commande : {orderId}</p>
           <p className="mt-2">
             Cette page simule Viva Wallet pour les tests locaux.
           </p>

@@ -129,7 +129,7 @@ export function verifyVivaWalletSignature(
   const webhookSecret = process.env.VIVA_WALLET_WEBHOOK_SECRET
 
   // In demo mode with local simulation, skip verification
-  if (process.env.VIVA_WALLET_LOCAL_SIMULATION === 'true') {
+  if (process.env.VIVA_WALLET_LOCAL_SIMULATION === 'true' && process.env.NODE_ENV !== 'production') {
     console.log('[Viva Wallet] Local simulation mode - skipping signature verification')
     return true
   }

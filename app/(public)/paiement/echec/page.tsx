@@ -3,6 +3,7 @@
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Button, Card, CardContent } from '@/components/ui'
+import { siteConfig } from '@/config/site'
 
 export default function PaymentFailedPage() {
   const searchParams = useSearchParams()
@@ -46,7 +47,7 @@ export default function PaymentFailedPage() {
 
             {orderId && (
               <div className="bg-gray-50 rounded-lg p-4 mb-8 text-sm text-gray-600">
-                Référence de commande : <span className="font-mono">{orderId}</span>
+                Référence de commande : <span className="font-mono break-all">{orderId}</span>
               </div>
             )}
 
@@ -54,9 +55,9 @@ export default function PaymentFailedPage() {
               <h3 className="font-medium text-amber-800 mb-2">Que faire ?</h3>
               <ul className="text-sm text-amber-700 space-y-1">
                 <li>• Vérifiez les informations de votre carte bancaire</li>
-                <li>• Assurez-vous d&apos;avoir des fonds suffisants</li>
-                <li>• Essayez avec une autre méthode de paiement</li>
+                <li>• Essayez avec une autre carte ou un autre moyen de paiement</li>
                 <li>• Contactez votre banque si le problème persiste</li>
+                <li>• En cas de débit malgré l&apos;échec, écrivez-nous avec la référence ci-dessus</li>
               </ul>
             </div>
 
@@ -64,11 +65,6 @@ export default function PaymentFailedPage() {
               <Link href="/billetterie">
                 <Button variant="primary">
                   Réessayer l&apos;achat
-                </Button>
-              </Link>
-              <Link href="/pro/plan">
-                <Button variant="outline">
-                  Réserver un stand
                 </Button>
               </Link>
               <Link href="/">
@@ -86,13 +82,13 @@ export default function PaymentFailedPage() {
             Besoin d&apos;aide ?
           </p>
           <a
-            href="mailto:contact@cannagri-expo.fr"
-            className="inline-flex items-center gap-2 text-terracotta hover:underline"
+            href={`mailto:${siteConfig.contact.email}`}
+            className="inline-flex min-h-[44px] items-center gap-2 text-forest font-medium underline underline-offset-2"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
-            contact@cannagri-expo.fr
+            {siteConfig.contact.email}
           </a>
         </div>
       </div>
