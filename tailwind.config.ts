@@ -117,15 +117,6 @@ const config: Config = {
         heading: ['var(--font-barlow-condensed)', 'Barlow Condensed', 'sans-serif'],
         body: ['var(--font-barlow)', 'Barlow', 'sans-serif'],
       },
-      backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-      },
-      animation: {
-        'float': 'float 6s ease-in-out infinite',
-        'pulse-glow': 'pulse-glow 3s ease-in-out infinite',
-        'bounce-slow': 'bounce 3s ease-in-out infinite',
-      },
     },
   },
   plugins: [],
