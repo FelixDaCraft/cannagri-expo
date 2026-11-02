@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { getAllowedOrigins, isAllowedOrigin } from '@/lib/allowed-origin'
 
 // Security headers for all responses
 const securityHeaders = {
@@ -10,13 +11,8 @@ const securityHeaders = {
   'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
 }
 
-// Allowed origins for CSRF protection
-const ALLOWED_ORIGINS = [
-  'https://cannagri-expo.eu',
-  'https://www.cannagri-expo.eu',
-  'https://dev.cannagri-expo.eu',
-  'http://localhost:3000',
-]
+// Allowed origins for CSRF protection (comparaison exacte, voir lib/allowed-origin)
+const ALLOWED_ORIGINS = getAllowedOrigins()
 
 // API routes that should verify origin (POST/PUT/DELETE requests)
 // Exclude webhook endpoints that receive external requests
@@ -38,25 +34,7 @@ const WEBHOOK_ROUTES = [
  * Verify that the request origin is allowed (CSRF protection)
  */
 function verifyOrigin(request: NextRequest): boolean {
-  const origin = request.headers.get('origin')
-  const referer = request.headers.get('referer')
-
-  // Allow requests without origin (same-origin requests, curl, etc.)
-  if (!origin && !referer) {
-    return true
-  }
-
-  // Check if origin is in allowed list
-  if (origin && ALLOWED_ORIGINS.some(allowed => origin.startsWith(allowed))) {
-    return true
-  }
-
-  // Check referer if origin is not set
-  if (!origin && referer && ALLOWED_ORIGINS.some(allowed => referer.startsWith(allowed))) {
-    return true
-  }
-
-  return false
+  return isAllowedOrigin(request.headers.get('origin'), request.headers.get('referer'), ALLOWED_ORIGINS)
 }
 
 /**
