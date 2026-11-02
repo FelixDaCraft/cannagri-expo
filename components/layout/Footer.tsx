@@ -9,9 +9,9 @@ import { shortHoursRange } from '@/lib/home/format'
 const linkClass =
   'inline-flex min-h-[44px] items-center text-cream/75 transition-colors hover:text-cream md:min-h-[32px]'
 
-function FooterColumn({ title, children }: { title: string; children: React.ReactNode }) {
+function FooterColumn({ title, children, className }: { title: string; children: React.ReactNode; className?: string }) {
   return (
-    <div>
+    <div className={className}>
       <h2 className="mb-3 font-condensed text-lg font-semibold leading-none text-cream">{title}</h2>
       <ul className="grid gap-0.5">{children}</ul>
     </div>
@@ -85,9 +85,9 @@ export function Footer() {
             </li>
           </FooterColumn>
 
-          <FooterColumn title={tFooter('contact')}>
+          <FooterColumn title={tFooter('contact')} className="col-span-2 lg:col-span-1">
             <li>
-              <a href={`mailto:${siteConfig.contact.email}`} className={`${linkClass} break-all`}>
+              <a href={`mailto:${siteConfig.contact.email}`} className={linkClass}>
                 {siteConfig.contact.email}
               </a>
             </li>
