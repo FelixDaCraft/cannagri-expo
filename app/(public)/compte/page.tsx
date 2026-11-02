@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { Card, CardContent, Badge, Button } from '@/components/ui'
+import { PageHeader } from '@/components/ui/PageHeader'
 
 interface UserProfile {
   id: string
@@ -285,10 +286,10 @@ export default function ComptePage() {
     return (
       <div className="min-h-screen bg-cream py-12">
         <div className="container-custom">
-          <div className="max-w-2xl mx-auto">
-            <div className="animate-pulse space-y-4">
-              <div className="h-8 bg-gray-200 rounded w-1/3"></div>
-              <div className="h-64 bg-gray-200 rounded"></div>
+          <div className="max-w-3xl mx-auto">
+            <div className="animate-pulse space-y-4 motion-reduce:animate-none">
+              <div className="h-8 bg-forest/10 rounded w-1/3"></div>
+              <div className="h-64 bg-forest/10 rounded"></div>
             </div>
           </div>
         </div>
@@ -305,34 +306,23 @@ export default function ComptePage() {
   const canRequestPro = profile?.role !== 'PRO' && profile?.role !== 'ADMIN'
 
   return (
-    <div className="min-h-screen bg-cream py-12">
+    <>
+      <PageHeader title={t('title')} lead={t('subtitle')} />
+    <div className="bg-cream py-12 text-forest md:py-16">
       <div className="container-custom">
-        <div className="max-w-2xl mx-auto space-y-6">
-          {/* Header */}
-          <div>
-            <h1 className="text-3xl font-heading font-bold text-heading mb-2">
-              {t('title')}
-            </h1>
-            <p className="text-body/70">
-              {t('subtitle')}
-            </p>
-          </div>
-
+        <div className="max-w-3xl mx-auto space-y-6">
           {/* Message */}
           {message && (
             <div
-              className={`p-4 rounded-lg ${
-                message.type === 'success'
-                  ? 'bg-green-100 text-green-800 border border-green-200'
-                  : message.type === 'error'
-                  ? 'bg-red-100 text-red-800 border border-red-200'
-                  : 'bg-blue-100 text-blue-800 border border-blue-200'
-              }`}
+              role={message.type === 'error' ? 'alert' : 'status'}
+              className={`flex items-start justify-between gap-4 ${message.type === 'error' ? 'notice-error' : 'notice-success'}`}
             >
               {message.text}
               <button
-                className="float-right font-bold"
+                type="button"
+                className="-my-2 -mr-2 inline-flex h-11 w-11 shrink-0 items-center justify-center text-xl font-bold"
                 onClick={() => setMessage(null)}
+                aria-label={t('closeMessage')}
               >
                 &times;
               </button>
@@ -341,28 +331,28 @@ export default function ComptePage() {
 
           {/* PRO Status Card */}
           {isPro && (
-            <Card className={isApproved ? 'border-green-200 bg-green-50' : 'border-orange-200 bg-orange-50'}>
+            <Card className={isApproved ? 'border-mascot-deep/40 bg-terracotta-50' : 'border-mint bg-mint-50'}>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
-                      isApproved ? 'bg-green-200' : 'bg-orange-200'
+                      isApproved ? 'bg-terracotta-100' : 'bg-mint-100'
                     }`}>
                       {isApproved ? (
-                        <svg className="w-6 h-6 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-6 h-6 text-mascot-deep" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                         </svg>
                       ) : (
-                        <svg className="w-6 h-6 text-orange-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-6 h-6 text-gold-ink" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                       )}
                     </div>
                     <div>
-                      <h3 className={`font-semibold ${isApproved ? 'text-green-800' : 'text-orange-800'}`}>
+                      <h3 className={`font-semibold ${isApproved ? 'text-forest' : 'text-forest'}`}>
                         {t('pro.title')}
                       </h3>
-                      <p className={`text-sm ${isApproved ? 'text-green-600' : 'text-orange-600'}`}>
+                      <p className={`text-sm ${isApproved ? 'text-mascot-deep' : 'text-gold-ink'}`}>
                         {isApproved
                           ? t('pro.validatedMessage')
                           : t('pro.pendingMessage')}
@@ -384,7 +374,7 @@ export default function ComptePage() {
                 <div className="flex items-center justify-between mb-6">
                   <div>
                     <h2 className="text-xl font-heading font-semibold text-forest">{t('exhibitor.title')}</h2>
-                    <p className="text-sm text-gray-600">{t('exhibitor.subtitle')}</p>
+                    <p className="text-sm text-ink">{t('exhibitor.subtitle')}</p>
                   </div>
                   {!editProProfile && (
                     <Button variant="outline" size="sm" onClick={() => setEditProProfile(true)}>
@@ -396,34 +386,34 @@ export default function ComptePage() {
                 {editProProfile ? (
                   <form onSubmit={handleSaveProProfile} className="space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="field-label">
                         {t('exhibitor.description')}
                       </label>
                       <textarea
                         value={proProfileData.companyDescription}
                         onChange={(e) => setProProfileData({ ...proProfileData, companyDescription: e.target.value })}
                         rows={4}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent resize-none"
+                        className="field-input resize-y"
                         placeholder={t('exhibitor.descriptionPlaceholder')}
                       />
-                      <p className="text-xs text-gray-500 mt-1">{t('exhibitor.maxChars')}</p>
+                      <p className="text-sm text-ink mt-1">{t('exhibitor.maxChars')}</p>
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="field-label">
                         {t('exhibitor.logo')}
                       </label>
 
                       {/* Current logo preview */}
                       {proProfileData.companyLogo && (
-                        <div className="mb-4 p-4 bg-gray-50 rounded-lg flex items-center gap-4">
+                        <div className="mb-4 p-4 bg-cream-100 rounded-lg flex items-center gap-4">
                           <img
                             src={proProfileData.companyLogo}
                             alt={t('exhibitor.currentLogo')}
-                            className="h-20 w-auto object-contain rounded border border-gray-200 bg-white p-2"
+                            className="h-20 w-auto object-contain rounded border border-forest/15 bg-white p-2"
                           />
                           <div className="flex-1">
-                            <p className="text-sm text-gray-600 mb-2">{t('exhibitor.currentLogo')}</p>
+                            <p className="text-sm text-ink mb-2">{t('exhibitor.currentLogo')}</p>
                             <button
                               type="button"
                               onClick={handleDeleteLogo}
@@ -445,22 +435,22 @@ export default function ComptePage() {
                           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
                         />
                         <div className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
-                          uploadingLogo ? 'border-gray-300 bg-gray-50' : 'border-forest/30 hover:border-forest hover:bg-forest/5'
+                          uploadingLogo ? 'border-forest/30 bg-cream-100' : 'border-forest/30 hover:border-forest hover:bg-forest/5'
                         }`}>
                           {uploadingLogo ? (
                             <div className="flex items-center justify-center gap-2">
                               <div className="w-5 h-5 border-2 border-forest/30 border-t-forest rounded-full animate-spin" />
-                              <span className="text-gray-600">{t('exhibitor.uploading')}</span>
+                              <span className="text-ink">{t('exhibitor.uploading')}</span>
                             </div>
                           ) : (
                             <>
                               <svg className="w-10 h-10 mx-auto text-forest/50 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                               </svg>
-                              <p className="text-sm text-gray-600">
+                              <p className="text-sm text-ink">
                                 <span className="text-forest font-medium">{t('exhibitor.uploadLogo')}</span> {t('exhibitor.uploadLogoHint')}
                               </p>
-                              <p className="text-xs text-gray-500 mt-1">{t('exhibitor.uploadFormats')}</p>
+                              <p className="text-sm text-ink mt-1">{t('exhibitor.uploadFormats')}</p>
                             </>
                           )}
                         </div>
@@ -468,7 +458,7 @@ export default function ComptePage() {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="field-label">
                         {t('exhibitor.website')}
                       </label>
                       <input
@@ -476,10 +466,10 @@ export default function ComptePage() {
                         autoComplete="url"
                         value={proProfileData.companyWebsite}
                         onChange={(e) => setProProfileData({ ...proProfileData, companyWebsite: e.target.value })}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent"
+                        className="field-input"
                         placeholder={t('exhibitor.websitePlaceholder')}
                       />
-                      <p className="text-xs text-gray-500 mt-1">{t('exhibitor.websiteHint')}</p>
+                      <p className="text-sm text-ink mt-1">{t('exhibitor.websiteHint')}</p>
                     </div>
 
                     <div className="flex gap-3 pt-4">
@@ -505,20 +495,20 @@ export default function ComptePage() {
                         <img
                           src={profile.companyLogo}
                           alt={t('exhibitor.logo')}
-                          className="h-16 w-auto object-contain rounded-lg border border-gray-200 p-2"
+                          className="h-16 w-auto object-contain rounded-lg border border-forest/15 p-2"
                         />
                       </div>
                     )}
                     <div>
-                      <p className="text-sm text-gray-500 mb-1">{t('exhibitor.description')}</p>
-                      <p className="text-gray-800">
+                      <p className="text-sm text-ink mb-1">{t('exhibitor.description')}</p>
+                      <p className="text-forest">
                         {profile?.companyDescription || (
-                          <span className="italic text-gray-400">{t('exhibitor.noDescription')}</span>
+                          <span className="italic text-ink">{t('exhibitor.noDescription')}</span>
                         )}
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500 mb-1">{t('exhibitor.website')}</p>
+                      <p className="text-sm text-ink mb-1">{t('exhibitor.website')}</p>
                       {profile?.companyWebsite ? (
                         <a
                           href={profile.companyWebsite}
@@ -532,7 +522,7 @@ export default function ComptePage() {
                           </svg>
                         </a>
                       ) : (
-                        <span className="italic text-gray-400">{t('exhibitor.noWebsite')}</span>
+                        <span className="italic text-ink">{t('exhibitor.noWebsite')}</span>
                       )}
                     </div>
                     {!profile?.companyDescription && !profile?.companyLogo && !profile?.companyWebsite && (
@@ -563,7 +553,7 @@ export default function ComptePage() {
               {editMode ? (
                 <form onSubmit={handleSaveProfile} className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="field-label">
                       {t('profile.fullName')}
                     </label>
                     <input
@@ -571,12 +561,12 @@ export default function ComptePage() {
                       autoComplete="name"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent"
+                      className="field-input"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="field-label">
                       {t('profile.email')}
                     </label>
                     <input
@@ -584,13 +574,13 @@ export default function ComptePage() {
                       autoComplete="email"
                       value={profile?.email || ''}
                       disabled
-                      className="w-full px-4 py-3 border border-gray-200 rounded-lg bg-gray-50 text-gray-500"
+                      className="field-input bg-cream-100 text-ink"
                     />
-                    <p className="text-xs text-gray-500 mt-1">{t('profile.emailNotEditable')}</p>
+                    <p className="text-sm text-ink mt-1">{t('profile.emailNotEditable')}</p>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="field-label">
                       {t('profile.phone')}
                     </label>
                     <input
@@ -598,12 +588,12 @@ export default function ComptePage() {
                       autoComplete="tel"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent"
+                      className="field-input"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="field-label">
                       {t('profile.company')}
                     </label>
                     <input
@@ -611,19 +601,19 @@ export default function ComptePage() {
                       autoComplete="organization"
                       value={formData.companyName}
                       onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent"
+                      className="field-input"
                     />
                   </div>
 
                   {isPro && (
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="field-label">
                         {t('profile.businessType')}
                       </label>
                       <select
                         value={formData.businessType}
                         onChange={(e) => setFormData({ ...formData, businessType: e.target.value })}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent"
+                        className="field-input"
                       >
                         <option value="">{t('profile.selectActivity')}</option>
                         {(['PRODUCTEURS', 'MATERIEL', 'LIFESTYLE', 'SERVICE'] as const).map((key) => (
@@ -650,27 +640,27 @@ export default function ComptePage() {
                     </div>
                     <div>
                       <p className="font-semibold text-lg">{profile?.name || t('profile.notProvided')}</p>
-                      <p className="text-gray-600">{profile?.email}</p>
+                      <p className="text-ink">{profile?.email}</p>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4 pt-4 border-t">
                     <div>
-                      <p className="text-sm text-gray-500">{t('profile.phone')}</p>
+                      <p className="text-sm text-ink">{t('profile.phone')}</p>
                       <p className="font-medium">{profile?.phone || t('profile.notProvided')}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500">{t('profile.company')}</p>
+                      <p className="text-sm text-ink">{t('profile.company')}</p>
                       <p className="font-medium">{profile?.companyName || t('profile.notProvided')}</p>
                     </div>
                     {isPro && (
                       <>
                         <div>
-                          <p className="text-sm text-gray-500">{t('profile.siret')}</p>
+                          <p className="text-sm text-ink">{t('profile.siret')}</p>
                           <p className="font-medium font-mono">{profile?.siret || t('profile.notProvided')}</p>
                         </div>
                         <div>
-                          <p className="text-sm text-gray-500">{t('profile.businessType')}</p>
+                          <p className="text-sm text-ink">{t('profile.businessType')}</p>
                           <p className="font-medium">
                             {profile?.businessType ? t(`businessTypes.${profile.businessType}`) : t('profile.notProvided')}
                           </p>
@@ -695,7 +685,7 @@ export default function ComptePage() {
                   </div>
                   <div className="flex-1">
                     <h3 className="font-semibold text-lg text-forest">{t('becomeExhibitor.title')}</h3>
-                    <p className="text-gray-600 text-sm mt-1">
+                    <p className="text-ink text-sm mt-1">
                       {t('becomeExhibitor.description')}
                     </p>
 
@@ -708,9 +698,9 @@ export default function ComptePage() {
                         {t('becomeExhibitor.button')}
                       </Button>
                     ) : (
-                      <form onSubmit={handleProRequest} className="mt-4 space-y-4 p-4 bg-gray-50 rounded-lg">
+                      <form onSubmit={handleProRequest} className="mt-4 space-y-4 p-4 bg-cream-100 rounded-lg">
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                          <label className="field-label">
                             {t('becomeExhibitor.companyName')} *
                           </label>
                           <input
@@ -719,12 +709,12 @@ export default function ComptePage() {
                             value={proFormData.companyName}
                             onChange={(e) => setProFormData({ ...proFormData, companyName: e.target.value })}
                             required
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent"
+                            className="field-input"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                          <label className="field-label">
                             {t('profile.siret')} *
                           </label>
                           <input
@@ -734,20 +724,20 @@ export default function ComptePage() {
                             onChange={(e) => setProFormData({ ...proFormData, siret: e.target.value })}
                             required
                             maxLength={17}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent"
+                            className="field-input"
                             placeholder="123 456 789 00012"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                          <label className="field-label">
                             {t('profile.businessType')} *
                           </label>
                           <select
                             value={proFormData.businessType}
                             onChange={(e) => setProFormData({ ...proFormData, businessType: e.target.value })}
                             required
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent"
+                            className="field-input"
                           >
                             <option value="">{t('profile.selectActivity')}</option>
                             {(['PRODUCTEURS', 'MATERIEL', 'LIFESTYLE', 'SERVICE'] as const).map((key) => (
@@ -773,7 +763,7 @@ export default function ComptePage() {
           )}
 
           {/* Member since */}
-          <p className="text-center text-sm text-gray-500">
+          <p className="text-center text-sm text-ink">
             {t('memberSince')}{' '}
             {profile?.createdAt
               ? new Date(profile.createdAt).toLocaleDateString(undefined, {
@@ -786,5 +776,6 @@ export default function ComptePage() {
         </div>
       </div>
     </div>
+    </>
   )
 }

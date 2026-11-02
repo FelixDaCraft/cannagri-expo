@@ -688,101 +688,131 @@
   },
   "account": {
     "title": "Mon compte",
-    "subtitle": "Gérez vos informations personnelles",
+    "subtitle": "Vos informations, vos billets et, pour les exposants, votre profil.",
+    "closeMessage": "Fermer le message",
+    "memberSince": "Membre depuis le",
     "profile": {
       "title": "Informations personnelles",
       "edit": "Modifier",
-      "fullName": "Nom complet",
-      "email": "Email",
-      "emailNotEditable": "L'email ne peut pas être modifié",
+      "fullName": "Nom et prénom",
+      "email": "E-mail",
+      "emailNotEditable": "L'adresse e-mail ne peut pas être modifiée.",
       "phone": "Téléphone",
       "company": "Entreprise",
-      "businessType": "Type d'activité",
-      "selectActivity": "Sélectionnez votre activité",
+      "businessType": "Activité",
+      "selectActivity": "Choisissez votre activité",
       "siret": "SIRET",
       "notProvided": "Non renseigné",
       "save": "Enregistrer",
-      "saving": "Enregistrement...",
+      "saving": "Enregistrement…",
       "cancel": "Annuler",
-      "updateSuccess": "Profil mis à jour avec succès",
-      "updateError": "Erreur lors de la mise à jour"
+      "updateSuccess": "Profil mis à jour.",
+      "updateError": "La mise à jour n'a pas abouti. Réessayez."
     },
     "pro": {
-      "title": "Compte Professionnel",
+      "title": "Compte professionnel",
       "validated": "Validé",
       "pending": "En attente",
-      "validatedMessage": "Votre compte est validé. Vous avez accès à l'Espace Pro.",
+      "validatedMessage": "Votre compte est validé : vous avez accès à l'espace pro.",
       "pendingMessage": "Votre demande est en cours de validation par notre équipe.",
-      "requestPending": "Votre demande de compte professionnel a bien été enregistrée. Elle sera validée par notre équipe dans les plus brefs délais.",
-      "requestSent": "Votre demande de compte professionnel a été envoyée. Elle sera validée par notre équipe."
+      "requestPending": "Votre demande de compte professionnel est enregistrée. Notre équipe la valide au plus vite.",
+      "requestSent": "Votre demande de compte professionnel est envoyée. Notre équipe la valide au plus vite."
     },
     "exhibitor": {
-      "title": "Profil Exposant",
-      "subtitle": "Ces informations apparaîtront sur la page Exposants du site",
+      "title": "Profil exposant",
+      "subtitle": "Ces informations apparaissent sur la page Exposants du site.",
       "description": "Description de votre activité",
-      "descriptionPlaceholder": "Décrivez votre activité, vos produits, vos services...",
-      "maxChars": "Maximum 500 caractères",
+      "descriptionPlaceholder": "Vos produits, vos services, ce qui vous distingue…",
+      "maxChars": "500 caractères maximum.",
       "logo": "Logo de votre entreprise",
       "currentLogo": "Logo actuel",
       "deleteLogo": "Supprimer le logo",
-      "uploadLogo": "Cliquez pour choisir",
+      "uploadLogo": "Choisir un fichier",
       "uploadLogoHint": "ou glissez-déposez votre logo",
-      "uploadFormats": "PNG, JPG, WebP ou GIF - Max 2 Mo",
-      "uploading": "Upload en cours...",
-      "uploadSuccess": "Logo uploadé avec succès",
-      "uploadError": "Erreur lors de l'upload",
-      "logoDeleted": "Logo supprimé",
+      "uploadFormats": "PNG, JPG, WebP ou GIF, 2 Mo maximum.",
+      "uploading": "Envoi en cours…",
+      "uploadSuccess": "Logo enregistré.",
+      "uploadError": "Le logo n'a pas pu être envoyé.",
+      "logoDeleted": "Logo supprimé.",
       "website": "Site web de l'entreprise",
-      "websitePlaceholder": "https://www.mon-entreprise.fr",
-      "websiteHint": "Ce lien apparaîtra sur la page Exposants du site",
-      "noDescription": "Aucune description ajoutée",
-      "noWebsite": "Aucun site web ajouté",
-      "completeProfile": "Ajoutez une description, un logo et un site web pour apparaître sur la page Exposants du site.",
-      "updateSuccess": "Profil entreprise mis à jour avec succès",
-      "fileTypeError": "Type de fichier non autorisé. Utilisez JPG, PNG, WebP ou GIF.",
-      "fileSizeError": "Le fichier est trop volumineux. Maximum 2 Mo."
+      "websitePlaceholder": "https://www.votre-entreprise.fr",
+      "websiteHint": "Ce lien apparaît sur la page Exposants du site.",
+      "noDescription": "Aucune description pour l'instant.",
+      "noWebsite": "Aucun site web pour l'instant.",
+      "completeProfile": "Ajoutez une description, un logo et un site web pour apparaître sur la page Exposants.",
+      "updateSuccess": "Profil exposant mis à jour.",
+      "fileTypeError": "Format non accepté : utilisez JPG, PNG, WebP ou GIF.",
+      "fileSizeError": "Le fichier dépasse 2 Mo."
     },
     "becomeExhibitor": {
-      "title": "Devenir exposant professionnel",
-      "description": "Accédez à l'Espace Pro pour réserver votre stand, gérer vos informations exposant et profiter d'avantages exclusifs.",
+      "title": "Devenir exposant",
+      "description": "Demandez un compte professionnel pour réserver votre stand et gérer votre fiche exposant.",
       "button": "Faire une demande",
       "companyName": "Nom de l'entreprise",
-      "allFieldsRequired": "Tous les champs sont requis pour la demande PRO",
+      "allFieldsRequired": "Tous les champs sont nécessaires pour la demande.",
       "submit": "Envoyer la demande",
-      "submitting": "Envoi..."
+      "submitting": "Envoi…"
     },
-    "memberSince": "Membre depuis le",
     "tickets": {
       "title": "Mes billets",
-      "noTickets": "Aucun billet",
-      "download": "Télécharger",
-      "viewQR": "Voir le QR code"
-    },
-    "orders": {
-      "title": "Mes commandes",
-      "noOrders": "Aucune commande",
-      "viewDetails": "Voir les détails"
-    },
-    "businessTypes": {
-      "PRODUCTEURS": "Producteurs",
-      "MATERIEL": "Matériel agricole",
-      "LIFESTYLE": "Lifestyle & Bien-être",
-      "SERVICE": "Services"
+      "subtitle": "Retrouvez et téléchargez vos billets pour le salon.",
+      "back": "Retour à mon compte",
+      "loading": "Chargement de vos billets…",
+      "loadError": "Vos billets n'ont pas pu être chargés. Réessayez dans un instant.",
+      "downloadError": "Le billet n'a pas pu être téléchargé. Réessayez dans un instant.",
+      "verify": {
+        "title": "Vérifiez votre adresse e-mail",
+        "text": "Pour protéger vos billets, ils s'affichent ici une fois l'adresse <strong>{email}</strong> vérifiée. Vous les avez aussi reçus par e-mail après l'achat.",
+        "cta": "Recevoir le lien de vérification",
+        "sending": "Envoi…",
+        "sent": "Lien envoyé : ouvrez l'e-mail, cliquez sur le lien, puis revenez sur cette page.",
+        "error": "L'envoi n'a pas abouti. Réessayez dans quelques minutes."
+      },
+      "empty": {
+        "title": "Aucun billet",
+        "text": "Vous n'avez pas encore de billet associé à ce compte.",
+        "cta": "Acheter des billets"
+      },
+      "types": {
+        "STANDARD": "Billet Standard",
+        "FLEX": "Billet Flex"
+      },
+      "status": {
+        "used": "Utilisé",
+        "valid": "Valide"
+      },
+      "order": "Commande {number}",
+      "scannedAt": "Scanné le {date}",
+      "download": "Télécharger le PDF",
+      "downloadFor": "Télécharger le billet de {name} (PDF)",
+      "downloading": "Téléchargement…"
     },
     "stands": {
-      "title": "Mes Stands",
-      "subtitle": "Retrouvez vos réservations de stands pour le salon.",
-      "backToAccount": "Retour au compte",
+      "title": "Mes stands",
+      "subtitle": "Vos réservations de stands pour le salon.",
+      "backToAccount": "Retour à mon compte",
+      "loadError": "Vos stands n'ont pas pu être chargés. Réessayez dans un instant.",
       "noStands": "Aucun stand réservé",
       "noStandsDescription": "Vous n'avez pas encore réservé de stand.",
       "bookStand": "Réserver un stand",
       "order": "Commande",
       "furniture": "Mobilier",
       "electricity": "Électricité",
-      "exhibitorName": "Nom exposant",
-      "totalStands": "Total stands",
+      "exhibitorName": "Nom de l'exposant",
+      "totalStands": "Stands",
       "totalSurface": "Surface totale",
-      "bookAnotherStand": "Réserver un autre stand"
+      "bookAnotherStand": "Réserver un autre stand",
+      "sizes": {
+        "SMALL": "Petit",
+        "MEDIUM": "Moyen",
+        "LARGE": "Grand"
+      }
+    },
+    "businessTypes": {
+      "PRODUCTEURS": "Producteurs CBD",
+      "MATERIEL": "Matériel de culture",
+      "LIFESTYLE": "Lifestyle et bien-être",
+      "SERVICE": "Services"
     }
   },
   "footer": {

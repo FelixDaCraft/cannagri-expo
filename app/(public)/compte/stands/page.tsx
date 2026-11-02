@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { Card, CardContent, Button, Badge } from '@/components/ui'
 import { formatPrice } from '@/lib/utils'
 import { useTranslations } from 'next-intl'
+import { PageHeader } from '@/components/ui/PageHeader'
 
 interface Stand {
   id: string
@@ -32,11 +33,6 @@ interface Stand {
   }
 }
 
-const sizeLabels: Record<string, string> = {
-  SMALL: 'Petit',
-  MEDIUM: 'Moyen',
-  LARGE: 'Grand',
-}
 
 export default function MesStandsPage() {
   const t = useTranslations('account')
@@ -64,12 +60,12 @@ export default function MesStandsPage() {
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || 'Erreur lors de la récupération des stands')
+        throw new Error(t('stands.loadError'))
       }
 
       setStands(data.stands)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Une erreur est survenue')
+      setError(err instanceof Error ? err.message : t('stands.loadError'))
     } finally {
       setIsLoading(false)
     }
@@ -94,38 +90,23 @@ export default function MesStandsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-cream py-12">
-      <div className="container-custom">
-        {/* Header */}
-        <div className="mb-8">
-          <Link
-            href="/compte"
-            className="inline-flex items-center text-forest hover:underline mb-4"
-          >
-            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            {t('stands.backToAccount')}
-          </Link>
-          <h1 className="text-3xl font-heading font-bold text-heading">
-            {t('stands.title')}
-          </h1>
-          <p className="text-body/70 mt-2">
-            {t('stands.subtitle')}
-          </p>
-        </div>
-
+    <>
+      <PageHeader
+        eyebrow={<Link href="/compte" className="underline decoration-mint/50 underline-offset-4 hover:decoration-mint">{t('stands.backToAccount')}</Link>}
+        title={t('stands.title')}
+        lead={t('stands.subtitle')}
+      />
+    <div className="bg-cream py-12 text-forest md:py-16">
+      <div className="container-custom max-w-4xl">
         {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
-            {error}
-          </div>
+          <p role="alert" className="notice-error mb-6">{error}</p>
         )}
 
         {stands.length === 0 ? (
           <Card>
             <CardContent className="text-center py-12">
               <svg
-                className="w-16 h-16 mx-auto text-gray-300 mb-4"
+                className="w-16 h-16 mx-auto text-forest/30 mb-4"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -137,10 +118,10 @@ export default function MesStandsPage() {
                   d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
                 />
               </svg>
-              <h2 className="text-xl font-heading font-semibold text-heading mb-2">
+              <h2 className="text-xl font-condensed font-semibold text-forest mb-2">
                 {t('stands.noStands')}
               </h2>
-              <p className="text-body/70 mb-6">
+              <p className="text-ink mb-6">
                 {t('stands.noStandsDescription')}
               </p>
               <Link href="/pro/plan">
@@ -156,14 +137,14 @@ export default function MesStandsPage() {
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-lg font-heading font-semibold text-heading">
+                        <h3 className="text-lg font-condensed font-semibold text-forest">
                           Stand n°{stand.number}
                         </h3>
                         <Badge variant="sage">
-                          {sizeLabels[stand.size] || stand.size}
+                          {t(`stands.sizes.${stand.size}`)}
                         </Badge>
                       </div>
-                      <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-body/70">
+                      <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-ink">
                         <span className="flex items-center gap-1">
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
@@ -191,7 +172,7 @@ export default function MesStandsPage() {
                       {/* Options */}
                       <div className="flex flex-wrap gap-2 mt-3">
                         {stand.hasFurniture && (
-                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border border-forest/30 text-forest bg-forest/5">
+                          <span className="inline-flex items-center px-2 py-1 rounded-full text-sm font-medium border border-forest/30 text-forest bg-forest/5">
                             <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                             </svg>
@@ -199,7 +180,7 @@ export default function MesStandsPage() {
                           </span>
                         )}
                         {stand.hasElectricity && (
-                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border border-forest/30 text-forest bg-forest/5">
+                          <span className="inline-flex items-center px-2 py-1 rounded-full text-sm font-medium border border-forest/30 text-forest bg-forest/5">
                             <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                             </svg>
@@ -219,7 +200,7 @@ export default function MesStandsPage() {
                       <p className="text-2xl font-bold text-forest">
                         {formatPrice(stand.order.amount)}
                       </p>
-                      <p className="text-xs text-body/50">
+                      <p className="text-sm text-ink">
                         {formatPrice(stand.order.amountHT)} HT
                       </p>
                     </div>
@@ -237,10 +218,10 @@ export default function MesStandsPage() {
               <CardContent>
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div>
-                    <h3 className="font-heading font-semibold text-heading">
+                    <h3 className="font-condensed font-semibold text-forest">
                       {t('stands.totalStands')}: {stands.length}
                     </h3>
-                    <p className="text-sm text-body/70">
+                    <p className="text-sm text-ink">
                       {t('stands.totalSurface')}: {stands.reduce((acc, s) => acc + s.surfaceM2, 0)} m²
                     </p>
                   </div>
@@ -256,5 +237,6 @@ export default function MesStandsPage() {
         )}
       </div>
     </div>
+    </>
   )
 }

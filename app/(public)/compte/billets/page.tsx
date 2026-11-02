@@ -1,11 +1,14 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Card, CardContent, Button, Badge } from '@/components/ui'
-import { formatPrice } from '@/lib/utils'
+import { useLocale, useTranslations } from 'next-intl'
+import { formatTicketPrice } from '@/lib/editions/tickets'
+import { PageHeader } from '@/components/ui/PageHeader'
+import { ButtonLink, buttonClasses } from '@/components/ui/ButtonLink'
+import { cn } from '@/lib/utils'
 
 interface Ticket {
   id: string
@@ -21,53 +24,51 @@ interface Ticket {
   }
 }
 
-const ticketTypeLabels: Record<string, string> = {
-  STANDARD: 'Standard',
-  FLEX: 'Flex',
-}
-
 export default function MesBilletsPage() {
+  const t = useTranslations('account.tickets')
+  const locale = useLocale()
   const { data: session, status } = useSession()
   const router = useRouter()
   const [tickets, setTickets] = useState<Ticket[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState('')
+  const [errorKey, setErrorKey] = useState<'loadError' | 'downloadError' | null>(null)
   const [downloadingId, setDownloadingId] = useState<string | null>(null)
   const [needsVerification, setNeedsVerification] = useState(false)
   const [resendState, setResendState] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
 
+  const formatDate = (value: string, withTime = false) =>
+    new Intl.DateTimeFormat(locale, {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+      ...(withTime ? { hour: '2-digit', minute: '2-digit' } : {}),
+      timeZone: 'Europe/Paris',
+    }).format(new Date(value))
+
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/connexion?callbackUrl=/compte/billets')
-    }
+    if (status === 'unauthenticated') router.push('/connexion?callbackUrl=/compte/billets')
   }, [status, router])
 
-  useEffect(() => {
-    if (session?.user) {
-      fetchTickets()
-    }
-  }, [session])
-
-  const fetchTickets = async () => {
+  const fetchTickets = useCallback(async () => {
     try {
       const response = await fetch('/api/user/tickets')
       const data = await response.json()
-
       if (response.status === 403 && data.code === 'EMAIL_NOT_VERIFIED') {
         setNeedsVerification(true)
         return
       }
-      if (!response.ok) {
-        throw new Error(data.error || 'Erreur lors de la récupération des billets')
-      }
-
+      if (!response.ok) throw new Error('load')
       setTickets(data.tickets)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Une erreur est survenue')
+    } catch {
+      setErrorKey('loadError')
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    if (session?.user) fetchTickets()
+  }, [session, fetchTickets])
 
   const resendVerification = async () => {
     setResendState('sending')
@@ -81,15 +82,10 @@ export default function MesBilletsPage() {
 
   const handleDownload = async (ticketId: string) => {
     setDownloadingId(ticketId)
+    setErrorKey(null)
     try {
       const response = await fetch(`/api/user/tickets/${ticketId}`)
-
-      if (!response.ok) {
-        const data = await response.json()
-        throw new Error(data.error || 'Erreur lors du téléchargement')
-      }
-
-      // Download the PDF
+      if (!response.ok) throw new Error('download')
       const blob = await response.blob()
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement('a')
@@ -99,180 +95,75 @@ export default function MesBilletsPage() {
       a.click()
       window.URL.revokeObjectURL(url)
       document.body.removeChild(a)
-    } catch (err) {
-      alert(err instanceof Error ? err.message : 'Erreur lors du téléchargement')
+    } catch {
+      setErrorKey('downloadError')
     } finally {
       setDownloadingId(null)
     }
   }
 
-  if (status === 'loading' || isLoading) {
-    return (
-      <div className="min-h-screen bg-cream py-12">
-        <div className="container-custom">
-          <div className="flex items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-forest"></div>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
   return (
-    <div className="min-h-screen bg-cream py-12">
-      <div className="container-custom">
-        {/* Header */}
-        <div className="mb-8">
-          <Link
-            href="/compte"
-            className="inline-flex items-center text-forest hover:underline mb-4"
-          >
-            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            Retour au compte
-          </Link>
-          <h1 className="text-3xl font-heading font-bold text-heading">
-            Mes Billets
-          </h1>
-          <p className="text-body/70 mt-2">
-            Retrouvez et téléchargez vos billets pour le salon.
-          </p>
-        </div>
+    <>
+      <PageHeader eyebrow={<Link href="/compte" className="underline decoration-mint/50 underline-offset-4 hover:decoration-mint">{t('back')}</Link>} title={t('title')} lead={t('subtitle')} />
+      <div className="bg-cream py-12 text-forest md:py-16">
+        <div className="container-custom max-w-4xl">
+          {errorKey && <p role="alert" className="notice-error mb-6">{t(errorKey)}</p>}
 
-        {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
-            {error}
-          </div>
-        )}
-
-        {needsVerification ? (
-          <Card>
-            <CardContent className="py-10 text-center max-w-xl mx-auto">
-              <h2 className="text-xl font-heading font-semibold text-heading mb-2">
-                Vérifiez votre adresse e-mail
-              </h2>
-              <p className="text-body/80 mb-6">
-                Pour protéger vos billets, ils s&apos;affichent ici une fois l&apos;adresse{' '}
-                <strong className="break-all">{session?.user?.email}</strong> vérifiée. Vous les avez aussi reçus par
-                e-mail après l&apos;achat.
+          {status === 'loading' || isLoading ? (
+            <div role="status" className="flex items-center gap-4">
+              <span aria-hidden="true" className="h-8 w-8 animate-spin rounded-full border-4 border-forest/20 border-t-forest motion-reduce:animate-none" />
+              <span className="text-lg text-ink">{t('loading')}</span>
+            </div>
+          ) : needsVerification ? (
+            <section className="rounded-2xl border-2 border-forest bg-cream-100 p-6 md:p-8">
+              <h2 className="font-condensed text-2xl font-semibold">{t('verify.title')}</h2>
+              <p className="mt-2 text-lg text-ink">
+                {t.rich('verify.text', { email: session?.user?.email ?? '', strong: (chunks) => <strong className="break-all text-forest">{chunks}</strong> })}
               </p>
               {resendState === 'sent' ? (
-                <p role="status" className="text-forest font-medium">
-                  Lien envoyé : ouvrez l&apos;e-mail et cliquez sur le lien, puis revenez sur cette page.
-                </p>
+                <p role="status" className="notice-success mt-6">{t('verify.sent')}</p>
               ) : (
-                <Button onClick={resendVerification} isLoading={resendState === 'sending'}>
-                  Recevoir le lien de vérification
-                </Button>
+                <button type="button" onClick={resendVerification} disabled={resendState === 'sending'} className={cn(buttonClasses(), 'mt-6 disabled:opacity-60')}>
+                  {resendState === 'sending' ? t('verify.sending') : t('verify.cta')}
+                </button>
               )}
-              {resendState === 'error' && (
-                <p role="alert" className="mt-4 text-sm text-red-700">
-                  L&apos;envoi n&apos;a pas abouti. Réessayez dans quelques minutes.
-                </p>
-              )}
-            </CardContent>
-          </Card>
-        ) : tickets.length === 0 ? (
-          <Card>
-            <CardContent className="text-center py-12">
-              <svg
-                className="w-16 h-16 mx-auto text-gray-300 mb-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"
-                />
-              </svg>
-              <h2 className="text-xl font-heading font-semibold text-heading mb-2">
-                Aucun billet
-              </h2>
-              <p className="text-body/70 mb-6">
-                Vous n&apos;avez pas encore acheté de billets.
-              </p>
-              <Link href="/billetterie">
-                <Button>Acheter des billets</Button>
-              </Link>
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="space-y-4">
-            {tickets.map((ticket) => (
-              <Card key={ticket.id}>
-                <CardContent>
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-lg font-heading font-semibold text-heading">
-                          {ticket.customerName}
-                        </h3>
-                        <Badge variant={ticket.status === 'USED' ? 'default' : 'sage'}>
-                          {ticket.status === 'USED' ? 'Utilisé' : 'Valide'}
-                        </Badge>
-                      </div>
-                      <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-body/70">
-                        <span className="flex items-center gap-1">
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
-                          </svg>
-                          {ticketTypeLabels[ticket.ticketType] || ticket.ticketType}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                          </svg>
-                          Commande {ticket.order.orderNumber}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                          </svg>
-                          {new Date(ticket.order.paidAt).toLocaleDateString('fr-FR', {
-                            day: 'numeric',
-                            month: 'long',
-                            year: 'numeric',
-                          })}
-                        </span>
-                        <span className="font-medium text-forest">
-                          {formatPrice(ticket.ticketPrice)}
-                        </span>
-                      </div>
-                      {ticket.scannedAt && (
-                        <p className="mt-2 text-xs text-body/50">
-                          Scanné le {new Date(ticket.scannedAt).toLocaleDateString('fr-FR', {
-                            day: 'numeric',
-                            month: 'long',
-                            year: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit',
-                          })}
-                        </p>
-                      )}
-                    </div>
-                    <div>
-                      <Button
-                        variant="outline"
-                        onClick={() => handleDownload(ticket.id)}
-                        isLoading={downloadingId === ticket.id}
-                      >
-                        <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                        </svg>
-                        Télécharger PDF
-                      </Button>
-                    </div>
+              {resendState === 'error' && <p role="alert" className="notice-error mt-4">{t('verify.error')}</p>}
+            </section>
+          ) : tickets.length === 0 ? (
+            <section className="rounded-2xl border-2 border-forest bg-cream-100 p-6 md:p-8">
+              <h2 className="font-condensed text-2xl font-semibold">{t('empty.title')}</h2>
+              <p className="mt-2 text-lg text-ink">{t('empty.text')}</p>
+              <ButtonLink href="/billetterie" className="mt-6">{t('empty.cta')}</ButtonLink>
+            </section>
+          ) : (
+            <ul className="space-y-4">
+              {tickets.map((ticket) => (
+                <li key={ticket.id} className="flex flex-col justify-between gap-4 rounded-2xl border border-forest/15 bg-cream-100 p-5 md:flex-row md:items-center">
+                  <div className="min-w-0">
+                    <p className="font-condensed text-base font-semibold text-gold-ink">
+                      {t(`types.${ticket.ticketType}`)} · {ticket.status === 'USED' ? t('status.used') : t('status.valid')}
+                    </p>
+                    <h2 className="font-condensed text-2xl font-semibold leading-tight">{ticket.customerName}</h2>
+                    <p className="mt-1 text-base text-ink">
+                      {t('order', { number: ticket.order.orderNumber })} · {formatDate(ticket.order.paidAt)} · {formatTicketPrice(ticket.ticketPrice)}
+                    </p>
+                    {ticket.scannedAt && <p className="mt-1 text-base text-ink">{t('scannedAt', { date: formatDate(ticket.scannedAt, true) })}</p>}
                   </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
+                  <button
+                    type="button"
+                    onClick={() => handleDownload(ticket.id)}
+                    disabled={downloadingId === ticket.id}
+                    aria-label={t('downloadFor', { name: ticket.customerName })}
+                    className={cn(buttonClasses({ tone: 'outline-night', size: 'sm' }), 'shrink-0 disabled:opacity-60')}
+                  >
+                    {downloadingId === ticket.id ? t('downloading') : t('download')}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   )
 }

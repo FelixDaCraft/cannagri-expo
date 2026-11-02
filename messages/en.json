@@ -688,101 +688,131 @@
   },
   "account": {
     "title": "My account",
-    "subtitle": "Manage your personal information",
+    "subtitle": "Your details, your tickets and, for exhibitors, your profile.",
+    "closeMessage": "Close message",
+    "memberSince": "Member since",
     "profile": {
-      "title": "Personal information",
+      "title": "Personal details",
       "edit": "Edit",
       "fullName": "Full name",
       "email": "Email",
-      "emailNotEditable": "Email cannot be changed",
+      "emailNotEditable": "The email address cannot be changed.",
       "phone": "Phone",
       "company": "Company",
       "businessType": "Business type",
-      "selectActivity": "Select your activity",
+      "selectActivity": "Choose your business type",
       "siret": "SIRET",
       "notProvided": "Not provided",
       "save": "Save",
-      "saving": "Saving...",
+      "saving": "Saving…",
       "cancel": "Cancel",
-      "updateSuccess": "Profile updated successfully",
-      "updateError": "Error updating profile"
+      "updateSuccess": "Profile updated.",
+      "updateError": "The update failed. Please try again."
     },
     "pro": {
-      "title": "Professional Account",
-      "validated": "Validated",
+      "title": "Professional account",
+      "validated": "Approved",
       "pending": "Pending",
-      "validatedMessage": "Your account is validated. You have access to the Pro Space.",
-      "pendingMessage": "Your request is being reviewed by our team.",
-      "requestPending": "Your professional account request has been registered. It will be validated by our team shortly.",
-      "requestSent": "Your professional account request has been sent. It will be validated by our team."
+      "validatedMessage": "Your account is approved: you have access to the professional area.",
+      "pendingMessage": "Our team is reviewing your request.",
+      "requestPending": "Your professional account request has been recorded. Our team will review it shortly.",
+      "requestSent": "Your professional account request has been sent. Our team will review it shortly."
     },
     "exhibitor": {
-      "title": "Exhibitor Profile",
-      "subtitle": "This information will appear on the Exhibitors page",
-      "description": "Description of your activity",
-      "descriptionPlaceholder": "Describe your activity, products, services...",
-      "maxChars": "Maximum 500 characters",
+      "title": "Exhibitor profile",
+      "subtitle": "This information appears on the site's Exhibitors page.",
+      "description": "Description of your business",
+      "descriptionPlaceholder": "Your products, your services, what makes you different…",
+      "maxChars": "500 characters maximum.",
       "logo": "Company logo",
       "currentLogo": "Current logo",
       "deleteLogo": "Delete logo",
-      "uploadLogo": "Click to choose",
+      "uploadLogo": "Choose a file",
       "uploadLogoHint": "or drag and drop your logo",
-      "uploadFormats": "PNG, JPG, WebP or GIF - Max 2 MB",
-      "uploading": "Uploading...",
-      "uploadSuccess": "Logo uploaded successfully",
-      "uploadError": "Error uploading logo",
-      "logoDeleted": "Logo deleted",
+      "uploadFormats": "PNG, JPG, WebP or GIF, 2 MB maximum.",
+      "uploading": "Uploading…",
+      "uploadSuccess": "Logo saved.",
+      "uploadError": "The logo could not be uploaded.",
+      "logoDeleted": "Logo deleted.",
       "website": "Company website",
-      "websitePlaceholder": "https://www.my-company.com",
-      "websiteHint": "This link will appear on the Exhibitors page",
-      "noDescription": "No description added",
-      "noWebsite": "No website added",
-      "completeProfile": "Add a description, logo and website to appear on the Exhibitors page.",
-      "updateSuccess": "Company profile updated successfully",
-      "fileTypeError": "File type not allowed. Use JPG, PNG, WebP or GIF.",
-      "fileSizeError": "File is too large. Maximum 2 MB."
+      "websitePlaceholder": "https://www.your-company.com",
+      "websiteHint": "This link appears on the site's Exhibitors page.",
+      "noDescription": "No description yet.",
+      "noWebsite": "No website yet.",
+      "completeProfile": "Add a description, a logo and a website to appear on the Exhibitors page.",
+      "updateSuccess": "Exhibitor profile updated.",
+      "fileTypeError": "Format not accepted: use JPG, PNG, WebP or GIF.",
+      "fileSizeError": "The file is larger than 2 MB."
     },
     "becomeExhibitor": {
-      "title": "Become a professional exhibitor",
-      "description": "Access the Pro Space to book your stand, manage your exhibitor information and enjoy exclusive benefits.",
-      "button": "Make a request",
+      "title": "Become an exhibitor",
+      "description": "Request a professional account to book your stand and manage your exhibitor listing.",
+      "button": "Send a request",
       "companyName": "Company name",
-      "allFieldsRequired": "All fields are required for the PRO request",
-      "submit": "Submit request",
-      "submitting": "Submitting..."
+      "allFieldsRequired": "All fields are required for the request.",
+      "submit": "Send the request",
+      "submitting": "Sending…"
     },
-    "memberSince": "Member since",
     "tickets": {
       "title": "My tickets",
-      "noTickets": "No tickets",
-      "download": "Download",
-      "viewQR": "View QR code"
-    },
-    "orders": {
-      "title": "My orders",
-      "noOrders": "No orders",
-      "viewDetails": "View details"
-    },
-    "businessTypes": {
-      "PRODUCTEURS": "Producers",
-      "MATERIEL": "Agricultural equipment",
-      "LIFESTYLE": "Lifestyle & Wellness",
-      "SERVICE": "Services"
+      "subtitle": "Find and download your tickets for the show.",
+      "back": "Back to my account",
+      "loading": "Loading your tickets…",
+      "loadError": "Your tickets could not be loaded. Please try again in a moment.",
+      "downloadError": "The ticket could not be downloaded. Please try again in a moment.",
+      "verify": {
+        "title": "Verify your email address",
+        "text": "To protect your tickets, they appear here once <strong>{email}</strong> has been verified. You also received them by email after your purchase.",
+        "cta": "Send me the verification link",
+        "sending": "Sending…",
+        "sent": "Link sent: open the email, click the link, then come back to this page.",
+        "error": "Sending failed. Please try again in a few minutes."
+      },
+      "empty": {
+        "title": "No tickets",
+        "text": "There are no tickets linked to this account yet.",
+        "cta": "Buy tickets"
+      },
+      "types": {
+        "STANDARD": "Standard ticket",
+        "FLEX": "Flex ticket"
+      },
+      "status": {
+        "used": "Used",
+        "valid": "Valid"
+      },
+      "order": "Order {number}",
+      "scannedAt": "Scanned on {date}",
+      "download": "Download PDF",
+      "downloadFor": "Download {name}'s ticket (PDF)",
+      "downloading": "Downloading…"
     },
     "stands": {
-      "title": "My Stands",
-      "subtitle": "View your stand reservations for the exhibition.",
-      "backToAccount": "Back to account",
-      "noStands": "No stand reserved",
-      "noStandsDescription": "You have not reserved any stand yet.",
+      "title": "My stands",
+      "subtitle": "Your stand bookings for the show.",
+      "backToAccount": "Back to my account",
+      "loadError": "Your stands could not be loaded. Please try again in a moment.",
+      "noStands": "No stand booked",
+      "noStandsDescription": "You haven't booked a stand yet.",
       "bookStand": "Book a stand",
       "order": "Order",
       "furniture": "Furniture",
       "electricity": "Electricity",
       "exhibitorName": "Exhibitor name",
-      "totalStands": "Total stands",
-      "totalSurface": "Total surface",
-      "bookAnotherStand": "Book another stand"
+      "totalStands": "Stands",
+      "totalSurface": "Total area",
+      "bookAnotherStand": "Book another stand",
+      "sizes": {
+        "SMALL": "Small",
+        "MEDIUM": "Medium",
+        "LARGE": "Large"
+      }
+    },
+    "businessTypes": {
+      "PRODUCTEURS": "CBD growers",
+      "MATERIEL": "Growing equipment",
+      "LIFESTYLE": "Lifestyle and wellness",
+      "SERVICE": "Services"
     }
   },
   "footer": {
