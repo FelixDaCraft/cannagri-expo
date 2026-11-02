@@ -230,33 +230,32 @@
     }
   },
   "exhibitors": {
-    "title": "Nos Exposants",
-    "subtitle": "Découvrez les acteurs de la filière chanvre CBD présents lors du salon",
-    "confirmedCount": "{count} exposants confirmés",
-    "comingSoon": "Exposants à venir",
+    "metaTitle": "Exposants",
+    "title": "Exposants",
+    "subtitle": "Les acteurs de la filière cannabis CBD présents au salon.",
+    "confirmedCount": "{count, plural, one {# exposant confirmé} other {# exposants confirmés}}",
+    "comingSoonLead": "Les exposants {year} seront annoncés ici au fil des inscriptions.",
+    "previous": {
+      "title": "Ils étaient là en {year}",
+      "text": "{count} stands ont accueilli les visiteurs de l'édition {year}. Un aperçu de ce qui vous attend.",
+      "link": "Revoir l'édition {year}"
+    },
     "categories": {
-      "all": "Tous",
       "PRODUCTEURS": "Producteurs CBD",
-      "MATERIEL": "Matériel de Culture",
-      "LIFESTYLE": "Lifestyle & Food",
+      "MATERIEL": "Matériel de culture",
+      "LIFESTYLE": "Lifestyle et food",
       "SERVICE": "Services",
-      "agriculture": "Agriculture",
-      "industry": "Industrie",
-      "wellness": "Bien-être",
-      "technology": "Technologie"
+      "other": "Autres"
     },
     "stand": "Stand",
-    "descriptionComingSoon": "Description à venir",
-    "visitWebsite": "Visiter le site",
-    "websiteComingSoon": "Site web à venir",
+    "logoAlt": "Logo de {name}",
+    "newTab": "(nouvel onglet)",
     "noExhibitors": "Les exposants seront bientôt annoncés.",
     "cta": {
       "title": "Vous souhaitez exposer ?",
-      "description": "Rejoignez les exposants du salon de référence du chanvre CBD. Réservez votre stand dès maintenant.",
-      "button": "Devenir Exposant"
-    },
-    "becomeExhibitor": "Devenir exposant",
-    "contactUs": "Nous contacter"
+      "description": "Stands {year} : demandez la plaquette avec les emplacements, les tarifs et les étapes.",
+      "button": "Demander la plaquette"
+    }
   },
   "event": {
     "metaTitle": "Présentation du salon",

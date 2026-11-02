@@ -229,33 +229,32 @@
     }
   },
   "exhibitors": {
-    "title": "I Nostri Espositori",
-    "subtitle": "Scopri gli attori del settore della canapa CBD presenti alla fiera",
-    "confirmedCount": "{count} espositori confermati",
-    "comingSoon": "Espositori in arrivo",
+    "metaTitle": "Espositori",
+    "title": "Espositori",
+    "subtitle": "Le aziende della filiera della cannabis CBD presenti in fiera.",
+    "confirmedCount": "{count, plural, one {# espositore confermato} other {# espositori confermati}}",
+    "comingSoonLead": "Gli espositori {year} saranno annunciati qui man mano che si iscrivono.",
+    "previous": {
+      "title": "Erano qui nel {year}",
+      "text": "{count} stand hanno accolto i visitatori dell'edizione {year}. Un'anteprima di ciò che vi aspetta.",
+      "link": "Rivedi l'edizione {year}"
+    },
     "categories": {
-      "all": "Tutti",
-      "PRODUCTEURS": "Produttori CBD",
-      "MATERIEL": "Attrezzature di Coltivazione",
-      "LIFESTYLE": "Lifestyle & Food",
+      "PRODUCTEURS": "Produttori di CBD",
+      "MATERIEL": "Attrezzatura per la coltivazione",
+      "LIFESTYLE": "Lifestyle e food",
       "SERVICE": "Servizi",
-      "agriculture": "Agricoltura",
-      "industry": "Industria",
-      "wellness": "Benessere",
-      "technology": "Tecnologia"
+      "other": "Altro"
     },
     "stand": "Stand",
-    "descriptionComingSoon": "Descrizione in arrivo",
-    "visitWebsite": "Visita il sito",
-    "websiteComingSoon": "Sito web in arrivo",
-    "noExhibitors": "Gli espositori saranno annunciati presto.",
+    "logoAlt": "Logo di {name}",
+    "newTab": "(nuova scheda)",
+    "noExhibitors": "Gli espositori saranno annunciati a breve.",
     "cta": {
-      "title": "Vuoi esporre?",
-      "description": "Unisciti agli espositori della fiera di riferimento della canapa CBD. Prenota ora il tuo stand.",
-      "button": "Diventa Espositore"
-    },
-    "becomeExhibitor": "Diventa espositore",
-    "contactUs": "Contattaci"
+      "title": "Volete esporre?",
+      "description": "Stand {year}: richiedete la brochure con posizioni, tariffe e tappe.",
+      "button": "Richiedi la brochure"
+    }
   },
   "event": {
     "metaTitle": "Presentazione della fiera",

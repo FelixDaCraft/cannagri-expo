@@ -230,33 +230,32 @@
     }
   },
   "exhibitors": {
-    "title": "Our Exhibitors",
-    "subtitle": "Discover the CBD hemp industry players present at the exhibition",
-    "confirmedCount": "{count} confirmed exhibitors",
-    "comingSoon": "Exhibitors coming soon",
+    "metaTitle": "Exhibitors",
+    "title": "Exhibitors",
+    "subtitle": "The cannabis CBD businesses exhibiting at the show.",
+    "confirmedCount": "{count, plural, one {# confirmed exhibitor} other {# confirmed exhibitors}}",
+    "comingSoonLead": "The {year} exhibitors will be announced here as they sign up.",
+    "previous": {
+      "title": "They were here in {year}",
+      "text": "{count} stands welcomed visitors at the {year} edition. A preview of what's waiting for you.",
+      "link": "Look back at {year}"
+    },
     "categories": {
-      "all": "All",
-      "PRODUCTEURS": "CBD Producers",
-      "MATERIEL": "Growing Equipment",
-      "LIFESTYLE": "Lifestyle & Food",
+      "PRODUCTEURS": "CBD growers",
+      "MATERIEL": "Growing equipment",
+      "LIFESTYLE": "Lifestyle and food",
       "SERVICE": "Services",
-      "agriculture": "Agriculture",
-      "industry": "Industry",
-      "wellness": "Wellness",
-      "technology": "Technology"
+      "other": "Other"
     },
     "stand": "Stand",
-    "descriptionComingSoon": "Description coming soon",
-    "visitWebsite": "Visit website",
-    "websiteComingSoon": "Website coming soon",
+    "logoAlt": "{name} logo",
+    "newTab": "(new tab)",
     "noExhibitors": "Exhibitors will be announced soon.",
     "cta": {
       "title": "Want to exhibit?",
-      "description": "Join the exhibitors at the reference CBD hemp exhibition. Book your stand now.",
-      "button": "Become an Exhibitor"
-    },
-    "becomeExhibitor": "Become an exhibitor",
-    "contactUs": "Contact us"
+      "description": "{year} stands: request the brochure with locations, prices and next steps.",
+      "button": "Request the brochure"
+    }
   },
   "event": {
     "metaTitle": "About the show",

@@ -229,33 +229,32 @@
     }
   },
   "exhibitors": {
-    "title": "Nuestros Expositores",
-    "subtitle": "Descubre los actores del sector del cáñamo CBD presentes en la feria",
-    "confirmedCount": "{count} expositores confirmados",
-    "comingSoon": "Expositores próximamente",
+    "metaTitle": "Expositores",
+    "title": "Expositores",
+    "subtitle": "Las empresas del sector del cannabis CBD presentes en la feria.",
+    "confirmedCount": "{count, plural, one {# expositor confirmado} other {# expositores confirmados}}",
+    "comingSoonLead": "Los expositores de {year} se anunciarán aquí a medida que se inscriban.",
+    "previous": {
+      "title": "Estuvieron aquí en {year}",
+      "text": "{count} stands recibieron a los visitantes de la edición {year}. Un adelanto de lo que le espera.",
+      "link": "Volver a ver {year}"
+    },
     "categories": {
-      "all": "Todos",
-      "PRODUCTEURS": "Productores CBD",
-      "MATERIEL": "Equipamiento de Cultivo",
-      "LIFESTYLE": "Lifestyle & Food",
+      "PRODUCTEURS": "Productores de CBD",
+      "MATERIEL": "Material de cultivo",
+      "LIFESTYLE": "Lifestyle y comida",
       "SERVICE": "Servicios",
-      "agriculture": "Agricultura",
-      "industry": "Industria",
-      "wellness": "Bienestar",
-      "technology": "Tecnología"
+      "other": "Otros"
     },
     "stand": "Stand",
-    "descriptionComingSoon": "Descripción próximamente",
-    "visitWebsite": "Visitar sitio web",
-    "websiteComingSoon": "Sitio web próximamente",
-    "noExhibitors": "Los expositores serán anunciados próximamente.",
+    "logoAlt": "Logo de {name}",
+    "newTab": "(nueva pestaña)",
+    "noExhibitors": "Los expositores se anunciarán pronto.",
     "cta": {
-      "title": "¿Quieres exponer?",
-      "description": "Únete a los expositores de la feria de referencia del cáñamo CBD. Reserva tu stand ahora.",
-      "button": "Ser Expositor"
-    },
-    "becomeExhibitor": "Ser expositor",
-    "contactUs": "Contáctanos"
+      "title": "¿Quiere exponer?",
+      "description": "Stands {year}: solicite el dossier con los emplazamientos, las tarifas y los pasos.",
+      "button": "Solicitar el dossier"
+    }
   },
   "event": {
     "metaTitle": "Presentación de la feria",

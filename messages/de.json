@@ -229,33 +229,32 @@
     }
   },
   "exhibitors": {
-    "title": "Unsere Aussteller",
-    "subtitle": "Entdecken Sie die CBD-Hanf-Branchenakteure auf der Messe",
-    "confirmedCount": "{count} bestätigte Aussteller",
-    "comingSoon": "Aussteller kommen bald",
+    "metaTitle": "Aussteller",
+    "title": "Aussteller",
+    "subtitle": "Die Unternehmen der Cannabis-CBD-Branche, die auf der Messe ausstellen.",
+    "confirmedCount": "{count, plural, one {# bestätigter Aussteller} other {# bestätigte Aussteller}}",
+    "comingSoonLead": "Die Aussteller {year} werden hier nach und nach bekannt gegeben.",
+    "previous": {
+      "title": "Sie waren {year} dabei",
+      "text": "{count} Stände haben die Besucher der Ausgabe {year} empfangen. Ein Vorgeschmack auf das, was Sie erwartet.",
+      "link": "Rückblick auf {year}"
+    },
     "categories": {
-      "all": "Alle",
-      "PRODUCTEURS": "CBD-Produzenten",
-      "MATERIEL": "Anbauausrüstung",
-      "LIFESTYLE": "Lifestyle & Food",
+      "PRODUCTEURS": "CBD-Erzeuger",
+      "MATERIEL": "Anbauzubehör",
+      "LIFESTYLE": "Lifestyle und Food",
       "SERVICE": "Dienstleistungen",
-      "agriculture": "Landwirtschaft",
-      "industry": "Industrie",
-      "wellness": "Wellness",
-      "technology": "Technologie"
+      "other": "Sonstige"
     },
     "stand": "Stand",
-    "descriptionComingSoon": "Beschreibung folgt",
-    "visitWebsite": "Website besuchen",
-    "websiteComingSoon": "Website folgt",
-    "noExhibitors": "Aussteller werden bald angekündigt.",
+    "logoAlt": "Logo von {name}",
+    "newTab": "(neuer Tab)",
+    "noExhibitors": "Die Aussteller werden bald bekannt gegeben.",
     "cta": {
-      "title": "Möchten Sie ausstellen?",
-      "description": "Werden Sie Aussteller auf der Referenzmesse für CBD-Hanf. Buchen Sie jetzt Ihren Stand.",
-      "button": "Aussteller werden"
-    },
-    "becomeExhibitor": "Aussteller werden",
-    "contactUs": "Kontaktieren Sie uns"
+      "title": "Sie möchten ausstellen?",
+      "description": "Stände {year}: Fordern Sie die Broschüre mit Standorten, Preisen und Ablauf an.",
+      "button": "Broschüre anfordern"
+    }
   },
   "event": {
     "metaTitle": "Über die Messe",
