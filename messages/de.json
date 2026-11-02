@@ -765,5 +765,14 @@
     "findUsAtEvent": "Besuchen Sie uns auf der Messe",
     "website": "Website",
     "backToExhibitors": "Alle Aussteller ansehen"
+  },
+  "notFound": {
+    "metaTitle": "Seite nicht gefunden",
+    "code": "Fehler 404",
+    "title": "Seite nicht gefunden",
+    "annotation": "in den Gängen verlaufen",
+    "text": "Diese Seite existiert nicht oder ist umgezogen. Tickets und alle Infos zur Messe sind nur einen Klick entfernt.",
+    "tickets": "Tickets",
+    "home": "Zur Startseite"
   }
 }

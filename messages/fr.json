@@ -829,5 +829,14 @@
     "findUsAtEvent": "Retrouvez-nous au salon",
     "website": "Site web",
     "backToExhibitors": "Voir tous les exposants"
+  },
+  "notFound": {
+    "metaTitle": "Page introuvable",
+    "code": "Erreur 404",
+    "title": "Page introuvable",
+    "annotation": "on s'est perdus dans les allées",
+    "text": "Cette page n'existe pas ou a changé d'adresse. Les billets et toutes les infos du salon sont à portée de clic.",
+    "tickets": "Billetterie",
+    "home": "Retour à l'accueil"
   }
 }

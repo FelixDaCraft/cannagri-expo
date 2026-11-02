@@ -765,5 +765,14 @@
     "findUsAtEvent": "Trovateci in fiera",
     "website": "Sito web",
     "backToExhibitors": "Vedi tutti gli espositori"
+  },
+  "notFound": {
+    "metaTitle": "Pagina non trovata",
+    "code": "Errore 404",
+    "title": "Pagina non trovata",
+    "annotation": "persi tra gli stand",
+    "text": "Questa pagina non esiste o ha cambiato indirizzo. I biglietti e tutte le informazioni sulla fiera sono a portata di clic.",
+    "tickets": "Biglietti",
+    "home": "Torna alla home"
   }
 }

@@ -829,5 +829,14 @@
     "findUsAtEvent": "Find us at the show",
     "website": "Website",
     "backToExhibitors": "See all exhibitors"
+  },
+  "notFound": {
+    "metaTitle": "Page not found",
+    "code": "Error 404",
+    "title": "Page not found",
+    "annotation": "lost in the aisles",
+    "text": "This page doesn't exist or has moved. Tickets and everything about the show are just a click away.",
+    "tickets": "Tickets",
+    "home": "Back to home"
   }
 }
