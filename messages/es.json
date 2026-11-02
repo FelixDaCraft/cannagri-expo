@@ -781,5 +781,75 @@
     "text": "Esta página no existe o ha cambiado de dirección. Las entradas y toda la información de la feria están a un clic.",
     "tickets": "Entradas",
     "home": "Volver al inicio"
+  },
+  "payment": {
+    "question": "¿Alguna pregunta? Escríbanos a",
+    "verifying": {
+      "title": "Verificando el pago",
+      "text": "Estamos verificando su pago con el banco.",
+      "keepOpen": "No cierre esta página."
+    },
+    "pending": {
+      "title": "Pago en curso",
+      "text": "Su banco todavía está procesando el pago, espere un momento.",
+      "attempt": "Nueva verificación ({count} de 5)…"
+    },
+    "verifyFailed": {
+      "title": "No se ha podido verificar",
+      "failed": "El pago ha fallado. No se ha emitido ninguna entrada.",
+      "missingParams": "Falta la referencia del pago en la dirección de la página.",
+      "verifyError": "No se ha podido verificar el pago por el momento.",
+      "unknown": "No se ha podido verificar el pago. Si se le ha cobrado, escríbanos: encontraremos su pedido.",
+      "retry": "Reintentar",
+      "backToTickets": "Volver a las entradas"
+    },
+    "success": {
+      "eyebrow": "¡Gracias!",
+      "title": "Pago confirmado",
+      "demo": "Modo de demostración: no se ha realizado ningún pago real.",
+      "thanksTicket": "Gracias por su compra. Le hemos enviado un correo de confirmación a <strong>{email}</strong>.",
+      "thanksStand": "Gracias por reservar un stand. Le hemos enviado un correo de confirmación a <strong>{email}</strong>.",
+      "orderNumber": "N.º de pedido",
+      "amount": "Importe",
+      "nextSteps": "¿Y ahora?",
+      "steps": {
+        "ticket1": "Recibirá por correo una entrada nominativa por asistente, con la factura.",
+        "ticket2": "Muestre el código QR en el acceso, en el móvil o impreso.",
+        "ticket3": "¿No ha recibido nada en unos minutos? Revise la carpeta de correo no deseado.",
+        "stand1": "La confirmación se envía por correo electrónico.",
+        "stand2": "La guía del expositor se le enviará en breve.",
+        "stand3": "Nuestro equipo se pondrá en contacto con usted."
+      },
+      "noDetails": "Su pago se ha procesado. Recibirá un correo de confirmación en breve.",
+      "account": {
+        "title": "Encuentre sus entradas en línea (opcional)",
+        "text": "Cree una cuenta con la dirección <strong>{email}</strong>: sus entradas aparecerán en «Mis entradas» una vez verificada la dirección.",
+        "cta": "Crear mi cuenta"
+      },
+      "home": "Volver al inicio",
+      "more": "Comprar más entradas"
+    },
+    "failed": {
+      "title": "Pago no realizado",
+      "reasons": {
+        "cancelled": "Ha cancelado el pago. No se le ha cobrado nada.",
+        "expired": "La sesión de pago ha caducado.",
+        "declined": "Su banco ha rechazado el pago.",
+        "insufficient_funds": "Saldo insuficiente en la cuenta.",
+        "default": "Se ha producido un error durante el pago."
+      },
+      "reference": "Referencia del pedido:",
+      "whatToDo": "¿Qué hacer?",
+      "tips": {
+        "card": "Compruebe los datos de su tarjeta.",
+        "other": "Pruebe con otra tarjeta.",
+        "bank": "Contacte con su banco si el problema persiste.",
+        "charged": "Si se le ha cobrado a pesar del error, escríbanos indicando la referencia de arriba."
+      },
+      "retry": "Reintentar la compra",
+      "home": "Volver al inicio",
+      "help": "¿Necesita ayuda? Escríbanos a"
+    },
+    "metaTitle": "Pago"
   }
 }

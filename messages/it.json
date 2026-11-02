@@ -781,5 +781,75 @@
     "text": "Questa pagina non esiste o ha cambiato indirizzo. I biglietti e tutte le informazioni sulla fiera sono a portata di clic.",
     "tickets": "Biglietti",
     "home": "Torna alla home"
+  },
+  "payment": {
+    "question": "Una domanda? Scriveteci a",
+    "verifying": {
+      "title": "Verifica del pagamento",
+      "text": "Stiamo verificando il pagamento con la banca.",
+      "keepOpen": "Non chiudete questa pagina."
+    },
+    "pending": {
+      "title": "Pagamento in corso",
+      "text": "La vostra banca sta ancora elaborando il pagamento, attendete.",
+      "attempt": "Nuova verifica ({count} di 5)…"
+    },
+    "verifyFailed": {
+      "title": "Verifica impossibile",
+      "failed": "Il pagamento non è andato a buon fine. Nessun biglietto è stato emesso.",
+      "missingParams": "Nell'indirizzo della pagina manca il riferimento del pagamento.",
+      "verifyError": "Al momento non è possibile verificare il pagamento.",
+      "unknown": "Non è stato possibile verificare il pagamento. Se vi è stato addebitato, scriveteci: ritroveremo il vostro ordine.",
+      "retry": "Riprova",
+      "backToTickets": "Torna alla biglietteria"
+    },
+    "success": {
+      "eyebrow": "Grazie!",
+      "title": "Pagamento confermato",
+      "demo": "Modalità dimostrativa: nessun pagamento reale è stato effettuato.",
+      "thanksTicket": "Grazie per l'acquisto. Un'e-mail di conferma è stata inviata a <strong>{email}</strong>.",
+      "thanksStand": "Grazie per la prenotazione dello stand. Un'e-mail di conferma è stata inviata a <strong>{email}</strong>.",
+      "orderNumber": "N. ordine",
+      "amount": "Importo",
+      "nextSteps": "E adesso?",
+      "steps": {
+        "ticket1": "Un e-biglietto nominativo per partecipante arriva via e-mail, con la fattura.",
+        "ticket2": "Mostrate il QR code all'ingresso, sul telefono o stampato.",
+        "ticket3": "Non ricevuto entro qualche minuto? Controllate nella posta indesiderata.",
+        "stand1": "La conferma viene inviata via e-mail.",
+        "stand2": "La guida per gli espositori vi sarà inviata a breve.",
+        "stand3": "Il nostro team vi contatterà."
+      },
+      "noDetails": "Il pagamento è stato elaborato. Riceverete a breve un'e-mail di conferma.",
+      "account": {
+        "title": "Ritrovate i biglietti online (facoltativo)",
+        "text": "Create un account con l'indirizzo <strong>{email}</strong>: i biglietti appariranno in “I miei biglietti” una volta verificato l'indirizzo.",
+        "cta": "Crea il mio account"
+      },
+      "home": "Torna alla home",
+      "more": "Acquista altri biglietti"
+    },
+    "failed": {
+      "title": "Pagamento non effettuato",
+      "reasons": {
+        "cancelled": "Avete annullato il pagamento. Nessun importo è stato addebitato.",
+        "expired": "La sessione di pagamento è scaduta.",
+        "declined": "La vostra banca ha rifiutato il pagamento.",
+        "insufficient_funds": "Fondi insufficienti sul conto.",
+        "default": "Si è verificato un errore durante il pagamento."
+      },
+      "reference": "Riferimento dell'ordine:",
+      "whatToDo": "Cosa fare?",
+      "tips": {
+        "card": "Controllate i dati della carta.",
+        "other": "Provate con un'altra carta.",
+        "bank": "Contattate la banca se il problema persiste.",
+        "charged": "In caso di addebito nonostante l'errore, scriveteci indicando il riferimento qui sopra."
+      },
+      "retry": "Riprova l'acquisto",
+      "home": "Torna alla home",
+      "help": "Serve aiuto? Scriveteci a"
+    },
+    "metaTitle": "Pagamento"
   }
 }

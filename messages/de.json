@@ -781,5 +781,75 @@
     "text": "Diese Seite existiert nicht oder ist umgezogen. Tickets und alle Infos zur Messe sind nur einen Klick entfernt.",
     "tickets": "Tickets",
     "home": "Zur Startseite"
+  },
+  "payment": {
+    "question": "Eine Frage? Schreiben Sie uns an",
+    "verifying": {
+      "title": "Zahlung wird geprüft",
+      "text": "Wir prüfen Ihre Zahlung bei der Bank.",
+      "keepOpen": "Bitte schließen Sie diese Seite nicht."
+    },
+    "pending": {
+      "title": "Zahlung läuft",
+      "text": "Ihre Bank bearbeitet die Zahlung noch, bitte haben Sie etwas Geduld.",
+      "attempt": "Erneute Prüfung ({count} von 5)…"
+    },
+    "verifyFailed": {
+      "title": "Prüfung nicht möglich",
+      "failed": "Die Zahlung ist fehlgeschlagen. Es wurde kein Ticket ausgestellt.",
+      "missingParams": "In der Seitenadresse fehlt die Zahlungsreferenz.",
+      "verifyError": "Die Zahlung konnte derzeit nicht geprüft werden.",
+      "unknown": "Die Zahlung konnte nicht geprüft werden. Falls Ihnen etwas abgebucht wurde, schreiben Sie uns: Wir finden Ihre Bestellung.",
+      "retry": "Erneut versuchen",
+      "backToTickets": "Zurück zu den Tickets"
+    },
+    "success": {
+      "eyebrow": "Danke!",
+      "title": "Zahlung bestätigt",
+      "demo": "Demomodus: Es wurde keine echte Zahlung durchgeführt.",
+      "thanksTicket": "Vielen Dank für Ihren Kauf. Eine Bestätigung wird an <strong>{email}</strong> gesendet.",
+      "thanksStand": "Vielen Dank für Ihre Standbuchung. Eine Bestätigung wird an <strong>{email}</strong> gesendet.",
+      "orderNumber": "Bestellnummer",
+      "amount": "Betrag",
+      "nextSteps": "Wie geht es weiter?",
+      "steps": {
+        "ticket1": "Pro Teilnehmer kommt ein personalisiertes E-Ticket per E-Mail, mit der Rechnung.",
+        "ticket2": "Zeigen Sie den QR-Code am Eingang vor, auf dem Handy oder ausgedruckt.",
+        "ticket3": "Nach ein paar Minuten nichts erhalten? Sehen Sie im Spam-Ordner nach.",
+        "stand1": "Die Bestätigung wird per E-Mail gesendet.",
+        "stand2": "Der Ausstellerleitfaden folgt in Kürze.",
+        "stand3": "Unser Team wird sich bei Ihnen melden."
+      },
+      "noDetails": "Ihre Zahlung wurde verarbeitet. Sie erhalten in Kürze eine Bestätigung per E-Mail.",
+      "account": {
+        "title": "Tickets online wiederfinden (optional)",
+        "text": "Erstellen Sie ein Konto mit <strong>{email}</strong>: Ihre Tickets erscheinen unter „Meine Tickets“, sobald die Adresse bestätigt ist.",
+        "cta": "Konto erstellen"
+      },
+      "home": "Zur Startseite",
+      "more": "Weitere Tickets kaufen"
+    },
+    "failed": {
+      "title": "Zahlung nicht durchgeführt",
+      "reasons": {
+        "cancelled": "Sie haben die Zahlung abgebrochen. Es wurde nichts abgebucht.",
+        "expired": "Die Zahlungssitzung ist abgelaufen.",
+        "declined": "Ihre Bank hat die Zahlung abgelehnt.",
+        "insufficient_funds": "Das Guthaben auf dem Konto reicht nicht aus.",
+        "default": "Bei der Zahlung ist ein Fehler aufgetreten."
+      },
+      "reference": "Bestellreferenz:",
+      "whatToDo": "Was tun?",
+      "tips": {
+        "card": "Prüfen Sie Ihre Kartendaten.",
+        "other": "Versuchen Sie es mit einer anderen Karte.",
+        "bank": "Wenden Sie sich an Ihre Bank, wenn das Problem weiterhin besteht.",
+        "charged": "Falls trotz des Fehlers etwas abgebucht wurde, schreiben Sie uns mit der obigen Referenz."
+      },
+      "retry": "Erneut kaufen",
+      "home": "Zur Startseite",
+      "help": "Brauchen Sie Hilfe? Schreiben Sie uns an"
+    },
+    "metaTitle": "Zahlung"
   }
 }

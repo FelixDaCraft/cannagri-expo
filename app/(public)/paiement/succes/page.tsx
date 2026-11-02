@@ -4,9 +4,11 @@ import { useEffect, useState, useCallback, useRef } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
-import { Button, Card, CardContent } from '@/components/ui'
+import { useTranslations } from 'next-intl'
 import { siteConfig } from '@/config/site'
 import { formatTicketPrice } from '@/lib/editions/tickets'
+import { ButtonLink, buttonClasses } from '@/components/ui/ButtonLink'
+import { ResultShell } from '@/components/payment/ResultShell'
 
 interface OrderDetails {
   id: string
@@ -18,8 +20,10 @@ interface OrderDetails {
 }
 
 type PaymentStatus = 'verifying' | 'success' | 'pending' | 'failed'
+type ErrorKey = 'failed' | 'missingParams' | 'verifyError' | 'unknown'
 
 export default function PaymentSuccessPage() {
+  const t = useTranslations('payment')
   const searchParams = useSearchParams()
   const { status: sessionStatus } = useSession()
 
@@ -30,7 +34,7 @@ export default function PaymentSuccessPage() {
 
   const [order, setOrder] = useState<OrderDetails | null>(null)
   const [status, setStatus] = useState<PaymentStatus>('verifying')
-  const [error, setError] = useState('')
+  const [errorKey, setErrorKey] = useState<ErrorKey>('unknown')
   const [retryCount, setRetryCount] = useState(0)
   const hasVerified = useRef(false)
 
@@ -41,7 +45,6 @@ export default function PaymentSuccessPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ orderId, vivaOrderCode, transactionId }),
       })
-
       const data = await res.json()
 
       if (data.success && data.status === 'PAID') {
@@ -50,14 +53,14 @@ export default function PaymentSuccessPage() {
       } else if (data.status === 'PENDING') {
         setStatus('pending')
       } else if (data.status === 'FAILED') {
+        setErrorKey('failed')
         setStatus('failed')
-        setError(data.message || 'Le paiement a échoué')
       } else if (data.error) {
-        setError(data.error)
+        setErrorKey('unknown')
         setStatus('failed')
       }
     } catch {
-      setError('Erreur lors de la vérification')
+      setErrorKey('verifyError')
       setStatus('failed')
     }
   }, [orderId, vivaOrderCode, transactionId])
@@ -65,8 +68,8 @@ export default function PaymentSuccessPage() {
   useEffect(() => {
     if (hasVerified.current) return
     if (!orderId && !vivaOrderCode) {
+      setErrorKey('missingParams')
       setStatus('failed')
-      setError('Paramètres de paiement manquants')
       return
     }
     hasVerified.current = true
@@ -76,163 +79,111 @@ export default function PaymentSuccessPage() {
   useEffect(() => {
     if (status === 'pending' && retryCount < 5) {
       const timer = setTimeout(() => {
-        setRetryCount(prev => prev + 1)
+        setRetryCount((prev) => prev + 1)
         verifyPayment()
       }, 3000)
       return () => clearTimeout(timer)
     }
   }, [status, retryCount, verifyPayment])
 
+  const help = (
+    <p className="mt-8 border-t border-forest/15 pt-5 text-base text-ink">
+      {t('question')}{' '}
+      <a href={`mailto:${siteConfig.contact.email}`} className="font-medium text-forest underline decoration-forest/40 underline-offset-4">
+        {siteConfig.contact.email}
+      </a>
+    </p>
+  )
+
   if (status === 'verifying' || status === 'pending') {
     return (
-      <div className="min-h-screen bg-cream py-16">
-        <div className="container-custom max-w-2xl mx-auto">
-          <Card variant="elevated" className="text-center">
-            <CardContent className="py-12">
-              <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
-              </div>
-              <h1 className="text-3xl font-heading font-bold text-forest mb-4">
-                {status === 'verifying' ? 'Vérification du paiement…' : 'Traitement en cours…'}
-              </h1>
-              <p className="text-forest/70 mb-4">
-                {status === 'verifying' ? 'Nous vérifions votre paiement.' : 'Veuillez patienter…'}
-              </p>
-              {status === 'pending' && retryCount > 0 && (
-                <p className="text-sm text-forest/50">Tentative {retryCount}/5…</p>
-              )}
-              <div className="mt-8 text-sm text-forest/60">Ne fermez pas cette page</div>
-            </CardContent>
-          </Card>
+      <ResultShell title={status === 'verifying' ? t('verifying.title') : t('pending.title')}>
+        <div role="status" className="flex items-center gap-4">
+          <span aria-hidden="true" className="h-8 w-8 shrink-0 animate-spin rounded-full border-4 border-forest/20 border-t-forest motion-reduce:animate-none" />
+          <p className="text-lg text-ink">{status === 'verifying' ? t('verifying.text') : t('pending.text')}</p>
         </div>
-      </div>
+        {status === 'pending' && retryCount > 0 && <p className="mt-3 text-base text-ink">{t('pending.attempt', { count: retryCount })}</p>}
+        <p className="mt-6 font-condensed text-lg font-semibold">{t('verifying.keepOpen')}</p>
+      </ResultShell>
     )
   }
 
   if (status === 'failed') {
     return (
-      <div className="min-h-screen bg-cream py-16">
-        <div className="container-custom max-w-2xl mx-auto">
-          <Card variant="elevated" className="text-center">
-            <CardContent className="py-12">
-              <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg className="w-10 h-10 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </div>
-              <h1 className="text-3xl font-heading font-bold text-forest mb-4">Problème de vérification</h1>
-              <p className="text-forest/70 mb-8">{error || 'Vérification impossible.'}</p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button onClick={() => { setStatus('verifying'); setRetryCount(0); hasVerified.current = false; verifyPayment(); }}>Réessayer</Button>
-                <Link href="/billetterie"><Button variant="outline">Retour à la billetterie</Button></Link>
-              </div>
-            </CardContent>
-          </Card>
+      <ResultShell title={t('verifyFailed.title')} tone="error">
+        <p className="text-lg text-ink">{t(`verifyFailed.${errorKey}`)}</p>
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <button
+            type="button"
+            className={buttonClasses()}
+            onClick={() => { setStatus('verifying'); setRetryCount(0); hasVerified.current = false; verifyPayment() }}
+          >
+            {t('verifyFailed.retry')}
+          </button>
+          <ButtonLink href="/billetterie" tone="outline-night">{t('verifyFailed.backToTickets')}</ButtonLink>
         </div>
-      </div>
+        {help}
+      </ResultShell>
     )
   }
 
+  const isTicket = order?.type === 'VISITOR_TICKET'
+
   return (
-    <div className="min-h-screen bg-cream py-16">
-      <div className="container-custom max-w-2xl mx-auto">
-        <Card variant="elevated" className="text-center">
-          <CardContent className="py-12">
-            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
+    <ResultShell eyebrow={t('success.eyebrow')} title={t('success.title')} tone="success">
+      {isDemo && <p className="notice-success mb-6">{t('success.demo')}</p>}
+
+      {order ? (
+        <>
+          <p className="text-lg leading-relaxed text-ink">
+            {t.rich(isTicket ? 'success.thanksTicket' : 'success.thanksStand', {
+              email: order.customerEmail,
+              strong: (chunks) => <strong className="break-all text-forest">{chunks}</strong>,
+            })}
+          </p>
+
+          <dl className="mt-6 divide-y divide-forest/15 border-y border-forest/15 font-condensed text-xl">
+            <div className="flex justify-between gap-4 py-3">
+              <dt className="text-ink">{t('success.orderNumber')}</dt>
+              <dd className="break-all font-semibold">{order.orderNumber}</dd>
             </div>
-
-            <h1 className="text-3xl font-heading font-bold text-forest mb-4">Paiement confirmé !</h1>
-
-            {isDemo && (
-              <div className="bg-amber-50 border border-amber-200 text-amber-800 px-4 py-3 rounded-lg mb-6 text-sm">
-                Mode démonstration : aucun paiement réel effectué
-              </div>
-            )}
-
-            {order ? (
-              <>
-                <p className="text-forest/70 mb-8">
-                  Merci pour votre {order.type === 'VISITOR_TICKET' ? 'achat' : 'réservation de stand'}.
-                  Un e-mail de confirmation est envoyé à <strong className="break-all">{order.customerEmail}</strong>.
-                </p>
-
-                <div className="bg-sage/10 rounded-xl p-6 mb-8">
-                  <div className="grid gap-4">
-                    <div className="flex justify-between gap-4">
-                      <span className="text-forest/70">N° de commande</span>
-                      <span className="font-bold text-forest">{order.orderNumber}</span>
-                    </div>
-                    <div className="flex justify-between gap-4">
-                      <span className="text-forest/70">Montant</span>
-                      <span className="font-bold text-forest">{formatTicketPrice(order.amount)}</span>
-                    </div>
-                    <div className="flex justify-between gap-4">
-                      <span className="text-forest/70">Type</span>
-                      <span className="font-medium text-forest">
-                        {order.type === 'VISITOR_TICKET' ? 'Billetterie' : 'Stand exposant'}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-forest/5 rounded-lg p-4 mb-8 text-left">
-                  <h3 className="font-medium text-forest mb-2">Prochaines étapes</h3>
-                  {order.type === 'VISITOR_TICKET' ? (
-                    <ul className="text-sm text-forest/70 space-y-1">
-                      <li>Un e-billet nominatif par participant arrive par e-mail, avec la facture.</li>
-                      <li>Présentez le QR code à l&apos;entrée, sur téléphone ou imprimé.</li>
-                      <li>Pas reçu d&apos;ici quelques minutes ? Regardez dans les indésirables.</li>
-                    </ul>
-                  ) : (
-                    <ul className="text-sm text-forest/70 space-y-1">
-                      <li>Confirmation envoyée par e-mail</li>
-                      <li>Guide exposant transmis prochainement</li>
-                      <li>Notre équipe vous contactera</li>
-                    </ul>
-                  )}
-                </div>
-              </>
-            ) : (
-              <p className="text-forest/70 mb-8">
-                Votre paiement a bien été traité. Vous recevrez un e-mail de confirmation sous peu.
-              </p>
-            )}
-
-            {order?.type === 'VISITOR_TICKET' && sessionStatus === 'unauthenticated' && (
-              <div className="border border-forest/15 rounded-lg p-4 mb-8 text-left">
-                <h2 className="font-medium text-forest mb-1">Retrouver vos billets en ligne (facultatif)</h2>
-                <p className="text-sm text-forest/80 mb-3">
-                  Créez un compte avec l&apos;adresse <strong className="break-all">{order.customerEmail}</strong> : vos
-                  billets apparaîtront dans « Mes billets » une fois l&apos;adresse vérifiée.
-                </p>
-                <Link
-                  href={`/inscription?email=${encodeURIComponent(order.customerEmail)}`}
-                  className="inline-flex min-h-[44px] items-center text-forest font-semibold underline underline-offset-2"
-                >
-                  Créer mon compte
-                </Link>
-              </div>
-            )}
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/"><Button variant="primary">Retour à l&apos;accueil</Button></Link>
-              {order?.type === 'VISITOR_TICKET' && (
-                <Link href="/billetterie"><Button variant="outline">Acheter d&apos;autres billets</Button></Link>
-              )}
+            <div className="flex justify-between gap-4 py-3">
+              <dt className="text-ink">{t('success.amount')}</dt>
+              <dd className="font-semibold">{formatTicketPrice(order.amount)}</dd>
             </div>
-          </CardContent>
-        </Card>
+          </dl>
 
-        <p className="text-center text-sm text-forest/60 mt-8">
-          Une question ? Contactez-nous à{' '}
-          <a href={`mailto:${siteConfig.contact.email}`} className="text-forest font-medium underline underline-offset-2">
-            {siteConfig.contact.email}
-          </a>
-        </p>
+          <h2 className="mt-8 font-condensed text-2xl font-semibold">{t('success.nextSteps')}</h2>
+          <ul className="mt-2 list-disc space-y-1 pl-5 text-base text-ink marker:text-gold-ink">
+            {(isTicket ? ['ticket1', 'ticket2', 'ticket3'] : ['stand1', 'stand2', 'stand3']).map((key) => (
+              <li key={key}>{t(`success.steps.${key}`)}</li>
+            ))}
+          </ul>
+        </>
+      ) : (
+        <p className="text-lg text-ink">{t('success.noDetails')}</p>
+      )}
+
+      {isTicket && order && sessionStatus === 'unauthenticated' && (
+        <div className="mt-8 rounded-xl border border-forest/20 p-5">
+          <h2 className="font-condensed text-xl font-semibold">{t('success.account.title')}</h2>
+          <p className="mt-1 text-base text-ink">
+            {t.rich('success.account.text', {
+              email: order.customerEmail,
+              strong: (chunks) => <strong className="break-all text-forest">{chunks}</strong>,
+            })}
+          </p>
+          <Link href={`/inscription?email=${encodeURIComponent(order.customerEmail)}`} className="link-underline text-forest decoration-forest/40">
+            {t('success.account.cta')}
+          </Link>
+        </div>
+      )}
+
+      <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+        <ButtonLink href="/">{t('success.home')}</ButtonLink>
+        {isTicket && <ButtonLink href="/billetterie" tone="outline-night">{t('success.more')}</ButtonLink>}
       </div>
-    </div>
+      {help}
+    </ResultShell>
   )
 }

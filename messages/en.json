@@ -845,5 +845,75 @@
     "text": "This page doesn't exist or has moved. Tickets and everything about the show are just a click away.",
     "tickets": "Tickets",
     "home": "Back to home"
+  },
+  "payment": {
+    "question": "A question? Write to us at",
+    "verifying": {
+      "title": "Checking your payment",
+      "text": "We are checking your payment with the bank.",
+      "keepOpen": "Please keep this page open."
+    },
+    "pending": {
+      "title": "Payment in progress",
+      "text": "Your bank is still processing the payment, please wait.",
+      "attempt": "Checking again ({count} of 5)…"
+    },
+    "verifyFailed": {
+      "title": "Unable to verify",
+      "failed": "The payment failed. No ticket has been issued.",
+      "missingParams": "The payment reference is missing from the page address.",
+      "verifyError": "The payment could not be verified for now.",
+      "unknown": "The payment could not be verified. If you were charged, write to us and we will find your order.",
+      "retry": "Try again",
+      "backToTickets": "Back to tickets"
+    },
+    "success": {
+      "eyebrow": "Thank you!",
+      "title": "Payment confirmed",
+      "demo": "Demo mode: no real payment was made.",
+      "thanksTicket": "Thank you for your purchase. A confirmation email is on its way to <strong>{email}</strong>.",
+      "thanksStand": "Thank you for booking a stand. A confirmation email is on its way to <strong>{email}</strong>.",
+      "orderNumber": "Order no.",
+      "amount": "Amount",
+      "nextSteps": "What's next?",
+      "steps": {
+        "ticket1": "One personal e-ticket per attendee arrives by email, with the invoice.",
+        "ticket2": "Show the QR code at the entrance, on your phone or printed.",
+        "ticket3": "Nothing within a few minutes? Check your spam folder.",
+        "stand1": "The confirmation is sent by email.",
+        "stand2": "The exhibitor guide will follow shortly.",
+        "stand3": "Our team will get in touch with you."
+      },
+      "noDetails": "Your payment has been processed. You will receive a confirmation email shortly.",
+      "account": {
+        "title": "Find your tickets online (optional)",
+        "text": "Create an account with <strong>{email}</strong>: your tickets will appear in “My tickets” once the address is verified.",
+        "cta": "Create my account"
+      },
+      "home": "Back to home",
+      "more": "Buy more tickets"
+    },
+    "failed": {
+      "title": "Payment not completed",
+      "reasons": {
+        "cancelled": "You cancelled the payment. Nothing has been charged.",
+        "expired": "The payment session has expired.",
+        "declined": "Your bank declined the payment.",
+        "insufficient_funds": "Insufficient funds on the account.",
+        "default": "An error occurred during payment."
+      },
+      "reference": "Order reference:",
+      "whatToDo": "What can you do?",
+      "tips": {
+        "card": "Check your card details.",
+        "other": "Try another card.",
+        "bank": "Contact your bank if the problem persists.",
+        "charged": "If you were charged despite the failure, write to us with the reference above."
+      },
+      "retry": "Try again",
+      "home": "Back to home",
+      "help": "Need help? Write to us at"
+    },
+    "metaTitle": "Payment"
   }
 }

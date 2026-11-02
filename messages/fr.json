@@ -845,5 +845,75 @@
     "text": "Cette page n'existe pas ou a changé d'adresse. Les billets et toutes les infos du salon sont à portée de clic.",
     "tickets": "Billetterie",
     "home": "Retour à l'accueil"
+  },
+  "payment": {
+    "question": "Une question ? Écrivez-nous à",
+    "verifying": {
+      "title": "Vérification du paiement",
+      "text": "Nous vérifions votre paiement auprès de la banque.",
+      "keepOpen": "Ne fermez pas cette page."
+    },
+    "pending": {
+      "title": "Paiement en cours",
+      "text": "Votre banque traite encore le paiement, merci de patienter.",
+      "attempt": "Nouvelle vérification ({count} sur 5)…"
+    },
+    "verifyFailed": {
+      "title": "Vérification impossible",
+      "failed": "Le paiement a échoué. Aucun billet n'a été émis.",
+      "missingParams": "Il manque la référence du paiement dans l'adresse de la page.",
+      "verifyError": "Le paiement n'a pas pu être vérifié pour le moment.",
+      "unknown": "Le paiement n'a pas pu être vérifié. Si vous avez été débité, écrivez-nous : nous retrouverons votre commande.",
+      "retry": "Réessayer",
+      "backToTickets": "Retour à la billetterie"
+    },
+    "success": {
+      "eyebrow": "Merci !",
+      "title": "Paiement confirmé",
+      "demo": "Mode démonstration : aucun paiement réel n'a été effectué.",
+      "thanksTicket": "Merci pour votre achat. Un e-mail de confirmation est envoyé à <strong>{email}</strong>.",
+      "thanksStand": "Merci pour votre réservation de stand. Un e-mail de confirmation est envoyé à <strong>{email}</strong>.",
+      "orderNumber": "N° de commande",
+      "amount": "Montant",
+      "nextSteps": "Et maintenant ?",
+      "steps": {
+        "ticket1": "Un e-billet nominatif par participant arrive par e-mail, avec la facture.",
+        "ticket2": "Présentez le QR code à l'entrée, sur téléphone ou imprimé.",
+        "ticket3": "Rien reçu d'ici quelques minutes ? Regardez dans les courriers indésirables.",
+        "stand1": "La confirmation est envoyée par e-mail.",
+        "stand2": "Le guide exposant vous sera transmis prochainement.",
+        "stand3": "Notre équipe vous contactera."
+      },
+      "noDetails": "Votre paiement a bien été traité. Vous recevrez un e-mail de confirmation sous peu.",
+      "account": {
+        "title": "Retrouver vos billets en ligne (facultatif)",
+        "text": "Créez un compte avec l'adresse <strong>{email}</strong> : vos billets apparaîtront dans « Mes billets » une fois l'adresse vérifiée.",
+        "cta": "Créer mon compte"
+      },
+      "home": "Retour à l'accueil",
+      "more": "Acheter d'autres billets"
+    },
+    "failed": {
+      "title": "Paiement non effectué",
+      "reasons": {
+        "cancelled": "Vous avez annulé le paiement. Aucun montant n'a été débité.",
+        "expired": "La session de paiement a expiré.",
+        "declined": "Votre banque a refusé le paiement.",
+        "insufficient_funds": "Le solde du compte est insuffisant.",
+        "default": "Une erreur est survenue pendant le paiement."
+      },
+      "reference": "Référence de commande :",
+      "whatToDo": "Que faire ?",
+      "tips": {
+        "card": "Vérifiez les informations de votre carte bancaire.",
+        "other": "Essayez avec une autre carte.",
+        "bank": "Contactez votre banque si le problème persiste.",
+        "charged": "En cas de débit malgré l'échec, écrivez-nous en indiquant la référence ci-dessus."
+      },
+      "retry": "Réessayer l'achat",
+      "home": "Retour à l'accueil",
+      "help": "Besoin d'aide ? Écrivez-nous à"
+    },
+    "metaTitle": "Paiement"
   }
 }
