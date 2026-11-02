@@ -67,7 +67,7 @@ export async function renderShareImage() {
         <div
           style={{
             fontSize: 28,
-            color: '#F0B23E',
+            color: '#C9A04A',
             textAlign: 'center',
             marginBottom: 32,
           }}
@@ -88,7 +88,7 @@ export async function renderShareImage() {
         >
           {details.map((detail, i) => (
             <span key={detail} style={{ display: 'flex', gap: 24 }}>
-              {i > 0 && <span style={{ color: '#F0B23E' }}>•</span>}
+              {i > 0 && <span style={{ color: '#C9A04A' }}>•</span>}
               <span>{detail}</span>
             </span>
           ))}

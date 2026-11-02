@@ -102,7 +102,7 @@ export default function InfosPratiquesPage() {
     <div className="min-h-screen bg-cream">
       {/* Hero Section - Compact on mobile */}
       <section className="relative py-12 md:py-20 bg-gradient-to-br from-forest via-forest to-forest-600 overflow-hidden">
-        <Spotlight className="-top-40 left-20 hidden md:block" fill="#F0B23E" />
+        <Spotlight className="-top-40 left-20 hidden md:block" fill="#C9A04A" />
         <FloatingParticles quantity={20} colors={['rgba(164, 180, 148, 0.5)', 'rgba(244, 241, 232, 0.3)']} />
 
         <div className="container-custom relative z-10">

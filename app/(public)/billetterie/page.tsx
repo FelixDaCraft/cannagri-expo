@@ -49,7 +49,7 @@ export default function BilletteriePage() {
       <div className="min-h-screen bg-cream">
         {/* Hero Section */}
         <section className="relative py-20 md:py-28 bg-gradient-to-br from-forest via-forest to-forest-600 overflow-hidden">
-          <Spotlight className="-top-40 left-20" fill="#F0B23E" />
+          <Spotlight className="-top-40 left-20" fill="#C9A04A" />
           <Spotlight className="top-20 right-0" fill="#5E8F62" />
           <FloatingParticles quantity={40} colors={['rgba(164, 180, 148, 0.5)', 'rgba(244, 241, 232, 0.3)']} />
 
@@ -161,7 +161,7 @@ export default function BilletteriePage() {
     <div className="min-h-screen bg-cream">
       {/* Hero Section */}
       <section className="relative py-20 md:py-28 bg-gradient-to-br from-forest via-forest to-forest-600 overflow-hidden">
-        <Spotlight className="-top-40 left-20" fill="#F0B23E" />
+        <Spotlight className="-top-40 left-20" fill="#C9A04A" />
         <Spotlight className="top-20 right-0" fill="#5E8F62" />
         <FloatingParticles quantity={40} colors={['rgba(164, 180, 148, 0.5)', 'rgba(244, 241, 232, 0.3)']} />
 

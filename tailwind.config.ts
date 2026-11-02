@@ -10,21 +10,21 @@ const config: Config = {
     extend: {
       colors: {
         // Charte graphique Cann'Agri Expo 2027, reprise de l'affiche des 5 ans
-        // (bleu nuit, crème, jaune-orangé, vert de la mascotte)
+        // (bleu nuit, crème, or du trophée, vert de la mascotte)
 
-        // Jaune-orangé de l'affiche 2027 (accent ; noms historiques mint/sage conservés)
+        // Or du trophée de l'affiche 2027 (accent ; noms historiques mint/sage conservés)
         mint: {
-          DEFAULT: '#F0B23E',
-          50: '#FEF9F0',
-          100: '#FDF3E0',
-          200: '#FAE5BD',
-          300: '#F7D79B',
-          400: '#F4C46C',
-          500: '#F0B23E',
-          600: '#C59233',
-          700: '#9A7228',
-          800: '#6E521D',
-          900: '#433211',
+          DEFAULT: '#C9A04A',
+          50: '#FBF7F1',
+          100: '#F6F0E2',
+          200: '#EDDFC1',
+          300: '#E3CEA1',
+          400: '#D6B775',
+          500: '#C9A04A',
+          600: '#A5833D',
+          700: '#81662F',
+          800: '#5C4A22',
+          900: '#382D15',
         },
         // Bleu nuit du fond de l'affiche 2027 (nom historique forest conservé)
         forest: {
@@ -84,17 +84,17 @@ const config: Config = {
         },
         // Alias sage pour rétrocompatibilité (= mint)
         sage: {
-          DEFAULT: '#F0B23E',
-          50: '#FEF9F0',
-          100: '#FDF3E0',
-          200: '#FAE5BD',
-          300: '#F7D79B',
-          400: '#F4C46C',
-          500: '#F0B23E',
-          600: '#C59233',
-          700: '#9A7228',
-          800: '#6E521D',
-          900: '#433211',
+          DEFAULT: '#C9A04A',
+          50: '#FBF7F1',
+          100: '#F6F0E2',
+          200: '#EDDFC1',
+          300: '#E3CEA1',
+          400: '#D6B775',
+          500: '#C9A04A',
+          600: '#A5833D',
+          700: '#81662F',
+          800: '#5C4A22',
+          900: '#382D15',
         },
         // Textes
         body: '#333333',

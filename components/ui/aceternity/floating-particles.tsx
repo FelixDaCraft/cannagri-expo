@@ -24,7 +24,7 @@ interface FloatingParticlesProps {
 export const FloatingParticles: React.FC<FloatingParticlesProps> = ({
   className,
   quantity = 50,
-  colors = ['#1D2B3A', '#F0B23E', '#2B3D52'],
+  colors = ['#1D2B3A', '#C9A04A', '#2B3D52'],
   minSize = 2,
   maxSize = 6,
 }) => {

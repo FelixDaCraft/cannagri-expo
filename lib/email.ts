@@ -138,7 +138,7 @@ function generateTicketEmailHTML(customerName: string, orderNumber: string, tick
         <tr>
           <td style="background-color: #1D2B3A; padding: 30px; text-align: center;">
             <h1 style="color: #FFFFFF; margin: 0; font-size: 28px;">${siteConfig.name}</h1>
-            <p style="color: #F0B23E; margin: 10px 0 0 0;">${ticketCount > 1 ? `${ticketCount} E-BILLETS` : 'E-BILLET'}</p>
+            <p style="color: #C9A04A; margin: 10px 0 0 0;">${ticketCount > 1 ? `${ticketCount} E-BILLETS` : 'E-BILLET'}</p>
           </td>
         </tr>
 
@@ -180,7 +180,7 @@ function generateTicketEmailHTML(customerName: string, orderNumber: string, tick
               </tr>
             </table>
 
-            <div style="background-color: #F0B23E; color: #1D2B3A; padding: 15px; border-radius: 8px; margin: 30px 0; text-align: center;">
+            <div style="background-color: #C9A04A; color: #1D2B3A; padding: 15px; border-radius: 8px; margin: 30px 0; text-align: center;">
               <strong>Important :</strong> Présentez ${ticketCount > 1 ? 'chaque' : 'votre'} e-billet (imprimé ou sur smartphone) à l'entrée du salon.
               ${ticketCount > 1 ? '<br><span style="font-size: 14px;">Chaque billet est nominatif et sera vérifié à l\'entrée.</span>' : ''}
             </div>
@@ -194,7 +194,7 @@ function generateTicketEmailHTML(customerName: string, orderNumber: string, tick
         <!-- Footer -->
         <tr>
           <td style="background-color: #1D2B3A; padding: 20px 30px; text-align: center;">
-            <p style="color: #F0B23E; margin: 0; font-size: 12px;">
+            <p style="color: #C9A04A; margin: 0; font-size: 12px;">
               ${siteConfig.name} - ${edition.year}<br>
               ${siteConfig.contact.email}
             </p>
@@ -221,7 +221,7 @@ function generateStandConfirmationHTML(customerName: string, orderNumber: string
         <tr>
           <td style="background-color: #1D2B3A; padding: 30px; text-align: center;">
             <h1 style="color: #FFFFFF; margin: 0; font-size: 28px;">${siteConfig.name}</h1>
-            <p style="color: #F0B23E; margin: 10px 0 0 0;">CONFIRMATION DE RÉSERVATION</p>
+            <p style="color: #C9A04A; margin: 10px 0 0 0;">CONFIRMATION DE RÉSERVATION</p>
           </td>
         </tr>
 
@@ -241,7 +241,7 @@ function generateStandConfirmationHTML(customerName: string, orderNumber: string
             </div>
 
             ${hasInvoice ? `
-            <div style="background-color: #F0B23E; color: #1D2B3A; padding: 15px; border-radius: 8px; margin: 20px 0; text-align: center;">
+            <div style="background-color: #C9A04A; color: #1D2B3A; padding: 15px; border-radius: 8px; margin: 20px 0; text-align: center;">
               <strong>Votre facture est jointe à cet email.</strong>
             </div>
             ` : ''}
@@ -262,7 +262,7 @@ function generateStandConfirmationHTML(customerName: string, orderNumber: string
         <!-- Footer -->
         <tr>
           <td style="background-color: #1D2B3A; padding: 20px 30px; text-align: center;">
-            <p style="color: #F0B23E; margin: 0; font-size: 12px;">
+            <p style="color: #C9A04A; margin: 0; font-size: 12px;">
               ${siteConfig.name} - ${edition.year}<br>
               ${siteConfig.contact.email}
             </p>
@@ -319,7 +319,7 @@ export async function sendTeamInvitation(options: SendTeamInvitationOptions): Pr
             <tr>
               <td style="background-color: #1D2B3A; padding: 30px; text-align: center;">
                 <h1 style="color: #FFFFFF; margin: 0; font-size: 28px;">${siteConfig.name}</h1>
-                <p style="color: #F0B23E; margin: 10px 0 0 0;">INVITATION ÉQUIPE</p>
+                <p style="color: #C9A04A; margin: 10px 0 0 0;">INVITATION ÉQUIPE</p>
               </td>
             </tr>
 
@@ -360,7 +360,7 @@ export async function sendTeamInvitation(options: SendTeamInvitationOptions): Pr
             <!-- Footer -->
             <tr>
               <td style="background-color: #1D2B3A; padding: 20px 30px; text-align: center;">
-                <p style="color: #F0B23E; margin: 0; font-size: 12px;">
+                <p style="color: #C9A04A; margin: 0; font-size: 12px;">
                   ${siteConfig.name}<br>
                   ${siteConfig.contact.email}
                 </p>
@@ -413,7 +413,7 @@ export async function sendSponsorBrochure(options: SendSponsorBrochureOptions): 
         <tr>
           <td style="background-color: #1D2B3A; padding: 30px; text-align: center;">
             <h1 style="color: #FFFFFF; margin: 0; font-size: 28px;">${siteConfig.name}</h1>
-            <p style="color: #F0B23E; margin: 10px 0 0 0;">SPONSORING</p>
+            <p style="color: #C9A04A; margin: 10px 0 0 0;">SPONSORING</p>
           </td>
         </tr>
 
@@ -422,7 +422,7 @@ export async function sendSponsorBrochure(options: SendSponsorBrochureOptions): 
           <td style="padding: 40px 30px;">
             <p style="color: #333333; line-height: 1.6; margin: 0 0 15px 0;">${htmlBody}</p>
 
-            <div style="background-color: #F0B23E; color: #1D2B3A; padding: 15px; border-radius: 8px; margin: 30px 0; text-align: center;">
+            <div style="background-color: #C9A04A; color: #1D2B3A; padding: 15px; border-radius: 8px; margin: 30px 0; text-align: center;">
               <strong>Vous trouverez notre plaquette de sponsoring en pièce jointe.</strong>
             </div>
 
@@ -435,7 +435,7 @@ export async function sendSponsorBrochure(options: SendSponsorBrochureOptions): 
         <!-- Footer -->
         <tr>
           <td style="background-color: #1D2B3A; padding: 20px 30px; text-align: center;">
-            <p style="color: #F0B23E; margin: 0; font-size: 12px;">
+            <p style="color: #C9A04A; margin: 0; font-size: 12px;">
               ${siteConfig.name}<br>
               ${siteConfig.contact.email}
             </p>
@@ -514,7 +514,7 @@ export async function sendNewsletterConfirmation(email: string): Promise<void> {
           <li>Les informations sur le programme</li>
         </ul>
         <p>À très bientôt !</p>
-        <p style="color: #F0B23E;">L'équipe ${siteConfig.name}</p>
+        <p style="color: #C9A04A;">L'équipe ${siteConfig.name}</p>
       </div>
     `,
   })
@@ -551,7 +551,7 @@ export async function sendPasswordResetEmail(options: SendPasswordResetEmailOpti
             <tr>
               <td style="background-color: #1D2B3A; padding: 30px; text-align: center;">
                 <h1 style="color: #FFFFFF; margin: 0; font-size: 28px;">${siteConfig.name}</h1>
-                <p style="color: #F0B23E; margin: 10px 0 0 0;">RÉINITIALISATION DE MOT DE PASSE</p>
+                <p style="color: #C9A04A; margin: 10px 0 0 0;">RÉINITIALISATION DE MOT DE PASSE</p>
               </td>
             </tr>
 
@@ -593,7 +593,7 @@ export async function sendPasswordResetEmail(options: SendPasswordResetEmailOpti
             <!-- Footer -->
             <tr>
               <td style="background-color: #1D2B3A; padding: 20px 30px; text-align: center;">
-                <p style="color: #F0B23E; margin: 0; font-size: 12px;">
+                <p style="color: #C9A04A; margin: 0; font-size: 12px;">
                   ${siteConfig.name}<br>
                   ${siteConfig.contact.email}
                 </p>
@@ -643,7 +643,7 @@ export async function sendVerificationEmail(options: SendVerificationEmailOption
             <tr>
               <td style="background-color: #1D2B3A; padding: 30px; text-align: center;">
                 <h1 style="color: #FFFFFF; margin: 0; font-size: 28px;">${siteConfig.name}</h1>
-                <p style="color: #F0B23E; margin: 10px 0 0 0;">BIENVENUE !</p>
+                <p style="color: #C9A04A; margin: 10px 0 0 0;">BIENVENUE !</p>
               </td>
             </tr>
 
@@ -685,7 +685,7 @@ export async function sendVerificationEmail(options: SendVerificationEmailOption
             <!-- Footer -->
             <tr>
               <td style="background-color: #1D2B3A; padding: 20px 30px; text-align: center;">
-                <p style="color: #F0B23E; margin: 0; font-size: 12px;">
+                <p style="color: #C9A04A; margin: 0; font-size: 12px;">
                   ${siteConfig.name}<br>
                   ${siteConfig.contact.email}
                 </p>

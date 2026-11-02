@@ -139,34 +139,3 @@ export function SponsorsArticles({ sponsors }: SponsorsArticlesProps) {
     </section>
   )
 }
-
-// Static version for when no sponsors data is available
-export function SponsorsArticlesPlaceholder() {
-  const t = useTranslations('home.sponsors')
-
-  return (
-    <section className="py-16 md:py-24 bg-cream">
-      <div className="container-custom">
-        <div className="text-center mb-12">
-          <h2 className="section-title">{t('featured')}</h2>
-          <p className="section-subtitle">
-            {t('comingSoon')}
-          </p>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-8">
-          {[1, 2].map((i) => (
-            <Card key={i} variant="bordered" className="h-64 flex items-center justify-center">
-              <div className="text-center text-body/50">
-                <svg className="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
-                </svg>
-                <p>{t('articleComingSoon')}</p>
-              </div>
-            </Card>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}

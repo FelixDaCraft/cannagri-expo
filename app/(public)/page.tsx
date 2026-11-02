@@ -5,7 +5,6 @@ import {
   PillarsSection,
   ProgramHighlight,
   SponsorsArticles,
-  SponsorsArticlesPlaceholder,
   PartnersGrid,
 } from '@/components/home'
 import { prisma } from '@/lib/prisma'
@@ -91,11 +90,8 @@ export default async function HomePage() {
   return (
     <>
       <HeroSection />
-      {sponsors.length > 0 ? (
-        <SponsorsArticles sponsors={sponsors} />
-      ) : (
-        <SponsorsArticlesPlaceholder />
-      )}
+      {/* « À la une » n'apparaît que si un article partenaire est publié pour l'édition */}
+      <SponsorsArticles sponsors={sponsors} />
       <TicketSection />
       <PillarsSection stats={stats} />
       <ProgramHighlight stats={stats} />

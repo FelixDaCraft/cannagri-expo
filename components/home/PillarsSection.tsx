@@ -40,58 +40,18 @@ interface PillarsSectionProps {
   stats?: PillarsStats
 }
 
-const headerBackgrounds = [
-  <div key="1" className="absolute inset-0 flex items-center justify-center">
-    <motion.div
-      animate={{ scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] }}
-      transition={{ duration: 4, repeat: Infinity }}
-      className="w-20 h-20 rounded-full bg-gradient-to-br from-sage/40 to-forest/20"
+// Photos de l'édition 2024 (Nextcloud, Images/Cann'Agri)
+function PillarPhoto({ src, alt }: { src: string; alt: string }) {
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={src}
+      alt={alt}
+      loading="lazy"
+      className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover/bento:scale-105"
     />
-    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_30%,_rgba(164,180,148,0.1)_100%)]" />
-  </div>,
-  <div key="2" className="absolute inset-0 flex items-center justify-center overflow-hidden">
-    <motion.div
-      animate={{ y: [0, -10, 0] }}
-      transition={{ duration: 3, repeat: Infinity }}
-      className="grid grid-cols-3 gap-2 opacity-30"
-    >
-      {[...Array(9)].map((_, i) => (
-        <div key={i} className="w-8 h-8 rounded bg-forest/30" />
-      ))}
-    </motion.div>
-  </div>,
-  <div key="3" className="absolute inset-0 flex items-center justify-center">
-    <motion.div
-      animate={{ scale: [1, 1.2, 1] }}
-      transition={{ duration: 2, repeat: Infinity }}
-      className="w-16 h-16 rounded-full border-2 border-sage/40"
-    />
-    <motion.div
-      animate={{ scale: [1.2, 1, 1.2] }}
-      transition={{ duration: 2, repeat: Infinity }}
-      className="absolute w-24 h-24 rounded-full border border-sage/20"
-    />
-  </div>,
-  <div key="4" className="absolute inset-0 flex items-center justify-center">
-    <motion.div
-      animate={{ rotate: 360 }}
-      transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}
-      className="relative w-24 h-24"
-    >
-      {[...Array(6)].map((_, i) => (
-        <div
-          key={i}
-          className="absolute w-3 h-3 rounded-full bg-sage/40"
-          style={{
-            top: `${Math.round(50 + 40 * Math.sin((i * Math.PI) / 3))}%`,
-            left: `${Math.round(50 + 40 * Math.cos((i * Math.PI) / 3))}%`,
-            transform: 'translate(-50%, -50%)',
-          }}
-        />
-      ))}
-    </motion.div>
-  </div>,
-]
+  )
+}
 
 export function PillarsSection({ stats }: PillarsSectionProps) {
   const t = useTranslations('home.pillars')
@@ -134,7 +94,7 @@ export function PillarsSection({ stats }: PillarsSectionProps) {
                   title={pillar.title}
                   description={pillar.description}
                   icon={iconMap[pillar.icon]}
-                  header={headerBackgrounds[index]}
+                  header={<PillarPhoto src={pillar.image} alt={pillar.title} />}
                   className="h-full hover:-translate-y-1 transition-transform cursor-pointer"
                 />
               </Link>

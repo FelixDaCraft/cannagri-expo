@@ -100,24 +100,28 @@ export const footerLinks = {
 export const pillars = [
   {
     title: "Producteurs CBD",
+    image: "/images/piliers/producteurs.jpg",
     description: "Rencontrez les cultivateurs et producteurs de chanvre CBD français et européens.",
     icon: "leaf",
     link: "/exposants?category=producteur",
   },
   {
     title: "Matériel de Culture",
+    image: "/images/piliers/materiel.jpg",
     description: "Découvrez les dernières innovations en équipement et technologie de culture.",
     icon: "settings",
     link: "/exposants?category=materiel",
   },
   {
     title: "Conférences",
+    image: "/images/piliers/conferences.jpg",
     description: "Assistez aux interventions d'experts sur la réglementation et les tendances du marché.",
     icon: "mic",
     link: "/programme",
   },
   {
     title: "Lifestyle & Food",
+    image: "/images/piliers/lifestyle.jpg",
     description: "Explorez les produits CBD pour le bien-être et l'alimentation.",
     icon: "heart",
     link: "/exposants?category=lifestyle",

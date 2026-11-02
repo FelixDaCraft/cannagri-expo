@@ -6,14 +6,14 @@
   /* Charte graphique Cann'Agri Expo 2027, reprise de l'affiche des 5 ans */
 
   /* Couleurs primaires */
-  --color-mint: #F0B23E;
+  --color-mint: #C9A04A;
   --color-forest: #1D2B3A;
   --color-cream: #F4EAD5;
   --color-terracotta: #5E8F62;
   --color-wood: #8B7355;
 
   /* Alias pour rétrocompatibilité */
-  --color-sage: #F0B23E;
+  --color-sage: #C9A04A;
 
   /* Textes */
   --color-text-body: #333333;
@@ -165,10 +165,10 @@
 
 @keyframes pulse-glow {
   0%, 100% {
-    box-shadow: 0 0 20px rgba(240, 178, 62, 0.3);
+    box-shadow: 0 0 20px rgba(201, 160, 74, 0.3);
   }
   50% {
-    box-shadow: 0 0 40px rgba(240, 178, 62, 0.6);
+    box-shadow: 0 0 40px rgba(201, 160, 74, 0.6);
   }
 }
 

@@ -13,18 +13,16 @@ export function HeroSection() {
   const edition = useEdition()
   return (
     <section className="relative min-h-screen overflow-hidden">
-      {/* Background Image */}
-      <div className="absolute inset-0 z-0">
-        {edition.posterUrl && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={edition.posterUrl}
-            alt=""
-            className="w-full h-full object-cover scale-100"
-          />
-        )}
-        {/* Overlay sombre pour lisibilité */}
-        <div className="absolute inset-0 bg-forest/70" />
+      {/* Fond : la mascotte seule sur bleu nuit (l'affiche entière parasitait le texte) */}
+      <div className="absolute inset-0 z-0 bg-forest" aria-hidden="true">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/images/hero-personnage.webp"
+          alt=""
+          className="absolute bottom-0 right-[-8%] h-[105%] w-auto max-w-none object-contain opacity-25 select-none pointer-events-none"
+        />
+        {/* Dégradé pour garder le texte lisible */}
+        <div className="absolute inset-0 bg-gradient-to-r from-forest via-forest/70 to-forest/20" />
       </div>
 
       {/* Contenu principal */}
