@@ -719,5 +719,22 @@
       "description": "Ha ocurrido un error. Por favor, inténtalo más tarde.",
       "backHome": "Volver al inicio"
     }
+  },
+  "gallery": {
+    "metaTitle": "Galería de fotos",
+    "title": "Galería",
+    "subtitle": "Los mejores momentos de las ediciones anteriores de Cann'Agri Expo.",
+    "count": "{count, plural, one {# foto} other {# fotos}}",
+    "yearTitle": "Recuerdos de {year}",
+    "fallbackAlt": "Foto de Cann'Agri Expo {year}",
+    "empty": "Las fotos estarán pronto en línea.",
+    "upcoming": "Las fotos de la edición {year} se añadirán después de la feria.",
+    "enlarge": "Ampliar la foto: {alt}",
+    "previous": "Foto anterior",
+    "next": "Foto siguiente",
+    "close": "Cerrar",
+    "viewer": "Visor de fotos",
+    "photo": "foto",
+    "position": "{index} de {total}"
   }
 }

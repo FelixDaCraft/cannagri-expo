@@ -783,5 +783,22 @@
       "description": "Une erreur est survenue. Veuillez réessayer plus tard.",
       "backHome": "Retour à l'accueil"
     }
+  },
+  "gallery": {
+    "metaTitle": "Galerie photo",
+    "title": "Galerie",
+    "subtitle": "Les moments forts des éditions précédentes de Cann'Agri Expo.",
+    "count": "{count, plural, one {# photo} other {# photos}}",
+    "yearTitle": "Souvenirs de {year}",
+    "fallbackAlt": "Photo de Cann'Agri Expo {year}",
+    "empty": "Les photos seront bientôt en ligne.",
+    "upcoming": "Les photos de l'édition {year} seront ajoutées après le salon.",
+    "enlarge": "Agrandir la photo : {alt}",
+    "previous": "Photo précédente",
+    "next": "Photo suivante",
+    "close": "Fermer",
+    "viewer": "Visionneuse de photos",
+    "photo": "photo",
+    "position": "{index} sur {total}"
   }
 }

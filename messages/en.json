@@ -783,5 +783,22 @@
       "description": "An error occurred. Please try again later.",
       "backHome": "Back to home"
     }
+  },
+  "gallery": {
+    "metaTitle": "Photo gallery",
+    "title": "Gallery",
+    "subtitle": "Highlights from previous editions of Cann'Agri Expo.",
+    "count": "{count, plural, one {# photo} other {# photos}}",
+    "yearTitle": "Memories of {year}",
+    "fallbackAlt": "Photo of Cann'Agri Expo {year}",
+    "empty": "Photos will be online soon.",
+    "upcoming": "Photos from the {year} edition will be added after the show.",
+    "enlarge": "Enlarge photo: {alt}",
+    "previous": "Previous photo",
+    "next": "Next photo",
+    "close": "Close",
+    "viewer": "Photo viewer",
+    "photo": "photo",
+    "position": "{index} of {total}"
   }
 }

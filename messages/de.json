@@ -719,5 +719,22 @@
       "description": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.",
       "backHome": "Zurück zur Startseite"
     }
+  },
+  "gallery": {
+    "metaTitle": "Fotogalerie",
+    "title": "Galerie",
+    "subtitle": "Die Höhepunkte der bisherigen Ausgaben der Cann'Agri Expo.",
+    "count": "{count, plural, one {# Foto} other {# Fotos}}",
+    "yearTitle": "Erinnerungen an {year}",
+    "fallbackAlt": "Foto der Cann'Agri Expo {year}",
+    "empty": "Die Fotos sind bald online.",
+    "upcoming": "Die Fotos der Ausgabe {year} werden nach der Messe hinzugefügt.",
+    "enlarge": "Foto vergrößern: {alt}",
+    "previous": "Vorheriges Foto",
+    "next": "Nächstes Foto",
+    "close": "Schließen",
+    "viewer": "Fotobetrachter",
+    "photo": "Foto",
+    "position": "{index} von {total}"
   }
 }
