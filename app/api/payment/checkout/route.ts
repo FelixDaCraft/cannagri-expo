@@ -7,12 +7,33 @@ import { createVivaWalletOrder } from '@/lib/vivawallet'
 import { checkRateLimit, getClientIP, RATE_LIMIT_PRESETS } from '@/lib/rate-limit'
 import { getActiveEdition, isTicketingOpen } from '@/lib/editions'
 import { buildTicketItems, TicketItemsError, type TicketItem } from '@/lib/editions/tickets'
+import { parseVisitorCustomer, CheckoutValidationError, normalizeEmail } from '@/lib/checkout'
 
 // Check if Viva Wallet is configured
 const isVivaWalletEnabled = !!(
   process.env.VIVA_WALLET_MERCHANT_ID &&
   process.env.VIVA_WALLET_API_KEY
 )
+
+// Parcours de test local sans Viva Wallet (page /paiement/demo), jamais en production
+const isLocalSimulation =
+  process.env.VIVA_WALLET_LOCAL_SIMULATION === 'true' && process.env.NODE_ENV !== 'production'
+
+// Un même acheteur ne peut pas lancer plus de 10 paiements par heure
+const CHECKOUT_PER_EMAIL = { limit: 10, windowSeconds: 60 * 60 }
+
+function tooManyAttempts(resetAt: number) {
+  return NextResponse.json(
+    { error: 'Trop de tentatives. Veuillez réessayer plus tard.' },
+    {
+      status: 429,
+      headers: {
+        'Retry-After': String(Math.ceil((resetAt - Date.now()) / 1000)),
+        'X-RateLimit-Remaining': '0',
+      }
+    }
+  )
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -21,27 +42,41 @@ export async function POST(request: NextRequest) {
     const rateLimitResult = checkRateLimit(`checkout:${clientIP}`, RATE_LIMIT_PRESETS.PAYMENT)
 
     if (!rateLimitResult.success) {
-      return NextResponse.json(
-        { error: 'Trop de tentatives. Veuillez réessayer plus tard.' },
-        {
-          status: 429,
-          headers: {
-            'Retry-After': String(Math.ceil((rateLimitResult.resetAt - Date.now()) / 1000)),
-            'X-RateLimit-Remaining': '0',
-          }
-        }
-      )
+      return tooManyAttempts(rateLimitResult.resetAt)
     }
 
-    const body = await request.json()
-    const { type, items, customer, promoCode: promoCodeInput } = body
+    const body = await request.json().catch(() => null)
+    if (!body || typeof body !== 'object') {
+      return NextResponse.json({ error: 'Requête invalide' }, { status: 400 })
+    }
+    const { type, items, promoCode: promoCodeInput } = body
+    let { customer } = body
 
-    // Validate required fields
-    if (!type || !customer?.email || !customer?.name) {
+    if (type === 'VISITOR_TICKET') {
+      // Billets : aucun compte requis, les coordonnées sont validées strictement
+      try {
+        customer = parseVisitorCustomer(customer)
+      } catch (error) {
+        if (error instanceof CheckoutValidationError) {
+          return NextResponse.json({ error: error.message }, { status: 400 })
+        }
+        throw error
+      }
+    } else if (
+      typeof customer?.email !== 'string' || !customer.email.trim() ||
+      typeof customer?.name !== 'string' || !customer.name.trim()
+    ) {
       return NextResponse.json(
         { error: 'Champs requis manquants' },
         { status: 400 }
       )
+    } else {
+      customer = { ...customer, email: normalizeEmail(customer.email) }
+    }
+
+    const emailRateLimit = checkRateLimit(`checkout-email:${customer.email}`, CHECKOUT_PER_EMAIL)
+    if (!emailRateLimit.success) {
+      return tooManyAttempts(emailRateLimit.resetAt)
     }
 
     // Toute commande est rattachée à l'édition présentée sur le site
@@ -64,7 +99,7 @@ export async function POST(request: NextRequest) {
 
       // Les prix viennent de l'édition, jamais du navigateur
       try {
-        ticketItems = buildTicketItems(items, edition)
+        ticketItems = buildTicketItems(items, edition, { requireAttendeeName: true })
       } catch (error) {
         if (error instanceof TicketItemsError) {
           return NextResponse.json({ error: error.message }, { status: 400 })
@@ -247,6 +282,15 @@ export async function POST(request: NextRequest) {
       await prisma.stand.update({
         where: { id: stand.id },
         data: { orderId: order.id }
+      })
+    }
+
+    if (isLocalSimulation) {
+      return NextResponse.json({
+        success: true,
+        orderId: order.id,
+        orderNumber: order.orderNumber,
+        checkoutUrl: `/paiement/demo?orderId=${encodeURIComponent(order.id)}&amount=${Math.round(amount * 100)}`,
       })
     }
 

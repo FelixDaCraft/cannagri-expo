@@ -1,6 +1,8 @@
 import type { Edition } from '@prisma/client'
 
 export const MAX_TICKETS_PER_ORDER = 20
+/** Plafond par formule dans le sélecteur de la billetterie. */
+export const MAX_TICKETS_PER_TYPE = 10
 const MAX_ATTENDEE_NAME_LENGTH = 100
 
 export type TicketKind = 'STANDARD' | 'FLEX'
@@ -32,11 +34,16 @@ function parseKind(value: unknown): TicketKind {
  * Reconstruit les billets d'une commande à partir de la saisie du client.
  * Le prix vient toujours de l'édition : le montant envoyé par le navigateur est ignoré.
  */
-export function buildTicketItems(raw: unknown, prices: TicketPrices): TicketItem[] {
+export function buildTicketItems(
+  raw: unknown,
+  prices: TicketPrices,
+  options: { requireAttendeeName?: boolean } = {}
+): TicketItem[] {
   if (!Array.isArray(raw) || raw.length === 0) throw new TicketItemsError('Aucun billet sélectionné')
 
   const items: TicketItem[] = []
   for (const entry of raw as Record<string, unknown>[]) {
+    if (!entry || typeof entry !== 'object') throw new TicketItemsError('Billet invalide')
     const type = parseKind(entry?.ticketType ?? entry?.type)
     const quantity = entry?.quantity ?? 1
     if (typeof quantity !== 'number' || !Number.isInteger(quantity) || quantity < 1) {
@@ -44,6 +51,9 @@ export function buildTicketItems(raw: unknown, prices: TicketPrices): TicketItem
     }
     const attendeeName =
       typeof entry?.attendeeName === 'string' ? entry.attendeeName.trim().slice(0, MAX_ATTENDEE_NAME_LENGTH) : ''
+    if (options.requireAttendeeName && !attendeeName) {
+      throw new TicketItemsError('Indiquez le nom de chaque participant')
+    }
     const price = type === 'FLEX' ? prices.flexTicketPrice : prices.standardTicketPrice
 
     for (let i = 0; i < quantity; i++) {
@@ -54,4 +64,26 @@ export function buildTicketItems(raw: unknown, prices: TicketPrices): TicketItem
     }
   }
   return items
+}
+
+export interface TicketSelection {
+  standard: number
+  flex: number
+}
+
+type SelectionParams = URLSearchParams | Record<string, string | string[] | undefined>
+
+function readQuantity(params: SelectionParams, key: keyof TicketSelection): number {
+  const raw = params instanceof URLSearchParams ? params.get(key) : params[key]
+  const value = Array.isArray(raw) ? raw[0] : raw
+  // Uniquement des chiffres : « 1.5 », « 1e1 », « -1 » ou « 0x3 » sont ignorés
+  if (typeof value !== 'string' || !/^\d{1,4}$/.test(value)) return 0
+  return Math.min(Number(value), MAX_TICKETS_PER_TYPE)
+}
+
+/** Quantités pré-remplies par l'adresse `/billetterie?standard=<n>&flex=<n>`, bornées. */
+export function parseTicketSelection(params: SelectionParams): TicketSelection {
+  const standard = readQuantity(params, 'standard')
+  const flex = Math.min(readQuantity(params, 'flex'), MAX_TICKETS_PER_ORDER - standard)
+  return { standard, flex }
 }
