@@ -42,6 +42,12 @@ const nextConfig = {
       },
     ],
   },
+  // Photos ajoutées à la galerie après le démarrage : servies par l'API (voir app/api/gallery/file)
+  async rewrites() {
+    return {
+      fallback: [{ source: '/images/gallery/:name', destination: '/api/gallery/file/:name' }],
+    }
+  },
   async headers() {
     return [
       {

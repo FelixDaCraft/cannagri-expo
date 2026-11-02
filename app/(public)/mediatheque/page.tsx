@@ -12,6 +12,8 @@ import 'yet-another-react-lightbox/styles.css'
 interface GalleryImage {
   id: string
   src: string
+  /** Miniature carrée pour la grille ; la visionneuse garde la photo entière */
+  thumb?: string
   caption: string
   edition: string
   width?: number
@@ -40,9 +42,10 @@ export default function GalleryPage() {
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {
-          const apiPhotos: GalleryImage[] = data.map((item: { id: string; imageUrl: string; caption: string | null; edition: string }) => ({
+          const apiPhotos: GalleryImage[] = data.map((item: { id: string; imageUrl: string; thumbnailUrl: string | null; caption: string | null; edition: string }) => ({
             id: item.id,
             src: item.imageUrl,
+            thumb: item.thumbnailUrl ?? undefined,
             caption: item.caption || 'Photo',
             edition: item.edition,
             width: 1920,
@@ -190,7 +193,7 @@ export default function GalleryPage() {
                 >
                   <div className="relative aspect-square rounded-xl overflow-hidden bg-sage/20 shadow-md hover:shadow-xl transition-all duration-300">
                     <Image
-                      src={photo.src}
+                      src={photo.thumb ?? photo.src}
                       alt={photo.caption}
                       fill
                       className="object-cover group-hover:scale-110 transition-transform duration-500"

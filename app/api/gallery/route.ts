@@ -3,6 +3,7 @@ import { readdir } from 'fs/promises'
 import { existsSync } from 'fs'
 import path from 'path'
 import { prisma } from '@/lib/prisma'
+import { isGalleryThumbnail } from '@/lib/gallery'
 
 // Lecture en base à chaque requête (sinon la route serait figée au moment du build)
 export const dynamic = 'force-dynamic'
@@ -24,6 +25,7 @@ export async function GET() {
       select: {
         id: true,
         imageUrl: true,
+        thumbnailUrl: true,
         caption: true,
         edition: { select: { year: true } },
         category: true,
@@ -44,7 +46,7 @@ export async function GET() {
 
     const files = await readdir(GALLERY_DIR)
     const imageFiles = files.filter(f =>
-      /\.(jpg|jpeg|png|webp)$/i.test(f) && !f.startsWith('.') && f !== '.gitkeep'
+      /\.(jpg|jpeg|png|webp)$/i.test(f) && !f.startsWith('.') && !isGalleryThumbnail(f)
     )
 
     const photos = imageFiles.map((file, index) => {
