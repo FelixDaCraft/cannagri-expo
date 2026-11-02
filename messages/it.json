@@ -752,5 +752,18 @@
     "noContent": "I contenuti di questa edizione non sono disponibili.",
     "recapTitle": "L'edizione {year} in breve",
     "recap": "Il {date} a {place}: {stands, plural, =0 {} one {# stand, } other {# stand, }}{events, plural, =0 {una giornata di incontri} one {# momento clou in programma} other {# momenti clou in programma}}."
+  },
+  "sponsorPage": {
+    "notFound": "Partner non trovato",
+    "metaDescription": "{name}, partner della fiera Cann'Agri Expo.",
+    "platineSponsor": "Sponsor Platinum",
+    "partner": "Partner",
+    "stand": "Stand",
+    "visitWebsite": "Visita il sito",
+    "newTab": "(nuova scheda)",
+    "logoAlt": "Logo di {name}",
+    "findUsAtEvent": "Trovateci in fiera",
+    "website": "Sito web",
+    "backToExhibitors": "Vedi tutti gli espositori"
   }
 }

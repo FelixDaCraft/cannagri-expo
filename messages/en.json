@@ -816,5 +816,18 @@
     "noContent": "The content of this edition is not available.",
     "recapTitle": "{year} at a glance",
     "recap": "On {date} at {place}: {stands, plural, =0 {} one {# stand, } other {# stands, }}{events, plural, =0 {a day of meetings} one {# programme highlight} other {# programme highlights}}."
+  },
+  "sponsorPage": {
+    "notFound": "Partner not found",
+    "metaDescription": "{name}, partner of the Cann'Agri Expo show.",
+    "platineSponsor": "Platinum sponsor",
+    "partner": "Partner",
+    "stand": "Stand",
+    "visitWebsite": "Visit the website",
+    "newTab": "(new tab)",
+    "logoAlt": "{name} logo",
+    "findUsAtEvent": "Find us at the show",
+    "website": "Website",
+    "backToExhibitors": "See all exhibitors"
   }
 }

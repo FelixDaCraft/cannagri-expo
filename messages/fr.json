@@ -816,5 +816,18 @@
     "noContent": "Les contenus de cette édition ne sont pas disponibles.",
     "recapTitle": "L'édition {year} en bref",
     "recap": "Le {date} à {place} : {stands, plural, =0 {} one {# stand, } other {# stands, }}{events, plural, =0 {une journée de rencontres} one {# temps fort au programme} other {# temps forts au programme}}."
+  },
+  "sponsorPage": {
+    "notFound": "Partenaire introuvable",
+    "metaDescription": "{name}, partenaire du salon Cann'Agri Expo.",
+    "platineSponsor": "Sponsor Platinum",
+    "partner": "Partenaire",
+    "stand": "Stand",
+    "visitWebsite": "Visiter le site",
+    "newTab": "(nouvel onglet)",
+    "logoAlt": "Logo de {name}",
+    "findUsAtEvent": "Retrouvez-nous au salon",
+    "website": "Site web",
+    "backToExhibitors": "Voir tous les exposants"
   }
 }

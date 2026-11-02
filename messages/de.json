@@ -752,5 +752,18 @@
     "noContent": "Die Inhalte dieser Ausgabe sind nicht verfügbar.",
     "recapTitle": "Die Ausgabe {year} im Überblick",
     "recap": "Am {date} in {place}: {stands, plural, =0 {} one {# Stand, } other {# Stände, }}{events, plural, =0 {ein Tag voller Begegnungen} one {# Programmpunkt} other {# Programmpunkte}}."
+  },
+  "sponsorPage": {
+    "notFound": "Partner nicht gefunden",
+    "metaDescription": "{name}, Partner der Messe Cann'Agri Expo.",
+    "platineSponsor": "Platinum-Sponsor",
+    "partner": "Partner",
+    "stand": "Stand",
+    "visitWebsite": "Website besuchen",
+    "newTab": "(neuer Tab)",
+    "logoAlt": "Logo von {name}",
+    "findUsAtEvent": "Besuchen Sie uns auf der Messe",
+    "website": "Website",
+    "backToExhibitors": "Alle Aussteller ansehen"
   }
 }
