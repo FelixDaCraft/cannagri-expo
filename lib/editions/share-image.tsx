@@ -54,7 +54,7 @@ export async function renderShareImage() {
           style={{
             fontSize: 56,
             fontWeight: 700,
-            color: '#F4F1E8',
+            color: '#F4EAD5',
             textAlign: 'center',
             marginBottom: 16,
             letterSpacing: '-0.02em',
@@ -67,7 +67,7 @@ export async function renderShareImage() {
         <div
           style={{
             fontSize: 28,
-            color: '#A4B494',
+            color: '#F0B23E',
             textAlign: 'center',
             marginBottom: 32,
           }}
@@ -82,13 +82,13 @@ export async function renderShareImage() {
             alignItems: 'center',
             gap: 24,
             fontSize: 22,
-            color: '#F4F1E8',
+            color: '#F4EAD5',
             opacity: 0.9,
           }}
         >
           {details.map((detail, i) => (
             <span key={detail} style={{ display: 'flex', gap: 24 }}>
-              {i > 0 && <span style={{ color: '#A4B494' }}>•</span>}
+              {i > 0 && <span style={{ color: '#F0B23E' }}>•</span>}
               <span>{detail}</span>
             </span>
           ))}

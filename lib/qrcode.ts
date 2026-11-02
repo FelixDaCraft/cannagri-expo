@@ -11,7 +11,7 @@ export async function generateQRCode(data: string): Promise<string> {
       width: 300,
       margin: 2,
       color: {
-        dark: '#2E4A33', // Forest green
+        dark: '#1D2B3A', // Forest green
         light: '#FFFFFF',
       },
     })
@@ -34,7 +34,7 @@ export async function generateQRCodeBuffer(data: string): Promise<Buffer> {
       width: 300,
       margin: 2,
       color: {
-        dark: '#2E4A33',
+        dark: '#1D2B3A',
         light: '#FFFFFF',
       },
     })
@@ -56,7 +56,7 @@ export async function generateQRCodeSVG(data: string): Promise<string> {
       width: 200,
       margin: 1,
       color: {
-        dark: '#2E4A33',
+        dark: '#1D2B3A',
         light: '#FFFFFF',
       },
     })

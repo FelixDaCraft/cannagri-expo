@@ -75,7 +75,7 @@ export default function ProgrammeClient({ events, locale }: ProgrammeClientProps
     <div className="min-h-screen bg-cream">
       {/* Hero Section */}
       <section className="relative py-20 md:py-28 bg-gradient-to-br from-forest via-forest to-forest-600 overflow-hidden">
-        <Spotlight className="-top-40 right-0 md:right-60" fill="#A4B494" />
+        <Spotlight className="-top-40 right-0 md:right-60" fill="#F0B23E" />
         <FloatingParticles quantity={30} colors={['rgba(164, 180, 148, 0.5)', 'rgba(244, 241, 232, 0.3)']} />
 
         <div className="container-custom relative z-10">

@@ -257,9 +257,9 @@ export function StandPlan({
 
           {/* Entrée (bottom left) */}
           <g transform="translate(50, 470)">
-            <rect x="0" y="0" width="50" height="50" fill="white" stroke="#3D5A45" strokeWidth="2" rx="4" />
-            <polygon points="25,35 15,20 35,20" fill="#3D5A45" />
-            <text x="25" y="65" textAnchor="middle" fill="#3D5A45" fontSize="11" fontWeight="600">
+            <rect x="0" y="0" width="50" height="50" fill="white" stroke="#1D2B3A" strokeWidth="2" rx="4" />
+            <polygon points="25,35 15,20 35,20" fill="#1D2B3A" />
+            <text x="25" y="65" textAnchor="middle" fill="#1D2B3A" fontSize="11" fontWeight="600">
               ENTRÉE
             </text>
           </g>

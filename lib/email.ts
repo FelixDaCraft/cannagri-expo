@@ -110,12 +110,12 @@ function generateTicketEmailHTML(customerName: string, orderNumber: string, tick
   let ticketListHTML = ''
   if (tickets && tickets.length > 0) {
     ticketListHTML = `
-      <h3 style="color: #2E4A33; margin: 30px 0 15px 0;">Vos ${ticketCount} ${ticketWordSimple}</h3>
+      <h3 style="color: #1D2B3A; margin: 30px 0 15px 0;">Vos ${ticketCount} ${ticketWordSimple}</h3>
       <table cellpadding="0" cellspacing="0" style="width: 100%; margin-bottom: 20px;">
         ${tickets.map((ticket, index) => `
           <tr>
             <td style="padding: 12px; border-bottom: 1px solid #E8E2D1; background-color: ${index % 2 === 0 ? '#F9F8F5' : '#FFFFFF'};">
-              <strong style="color: #2E4A33;">${ticket.attendeeName}</strong>
+              <strong style="color: #1D2B3A;">${ticket.attendeeName}</strong>
               <span style="color: #666666; font-size: 14px; margin-left: 10px;">${ticketTypeLabels[ticket.ticketType] || ticket.ticketType}</span>
             </td>
           </tr>
@@ -132,34 +132,34 @@ function generateTicketEmailHTML(customerName: string, orderNumber: string, tick
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Vos e-billets</title>
     </head>
-    <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #F4F1E8;">
+    <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #F4EAD5;">
       <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; background-color: #FFFFFF;">
         <!-- Header -->
         <tr>
-          <td style="background-color: #2E4A33; padding: 30px; text-align: center;">
+          <td style="background-color: #1D2B3A; padding: 30px; text-align: center;">
             <h1 style="color: #FFFFFF; margin: 0; font-size: 28px;">${siteConfig.name}</h1>
-            <p style="color: #A4B494; margin: 10px 0 0 0;">${ticketCount > 1 ? `${ticketCount} E-BILLETS` : 'E-BILLET'}</p>
+            <p style="color: #F0B23E; margin: 10px 0 0 0;">${ticketCount > 1 ? `${ticketCount} E-BILLETS` : 'E-BILLET'}</p>
           </td>
         </tr>
 
         <!-- Content -->
         <tr>
           <td style="padding: 40px 30px;">
-            <h2 style="color: #2E4A33; margin: 0 0 20px 0;">Bonjour ${customerName},</h2>
+            <h2 style="color: #1D2B3A; margin: 0 0 20px 0;">Bonjour ${customerName},</h2>
 
             <p style="color: #333333; line-height: 1.6;">
               Merci pour votre commande ! ${ticketCount > 1 ? `Vos ${ticketCount} ${ticketWord}` : `Votre ${ticketWord}`} en pièce${ticketCount > 1 ? 's' : ''} jointe${ticketCount > 1 ? 's' : ''} de cet email.
               ${hasInvoice ? '<br><strong>Votre facture est également jointe à cet email.</strong>' : ''}
             </p>
 
-            <div style="background-color: #F4F1E8; padding: 20px; border-radius: 8px; margin: 30px 0;">
+            <div style="background-color: #F4EAD5; padding: 20px; border-radius: 8px; margin: 30px 0;">
               <p style="margin: 0 0 10px 0; color: #666666;">N° de commande</p>
-              <p style="margin: 0; font-size: 18px; font-weight: bold; color: #2E4A33;">${orderNumber}</p>
+              <p style="margin: 0; font-size: 18px; font-weight: bold; color: #1D2B3A;">${orderNumber}</p>
             </div>
 
             ${ticketListHTML}
 
-            <h3 style="color: #2E4A33; margin: 30px 0 15px 0;">Informations pratiques</h3>
+            <h3 style="color: #1D2B3A; margin: 30px 0 15px 0;">Informations pratiques</h3>
 
             <table cellpadding="0" cellspacing="0" style="width: 100%;">
               <tr>
@@ -180,21 +180,21 @@ function generateTicketEmailHTML(customerName: string, orderNumber: string, tick
               </tr>
             </table>
 
-            <div style="background-color: #A4B494; color: #2E4A33; padding: 15px; border-radius: 8px; margin: 30px 0; text-align: center;">
+            <div style="background-color: #F0B23E; color: #1D2B3A; padding: 15px; border-radius: 8px; margin: 30px 0; text-align: center;">
               <strong>Important :</strong> Présentez ${ticketCount > 1 ? 'chaque' : 'votre'} e-billet (imprimé ou sur smartphone) à l'entrée du salon.
               ${ticketCount > 1 ? '<br><span style="font-size: 14px;">Chaque billet est nominatif et sera vérifié à l\'entrée.</span>' : ''}
             </div>
 
             <p style="color: #666666; font-size: 14px;">
-              Si vous avez des questions, n'hésitez pas à nous contacter à <a href="mailto:${siteConfig.contact.email}" style="color: #2E4A33;">${siteConfig.contact.email}</a>
+              Si vous avez des questions, n'hésitez pas à nous contacter à <a href="mailto:${siteConfig.contact.email}" style="color: #1D2B3A;">${siteConfig.contact.email}</a>
             </p>
           </td>
         </tr>
 
         <!-- Footer -->
         <tr>
-          <td style="background-color: #2E4A33; padding: 20px 30px; text-align: center;">
-            <p style="color: #A4B494; margin: 0; font-size: 12px;">
+          <td style="background-color: #1D2B3A; padding: 20px 30px; text-align: center;">
+            <p style="color: #F0B23E; margin: 0; font-size: 12px;">
               ${siteConfig.name} - ${edition.year}<br>
               ${siteConfig.contact.email}
             </p>
@@ -215,38 +215,38 @@ function generateStandConfirmationHTML(customerName: string, orderNumber: string
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Confirmation de réservation</title>
     </head>
-    <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #F4F1E8;">
+    <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #F4EAD5;">
       <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; background-color: #FFFFFF;">
         <!-- Header -->
         <tr>
-          <td style="background-color: #2E4A33; padding: 30px; text-align: center;">
+          <td style="background-color: #1D2B3A; padding: 30px; text-align: center;">
             <h1 style="color: #FFFFFF; margin: 0; font-size: 28px;">${siteConfig.name}</h1>
-            <p style="color: #A4B494; margin: 10px 0 0 0;">CONFIRMATION DE RÉSERVATION</p>
+            <p style="color: #F0B23E; margin: 10px 0 0 0;">CONFIRMATION DE RÉSERVATION</p>
           </td>
         </tr>
 
         <!-- Content -->
         <tr>
           <td style="padding: 40px 30px;">
-            <h2 style="color: #2E4A33; margin: 0 0 20px 0;">Bonjour ${customerName},</h2>
+            <h2 style="color: #1D2B3A; margin: 0 0 20px 0;">Bonjour ${customerName},</h2>
 
             <p style="color: #333333; line-height: 1.6;">
               Nous avons le plaisir de vous confirmer la réservation de votre stand pour <strong>${siteConfig.name}</strong>.
             </p>
 
-            <div style="background-color: #F4F1E8; padding: 20px; border-radius: 8px; margin: 30px 0;">
+            <div style="background-color: #F4EAD5; padding: 20px; border-radius: 8px; margin: 30px 0;">
               <p style="margin: 0 0 10px 0; color: #666666;">Stand(s) réservé(s)</p>
-              <p style="margin: 0; font-size: 24px; font-weight: bold; color: #2E4A33;">${standCodes.join(', ')}</p>
+              <p style="margin: 0; font-size: 24px; font-weight: bold; color: #1D2B3A;">${standCodes.join(', ')}</p>
               <p style="margin: 15px 0 0 0; color: #666666; font-size: 14px;">N° de commande : ${orderNumber}</p>
             </div>
 
             ${hasInvoice ? `
-            <div style="background-color: #A4B494; color: #2E4A33; padding: 15px; border-radius: 8px; margin: 20px 0; text-align: center;">
+            <div style="background-color: #F0B23E; color: #1D2B3A; padding: 15px; border-radius: 8px; margin: 20px 0; text-align: center;">
               <strong>Votre facture est jointe à cet email.</strong>
             </div>
             ` : ''}
 
-            <h3 style="color: #2E4A33; margin: 30px 0 15px 0;">Prochaines étapes</h3>
+            <h3 style="color: #1D2B3A; margin: 30px 0 15px 0;">Prochaines étapes</h3>
 
             <ol style="color: #333333; line-height: 1.8; padding-left: 20px;">
               <li>Un guide de l'exposant vous sera envoyé 1 mois avant l'événement.</li>
@@ -254,15 +254,15 @@ function generateStandConfirmationHTML(customerName: string, orderNumber: string
             </ol>
 
             <p style="color: #666666; font-size: 14px; margin-top: 30px;">
-              Pour toute question concernant votre stand, contactez-nous à <a href="mailto:${siteConfig.contact.email}" style="color: #2E4A33;">${siteConfig.contact.email}</a>
+              Pour toute question concernant votre stand, contactez-nous à <a href="mailto:${siteConfig.contact.email}" style="color: #1D2B3A;">${siteConfig.contact.email}</a>
             </p>
           </td>
         </tr>
 
         <!-- Footer -->
         <tr>
-          <td style="background-color: #2E4A33; padding: 20px 30px; text-align: center;">
-            <p style="color: #A4B494; margin: 0; font-size: 12px;">
+          <td style="background-color: #1D2B3A; padding: 20px 30px; text-align: center;">
+            <p style="color: #F0B23E; margin: 0; font-size: 12px;">
               ${siteConfig.name} - ${edition.year}<br>
               ${siteConfig.contact.email}
             </p>
@@ -313,32 +313,32 @@ export async function sendTeamInvitation(options: SendTeamInvitationOptions): Pr
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <title>Invitation équipe</title>
         </head>
-        <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #F4F1E8;">
+        <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #F4EAD5;">
           <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; background-color: #FFFFFF;">
             <!-- Header -->
             <tr>
-              <td style="background-color: #2E4A33; padding: 30px; text-align: center;">
+              <td style="background-color: #1D2B3A; padding: 30px; text-align: center;">
                 <h1 style="color: #FFFFFF; margin: 0; font-size: 28px;">${siteConfig.name}</h1>
-                <p style="color: #A4B494; margin: 10px 0 0 0;">INVITATION ÉQUIPE</p>
+                <p style="color: #F0B23E; margin: 10px 0 0 0;">INVITATION ÉQUIPE</p>
               </td>
             </tr>
 
             <!-- Content -->
             <tr>
               <td style="padding: 40px 30px;">
-                <h2 style="color: #2E4A33; margin: 0 0 20px 0;">Vous êtes invité(e) !</h2>
+                <h2 style="color: #1D2B3A; margin: 0 0 20px 0;">Vous êtes invité(e) !</h2>
 
                 <p style="color: #333333; line-height: 1.6;">
                   <strong>${inviterName}</strong> vous invite à rejoindre l'équipe d'administration de <strong>${siteConfig.name}</strong> en tant que <strong>${roleLabel}</strong>.
                 </p>
 
-                <div style="background-color: #F4F1E8; padding: 20px; border-radius: 8px; margin: 30px 0;">
+                <div style="background-color: #F4EAD5; padding: 20px; border-radius: 8px; margin: 30px 0;">
                   <p style="margin: 0 0 10px 0; color: #666666;">Votre rôle</p>
-                  <p style="margin: 0; font-size: 18px; font-weight: bold; color: #2E4A33;">${roleLabel}</p>
+                  <p style="margin: 0; font-size: 18px; font-weight: bold; color: #1D2B3A;">${roleLabel}</p>
                 </div>
 
                 <div style="text-align: center; margin: 30px 0;">
-                  <a href="${inviteUrl}" style="display: inline-block; background-color: #2E4A33; color: #FFFFFF; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold;">
+                  <a href="${inviteUrl}" style="display: inline-block; background-color: #1D2B3A; color: #FFFFFF; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold;">
                     Accepter l'invitation
                   </a>
                 </div>
@@ -352,15 +352,15 @@ export async function sendTeamInvitation(options: SendTeamInvitationOptions): Pr
                 <p style="color: #666666; font-size: 12px;">
                   Si vous n'attendiez pas cette invitation, vous pouvez ignorer cet email.<br>
                   Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :<br>
-                  <a href="${inviteUrl}" style="color: #2E4A33; word-break: break-all;">${inviteUrl}</a>
+                  <a href="${inviteUrl}" style="color: #1D2B3A; word-break: break-all;">${inviteUrl}</a>
                 </p>
               </td>
             </tr>
 
             <!-- Footer -->
             <tr>
-              <td style="background-color: #2E4A33; padding: 20px 30px; text-align: center;">
-                <p style="color: #A4B494; margin: 0; font-size: 12px;">
+              <td style="background-color: #1D2B3A; padding: 20px 30px; text-align: center;">
+                <p style="color: #F0B23E; margin: 0; font-size: 12px;">
                   ${siteConfig.name}<br>
                   ${siteConfig.contact.email}
                 </p>
@@ -407,13 +407,13 @@ export async function sendSponsorBrochure(options: SendSponsorBrochureOptions): 
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>${subject}</title>
     </head>
-    <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #F4F1E8;">
+    <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #F4EAD5;">
       <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; background-color: #FFFFFF;">
         <!-- Header -->
         <tr>
-          <td style="background-color: #2E4A33; padding: 30px; text-align: center;">
+          <td style="background-color: #1D2B3A; padding: 30px; text-align: center;">
             <h1 style="color: #FFFFFF; margin: 0; font-size: 28px;">${siteConfig.name}</h1>
-            <p style="color: #A4B494; margin: 10px 0 0 0;">SPONSORING</p>
+            <p style="color: #F0B23E; margin: 10px 0 0 0;">SPONSORING</p>
           </td>
         </tr>
 
@@ -422,20 +422,20 @@ export async function sendSponsorBrochure(options: SendSponsorBrochureOptions): 
           <td style="padding: 40px 30px;">
             <p style="color: #333333; line-height: 1.6; margin: 0 0 15px 0;">${htmlBody}</p>
 
-            <div style="background-color: #A4B494; color: #2E4A33; padding: 15px; border-radius: 8px; margin: 30px 0; text-align: center;">
+            <div style="background-color: #F0B23E; color: #1D2B3A; padding: 15px; border-radius: 8px; margin: 30px 0; text-align: center;">
               <strong>Vous trouverez notre plaquette de sponsoring en pièce jointe.</strong>
             </div>
 
             <p style="color: #666666; font-size: 14px;">
-              Pour toute question, n'hésitez pas à nous contacter à <a href="mailto:${siteConfig.contact.email}" style="color: #2E4A33;">${siteConfig.contact.email}</a>
+              Pour toute question, n'hésitez pas à nous contacter à <a href="mailto:${siteConfig.contact.email}" style="color: #1D2B3A;">${siteConfig.contact.email}</a>
             </p>
           </td>
         </tr>
 
         <!-- Footer -->
         <tr>
-          <td style="background-color: #2E4A33; padding: 20px 30px; text-align: center;">
-            <p style="color: #A4B494; margin: 0; font-size: 12px;">
+          <td style="background-color: #1D2B3A; padding: 20px 30px; text-align: center;">
+            <p style="color: #F0B23E; margin: 0; font-size: 12px;">
               ${siteConfig.name}<br>
               ${siteConfig.contact.email}
             </p>
@@ -505,7 +505,7 @@ export async function sendNewsletterConfirmation(email: string): Promise<void> {
     subject: `Bienvenue dans la newsletter ${siteConfig.name}`,
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h1 style="color: #2E4A33;">Merci pour votre inscription !</h1>
+        <h1 style="color: #1D2B3A;">Merci pour votre inscription !</h1>
         <p>Vous êtes maintenant inscrit à la newsletter ${siteConfig.name}.</p>
         <p>Vous recevrez en avant-première :</p>
         <ul>
@@ -514,7 +514,7 @@ export async function sendNewsletterConfirmation(email: string): Promise<void> {
           <li>Les informations sur le programme</li>
         </ul>
         <p>À très bientôt !</p>
-        <p style="color: #A4B494;">L'équipe ${siteConfig.name}</p>
+        <p style="color: #F0B23E;">L'équipe ${siteConfig.name}</p>
       </div>
     `,
   })
@@ -545,20 +545,20 @@ export async function sendPasswordResetEmail(options: SendPasswordResetEmailOpti
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <title>Réinitialisation de mot de passe</title>
         </head>
-        <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #F4F1E8;">
+        <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #F4EAD5;">
           <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; background-color: #FFFFFF;">
             <!-- Header -->
             <tr>
-              <td style="background-color: #2E4A33; padding: 30px; text-align: center;">
+              <td style="background-color: #1D2B3A; padding: 30px; text-align: center;">
                 <h1 style="color: #FFFFFF; margin: 0; font-size: 28px;">${siteConfig.name}</h1>
-                <p style="color: #A4B494; margin: 10px 0 0 0;">RÉINITIALISATION DE MOT DE PASSE</p>
+                <p style="color: #F0B23E; margin: 10px 0 0 0;">RÉINITIALISATION DE MOT DE PASSE</p>
               </td>
             </tr>
 
             <!-- Content -->
             <tr>
               <td style="padding: 40px 30px;">
-                <h2 style="color: #2E4A33; margin: 0 0 20px 0;">Bonjour ${name},</h2>
+                <h2 style="color: #1D2B3A; margin: 0 0 20px 0;">Bonjour ${name},</h2>
 
                 <p style="color: #333333; line-height: 1.6;">
                   Vous avez demandé la réinitialisation de votre mot de passe pour votre compte ${siteConfig.name}.
@@ -569,7 +569,7 @@ export async function sendPasswordResetEmail(options: SendPasswordResetEmailOpti
                 </p>
 
                 <div style="text-align: center; margin: 30px 0;">
-                  <a href="${resetUrl}" style="display: inline-block; background-color: #2E4A33; color: #FFFFFF; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold;">
+                  <a href="${resetUrl}" style="display: inline-block; background-color: #1D2B3A; color: #FFFFFF; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold;">
                     Réinitialiser mon mot de passe
                   </a>
                 </div>
@@ -585,15 +585,15 @@ export async function sendPasswordResetEmail(options: SendPasswordResetEmailOpti
 
                 <p style="color: #666666; font-size: 12px;">
                   Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :<br>
-                  <a href="${resetUrl}" style="color: #2E4A33; word-break: break-all;">${resetUrl}</a>
+                  <a href="${resetUrl}" style="color: #1D2B3A; word-break: break-all;">${resetUrl}</a>
                 </p>
               </td>
             </tr>
 
             <!-- Footer -->
             <tr>
-              <td style="background-color: #2E4A33; padding: 20px 30px; text-align: center;">
-                <p style="color: #A4B494; margin: 0; font-size: 12px;">
+              <td style="background-color: #1D2B3A; padding: 20px 30px; text-align: center;">
+                <p style="color: #F0B23E; margin: 0; font-size: 12px;">
                   ${siteConfig.name}<br>
                   ${siteConfig.contact.email}
                 </p>
@@ -637,20 +637,20 @@ export async function sendVerificationEmail(options: SendVerificationEmailOption
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <title>Vérification d'email</title>
         </head>
-        <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #F4F1E8;">
+        <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #F4EAD5;">
           <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; background-color: #FFFFFF;">
             <!-- Header -->
             <tr>
-              <td style="background-color: #2E4A33; padding: 30px; text-align: center;">
+              <td style="background-color: #1D2B3A; padding: 30px; text-align: center;">
                 <h1 style="color: #FFFFFF; margin: 0; font-size: 28px;">${siteConfig.name}</h1>
-                <p style="color: #A4B494; margin: 10px 0 0 0;">BIENVENUE !</p>
+                <p style="color: #F0B23E; margin: 10px 0 0 0;">BIENVENUE !</p>
               </td>
             </tr>
 
             <!-- Content -->
             <tr>
               <td style="padding: 40px 30px;">
-                <h2 style="color: #2E4A33; margin: 0 0 20px 0;">Bonjour ${name},</h2>
+                <h2 style="color: #1D2B3A; margin: 0 0 20px 0;">Bonjour ${name},</h2>
 
                 <p style="color: #333333; line-height: 1.6;">
                   Merci de vous être inscrit sur ${siteConfig.name} !
@@ -661,13 +661,13 @@ export async function sendVerificationEmail(options: SendVerificationEmailOption
                 </p>
 
                 <div style="text-align: center; margin: 30px 0;">
-                  <a href="${verificationUrl}" style="display: inline-block; background-color: #2E4A33; color: #FFFFFF; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold;">
+                  <a href="${verificationUrl}" style="display: inline-block; background-color: #1D2B3A; color: #FFFFFF; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold;">
                     Confirmer mon adresse email
                   </a>
                 </div>
 
-                <div style="background-color: #F4F1E8; padding: 20px; border-radius: 8px; margin: 20px 0;">
-                  <p style="color: #2E4A33; margin: 0; font-size: 14px;">
+                <div style="background-color: #F4EAD5; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                  <p style="color: #1D2B3A; margin: 0; font-size: 14px;">
                     <strong>Ce lien expire dans 24 heures.</strong><br>
                     Si vous n'avez pas créé de compte, vous pouvez ignorer cet email.
                   </p>
@@ -677,15 +677,15 @@ export async function sendVerificationEmail(options: SendVerificationEmailOption
 
                 <p style="color: #666666; font-size: 12px;">
                   Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :<br>
-                  <a href="${verificationUrl}" style="color: #2E4A33; word-break: break-all;">${verificationUrl}</a>
+                  <a href="${verificationUrl}" style="color: #1D2B3A; word-break: break-all;">${verificationUrl}</a>
                 </p>
               </td>
             </tr>
 
             <!-- Footer -->
             <tr>
-              <td style="background-color: #2E4A33; padding: 20px 30px; text-align: center;">
-                <p style="color: #A4B494; margin: 0; font-size: 12px;">
+              <td style="background-color: #1D2B3A; padding: 20px 30px; text-align: center;">
+                <p style="color: #F0B23E; margin: 0; font-size: 12px;">
                   ${siteConfig.name}<br>
                   ${siteConfig.contact.email}
                 </p>

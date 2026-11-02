@@ -3,22 +3,21 @@
 @tailwind utilities;
 
 :root {
-  /* Nouvelle charte graphique Cann'Agri Expo 2026 */
-  /* Basée sur l'affiche officielle */
+  /* Charte graphique Cann'Agri Expo 2027, reprise de l'affiche des 5 ans */
 
   /* Couleurs primaires */
-  --color-mint: #8FB58B;
-  --color-forest: #3D5A45;
-  --color-cream: #F4F1E8;
-  --color-terracotta: #C4784A;
+  --color-mint: #F0B23E;
+  --color-forest: #1D2B3A;
+  --color-cream: #F4EAD5;
+  --color-terracotta: #5E8F62;
   --color-wood: #8B7355;
 
   /* Alias pour rétrocompatibilité */
-  --color-sage: #8FB58B;
+  --color-sage: #F0B23E;
 
   /* Textes */
   --color-text-body: #333333;
-  --color-text-heading: #3D5A45;
+  --color-text-heading: #1D2B3A;
   --color-text-light: #FFFFFF;
 }
 
@@ -166,10 +165,10 @@
 
 @keyframes pulse-glow {
   0%, 100% {
-    box-shadow: 0 0 20px rgba(143, 181, 139, 0.3);
+    box-shadow: 0 0 20px rgba(240, 178, 62, 0.3);
   }
   50% {
-    box-shadow: 0 0 40px rgba(143, 181, 139, 0.6);
+    box-shadow: 0 0 40px rgba(240, 178, 62, 0.6);
   }
 }
 

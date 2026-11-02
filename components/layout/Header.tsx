@@ -17,7 +17,7 @@ import { NavItem } from '@/types'
 function LogoFallback() {
   return (
     <svg viewBox="0 0 48 48" className="w-full h-full p-2">
-      <circle cx="24" cy="24" r="22" fill="#3D5A45" />
+      <circle cx="24" cy="24" r="22" fill="#1D2B3A" />
       <text x="24" y="30" textAnchor="middle" fill="white" fontSize="16" fontWeight="bold">CA</text>
     </svg>
   )

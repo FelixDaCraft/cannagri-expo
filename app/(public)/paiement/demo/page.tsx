@@ -74,7 +74,7 @@ export default function DemoPaymentPage() {
         <Card className="shadow-xl">
           <CardContent className="p-0">
             {/* Header */}
-            <div className="bg-[#2E4A33] text-white p-6 rounded-t-lg">
+            <div className="bg-[#1D2B3A] text-white p-6 rounded-t-lg">
               <div className="flex items-center justify-between mb-4">
                 <span className="text-sm opacity-80">Paiement securise</span>
                 <div className="flex gap-2">
@@ -103,7 +103,7 @@ export default function DemoPaymentPage() {
                   autoComplete="cc-number"
                   value={cardNumber}
                   onChange={(e) => setCardNumber(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E4A33] focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1D2B3A] focus:border-transparent"
                   placeholder="1234 5678 9012 3456"
                 />
               </div>
@@ -118,7 +118,7 @@ export default function DemoPaymentPage() {
                     autoComplete="cc-exp"
                     value={expiry}
                     onChange={(e) => setExpiry(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E4A33] focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1D2B3A] focus:border-transparent"
                     placeholder="MM/AA"
                   />
                 </div>
@@ -131,7 +131,7 @@ export default function DemoPaymentPage() {
                     autoComplete="cc-csc"
                     value={cvv}
                     onChange={(e) => setCvv(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E4A33] focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1D2B3A] focus:border-transparent"
                     placeholder="123"
                   />
                 </div>
@@ -142,7 +142,7 @@ export default function DemoPaymentPage() {
                 <Button
                   onClick={() => handlePayment(true)}
                   disabled={processing}
-                  className="w-full bg-[#2E4A33] hover:bg-[#1e3a23] text-white py-3"
+                  className="w-full bg-[#1D2B3A] hover:bg-[#131C25] text-white py-3"
                 >
                   {processing ? 'Traitement...' : 'Payer maintenant'}
                 </Button>

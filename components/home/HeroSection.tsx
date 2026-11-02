@@ -63,7 +63,7 @@ export function HeroSection() {
                 transition={{ delay: 0.5, type: 'spring', stiffness: 200 }}
                 className="absolute -top-4 -right-4 md:-top-6 md:-right-6"
               >
-                <div className="bg-terracotta text-cream px-4 py-2 rounded-full font-heading font-bold text-sm md:text-base shadow-lg transform rotate-12">
+                <div className="bg-mint text-forest px-4 py-2 rounded-full font-heading font-bold text-sm md:text-base shadow-lg transform rotate-12">
                   {t('edition', { year: edition.year })}
                 </div>
               </motion.div>
@@ -83,7 +83,7 @@ export function HeroSection() {
             >
               CANN&apos;AGRI
               <br />
-              <span className="text-terracotta">EXPO</span>
+              <span className="text-mint">EXPO</span>
             </motion.h1>
 
             {/* Sous-titre */}
@@ -104,13 +104,13 @@ export function HeroSection() {
               className="flex flex-wrap justify-center lg:justify-start gap-4 mb-8"
             >
               <div className="flex items-center gap-3 px-5 py-3 bg-cream/10 backdrop-blur-md rounded-xl border border-cream/20">
-                <svg className="w-6 h-6 text-terracotta" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6 text-mint" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
                 <span className="font-heading font-bold text-cream text-lg">{edition.dateDisplay}</span>
               </div>
               <div className="flex items-center gap-3 px-5 py-3 bg-cream/10 backdrop-blur-md rounded-xl border border-cream/20">
-                <svg className="w-6 h-6 text-terracotta" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6 text-mint" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
@@ -139,7 +139,7 @@ export function HeroSection() {
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Button
                     size="lg"
-                    className="w-full sm:w-auto bg-terracotta hover:bg-terracotta-600 text-white shadow-lg shadow-terracotta/30 hover:shadow-terracotta/50 transition-all text-lg px-8"
+                    className="w-full sm:w-auto bg-mint hover:bg-mint-400 text-forest shadow-lg shadow-mint/30 hover:shadow-mint/50 transition-all text-lg px-8"
                   >
                     {t('buyTicket')}
                   </Button>
