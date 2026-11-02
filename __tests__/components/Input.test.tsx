@@ -61,19 +61,20 @@ describe('Input Component', () => {
     it('should have error styling when error prop is provided', () => {
       render(<Input name="email" error="Error" />)
       const input = screen.getByRole('textbox')
-      expect(input).toHaveClass('border-red-500')
+      expect(input).toHaveClass('border-red-700')
+      expect(input).toHaveAttribute('aria-invalid', 'true')
     })
 
     it('should not show error styling without error', () => {
       render(<Input name="email" />)
       const input = screen.getByRole('textbox')
-      expect(input).not.toHaveClass('border-red-500')
+      expect(input).not.toHaveClass('border-red-700')
     })
 
     it('should have error text color', () => {
       render(<Input name="email" error="Error message" />)
       const errorText = screen.getByText('Error message')
-      expect(errorText).toHaveClass('text-red-500')
+      expect(errorText).toHaveClass('text-red-700')
     })
   })
 
@@ -92,7 +93,7 @@ describe('Input Component', () => {
     it('should have helper text styling', () => {
       render(<Input name="email" helperText="Helper text" />)
       const helperText = screen.getByText('Helper text')
-      expect(helperText).toHaveClass('text-gray-500')
+      expect(helperText).toHaveClass('text-ink')
     })
   })
 
@@ -197,7 +198,7 @@ describe('Input Component', () => {
     it('should merge with default classes', () => {
       render(<Input name="test" className="custom-class" />)
       const input = screen.getByRole('textbox')
-      expect(input).toHaveClass('w-full', 'custom-class')
+      expect(input).toHaveClass('field-input', 'custom-class')
     })
   })
 
@@ -236,7 +237,7 @@ describe('Input Component', () => {
     it('should have focus ring on focus', () => {
       render(<Input name="test" />)
       const input = screen.getByRole('textbox')
-      expect(input).toHaveClass('focus:ring-2')
+      expect(input).toHaveClass('field-input')
     })
 
     it('should be accessible with label', () => {

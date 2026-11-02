@@ -8,9 +8,10 @@ interface CardProps extends HTMLAttributes<HTMLDivElement> {
 const Card = forwardRef<HTMLDivElement, CardProps>(
   ({ className, variant = 'default', children, ...props }, ref) => {
     const variants = {
-      default: 'bg-white rounded-xl shadow-md',
-      bordered: 'bg-white rounded-xl border-2 border-sage/30',
-      elevated: 'bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-200',
+      // Charte 2027 : aplats nets, pas d'ombre portée ni de carte qui se soulève
+      default: 'bg-cream-100 rounded-2xl border border-forest/15',
+      bordered: 'bg-cream-100 rounded-2xl border-2 border-forest',
+      elevated: 'bg-cream-100 rounded-2xl border border-forest/15',
     }
 
     return (
@@ -38,7 +39,7 @@ const CardTitle = forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadingEleme
   ({ className, ...props }, ref) => (
     <h3
       ref={ref}
-      className={cn('text-xl font-heading font-semibold text-heading', className)}
+      className={cn('font-condensed text-2xl font-semibold text-forest', className)}
       {...props}
     />
   )
@@ -47,7 +48,7 @@ CardTitle.displayName = 'CardTitle'
 
 const CardDescription = forwardRef<HTMLParagraphElement, HTMLAttributes<HTMLParagraphElement>>(
   ({ className, ...props }, ref) => (
-    <p ref={ref} className={cn('text-body/70 text-sm mt-1', className)} {...props} />
+    <p ref={ref} className={cn('text-ink text-base mt-1', className)} {...props} />
   )
 )
 CardDescription.displayName = 'CardDescription'
@@ -61,7 +62,7 @@ CardContent.displayName = 'CardContent'
 
 const CardFooter = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn('mt-4 pt-4 border-t border-gray-100', className)} {...props} />
+    <div ref={ref} className={cn('mt-4 pt-4 border-t border-forest/10', className)} {...props} />
   )
 )
 CardFooter.displayName = 'CardFooter'

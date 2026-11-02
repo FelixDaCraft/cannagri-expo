@@ -411,63 +411,47 @@
     }
   },
   "sponsoring": {
-    "badge": "Partnership",
-    "title": "Diventa Partner",
-    "subtitle": "Associa il tuo marchio alla fiera di riferimento della canapa CBD e raggiungi un pubblico qualificato di professionisti del settore.",
+    "metaTitle": "Sponsorizzazione e stand",
+    "badge": "Stand e partnership {year}",
+    "title": "Sponsorizzazione",
+    "subtitle": "Associate il vostro marchio alla fiera professionale della cannabis CBD e incontrate tutta la filiera a Nantes.",
     "benefits": {
+      "title": "Perché partecipare",
       "visibility": {
-        "title": "Visibilità Massima",
-        "description": "Il tuo marchio messo in evidenza sul nostro sito web, social media, materiali stampati e segnaletica in loco."
+        "title": "Visibilità",
+        "description": "Il vostro marchio in fiera, sulla locandina e sui nostri social, davanti a 700-800 visitatori professionali e appassionati."
       },
       "notoriety": {
-        "title": "Notorietà Rafforzata",
-        "description": "Posiziona la tua azienda come attore chiave del settore della canapa CBD in Francia e in Europa."
+        "title": "Notorietà",
+        "description": "Rafforzate la vostra immagine presso i professionisti della filiera."
       },
       "network": {
-        "title": "Network Qualificato",
-        "description": "Incontra professionisti, decision-maker e appassionati durante questo evento imperdibile."
+        "title": "Rete",
+        "description": "Incontrate produttori, negozi, fornitori e nuovi progetti in una sola giornata."
       }
     },
-    "packagesTitle": "I Nostri Pacchetti Partner",
-    "packagesSubtitle": "Scopri le nostre diverse formule di partnership adatte alle tue esigenze e al tuo budget.",
-    "tiers": {
-      "platinum": {
-        "name": "Platino",
-        "description": "Visibilità massima e vantaggi esclusivi"
-      },
-      "gold": {
-        "name": "Oro",
-        "description": "Alta visibilità e posizionamento privilegiato"
-      },
-      "silver": {
-        "name": "Argento",
-        "description": "Presenza rinforzata e visibilità mirata"
-      },
-      "bronze": {
-        "name": "Bronzo",
-        "description": "Presenza partner e supporto al settore"
-      }
-    },
+    "packagesTitle": "I livelli di partnership",
+    "packagesSubtitle": "Quattro livelli, dal Bronze al Platinum, descritti con le tariffe nella brochure.",
     "form": {
-      "title": "Richiedi la Brochure Gratuita",
-      "subtitle": "Compila questo modulo per ricevere la nostra brochure dettagliata con tutti i vantaggi e le tariffe dei nostri pacchetti partnership.",
-      "company": "Nome Azienda",
-      "companyPlaceholder": "La tua azienda",
-      "contact": "Nome del Contatto",
-      "contactPlaceholder": "Nome e cognome",
-      "email": "Email",
-      "emailPlaceholder": "tua@email.it",
+      "title": "Ricevete la brochure",
+      "subtitle": "Offerte di stand e partnership, con le tariffe: ve la inviamo via e-mail.",
+      "company": "Azienda",
+      "contact": "Nome e cognome",
+      "email": "E-mail",
+      "emailPlaceholder": "voi@azienda.it",
       "phone": "Telefono",
-      "phonePlaceholder": "+39 123 456 7890",
-      "submit": "Ricevi la brochure gratuita",
-      "sending": "Invio in corso...",
-      "success": "Richiesta inviata con successo! Riceverai presto la brochure via email.",
-      "error": "Errore nell'invio della richiesta. Riprova.",
-      "privacyNotice": "Inviando questo modulo, accetti la nostra",
-      "privacyPolicy": "politica sulla privacy"
+      "optional": "(facoltativo)",
+      "submit": "Ricevi la brochure",
+      "sending": "Invio in corso…",
+      "successTitle": "Richiesta ricevuta",
+      "success": "Vi invieremo la brochure via e-mail a breve.",
+      "error": "Non è stato possibile inviare la richiesta. Riprovate tra un attimo o scriveteci direttamente.",
+      "invalid": "Controllate i campi: azienda, nome e un indirizzo e-mail valido sono obbligatori.",
+      "privacyNotice": "I vostri dati servono solo a inviarvi la brochure e a ricontattarvi. Consultate la nostra",
+      "privacyPolicy": "informativa sulla privacy"
     },
     "alternativeContact": {
-      "title": "Preferisci contattarci direttamente?"
+      "title": "Preferite scriverci direttamente?"
     }
   },
   "tickets": {

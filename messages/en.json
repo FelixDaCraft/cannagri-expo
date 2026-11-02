@@ -412,69 +412,47 @@
     }
   },
   "sponsoring": {
-    "badge": "Partnership",
-    "title": "Become a Partner",
-    "subtitle": "Associate your brand with the reference CBD hemp exhibition and benefit from exceptional visibility.",
-    "intro": "Associate your image with the sector's reference event",
+    "metaTitle": "Sponsorship and stands",
+    "badge": "Stands and partnerships {year}",
+    "title": "Sponsorship",
+    "subtitle": "Associate your brand with the professional cannabis CBD trade show and meet the whole industry in Nantes.",
     "benefits": {
-      "title": "Benefits",
+      "title": "Why join us",
       "visibility": {
         "title": "Visibility",
-        "description": "Associate your brand with the CBD sector's reference event."
+        "description": "Your brand at the show, on the poster and on our social media, in front of 700 to 800 professional and enthusiast visitors."
       },
       "notoriety": {
-        "title": "Notoriety",
-        "description": "Strengthen your brand image among industry professionals."
+        "title": "Reputation",
+        "description": "Strengthen your image with industry professionals."
       },
       "network": {
         "title": "Network",
-        "description": "Access a privileged network of decision-makers and influencers."
-      },
-      "stand": "Premium stand",
-      "conference": "Conference slot",
-      "networking": "VIP events access"
-    },
-    "packagesTitle": "Our partnership offers",
-    "packagesSubtitle": "We offer 4 partnership levels adapted to your objectives. Contact us to receive the full details of each offer.",
-    "tiers": {
-      "platinum": {
-        "name": "Platinum",
-        "description": "Maximum visibility and exclusive partnership"
-      },
-      "gold": {
-        "name": "Gold",
-        "description": "Premium partnership with high visibility"
-      },
-      "silver": {
-        "name": "Silver",
-        "description": "Partnership with targeted visibility"
-      },
-      "bronze": {
-        "name": "Bronze",
-        "description": "Support partnership"
+        "description": "Meet growers, shops, suppliers and project founders in a single day."
       }
     },
-    "requestBrochure": "Request brochure",
+    "packagesTitle": "Partnership levels",
+    "packagesSubtitle": "Four levels, from Bronze to Platinum, detailed with their prices in the brochure.",
     "form": {
-      "title": "Receive our sponsoring brochures",
-      "subtitle": "Fill out this form to receive the full details of our Platinum, Gold, Silver and Bronze partnership offers.",
-      "company": "Company name",
-      "companyPlaceholder": "Your company",
+      "title": "Get the brochure",
+      "subtitle": "Stand and partnership offers, with prices: we'll send it to you by email.",
+      "company": "Company",
       "contact": "Full name",
-      "contactPlaceholder": "John Doe",
       "email": "Email",
-      "emailPlaceholder": "contact@company.com",
+      "emailPlaceholder": "you@company.com",
       "phone": "Phone",
-      "phonePlaceholder": "06 XX XX XX XX",
-      "submit": "Receive brochures",
-      "sending": "Sending...",
-      "success": "Request sent! You will receive the brochures by email.",
-      "error": "Error sending request",
-      "privacyNotice": "By submitting this form, you agree to be contacted by our team. Your data is processed in accordance with our",
+      "optional": "(optional)",
+      "submit": "Get the brochure",
+      "sending": "Sending…",
+      "successTitle": "Request received",
+      "success": "We'll send you the brochure by email very soon.",
+      "error": "Your request could not be sent. Please try again in a moment or write to us directly.",
+      "invalid": "Please check the fields: company, name and a valid email address are required.",
+      "privacyNotice": "Your details are only used to send you the brochure and get back to you. See our",
       "privacyPolicy": "privacy policy"
     },
     "alternativeContact": {
-      "title": "Prefer to contact us directly?"
+      "title": "Prefer to write to us directly?"
     }
   },
   "tickets": {

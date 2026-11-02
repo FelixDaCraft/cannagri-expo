@@ -18,32 +18,30 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="block text-sm font-medium text-body mb-1"
+            className="mb-1.5 block font-condensed text-lg font-semibold text-forest"
           >
             {label}
-            {props.required && <span className="text-red-500 ml-1">*</span>}
+            {props.required && <span className="ml-1 text-red-700" aria-hidden="true">*</span>}
           </label>
         )}
         <input
           ref={ref}
           id={inputId}
           type={type}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={error ? `${inputId}-error` : undefined}
           className={cn(
-            'w-full px-4 py-3 rounded-lg border bg-white text-body placeholder:text-gray-400',
-            'transition-colors duration-200',
-            'focus:outline-none focus:ring-2 focus:ring-sage focus:border-sage',
-            error
-              ? 'border-red-500 focus:ring-red-500 focus:border-red-500'
-              : 'border-gray-300 hover:border-sage',
+            'field-input',
+            error && 'border-red-700',
             className
           )}
           {...props}
         />
         {error && (
-          <p className="mt-1 text-sm text-red-500">{error}</p>
+          <p id={`${inputId}-error`} className="mt-1.5 text-base text-red-700">{error}</p>
         )}
         {helperText && !error && (
-          <p className="mt-1 text-sm text-gray-500">{helperText}</p>
+          <p className="mt-1.5 text-base text-ink">{helperText}</p>
         )}
       </div>
     )

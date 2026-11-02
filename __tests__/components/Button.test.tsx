@@ -17,13 +17,13 @@ describe('Button Component', () => {
     it('should render with secondary variant', () => {
       render(<Button variant="secondary">Secondary</Button>)
       const button = screen.getByRole('button')
-      expect(button).toHaveClass('bg-sage')
+      expect(button).toHaveClass('bg-mint')
     })
 
     it('should render with outline variant', () => {
       render(<Button variant="outline">Outline</Button>)
       const button = screen.getByRole('button')
-      expect(button).toHaveClass('border-forest')
+      expect(button).toHaveClass('border-forest/40')
     })
 
     it('should render with ghost variant', () => {
@@ -43,19 +43,19 @@ describe('Button Component', () => {
     it('should render with small size', () => {
       render(<Button size="sm">Small</Button>)
       const button = screen.getByRole('button')
-      expect(button).toHaveClass('px-4', 'py-2', 'text-sm')
+      expect(button).toHaveClass('min-h-[44px]', 'px-4', 'text-lg')
     })
 
     it('should render with default medium size', () => {
       render(<Button>Medium</Button>)
       const button = screen.getByRole('button')
-      expect(button).toHaveClass('px-6', 'py-3', 'text-base')
+      expect(button).toHaveClass('min-h-[48px]', 'px-6', 'text-xl')
     })
 
     it('should render with large size', () => {
       render(<Button size="lg">Large</Button>)
       const button = screen.getByRole('button')
-      expect(button).toHaveClass('px-8', 'py-4', 'text-lg')
+      expect(button).toHaveClass('min-h-[56px]', 'px-8', 'text-[1.375rem]')
     })
   })
 
@@ -74,12 +74,14 @@ describe('Button Component', () => {
 
     it('should show loading spinner when isLoading is true', () => {
       render(<Button isLoading>Loading</Button>)
-      expect(screen.getByText('Chargement...')).toBeInTheDocument()
+      expect(screen.getByRole('button')).toHaveAttribute('aria-busy', 'true')
+      expect(screen.getByRole('button').querySelector('svg')).toBeInTheDocument()
     })
 
-    it('should not show children when loading', () => {
+    // Le libellé reste affiché (traduit) à côté de l'indicateur : plus de « Chargement... » en dur
+    it('keeps its label when loading', () => {
       render(<Button isLoading>Click me</Button>)
-      expect(screen.queryByText('Click me')).not.toBeInTheDocument()
+      expect(screen.getByText('Click me')).toBeInTheDocument()
     })
 
     it('should have disabled opacity class when disabled', () => {

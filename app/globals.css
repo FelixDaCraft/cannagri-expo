@@ -261,3 +261,23 @@ html[data-reveal-on] [data-reveal]:not([data-shown]) {
     @apply font-display text-[2.75rem] font-normal leading-[.9] text-forest md:text-[3.75rem] text-balance;
   }
 }
+
+@layer components {
+  /* Champs de formulaire (charte 2027) : fond blanc, bord bleu nuit léger, 48 px de haut */
+  .field-label {
+    @apply mb-1.5 block font-condensed text-lg font-semibold text-forest;
+  }
+  .field-input {
+    @apply block min-h-[48px] w-full rounded-[10px] border border-forest/30 bg-white px-4 py-2.5 text-base text-forest placeholder:text-forest/60 transition-colors hover:border-forest/60 focus:border-forest;
+  }
+  .field-hint {
+    @apply mt-1.5 text-base text-ink;
+  }
+  /* Messages d'état des formulaires */
+  .notice-error {
+    @apply rounded-[10px] border border-red-700/40 bg-red-50 px-4 py-3 text-base text-red-800;
+  }
+  .notice-success {
+    @apply rounded-[10px] border border-mascot-deep/40 bg-terracotta-50 px-4 py-3 text-base text-forest;
+  }
+}

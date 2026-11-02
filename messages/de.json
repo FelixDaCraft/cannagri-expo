@@ -411,69 +411,47 @@
     }
   },
   "sponsoring": {
-    "badge": "Partnerschaft",
-    "title": "Partner werden",
-    "subtitle": "Verbinden Sie Ihre Marke mit der Referenzmesse für CBD-Hanf und profitieren Sie von außergewöhnlicher Sichtbarkeit.",
-    "intro": "Verbinden Sie Ihr Image mit dem Referenz-Event der Branche",
+    "metaTitle": "Sponsoring und Stände",
+    "badge": "Stände und Partnerschaften {year}",
+    "title": "Sponsoring",
+    "subtitle": "Verbinden Sie Ihre Marke mit der Fachmesse für Cannabis-CBD und treffen Sie die ganze Branche in Nantes.",
     "benefits": {
-      "title": "Vorteile",
+      "title": "Warum mitmachen",
       "visibility": {
         "title": "Sichtbarkeit",
-        "description": "Verbinden Sie Ihre Marke mit dem Referenz-Event des CBD-Sektors."
+        "description": "Ihre Marke auf der Messe, auf dem Plakat und in unseren sozialen Netzwerken, vor 700 bis 800 Fachbesuchern und Interessierten."
       },
       "notoriety": {
         "title": "Bekanntheit",
-        "description": "Stärken Sie Ihr Markenimage bei Branchenprofis."
+        "description": "Stärken Sie Ihr Image bei den Fachleuten der Branche."
       },
       "network": {
         "title": "Netzwerk",
-        "description": "Zugang zu einem privilegierten Netzwerk von Entscheidungsträgern und Influencern."
-      },
-      "stand": "Premium-Stand",
-      "conference": "Konferenz-Slot",
-      "networking": "Zugang zu VIP-Events"
-    },
-    "packagesTitle": "Unsere Partnerschaftsangebote",
-    "packagesSubtitle": "Wir bieten 4 Partnerschaftsstufen an, die auf Ihre Ziele abgestimmt sind. Kontaktieren Sie uns für die vollständigen Details jedes Angebots.",
-    "tiers": {
-      "platinum": {
-        "name": "Platin",
-        "description": "Maximale Sichtbarkeit und exklusive Partnerschaft"
-      },
-      "gold": {
-        "name": "Gold",
-        "description": "Premium-Partnerschaft mit hoher Sichtbarkeit"
-      },
-      "silver": {
-        "name": "Silber",
-        "description": "Partnerschaft mit gezielter Sichtbarkeit"
-      },
-      "bronze": {
-        "name": "Bronze",
-        "description": "Unterstützungspartnerschaft"
+        "description": "Treffen Sie Erzeuger, Geschäfte, Lieferanten und Gründer an einem einzigen Tag."
       }
     },
-    "requestBrochure": "Broschüre anfordern",
+    "packagesTitle": "Partnerschaftsstufen",
+    "packagesSubtitle": "Vier Stufen, von Bronze bis Platinum, mit Preisen in der Broschüre beschrieben.",
     "form": {
-      "title": "Erhalten Sie unsere Sponsoring-Broschüren",
-      "subtitle": "Füllen Sie dieses Formular aus, um die vollständigen Details unserer Platin-, Gold-, Silber- und Bronze-Partnerschaftsangebote zu erhalten.",
-      "company": "Firmenname",
-      "companyPlaceholder": "Ihr Unternehmen",
-      "contact": "Vollständiger Name",
-      "contactPlaceholder": "Max Mustermann",
+      "title": "Broschüre anfordern",
+      "subtitle": "Stand- und Partnerschaftsangebote mit Preisen: Wir senden sie Ihnen per E-Mail.",
+      "company": "Unternehmen",
+      "contact": "Vor- und Nachname",
       "email": "E-Mail",
-      "emailPlaceholder": "kontakt@unternehmen.de",
+      "emailPlaceholder": "sie@unternehmen.de",
       "phone": "Telefon",
-      "phonePlaceholder": "06 XX XX XX XX",
-      "submit": "Broschüren erhalten",
-      "sending": "Wird gesendet...",
-      "success": "Anfrage gesendet! Sie erhalten die Broschüren per E-Mail.",
-      "error": "Fehler beim Senden der Anfrage",
-      "privacyNotice": "Mit dem Absenden dieses Formulars stimmen Sie zu, von unserem Team kontaktiert zu werden. Ihre Daten werden gemäß unserer",
-      "privacyPolicy": "Datenschutzrichtlinie verarbeitet"
+      "optional": "(optional)",
+      "submit": "Broschüre erhalten",
+      "sending": "Wird gesendet…",
+      "successTitle": "Anfrage erhalten",
+      "success": "Wir senden Ihnen die Broschüre in Kürze per E-Mail.",
+      "error": "Ihre Anfrage konnte nicht gesendet werden. Versuchen Sie es gleich noch einmal oder schreiben Sie uns direkt.",
+      "invalid": "Bitte prüfen Sie die Felder: Unternehmen, Name und eine gültige E-Mail-Adresse sind erforderlich.",
+      "privacyNotice": "Ihre Daten werden nur verwendet, um Ihnen die Broschüre zu senden und Sie zu kontaktieren. Siehe unsere",
+      "privacyPolicy": "Datenschutzerklärung"
     },
     "alternativeContact": {
-      "title": "Möchten Sie uns lieber direkt kontaktieren?"
+      "title": "Lieber direkt schreiben?"
     }
   },
   "tickets": {

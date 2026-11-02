@@ -411,69 +411,47 @@
     }
   },
   "sponsoring": {
-    "badge": "Patrocinio",
-    "title": "Conviértase en Socio",
-    "subtitle": "Asocie su marca a la feria de referencia del cáñamo CBD y benefíciese de una visibilidad excepcional.",
-    "intro": "Asocia tu imagen al evento de referencia del sector",
+    "metaTitle": "Patrocinio y stands",
+    "badge": "Stands y patrocinios {year}",
+    "title": "Patrocinio",
+    "subtitle": "Asocie su marca a la feria profesional del cannabis CBD y conozca a todo el sector en Nantes.",
     "benefits": {
-      "title": "Ventajas",
+      "title": "Por qué participar",
       "visibility": {
         "title": "Visibilidad",
-        "description": "Asocie su marca al evento de referencia del sector CBD."
+        "description": "Su marca en la feria, en el cartel y en nuestras redes, ante 700 a 800 visitantes profesionales y aficionados."
       },
       "notoriety": {
         "title": "Notoriedad",
-        "description": "Refuerce su imagen de marca entre los profesionales del sector."
+        "description": "Refuerce su imagen ante los profesionales del sector."
       },
       "network": {
-        "title": "Red",
-        "description": "Acceda a una red privilegiada de tomadores de decisiones e influencers."
-      },
-      "stand": "Stand premium",
-      "conference": "Slot de conferencia",
-      "networking": "Acceso a eventos VIP"
-    },
-    "packagesTitle": "Nuestras ofertas de patrocinio",
-    "packagesSubtitle": "Ofrecemos 4 niveles de patrocinio adaptados a sus objetivos. Contáctenos para recibir los detalles completos de cada oferta.",
-    "tiers": {
-      "platinum": {
-        "name": "Platino",
-        "description": "Visibilidad máxima y asociación exclusiva"
-      },
-      "gold": {
-        "name": "Oro",
-        "description": "Asociación premium con alta visibilidad"
-      },
-      "silver": {
-        "name": "Plata",
-        "description": "Asociación con visibilidad dirigida"
-      },
-      "bronze": {
-        "name": "Bronce",
-        "description": "Asociación de apoyo"
+        "title": "Red de contactos",
+        "description": "Conozca a productores, tiendas, proveedores y emprendedores en un solo día."
       }
     },
-    "requestBrochure": "Solicitar folleto",
+    "packagesTitle": "Los niveles de patrocinio",
+    "packagesSubtitle": "Cuatro niveles, del Bronze al Platinum, detallados con sus tarifas en el dossier.",
     "form": {
-      "title": "Reciba nuestros folletos de patrocinio",
-      "subtitle": "Complete este formulario para recibir los detalles completos de nuestras ofertas de asociación Platino, Oro, Plata y Bronce.",
-      "company": "Nombre de la empresa",
-      "companyPlaceholder": "Su empresa",
-      "contact": "Nombre completo",
-      "contactPlaceholder": "Juan García",
-      "email": "Email",
-      "emailPlaceholder": "contacto@empresa.es",
+      "title": "Reciba el dossier",
+      "subtitle": "Ofertas de stands y patrocinio, con las tarifas: se lo enviamos por correo electrónico.",
+      "company": "Empresa",
+      "contact": "Nombre y apellidos",
+      "email": "Correo electrónico",
+      "emailPlaceholder": "usted@empresa.es",
       "phone": "Teléfono",
-      "phonePlaceholder": "06 XX XX XX XX",
-      "submit": "Recibir folletos",
-      "sending": "Enviando...",
-      "success": "¡Solicitud enviada! Recibirá los folletos por email.",
-      "error": "Error al enviar la solicitud",
-      "privacyNotice": "Al enviar este formulario, acepta ser contactado por nuestro equipo. Sus datos se tratan de acuerdo con nuestra",
+      "optional": "(opcional)",
+      "submit": "Recibir el dossier",
+      "sending": "Enviando…",
+      "successTitle": "Solicitud recibida",
+      "success": "Le enviaremos el dossier por correo electrónico muy pronto.",
+      "error": "No se ha podido enviar la solicitud. Inténtelo de nuevo en un momento o escríbanos directamente.",
+      "invalid": "Revise los campos: la empresa, el nombre y un correo electrónico válido son obligatorios.",
+      "privacyNotice": "Sus datos solo sirven para enviarle el dossier y volver a contactarle. Consulte nuestra",
       "privacyPolicy": "política de privacidad"
     },
     "alternativeContact": {
-      "title": "¿Prefiere contactarnos directamente?"
+      "title": "¿Prefiere escribirnos directamente?"
     }
   },
   "tickets": {

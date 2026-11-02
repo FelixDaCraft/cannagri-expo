@@ -412,69 +412,47 @@
     }
   },
   "sponsoring": {
-    "badge": "Partenariat",
-    "title": "Devenez Partenaire",
-    "subtitle": "Associez votre marque au salon de référence du chanvre CBD et bénéficiez d'une visibilité exceptionnelle.",
-    "intro": "Associez votre image à l'événement de référence du secteur",
+    "metaTitle": "Sponsoring et stands",
+    "badge": "Stands et partenariats {year}",
+    "title": "Sponsoring",
+    "subtitle": "Associez votre marque au salon professionnel du cannabis CBD et rencontrez toute la filière à Nantes.",
     "benefits": {
-      "title": "Avantages",
+      "title": "Pourquoi nous rejoindre",
       "visibility": {
         "title": "Visibilité",
-        "description": "Associez votre marque à l'événement de référence du secteur CBD."
+        "description": "Votre marque sur le salon, l'affiche et nos réseaux, devant 700 à 800 visiteurs professionnels et passionnés."
       },
       "notoriety": {
         "title": "Notoriété",
-        "description": "Renforcez votre image de marque auprès des professionnels du secteur."
+        "description": "Renforcez votre image auprès des professionnels de la filière."
       },
       "network": {
         "title": "Réseau",
-        "description": "Accédez à un réseau privilégié de décideurs et d'influenceurs."
-      },
-      "stand": "Stand premium",
-      "conference": "Slot conférence",
-      "networking": "Accès événements VIP"
-    },
-    "packagesTitle": "Nos offres de partenariat",
-    "packagesSubtitle": "Nous proposons 4 niveaux de partenariat adaptés à vos objectifs. Contactez-nous pour recevoir le détail complet de chaque offre.",
-    "tiers": {
-      "platinum": {
-        "name": "Platinum",
-        "description": "Visibilité maximale et partenariat exclusif"
-      },
-      "gold": {
-        "name": "Or",
-        "description": "Partenariat premium avec forte visibilité"
-      },
-      "silver": {
-        "name": "Argent",
-        "description": "Partenariat avec visibilité ciblée"
-      },
-      "bronze": {
-        "name": "Bronze",
-        "description": "Partenariat de soutien"
+        "description": "Rencontrez producteurs, boutiques, fournisseurs et porteurs de projets en une journée."
       }
     },
-    "requestBrochure": "Demander la plaquette",
+    "packagesTitle": "Les niveaux de partenariat",
+    "packagesSubtitle": "Quatre niveaux, du Bronze au Platinum, détaillés avec leurs tarifs dans la plaquette.",
     "form": {
-      "title": "Recevez nos plaquettes de sponsoring",
-      "subtitle": "Remplissez ce formulaire pour recevoir le détail complet de nos offres de partenariat Platinum, Or, Argent et Bronze.",
-      "company": "Nom de l'entreprise",
-      "companyPlaceholder": "Votre entreprise",
+      "title": "Recevez la plaquette",
+      "subtitle": "Offres de stands et de partenariat, avec les tarifs : nous vous l'envoyons par e-mail.",
+      "company": "Entreprise",
       "contact": "Nom et prénom",
-      "contactPlaceholder": "Jean Dupont",
-      "email": "Email",
-      "emailPlaceholder": "contact@entreprise.fr",
+      "email": "E-mail",
+      "emailPlaceholder": "vous@entreprise.fr",
       "phone": "Téléphone",
-      "phonePlaceholder": "06 XX XX XX XX",
-      "submit": "Recevoir les plaquettes",
-      "sending": "Envoi en cours...",
-      "success": "Demande envoyée ! Vous recevrez les plaquettes par email.",
-      "error": "Erreur lors de l'envoi de la demande",
-      "privacyNotice": "En soumettant ce formulaire, vous acceptez d'être recontacté par notre équipe. Vos données sont traitées conformément à notre",
+      "optional": "(facultatif)",
+      "submit": "Recevoir la plaquette",
+      "sending": "Envoi en cours…",
+      "successTitle": "Demande bien reçue",
+      "success": "Nous vous envoyons la plaquette par e-mail très vite.",
+      "error": "La demande n'a pas pu être envoyée. Réessayez dans un instant ou écrivez-nous directement.",
+      "invalid": "Vérifiez les champs : l'entreprise, le nom et une adresse e-mail valide sont nécessaires.",
+      "privacyNotice": "Vos coordonnées servent uniquement à vous envoyer la plaquette et à vous recontacter. Voir notre",
       "privacyPolicy": "politique de confidentialité"
     },
     "alternativeContact": {
-      "title": "Vous préférez nous contacter directement ?"
+      "title": "Vous préférez écrire directement ?"
     }
   },
   "tickets": {

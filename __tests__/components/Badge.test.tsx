@@ -19,7 +19,7 @@ describe('Badge Component', () => {
     it('should render with default variant', () => {
       render(<Badge>Default</Badge>)
       const badge = screen.getByText('Default')
-      expect(badge).toHaveClass('bg-gray-100', 'text-gray-800')
+      expect(badge).toHaveClass('bg-forest/10', 'text-forest')
     })
 
     it('should render with success variant', () => {
@@ -49,19 +49,19 @@ describe('Badge Component', () => {
     it('should render with forest variant', () => {
       render(<Badge variant="forest">Forest</Badge>)
       const badge = screen.getByText('Forest')
-      expect(badge).toHaveClass('bg-forest', 'text-white')
+      expect(badge).toHaveClass('bg-forest', 'text-cream')
     })
 
     it('should render with sage variant', () => {
       render(<Badge variant="sage">Sage</Badge>)
       const badge = screen.getByText('Sage')
-      expect(badge).toHaveClass('bg-sage', 'text-forest')
+      expect(badge).toHaveClass('bg-mint', 'text-forest')
     })
 
     it('should render with terracotta variant', () => {
       render(<Badge variant="terracotta">Terracotta</Badge>)
       const badge = screen.getByText('Terracotta')
-      expect(badge).toHaveClass('bg-terracotta', 'text-white')
+      expect(badge).toHaveClass('bg-mascot-deep', 'text-cream')
     })
   })
 
@@ -69,13 +69,13 @@ describe('Badge Component', () => {
     it('should render with default medium size', () => {
       render(<Badge>Medium</Badge>)
       const badge = screen.getByText('Medium')
-      expect(badge).toHaveClass('px-3', 'py-1', 'text-sm')
+      expect(badge).toHaveClass('px-3', 'py-1', 'text-base')
     })
 
     it('should render with small size', () => {
       render(<Badge size="sm">Small</Badge>)
       const badge = screen.getByText('Small')
-      expect(badge).toHaveClass('px-2', 'py-0.5', 'text-xs')
+      expect(badge).toHaveClass('px-2', 'py-0.5', 'text-sm')
     })
   })
 
@@ -86,16 +86,16 @@ describe('Badge Component', () => {
       expect(badge).toHaveClass('inline-flex')
     })
 
-    it('should have rounded-full border radius', () => {
+    it('should have rounded-md border radius', () => {
       render(<Badge>Test</Badge>)
       const badge = screen.getByText('Test')
-      expect(badge).toHaveClass('rounded-full')
+      expect(badge).toHaveClass('rounded-md')
     })
 
-    it('should have font-medium weight', () => {
+    it('should have font-semibold weight', () => {
       render(<Badge>Test</Badge>)
       const badge = screen.getByText('Test')
-      expect(badge).toHaveClass('font-medium')
+      expect(badge).toHaveClass('font-semibold')
     })
 
     it('should have items-center alignment', () => {
@@ -191,7 +191,7 @@ describe('Badge Component', () => {
         <Badge variant="forest">PLATINE</Badge>
       )
       const badge = screen.getByText('PLATINE')
-      expect(badge).toHaveClass('bg-forest', 'text-white')
+      expect(badge).toHaveClass('bg-forest', 'text-cream')
     })
 
     it('should work for pending status', () => {
