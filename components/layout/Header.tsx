@@ -4,12 +4,12 @@ import { useState, useMemo, useEffect, useRef, useCallback, useId } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useSession, signOut } from 'next-auth/react'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { cn } from '@/lib/utils'
 import { ButtonLink } from '@/components/ui/ButtonLink'
 import { siteConfig } from '@/config/site'
 import { LanguageSwitcher } from './LanguageSwitcher'
-import { locales, type Locale } from '@/i18n/config'
+import type { Locale } from '@/i18n/config'
 import { NavItem } from '@/types'
 
 const linkBase =
@@ -137,13 +137,8 @@ export function Header({ showPastEditions = false }: { showPastEditions?: boolea
   const t = useTranslations('common')
   const tNav = useTranslations('nav')
 
-  // Locale courante lue dans le cookie
-  const [currentLocale, setCurrentLocale] = useState<Locale>('fr')
-
-  useEffect(() => {
-    const match = document.cookie.match(/NEXT_LOCALE=([^;]+)/)
-    if (match && locales.includes(match[1] as Locale)) setCurrentLocale(match[1] as Locale)
-  }, [])
+  // Langue affichée (cookie du sélecteur, sinon langue du navigateur, sinon français)
+  const currentLocale = useLocale() as Locale
 
   // Sous-menu « L'événement » : tout ce qui décrit le salon
   const eventItems: NavItem[] = useMemo(

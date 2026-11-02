@@ -2,22 +2,15 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
-import Image from 'next/image'
-import { locales, localeNames, localeFlagCodes, type Locale } from '@/i18n/config'
+import { locales, localeNames, type Locale } from '@/i18n/config'
 import { cn } from '@/lib/utils'
 
-// Flag component using flagcdn.com
-function Flag({ locale, size = 20 }: { locale: Locale; size?: number }) {
-  const code = localeFlagCodes[locale]
+// Code de langue en texte (« FR »), comme sur la maquette : pas d'image chargée depuis un site externe
+function Flag({ locale }: { locale: Locale; size?: number }) {
   return (
-    <Image
-      src={`https://flagcdn.com/w40/${code}.png`}
-      alt={localeNames[locale]}
-      width={size}
-      height={Math.round(size * 0.75)}
-      className="rounded-sm object-cover"
-      unoptimized
-    />
+    <span lang={locale} title={localeNames[locale]} className="inline-block min-w-[1.75rem] font-condensed text-base font-semibold uppercase leading-none tracking-wide">
+      {locale}
+    </span>
   )
 }
 

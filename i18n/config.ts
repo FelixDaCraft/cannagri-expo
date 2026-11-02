@@ -10,12 +10,3 @@ export const localeNames: Record<Locale, string> = {
   de: 'Deutsch',
   es: 'Español',
 }
-
-// Using country codes for flag CDN
-export const localeFlagCodes: Record<Locale, string> = {
-  fr: 'fr',
-  en: 'gb',
-  it: 'it',
-  de: 'de',
-  es: 'es',
-}
