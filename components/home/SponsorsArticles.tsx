@@ -50,14 +50,14 @@ export function SponsorsArticles({ sponsors }: SponsorsArticlesProps) {
   }
 
   return (
-    <section className="py-16 md:py-24 bg-cream">
+    <section className="bg-cream py-[4.5rem] md:py-24" aria-labelledby="a-la-une-title">
       <div className="container-custom">
         {/* Section Header */}
         <div className="text-center mb-12">
-          <h2 className="section-title">{t('featured')}</h2>
-          <p className="section-subtitle">
-            {t('featuredSubtitle')}
-          </p>
+          <h2 id="a-la-une-title" className="font-display text-[3.75rem] font-normal leading-[.85] text-forest md:text-[5.5rem]">
+            {t('featured')}
+          </h2>
+          <p className="mx-auto mt-5 max-w-[34em] text-[1.1875rem] leading-relaxed text-ink">{t('featuredSubtitle')}</p>
         </div>
 
         {/* Articles Grid */}

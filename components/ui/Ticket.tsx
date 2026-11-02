@@ -76,13 +76,13 @@ export function Ticket({
           )}
         </h3>
         {description && <p className="mt-3 max-w-[22em] text-[1.0625rem] leading-snug text-cream">{description}</p>}
-        {meta && <p className="mt-4 font-condensed text-base font-medium leading-snug text-cream/80">{meta}</p>}
+        {meta && <p className="mt-4 font-condensed text-base font-medium leading-snug text-cream">{meta}</p>}
         {children && <div className="mt-auto pt-5">{children}</div>}
       </div>
 
       <div className={cn('flex flex-col items-center justify-center gap-1 border-l-2 border-dashed px-3 py-6 sm:px-4', t.stub)}>
         <span className="font-display text-[4.5rem] sm:text-[6.5rem] leading-[.8] text-cream">{price}</span>
-        <span className="font-condensed text-lg sm:text-[1.375rem] font-semibold leading-none text-cream/80">{unit}</span>
+        <span className="font-condensed text-lg sm:text-[1.375rem] font-semibold leading-none text-cream">{unit}</span>
       </div>
     </Tag>
   )

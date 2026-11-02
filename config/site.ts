@@ -96,38 +96,3 @@ export const footerLinks = {
     { label: "CGV", href: "/cgv" },
   ],
 }
-
-export const pillars = [
-  {
-    title: "Producteurs CBD",
-    image: "/images/piliers/producteurs.jpg",
-    alt: "Fleurs de CBD exposées par un producteur en 2024",
-    description: "Cultivateurs français et européens, fleurs sur table.",
-    icon: "leaf",
-    link: "/exposants?category=producteur",
-  },
-  {
-    title: "Matériel de culture",
-    image: "/images/piliers/materiel.jpg",
-    alt: "Démonstration de matériel de culture sur un stand en 2024",
-    description: "Équipement et démonstrations.",
-    icon: "settings",
-    link: "/exposants?category=materiel",
-  },
-  {
-    title: "Conférences",
-    image: "/images/piliers/conferences.jpg",
-    alt: "Table ronde sur la scène Cann'Agri en 2024",
-    description: "Réglementation et marché.",
-    icon: "mic",
-    link: "/programme",
-  },
-  {
-    title: "Lifestyle et food",
-    image: "/images/piliers/lifestyle.jpg",
-    alt: "Stand d'accessoires en 2024",
-    description: "Bien-être, alimentation, accessoires.",
-    icon: "heart",
-    link: "/exposants?category=lifestyle",
-  },
-]

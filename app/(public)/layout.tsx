@@ -2,7 +2,7 @@ import { NextIntlClientProvider } from 'next-intl'
 import { getMessages, getLocale } from 'next-intl/server'
 import { getActiveEditionView, editionService } from '@/lib/editions'
 import { EditionProvider } from '@/components/editions'
-import { Header, Footer, InfoBanner } from '@/components/layout'
+import { Header, Footer } from '@/components/layout'
 import { PageTracker } from '@/components/analytics'
 
 export default async function PublicLayout({
@@ -22,10 +22,9 @@ export default async function PublicLayout({
       <EditionProvider edition={edition}>
         <PageTracker />
         <Header showPastEditions={showPastEditions} />
-        <main className="flex-1 pt-16">
+        <main id="contenu" tabIndex={-1} className="flex-1 pt-16 outline-none lg:pt-[72px]">
           {children}
         </main>
-        <InfoBanner />
         <Footer />
       </EditionProvider>
     </NextIntlClientProvider>

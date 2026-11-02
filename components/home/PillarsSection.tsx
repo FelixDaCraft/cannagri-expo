@@ -1,132 +1,86 @@
 'use client'
 
-import Link from 'next/link'
-import { motion } from 'motion/react'
 import { useTranslations } from 'next-intl'
-import { BentoGrid, BentoGridItem } from '@/components/ui/aceternity'
-import { pillars } from '@/config/site'
+import { Reveal } from '@/components/ui/Reveal'
+import { cn } from '@/lib/utils'
 
-const iconMap: Record<string, React.ReactNode> = {
-  leaf: (
-    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 21c-4.97 0-9-4.03-9-9 0-4.97 4.03-9 9-9s9 4.03 9 9c0 .34-.02.67-.05 1M12 21V12M12 12l3-3M12 12L9 9M15 21a3 3 0 100-6 3 3 0 000 6z" />
-    </svg>
-  ),
-  settings: (
-    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-    </svg>
-  ),
-  mic: (
-    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-    </svg>
-  ),
-  heart: (
-    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-    </svg>
-  ),
-}
+// Photos de l'édition 2024 ; la première occupe la grande case
+const PILLARS = [
+  { key: 'producers', image: '/images/piliers/producteurs.jpg', width: 800, height: 500 },
+  { key: 'growing', image: '/images/piliers/materiel.jpg', width: 800, height: 500 },
+  { key: 'talks', image: '/images/piliers/conferences.jpg', width: 800, height: 400 },
+  { key: 'lifestyle', image: '/images/piliers/lifestyle.jpg', width: 800, height: 400 },
+] as const
 
-interface PillarsStats {
-  conferenceCount: number
-  speakerCount: number
-  standCount: number
-}
+// Chiffres officiels de la dernière édition (à reprendre partout à l'identique)
+const STATS = [
+  { key: 'exhibitors', value: '34' },
+  { key: 'visitors', value: '700-800' },
+  { key: 'conferences', value: '3' },
+] as const
 
-interface PillarsSectionProps {
-  stats?: PillarsStats
-}
+const tileLayout = [
+  'col-span-2 h-60 md:col-span-1 md:row-span-2 md:h-auto',
+  'h-44 md:h-auto',
+  'h-44 md:h-auto',
+  'col-span-2 h-44 md:h-auto',
+]
 
-// Photos de l'édition 2024 (Nextcloud, Images/Cann'Agri)
-function PillarPhoto({ src, alt }: { src: string; alt: string }) {
-  return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
-      src={src}
-      alt={alt}
-      loading="lazy"
-      className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover/bento:scale-105"
-    />
-  )
-}
-
-export function PillarsSection({ stats }: PillarsSectionProps) {
+/** « Toute la filière sous un toit » : une grande photo, trois petites, puis les chiffres */
+export function PillarsSection() {
   const t = useTranslations('home.pillars')
 
   return (
-    <section className="py-16 md:py-24 bg-cream relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-sage/5 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-forest/5 rounded-full blur-3xl" />
-
-      <div className="container-custom relative">
-        {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12"
-        >
-          <h2 className="text-3xl md:text-4xl font-heading font-bold text-heading mb-4">
+    <section className="bg-cream pb-16 pt-[4.5rem] text-forest md:pb-20 md:pt-28" aria-labelledby="piliers-title">
+      <div className="container-custom">
+        <Reveal>
+          <h2 id="piliers-title" className="font-display text-[3.75rem] font-normal leading-[.85] text-forest md:text-[5.5rem] text-balance">
             {t('title')}
           </h2>
-          <p className="text-lg text-body/70 max-w-2xl mx-auto">
-            {t('subtitle')}
-          </p>
-        </motion.div>
+          <p className="mt-5 max-w-[34em] text-[1.1875rem] leading-relaxed text-ink">{t('subtitle')}</p>
+        </Reveal>
 
-        {/* Bento Grid */}
-        <BentoGrid className="lg:grid-cols-4">
-          {pillars.map((pillar, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-            >
-              <Link href={pillar.link || '#'} className="block h-full">
-                <BentoGridItem
-                  title={pillar.title}
-                  description={pillar.description}
-                  icon={iconMap[pillar.icon]}
-                  header={<PillarPhoto src={pillar.image} alt={pillar.title} />}
-                  className="h-full hover:-translate-y-1 transition-transform cursor-pointer"
-                />
-              </Link>
-            </motion.div>
-          ))}
-        </BentoGrid>
-
-        {/* Stats Row */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-16 grid grid-cols-3 gap-6"
-        >
-          {[
-            { number: stats?.standCount || 0, label: t('stats.exhibitors') },
-            { number: '700-800', label: t('stats.visitors') },
-            { number: 3, label: t('stats.conferences') },
-          ].map((stat, index) => (
-            <motion.div
-              key={index}
-              whileHover={{ scale: 1.05 }}
-              className="text-center p-6 rounded-2xl bg-white/50 backdrop-blur-sm border border-sage/10 shadow-sm"
-            >
-              <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-forest to-sage bg-clip-text text-transparent mb-1">
-                {stat.number}
+        <ul className="mt-10 grid grid-cols-2 gap-3 md:mt-14 md:grid-cols-[1.4fr_1fr_1fr] md:grid-rows-[280px_280px] md:gap-4">
+          {PILLARS.map((pillar, i) => (
+            <Reveal as="li" key={pillar.key} delay={i * 80} className={cn('relative overflow-hidden rounded-2xl bg-cream-300', tileLayout[i])}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={pillar.image}
+                alt={t(`items.${pillar.key}.alt`)}
+                width={pillar.width}
+                height={pillar.height}
+                loading="lazy"
+                decoding="async"
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+              <div className="absolute inset-x-2 bottom-2 rounded-[10px] bg-cream px-3 py-2 md:inset-x-4 md:bottom-4 md:px-4 md:py-3">
+                <h3 className="font-condensed text-xl font-semibold leading-tight text-forest md:text-2xl">
+                  {t(`items.${pillar.key}.title`)}
+                </h3>
+                <p className="hidden text-[0.9375rem] leading-snug text-ink md:block">{t(`items.${pillar.key}.description`)}</p>
               </div>
-              <div className="text-body/60 text-sm">{stat.label}</div>
-            </motion.div>
+            </Reveal>
           ))}
-        </motion.div>
+        </ul>
+
+        {/* Les chiffres : une colonne sur mobile pour ne rien couper (constat n°38) */}
+        <Reveal>
+          <p className="mt-14 font-condensed text-lg font-semibold text-gold-ink md:mt-16">{t('statsCaption')}</p>
+          <dl className="mt-3 grid border-t border-forest/15 sm:grid-cols-3">
+            {STATS.map((stat, i) => (
+              <div
+                key={stat.key}
+                className={cn(
+                  'flex flex-row-reverse items-baseline justify-end gap-4 border-b border-forest/15 py-4 sm:flex-col-reverse sm:items-start sm:justify-start sm:gap-1 sm:border-b-0 sm:py-6',
+                  i > 0 && 'sm:border-l sm:pl-8'
+                )}
+              >
+                <dt className="font-condensed text-xl font-semibold text-ink">{t(`stats.${stat.key}`)}</dt>
+                <dd className="font-display text-[3.5rem] leading-[.9] text-forest md:text-[4.5rem]">{stat.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </Reveal>
       </div>
     </section>
   )

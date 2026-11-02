@@ -1,253 +1,63 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { motion } from 'motion/react'
+import { useEffect, useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { useEdition } from '@/components/editions'
-import { toIcsDateTime } from '@/lib/editions/format'
+import { getTimeLeft, type TimeLeft } from '@/lib/home/countdown'
 
-interface TimeLeft {
-  days: number
-  hours: number
-  minutes: number
-  seconds: number
-}
+const pad = (n: number) => String(n).padStart(2, '0')
 
-interface CountdownTimerProps {
-  variant?: 'default' | 'hero'
-}
-
-function calculateTimeLeft(startAt: string | null): TimeLeft {
-  const difference = startAt ? new Date(startAt).getTime() - Date.now() : 0
-
-  if (difference <= 0) {
-    return { days: 0, hours: 0, minutes: 0, seconds: 0 }
-  }
-
-  return {
-    days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-    hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-    minutes: Math.floor((difference / 1000 / 60) % 60),
-    seconds: Math.floor((difference / 1000) % 60),
-  }
-}
-
-function TimeUnit({ value, label, variant = 'default' }: { value: number; label: string; variant?: 'default' | 'hero' }) {
-  const isHero = variant === 'hero'
-
-  return (
-    <motion.div
-      initial={{ scale: 0.8, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      className="flex flex-col items-center"
-    >
-      <motion.div
-        key={value}
-        initial={{ y: -10, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        className="relative"
-      >
-        <div className={`flex items-center justify-center shadow-lg ${
-          isHero
-            ? 'bg-cream/10 backdrop-blur-sm text-cream w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-xl border border-cream/20'
-            : 'bg-forest text-cream w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-xl border border-forest-600'
-        }`}>
-          <span className={`font-heading font-bold ${isHero ? 'text-xl sm:text-2xl md:text-3xl' : 'text-2xl sm:text-3xl md:text-4xl'}`}>
-            {String(value).padStart(2, '0')}
-          </span>
-        </div>
-      </motion.div>
-      <span className={`mt-2 text-xs font-medium uppercase tracking-wider ${
-        isHero ? 'text-cream/70' : 'text-forest/70 sm:text-sm'
-      }`}>
-        {label}
-      </span>
-    </motion.div>
-  )
-}
-
-export function CountdownTimer({ variant = 'default' }: CountdownTimerProps) {
+/**
+ * Compte à rebours du hero, dans l'esprit de l'affiche : chiffres en Barlow Condensed
+ * séparés par de fines lignes, sans boîtes. Les lecteurs d'écran n'entendent qu'une
+ * phrase fixe (« ouverture dans 151 jours »), pas le défilement des secondes.
+ */
+export function CountdownTimer() {
+  const t = useTranslations('home.hero.countdown')
   const edition = useEdition()
-  const [timeLeft, setTimeLeft] = useState<TimeLeft>(calculateTimeLeft(edition.startAt))
-  const [mounted, setMounted] = useState(false)
+  // Rendu serveur sans heure précise : seules les valeurs calculées côté client s'affichent
+  const [timeLeft, setTimeLeft] = useState<TimeLeft | null>(null)
 
   useEffect(() => {
-    setMounted(true)
-    const timer = setInterval(() => {
-      setTimeLeft(calculateTimeLeft(edition.startAt))
-    }, 1000)
-
+    const tick = () => setTimeLeft(getTimeLeft(edition.startAt))
+    tick()
+    const timer = setInterval(tick, 1000)
     return () => clearInterval(timer)
   }, [edition.startAt])
 
-  const title = `Cann'Agri Expo ${edition.year}`
-  const location = `${edition.venueDisplay}, France`
-  // Sans heure de fin connue, l'événement est supposé durer 10 heures
-  const startIcs = edition.startAt ? toIcsDateTime(edition.startAt) : ''
-  const endIcs = edition.endAt
-    ? toIcsDateTime(edition.endAt)
-    : edition.startAt
-      ? toIcsDateTime(new Date(new Date(edition.startAt).getTime() + 10 * 3600 * 1000))
-      : ''
-
-  const handleAddToCalendar = () => {
-    const eventTitle = encodeURIComponent(title)
-    const eventDetails = encodeURIComponent(
-      `Le salon de référence du chanvre CBD - ${edition.venueDisplay}`
-    )
-    const eventLocation = encodeURIComponent(location)
-
-    const googleUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${eventTitle}&details=${eventDetails}&location=${eventLocation}&dates=${startIcs}/${endIcs}`
-    window.open(googleUrl, '_blank')
-  }
-
-  const handleDownloadICS = () => {
-    const icsContent = `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Cann'Agri Expo//FR
-BEGIN:VEVENT
-DTSTART:${startIcs}
-DTEND:${endIcs}
-SUMMARY:${title}
-DESCRIPTION:Le salon de référence du chanvre CBD
-LOCATION:${location}
-END:VEVENT
-END:VCALENDAR`
-
-    const blob = new Blob([icsContent], { type: 'text/calendar' })
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = `cannagri-expo-${edition.year}.ics`
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    URL.revokeObjectURL(url)
-  }
-
-  // Pas de compte à rebours tant que la date de l'édition n'est pas fixée
   if (!edition.startAt) return null
+  if (timeLeft?.isOver) return null
 
-  // Hero variant - compact inline display
-  if (variant === 'hero') {
-    if (!mounted) {
-      return (
-        <div className="flex justify-center lg:justify-start gap-2 sm:gap-3">
-          {[...Array(4)].map((_, i) => (
-            <div key={i} className="flex flex-col items-center">
-              <div className="bg-cream/10 w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-xl animate-pulse" />
-              <div className="mt-2 h-3 w-10 bg-cream/10 rounded animate-pulse" />
-            </div>
-          ))}
-        </div>
-      )
-    }
-
-    return (
-      <div className="flex justify-center lg:justify-start gap-2 sm:gap-3">
-        <TimeUnit value={timeLeft.days} label="Jours" variant="hero" />
-        <div className="flex items-center text-cream/30 text-xl font-bold self-start mt-4 sm:mt-5">:</div>
-        <TimeUnit value={timeLeft.hours} label="Heures" variant="hero" />
-        <div className="flex items-center text-cream/30 text-xl font-bold self-start mt-4 sm:mt-5">:</div>
-        <TimeUnit value={timeLeft.minutes} label="Min" variant="hero" />
-        <div className="flex items-center text-cream/30 text-xl font-bold self-start mt-4 sm:mt-5">:</div>
-        <TimeUnit value={timeLeft.seconds} label="Sec" variant="hero" />
-      </div>
-    )
-  }
-
-  // Default variant - full section
-  if (!mounted) {
-    return (
-      <section className="py-16 bg-cream">
-        <div className="container-custom">
-          <div className="flex justify-center gap-3 sm:gap-4 md:gap-6">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="flex flex-col items-center">
-                <div className="bg-forest/20 w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-xl animate-pulse" />
-                <div className="mt-2 h-4 w-12 bg-forest/10 rounded animate-pulse" />
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-    )
-  }
+  const units = [
+    { key: 'days', value: timeLeft ? String(timeLeft.days) : '–' },
+    { key: 'hours', value: timeLeft ? pad(timeLeft.hours) : '–' },
+    { key: 'minutes', value: timeLeft ? pad(timeLeft.minutes) : '–' },
+    { key: 'seconds', value: timeLeft ? pad(timeLeft.seconds) : '–' },
+  ] as const
 
   return (
-    <section className="py-16 bg-cream relative overflow-hidden">
-      {/* Decorative elements */}
-      <div className="absolute top-0 left-1/4 w-64 h-64 bg-mint/20 rounded-full blur-3xl -translate-y-1/2" />
-      <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-terracotta/10 rounded-full blur-3xl translate-y-1/2" />
-
-      <div className="container-custom relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-10"
-        >
-          <span className="inline-flex items-center gap-2 px-4 py-2 bg-terracotta/10 text-terracotta font-medium rounded-full text-sm mb-4">
-            <span className="w-2 h-2 rounded-full bg-terracotta animate-pulse" />
-            Save the date
-          </span>
-          <h2 className="text-3xl md:text-4xl font-heading font-bold text-forest mb-2">
-            {edition.dateDisplay}
-          </h2>
-          <p className="text-forest/70">
-            {edition.venueDisplay}
-          </p>
-        </motion.div>
-
-        {/* Countdown */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          className="flex justify-center gap-3 sm:gap-4 md:gap-6 mb-10"
-        >
-          <TimeUnit value={timeLeft.days} label="Jours" />
-          <div className="flex items-center text-forest/30 text-2xl font-bold self-start mt-6 sm:mt-8">:</div>
-          <TimeUnit value={timeLeft.hours} label="Heures" />
-          <div className="flex items-center text-forest/30 text-2xl font-bold self-start mt-6 sm:mt-8">:</div>
-          <TimeUnit value={timeLeft.minutes} label="Minutes" />
-          <div className="hidden sm:flex items-center text-forest/30 text-2xl font-bold self-start mt-6 sm:mt-8">:</div>
-          <div className="hidden sm:block">
-            <TimeUnit value={timeLeft.seconds} label="Secondes" />
-          </div>
-        </motion.div>
-
-        {/* Add to Calendar buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.2 }}
-          className="flex flex-col sm:flex-row gap-3 justify-center items-center"
-        >
-          <motion.button
-            onClick={handleAddToCalendar}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-white border-2 border-forest text-forest font-heading font-semibold rounded-xl shadow-md hover:bg-forest hover:text-cream transition-all"
+    <div className="font-condensed">
+      <p className="text-lg font-medium leading-none text-cream/75">
+        {t('label')}
+        {timeLeft && <span className="sr-only"> {t('summary', { days: timeLeft.days })}</span>}
+      </p>
+      <ol aria-hidden="true" className="mt-3 flex items-stretch">
+        {units.map((unit, i) => (
+          <li
+            key={unit.key}
+            className={i === 0 ? 'pr-4 sm:pr-6' : 'border-l border-cream/15 px-4 sm:px-6'}
           >
-            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11zM9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm-8 4H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z"/>
-            </svg>
-            Google Calendar
-          </motion.button>
-          <motion.button
-            onClick={handleDownloadICS}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-forest/10 text-forest font-heading font-semibold rounded-xl hover:bg-forest/20 transition-all"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-            </svg>
-            Télécharger .ics
-          </motion.button>
-        </motion.div>
-      </div>
-    </section>
+            <span
+              className={`block min-w-[2ch] text-[2.5rem] font-semibold leading-none tabular-nums sm:text-[2.75rem] ${
+                i === 0 ? 'text-mint' : 'text-cream'
+              }`}
+            >
+              {unit.value}
+            </span>
+            <span className="mt-1.5 block text-base font-medium leading-none text-cream/70">{t(unit.key)}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
   )
 }

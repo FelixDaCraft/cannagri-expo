@@ -20,7 +20,7 @@ export default async function ProLayout({
     <NextIntlClientProvider locale={locale} messages={messages}>
       <EditionProvider edition={edition}>
         <Header showPastEditions={showPastEditions} />
-        <main className="flex-1 pt-16">
+        <main id="contenu" tabIndex={-1} className="flex-1 pt-16 outline-none lg:pt-[72px]">
           {children}
         </main>
         <Footer />

@@ -2,92 +2,57 @@
 
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
-import { Button, Badge } from '@/components/ui'
+import { Reveal } from '@/components/ui/Reveal'
 import { useEdition } from '@/components/editions'
+import { formatEventTime } from '@/lib/editions/format'
+import { shortHour } from '@/lib/home/format'
 
-interface ProgramStats {
-  conferenceCount: number
-  speakerCount: number
-  standCount: number
-}
-
-interface ProgramHighlightProps {
-  stats?: ProgramStats
-}
-
-export function ProgramHighlight({ stats }: ProgramHighlightProps) {
+/** Le déroulé connu de la journée ; le détail des conférences viendra sur la page Programme */
+export function ProgramHighlight() {
   const t = useTranslations('home.program')
   const edition = useEdition()
+  const opening = edition.startAt ? shortHour(formatEventTime(edition.startAt)) : t('morning')
+  const closing = edition.endAt ? shortHour(formatEventTime(edition.endAt)) : t('evening')
+
+  const rows = [
+    { when: opening, title: t('rows.opening.title'), detail: t('rows.opening.detail') },
+    { when: t('allDay'), title: t('rows.talks.title'), detail: t('rows.talks.detail') },
+    { when: t('endOfDay'), title: t('rows.cup.title'), detail: t('rows.cup.detail') },
+    { when: closing, title: t('rows.closing.title') },
+  ]
 
   return (
-    <section className="py-16 md:py-24 bg-white">
-      <div className="container-custom">
-        {/* Section Header */}
-        <div className="text-center mb-12">
-          <h2 className="section-title">{t('title')}</h2>
-          <p className="section-subtitle">
-            {t('subtitle')}
-          </p>
-        </div>
+    <section className="bg-cream pb-[4.5rem] pt-8 text-forest md:pb-28 md:pt-12" aria-labelledby="programme-title">
+      <div className="container-custom grid items-end gap-10 lg:grid-cols-2 lg:gap-16">
+        <Reveal>
+          <h2 id="programme-title" className="font-display text-[3.75rem] font-normal leading-[.85] text-forest md:text-[5.5rem]">
+            {t('title')}
+          </h2>
+          <p className="mt-5 max-w-[30em] text-[1.1875rem] leading-relaxed text-ink">{t('intro', { year: edition.year })}</p>
+          <Link href="/programme" className="link-underline mt-4 text-forest decoration-forest/40">
+            {t('viewFullProgram')}
+          </Link>
+        </Reveal>
 
-        {/* Programme à venir */}
-        <div className="max-w-3xl mx-auto">
-          <div className="text-center p-8 md:p-12 rounded-2xl bg-gradient-to-br from-sage/10 to-forest/5 border border-sage/20">
-            <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-forest/10 flex items-center justify-center">
-              <svg className="w-10 h-10 text-forest" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-            </div>
-
-            <Badge variant="sage" className="mb-4">
-              {t('comingSoon')}
-            </Badge>
-
-            <h3 className="text-2xl md:text-3xl font-heading font-bold text-heading mb-4">
-              {t('programComingSoonTitle')}
-            </h3>
-
-            <p className="text-body/70 mb-6 leading-relaxed max-w-xl mx-auto">
-              {t('programComingSoonDescription', { year: edition.year })}
-            </p>
-
-            <Link href="/programme">
-              <Button>
-                {t('viewFullProgram')}
-              </Button>
-            </Link>
-          </div>
-        </div>
-
-        {/* Quick Stats - Only show if there are events */}
-        {(stats?.conferenceCount || stats?.speakerCount) ? (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16">
-            <div className="text-center p-6 rounded-xl bg-cream">
-              <div className="text-3xl md:text-4xl font-heading font-bold text-forest mb-1">
-                {stats?.conferenceCount || 0}
-              </div>
-              <div className="text-body/60 text-sm">{t('stats.conferences')}</div>
-            </div>
-            <div className="text-center p-6 rounded-xl bg-cream">
-              <div className="text-3xl md:text-4xl font-heading font-bold text-forest mb-1">
-                {stats?.speakerCount || 0}
-              </div>
-              <div className="text-body/60 text-sm">{t('stats.speakers')}</div>
-            </div>
-            <div className="text-center p-6 rounded-xl bg-cream">
-              <div className="text-3xl md:text-4xl font-heading font-bold text-forest mb-1">
-                {stats?.standCount || 0}
-              </div>
-              <div className="text-body/60 text-sm">{t('stats.exhibitors')}</div>
-            </div>
-            <div className="text-center p-6 rounded-xl bg-cream">
-              <div className="text-3xl md:text-4xl font-heading font-bold text-forest mb-1">
-                1
-              </div>
-              <div className="text-body/60 text-sm">{t('stats.award')}</div>
-            </div>
-          </div>
-        ) : null}
+        <Reveal delay={100} className="rounded-2xl border-2 border-forest p-6 md:p-8">
+          <ol>
+            {rows.map((row) => (
+              <li
+                key={row.title}
+                className="grid grid-cols-[6.5rem_1fr] gap-4 border-b border-forest/15 py-4 font-condensed first:pt-0 last:border-b-0 md:grid-cols-[7.5rem_1fr]"
+              >
+                <span className="text-[1.375rem] font-semibold leading-tight text-gold-ink">{row.when}</span>
+                <span className="text-[1.375rem] font-semibold leading-tight">
+                  {row.title}
+                  {row.detail && (
+                    <span className="mt-1 block font-body text-base font-normal leading-snug text-ink">{row.detail}</span>
+                  )}
+                </span>
+              </li>
+            ))}
+          </ol>
+          <p className="mt-2 text-[0.9375rem] text-ink">{t('note')}</p>
+        </Reveal>
       </div>
     </section>
   )

@@ -52,7 +52,7 @@
     "event": "The event",
     "program": "Program",
     "exhibitors": "Exhibitors",
-    "photoGallery": "Photo Gallery",
+    "photoGallery": "Gallery",
     "practicalInfo": "Practical info",
     "pastEditions": "Past editions",
     "sponsoring": "Sponsoring",
@@ -60,62 +60,86 @@
     "proSpace": "Pro Space",
     "becomeExhibitor": "Become Exhibitor",
     "bookStand": "Book a Stand",
-    "cgv": "Terms"
+    "cgv": "Terms",
+    "skipToContent": "Skip to content",
+    "mainNav": "Main navigation",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
   },
   "home": {
     "hero": {
-      "title": "CANN'AGRI",
-      "titleHighlight": "EXPO",
-      "subtitle": "The reference CBD hemp exhibition",
-      "edition": "{year} Edition",
+      "anniversary": "turns 5",
+      "when": "When",
+      "hours": "Opening hours",
+      "where": "Where",
+      "dateValue": "Saturday {date}",
       "buyTicket": "Buy my ticket",
-      "practicalInfo": "Practical Info",
-      "discover": "Discover"
+      "practicalInfo": "Practical info",
+      "tagline": "The trade show for CBD cannabis",
+      "mascotAlt": "The Cann'Agri Expo mascot, a cannabis bud in a party hat holding up a trophy",
+      "countdown": {
+        "label": "Doors open in",
+        "summary": "{days, plural, one {# day} other {# days}}",
+        "days": "days",
+        "hours": "hours",
+        "minutes": "min",
+        "seconds": "s"
+      }
     },
     "pillars": {
-      "title": "At the Heart of the Industry",
-      "subtitle": "Discover the key players of the French and European CBD hemp industry gathered for an exceptional day.",
+      "title": "The whole industry under one roof",
+      "subtitle": "Growers, equipment makers, speakers and shops: the people behind CBD cannabis in France and Europe, together for one day in Nantes.",
+      "items": {
+        "producers": {
+          "title": "CBD growers",
+          "description": "French and European growers, flowers on the table",
+          "alt": "CBD flowers on display at a grower’s stand in 2024"
+        },
+        "growing": {
+          "title": "Growing equipment",
+          "description": "Equipment and demonstrations",
+          "alt": "Growing equipment demonstration at a stand in 2024"
+        },
+        "talks": {
+          "title": "Talks",
+          "description": "Regulation and market",
+          "alt": "Panel discussion on the Cann'Agri stage in 2024"
+        },
+        "lifestyle": {
+          "title": "Lifestyle and food",
+          "description": "Wellbeing, food, accessories",
+          "alt": "Accessories stand in 2024"
+        }
+      },
+      "statsCaption": "The last edition in numbers",
       "stats": {
-        "exhibitors": "Exhibitors",
-        "visitors": "Expected visitors",
-        "conferences": "Conferences",
-        "uniqueDay": "Unique day"
+        "exhibitors": "exhibitors",
+        "visitors": "visitors",
+        "conferences": "talks"
       }
     },
     "tickets": {
-      "badge": "Tickets",
-      "title": "Book your tickets",
-      "subtitle": "Choose the formula that suits you and join us on {date} at {location}, {city}.",
+      "title": "Grab your ticket",
+      "intro": "Two tickets, the same day. Flex costs €{extra} more, which goes to the association that runs the show.",
+      "unit": "euros",
+      "meta": "Visitor badge · e-ticket by email",
       "standard": {
-        "name": "Standard Ticket",
-        "description": "Full day access to the exhibition",
-        "features": {
-          "stands": "Access to exhibitor stands",
-          "conferences": "Access to conferences",
-          "badge": "Visitor badge"
-        },
-        "supportMessage": "No hard feelings, thanks anyway, paying for your ticket is already great!"
+        "name": "Standard ticket",
+        "description": "Entry for the whole day: stands, talks and the awards ceremony."
       },
       "flex": {
-        "name": "Flex Ticket",
-        "description": "Support the association",
-        "features": {
-          "stands": "Access to exhibitor stands",
-          "conferences": "Access to conferences",
-          "badge": "Visitor badge"
-        },
-        "supportMessage": "Your support allows us to organize better events and develop the CBD hemp industry in France.",
-        "badge": "FULL SUPPORT"
+        "name": "Flex ticket",
+        "tag": "thanks",
+        "description": "The same entry, with a boost for the association and future editions."
       },
       "quantity": "Quantity",
-      "yourSelection": "Your selection",
-      "ticket": "ticket",
-      "tickets": "tickets",
-      "proceedPayment": "Proceed to payment",
-      "seeAllOptions": "See all options",
-      "securePayment": "Secure payment",
-      "eTicket": "E-ticket by email",
-      "refundable": "Refundable 48h before"
+      "quantityOf": "Number of {name}s",
+      "decrease": "Remove one {name}",
+      "increase": "Add one {name}",
+      "choose": "Choose my tickets",
+      "continue": "{count, plural, one {Continue with # ticket} other {Continue with # tickets}} · €{total}",
+      "conditions": "Named tickets, non-refundable · Secure payment ·",
+      "cgv": "Terms of sale"
     },
     "sponsors": {
       "featured": "Featured",
@@ -145,18 +169,31 @@
       "discoverOffers": "Discover our offers"
     },
     "program": {
-      "title": "Highlights & Conferences",
-      "subtitle": "A rich program with quality speakers to understand the challenges of the CBD hemp industry.",
-      "comingSoon": "Coming Soon",
-      "programComingSoonTitle": "Program Coming Soon",
-      "programComingSoonDescription": "The detailed program for the {year} edition will be available soon. Conferences, round tables and workshops will be led by recognized experts in the CBD hemp industry.",
-      "viewFullProgram": "View program",
-      "stats": {
-        "conferences": "Conferences",
-        "speakers": "Speakers",
-        "exhibitors": "Exhibitors",
-        "award": "Platinum CBD Cup Award Show"
-      }
+      "title": "The programme",
+      "intro": "The {year} talks and panels are being prepared. The full programme will be published as soon as it is final.",
+      "viewFullProgram": "See the programme page",
+      "morning": "Morning",
+      "evening": "Evening",
+      "allDay": "All day",
+      "endOfDay": "Late afternoon",
+      "rows": {
+        "opening": {
+          "title": "Doors open",
+          "detail": "Stands open all day"
+        },
+        "talks": {
+          "title": "Talks and panels",
+          "detail": "Speakers announced soon"
+        },
+        "cup": {
+          "title": "Platinum CBD Cup",
+          "detail": "Awards on the Cann'Agri stage"
+        },
+        "closing": {
+          "title": "Closing"
+        }
+      },
+      "note": "Detailed timings to come"
     },
     "newsletter": {
       "title": "Stay informed",
@@ -165,6 +202,31 @@
       "subscribe": "Subscribe",
       "success": "Thank you for subscribing!",
       "error": "An error occurred"
+    },
+    "menu": {
+      "title": "What's on",
+      "items": {
+        "producers": "Grower stands",
+        "shops": "Shops",
+        "growing": "Growing equipment",
+        "fertilizers": "Fertilisers",
+        "smoking": "Smoking accessories",
+        "talks": "Talks",
+        "tattoo": "Tattoo artists",
+        "food": "Food trucks"
+      },
+      "cup": "And to close the day, the Platinum CBD Cup awards",
+      "posterAlt": "Official Cann'Agri Expo {year} poster, the 5th edition"
+    },
+    "gallery": {
+      "title": "Memories from past editions",
+      "titleYear": "Memories from {year}",
+      "viewAll": "See the full gallery"
+    },
+    "pro": {
+      "title": "Exhibit or sponsor",
+      "text": "Stands and partnerships {year}: get the brochure with offers and prices.",
+      "cta": "Request the brochure"
     }
   },
   "exhibitors": {
@@ -689,18 +751,21 @@
     }
   },
   "footer": {
-    "description": "The reference exhibition for hemp and cannabis in France",
+    "description": "The trade show for CBD cannabis, organised in Nantes by a non-profit association.",
     "quickLinks": "Quick links",
     "contact": "Contact",
     "followUs": "Follow us",
     "legal": {
       "title": "Legal information",
       "privacy": "Privacy policy",
-      "terms": "Terms of service",
+      "terms": "Legal notice",
       "cgv": "Terms and conditions",
       "cookies": "Cookie management"
     },
-    "copyright": "© {year} Cann'Agri Expo. All rights reserved."
+    "copyright": "© {year} Cann'Agri Expo. All rights reserved.",
+    "salon": "The show",
+    "visit": "Getting there",
+    "contactForm": "Contact form"
   },
   "errors": {
     "404": {

@@ -1,469 +1,380 @@
 'use client'
 
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useRef, useCallback, useId } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useSession, signOut } from 'next-auth/react'
 import { useTranslations } from 'next-intl'
 import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui'
+import { ButtonLink } from '@/components/ui/ButtonLink'
 import { siteConfig } from '@/config/site'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import { locales, type Locale } from '@/i18n/config'
 import { NavItem } from '@/types'
 
-// Fallback logo SVG
-function LogoFallback() {
+const linkBase =
+  'inline-flex min-h-[44px] items-center gap-1 rounded-lg px-2.5 font-condensed text-lg font-medium leading-none text-cream/80 transition-colors hover:text-cream whitespace-nowrap'
+
+function Chevron({ open }: { open: boolean }) {
   return (
-    <svg viewBox="0 0 48 48" className="w-full h-full p-2">
-      <circle cx="24" cy="24" r="22" fill="#1D2B3A" />
-      <text x="24" y="30" textAnchor="middle" fill="white" fontSize="16" fontWeight="bold">CA</text>
+    <svg
+      aria-hidden="true"
+      className={cn('h-3.5 w-3.5 opacity-70 transition-transform duration-200', open && 'rotate-180')}
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
     </svg>
   )
 }
 
-/** `showPastEditions` : affiche « Éditions passées » dans le menu principal s'il existe des archives publiées */
+/**
+ * Menu déroulant accessible au clavier : bouton qui annonce son état, ouverture au survol
+ * ou à Entrée/Espace/flèche bas, fermeture par Échap (le focus revient au bouton) ou en quittant.
+ */
+function Dropdown({
+  label,
+  items,
+  active,
+  align = 'left',
+  isCurrent,
+}: {
+  label: React.ReactNode
+  items: { label: string; href?: string; onSelect?: () => void }[]
+  active?: boolean
+  align?: 'left' | 'right'
+  isCurrent: (href: string) => boolean
+}) {
+  const [open, setOpen] = useState(false)
+  const id = useId()
+  const wrapper = useRef<HTMLDivElement>(null)
+  const button = useRef<HTMLButtonElement>(null)
+
+  const focusItem = (index: number) => {
+    const links = wrapper.current?.querySelectorAll<HTMLElement>('[data-menu-item]')
+    links?.[index]?.focus()
+  }
+
+  return (
+    <div
+      ref={wrapper}
+      className="relative"
+      // Survol seulement à la souris : sur tablette, le toucher passe par le clic du bouton
+      onPointerEnter={(e) => e.pointerType === 'mouse' && setOpen(true)}
+      onPointerLeave={(e) => e.pointerType === 'mouse' && setOpen(false)}
+      onBlur={(e) => {
+        if (!wrapper.current?.contains(e.relatedTarget as Node)) setOpen(false)
+      }}
+      onKeyDown={(e) => {
+        if (e.key === 'Escape' && open) {
+          setOpen(false)
+          button.current?.focus()
+        }
+      }}
+    >
+      <button
+        ref={button}
+        type="button"
+        className={cn(linkBase, active && 'text-cream')}
+        aria-expanded={open}
+        aria-controls={id}
+        onClick={() => setOpen((o) => !o)}
+        onKeyDown={(e) => {
+          if (e.key === 'ArrowDown') {
+            e.preventDefault()
+            setOpen(true)
+            requestAnimationFrame(() => focusItem(0))
+          }
+        }}
+      >
+        {label}
+        <Chevron open={open} />
+      </button>
+      <div id={id} hidden={!open} className={cn('absolute top-full z-50 pt-2', align === 'right' ? 'right-0' : 'left-0')}>
+        <ul className="min-w-[13rem] rounded-xl bg-cream py-2 shadow-[0_12px_32px_rgba(13,20,27,.35)]">
+          {items.map((item) => (
+            <li key={item.label}>
+              {item.href ? (
+                <Link
+                  href={item.href}
+                  data-menu-item=""
+                  aria-current={isCurrent(item.href) ? 'page' : undefined}
+                  className="flex min-h-[44px] items-center px-4 font-condensed text-lg font-medium text-forest hover:bg-forest/5 aria-[current=page]:text-gold-ink"
+                  onClick={() => setOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              ) : (
+                <button
+                  type="button"
+                  data-menu-item=""
+                  className="flex min-h-[44px] w-full items-center px-4 text-left font-condensed text-lg font-medium text-forest hover:bg-forest/5"
+                  onClick={() => {
+                    setOpen(false)
+                    item.onSelect?.()
+                  }}
+                >
+                  {item.label}
+                </button>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  )
+}
+
+/** `showPastEditions` : affiche « Éditions passées » dans le menu s'il existe des archives publiées */
 export function Header({ showPastEditions = false }: { showPastEditions?: boolean }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null)
-  const [userMenuOpen, setUserMenuOpen] = useState(false)
-  const [logoError, setLogoError] = useState(false)
   const pathname = usePathname()
   const { data: session, status } = useSession()
+  const menuButton = useRef<HTMLButtonElement>(null)
+  const mobileMenuId = useId()
 
   const t = useTranslations('common')
   const tNav = useTranslations('nav')
 
-  // Détecter la locale courante depuis le cookie
+  // Locale courante lue dans le cookie
   const [currentLocale, setCurrentLocale] = useState<Locale>('fr')
 
   useEffect(() => {
-    const getLocaleFromCookie = () => {
-      const match = document.cookie.match(/NEXT_LOCALE=([^;]+)/)
-      if (match && locales.includes(match[1] as Locale)) {
-        return match[1] as Locale
-      }
-      return 'fr'
-    }
-    setCurrentLocale(getLocaleFromCookie())
-
-    // Écouter les changements de cookie
-    const interval = setInterval(() => {
-      const newLocale = getLocaleFromCookie()
-      setCurrentLocale(prev => prev !== newLocale ? newLocale : prev)
-    }, 500)
-
-    return () => clearInterval(interval)
+    const match = document.cookie.match(/NEXT_LOCALE=([^;]+)/)
+    if (match && locales.includes(match[1] as Locale)) setCurrentLocale(match[1] as Locale)
   }, [])
 
-  // Navigation avec traductions
-  const navigation: NavItem[] = useMemo(() => [
-    { label: tNav('ourVision'), href: "/evenement" },
-    {
-      label: tNav('theEvent'),
-      href: "/programme",
-      children: [
-        { label: tNav('program'), href: "/programme" },
-        { label: tNav('exhibitors'), href: "/exposants" },
-        { label: tNav('photoGallery'), href: "/mediatheque" },
-        { label: tNav('practicalInfo'), href: "/infos-pratiques" },
-      ],
-    },
-    ...(showPastEditions ? [{ label: tNav('pastEditions'), href: "/editions" }] : []),
-    { label: tNav('sponsoring'), href: "/sponsoring" },
-    { label: tNav('contact'), href: "/contact" },
-    {
-      label: tNav('proSpace'),
-      href: "/pro",
-      children: [
-        { label: tNav('becomeExhibitor'), href: "/pro" },
-        { label: tNav('bookStand'), href: "/pro/plan" },
-      ],
-    },
-  ], [tNav, showPastEditions])
+  // Sous-menu « L'événement » : tout ce qui décrit le salon
+  const eventItems: NavItem[] = useMemo(
+    () => [
+      { label: tNav('ourVision'), href: '/evenement' },
+      { label: tNav('program'), href: '/programme' },
+      { label: tNav('exhibitors'), href: '/exposants' },
+      { label: tNav('photoGallery'), href: '/mediatheque' },
+      ...(showPastEditions ? [{ label: tNav('pastEditions'), href: '/editions' }] : []),
+    ],
+    [tNav, showPastEditions]
+  )
 
-  // Vérifier si l'utilisateur est un PRO validé ou un ADMIN
-  const canAccessProSpace = useMemo(() => {
-    if (!session?.user) return false
-    const { role, isApproved } = session.user
-    // Admin peut toujours accéder
-    if (role === 'ADMIN') return true
-    // PRO doit être approuvé par un admin
-    if (role === 'PRO' && isApproved) return true
-    return false
-  }, [session])
+  // Premier niveau : ce qu'on cherche le plus (constat n°12 : Infos pratiques visible)
+  const topItems: NavItem[] = useMemo(
+    () => [
+      { label: tNav('practicalInfo'), href: '/infos-pratiques' },
+      { label: tNav('sponsoring'), href: '/sponsoring' },
+      { label: tNav('contact'), href: '/contact' },
+    ],
+    [tNav]
+  )
 
-  // Filtrer la navigation pour masquer "Espace Pro" si non autorisé
-  const filteredNavigation = useMemo(() => {
-    return navigation.filter(item => {
-      if (item.href === '/pro') {
-        return canAccessProSpace
-      }
-      return true
-    })
-  }, [canAccessProSpace, navigation])
+  const user = session?.user
+  const accountItems = useMemo(() => {
+    if (!user) return []
+    const items: { label: string; href?: string; onSelect?: () => void }[] = [{ label: t('myAccount'), href: '/compte' }]
+    if (['USER', 'PRO'].includes(user.role)) items.push({ label: t('myTickets'), href: '/compte/billets' })
+    if (user.role === 'PRO') items.push({ label: t('myStands'), href: '/compte/stands' })
+    if ((user.role === 'PRO' && user.isApproved) || user.role === 'ADMIN') items.push({ label: tNav('proSpace'), href: '/pro' })
+    if (['SUPER_ADMIN', 'ADMIN', 'CONTRIBUTOR'].includes(user.role)) items.push({ label: t('admin'), href: '/admin' })
+    items.push({ label: t('logout'), onSelect: () => signOut({ callbackUrl: '/' }) })
+    return items
+  }, [user, t, tNav])
 
-  const isActive = (href: string) => {
-    if (href === '/') return pathname === '/'
-    return pathname.startsWith(href)
-  }
+  const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.startsWith(href))
+  const eventActive = eventItems.some((item) => isActive(item.href))
+
+  const closeMobileMenu = useCallback((returnFocus = false) => {
+    setIsMobileMenuOpen(false)
+    if (returnFocus) menuButton.current?.focus()
+  }, [])
+
+  // Menu mobile : Échap le ferme, la page derrière ne défile plus (constat n°59)
+  useEffect(() => {
+    if (!isMobileMenuOpen) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeMobileMenu(true)
+    }
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.body.style.overflow = previousOverflow
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [isMobileMenuOpen, closeMobileMenu])
+
+  // Changement de page : le menu mobile se referme
+  useEffect(() => {
+    setIsMobileMenuOpen(false)
+  }, [pathname])
+
+  const userLabel = user ? user.name || user.email?.split('@')[0] || t('user') : ''
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-forest h-16">
-      <div className="container-custom h-full">
-        <div className="flex items-center h-full">
-          {/* Logo - fixe à gauche */}
-          <Link href="/" className="flex items-center gap-2 shrink-0">
-            <div className="relative w-12 h-12">
-              {logoError ? (
-                <LogoFallback />
-              ) : (
-                <Image
-                  src="/images/logo.PNG"
-                  alt={siteConfig.name}
-                  fill
-                  className="object-contain"
-                  priority
-                  onError={() => setLogoError(true)}
-                />
-              )}
-            </div>
-            <span className="font-heading font-bold text-white text-lg hidden sm:block whitespace-nowrap">
-              {siteConfig.name}
-            </span>
-          </Link>
+    <header className="fixed inset-x-0 top-0 z-50 bg-forest">
+      <a href="#contenu" className="skip-link">
+        {tNav('skipToContent')}
+      </a>
+      <div className="container-custom flex h-16 items-center gap-3 lg:h-[72px]">
+        {/* Logo d'origine + nom du salon */}
+        <Link href="/" className="flex shrink-0 items-center gap-2.5 rounded-lg" aria-label={`${siteConfig.name}, ${t('home')}`}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/images/logo-96.png" alt="" width={44} height={44} className="h-10 w-10 lg:h-11 lg:w-11" />
+          <span className="font-display text-[1.375rem] leading-none text-cream xl:text-[1.625rem]">
+            {siteConfig.name}
+          </span>
+        </Link>
 
-          {/* Desktop Navigation - centré avec flex-1 */}
-          <nav className="hidden lg:flex items-center justify-center flex-1 mx-4">
-            <div className="flex items-center gap-1">
-              {filteredNavigation.map((item) => (
-                <div
-                  key={item.label}
-                  className="relative group"
-                  onMouseEnter={() => item.children && setOpenDropdown(item.label)}
-                  onMouseLeave={() => setOpenDropdown(null)}
+        {/* Navigation ordinateur et tablette paysage */}
+        <nav aria-label={tNav('mainNav')} className="ml-auto hidden lg:block">
+          <ul className="flex items-center">
+            <li>
+              <Dropdown label={tNav('event')} items={eventItems} active={eventActive} isCurrent={isActive} />
+            </li>
+            {topItems.map((item) => (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  aria-current={isActive(item.href) ? 'page' : undefined}
+                  className={cn(linkBase, 'aria-[current=page]:text-cream aria-[current=page]:underline decoration-mint underline-offset-[6px]')}
                 >
-                  <Link
-                    href={item.href}
-                    className={cn(
-                      'flex items-center gap-1 px-3 py-2 text-sm font-medium text-white/90 hover:text-white transition-colors rounded-lg hover:bg-white/10 whitespace-nowrap',
-                      isActive(item.href) && 'text-white bg-white/10'
-                    )}
-                  >
-                    {item.label}
-                    {item.children && (
-                      <svg
-                        className={cn(
-                          "w-3 h-3 opacity-70 transition-transform duration-200",
-                          openDropdown === item.label && "rotate-180"
-                        )}
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    )}
-                  </Link>
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
 
-                  {/* Dropdown with invisible bridge to prevent hover gap issue */}
-                  {item.children && openDropdown === item.label && (
-                    <div className="absolute top-full left-0 pt-2 z-50">
-                      {/* Invisible bridge area */}
-                      <div className="absolute -top-2 left-0 right-0 h-2" />
-                      <div className="bg-white rounded-lg shadow-lg py-2 min-w-[200px]">
-                        {item.children.map((child) => (
-                          <Link
-                            key={child.label}
-                            href={child.href}
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-cream hover:text-forest transition-colors"
-                          >
-                            {child.label}
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </nav>
+        <div className="ml-auto flex items-center gap-1 lg:ml-2 lg:gap-2">
+          {/* Le seul bouton or du header, visible aussi sur mobile (constat n°37) */}
+          <ButtonLink href="/billetterie" size="sm" className="px-3.5 sm:px-4">
+            {t('tickets')}
+          </ButtonLink>
 
-          {/* CTA Buttons & User Menu - fixe à droite */}
-          <div className="hidden lg:flex items-center gap-3 shrink-0">
-            <Link href="/billetterie">
-              <Button variant="secondary" size="sm">
-                {t('tickets')}
-              </Button>
-            </Link>
-
+          <div className="hidden items-center lg:flex">
             {status === 'loading' ? (
-              <div className="w-8 h-8 bg-white/20 rounded-full animate-pulse" />
-            ) : session?.user ? (
-              /* Menu utilisateur connecté */
-              <div
-                className="relative"
-                onMouseEnter={() => setUserMenuOpen(true)}
-                onMouseLeave={() => setUserMenuOpen(false)}
-              >
-                <button className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors">
-                  {session.user.image ? (
-                    <img
-                      src={session.user.image}
-                      alt=""
-                      className="w-8 h-8 rounded-full"
-                    />
-                  ) : (
-                    <div className="w-8 h-8 bg-terracotta rounded-full flex items-center justify-center text-white font-bold text-sm">
-                      {(session.user.name || session.user.email || '?').charAt(0).toUpperCase()}
-                    </div>
-                  )}
-                  <span className="text-white text-sm font-medium max-w-[120px] truncate">
-                    {session.user.name || session.user.email?.split('@')[0]}
-                  </span>
-                  <svg className={cn(
-                    "w-4 h-4 text-white/70 transition-transform duration-200",
-                    userMenuOpen && "rotate-180"
-                  )} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-
-                {/* Dropdown menu with invisible bridge */}
-                {userMenuOpen && (
-                  <div className="absolute top-full right-0 pt-2 z-50">
-                    {/* Invisible bridge area */}
-                    <div className="absolute -top-2 left-0 right-0 h-2" />
-                    <div className="bg-white rounded-lg shadow-lg py-2 min-w-[200px]">
-                    <div className="px-4 py-2 border-b border-gray-100">
-                      <p className="font-medium text-gray-900 truncate">{session.user.name || t('user')}</p>
-                      <p className="text-sm text-gray-500 truncate">{session.user.email}</p>
-                    </div>
-
-                    <Link
-                      href="/compte"
-                      className="block px-4 py-2 text-gray-700 hover:bg-cream hover:text-forest transition-colors"
-                    >
-                      <svg className="w-4 h-4 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                      </svg>
-                      {t('myAccount')}
-                    </Link>
-
-                    {['USER', 'PRO'].includes(session.user.role) && (
-                      <Link
-                        href="/compte/billets"
-                        className="block px-4 py-2 text-gray-700 hover:bg-cream hover:text-forest transition-colors"
-                      >
-                        <svg className="w-4 h-4 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
-                        </svg>
-                        {t('myTickets')}
-                      </Link>
-                    )}
-
-                    {session.user.role === 'PRO' && (
-                      <Link
-                        href="/compte/stands"
-                        className="block px-4 py-2 text-gray-700 hover:bg-cream hover:text-forest transition-colors"
-                      >
-                        <svg className="w-4 h-4 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                        </svg>
-                        {t('myStands')}
-                      </Link>
-                    )}
-
-                    {['SUPER_ADMIN', 'ADMIN', 'CONTRIBUTOR'].includes(session.user.role) && (
-                      <Link
-                        href="/admin"
-                        className="block px-4 py-2 text-gray-700 hover:bg-cream hover:text-forest transition-colors"
-                      >
-                        <svg className="w-4 h-4 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                        {t('admin')}
-                      </Link>
-                    )}
-
-                    <hr className="my-2 border-gray-100" />
-
-                    <button
-                      onClick={() => signOut({ callbackUrl: '/' })}
-                      className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 transition-colors"
-                    >
-                      <svg className="w-4 h-4 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                      </svg>
-                      {t('logout')}
-                    </button>
-                    </div>
-                  </div>
-                )}
-              </div>
+              <span className="mx-2 h-6 w-16 rounded bg-cream/10" aria-hidden="true" />
+            ) : user ? (
+              <Dropdown
+                align="right"
+                label={<span className="max-w-[7.5rem] truncate">{userLabel}</span>}
+                items={accountItems}
+                isCurrent={isActive}
+              />
             ) : (
-              /* Boutons connexion/inscription */
-              <div className="flex items-center gap-2">
-                <Link href="/connexion">
-                  <Button variant="ghost" size="sm" className="text-white hover:bg-white/10">
-                    {t('login')}
-                  </Button>
-                </Link>
-                <Link href="/inscription">
-                  <Button variant="outline" size="sm" className="border-white text-white hover:bg-white hover:text-forest">
-                    {t('register')}
-                  </Button>
-                </Link>
-              </div>
+              <Link href="/connexion" className={cn(linkBase, 'text-cream/70')}>
+                {t('login')}
+              </Link>
             )}
-
-            {/* Séparateur */}
-            <div className="w-px h-6 bg-white/20" />
-
-            {/* Language Switcher - tout à droite */}
             <LanguageSwitcher currentLocale={currentLocale} variant="flag-dropdown" />
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Bouton du menu mobile */}
           <button
-            className="lg:hidden p-2 text-white"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label="Menu"
+            ref={menuButton}
+            type="button"
+            className="ml-1 inline-flex h-11 w-11 items-center justify-center rounded-[10px] border border-cream/20 text-cream lg:hidden"
+            onClick={() => setIsMobileMenuOpen((o) => !o)}
+            aria-expanded={isMobileMenuOpen}
+            aria-controls={mobileMenuId}
+            aria-label={isMobileMenuOpen ? tNav('closeMenu') : tNav('openMenu')}
           >
             {isMobileMenuOpen ? (
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg aria-hidden="true" className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             ) : (
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              <svg aria-hidden="true" className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7h16M4 12h16M4 17h16" />
               </svg>
             )}
           </button>
         </div>
+      </div>
 
-        {/* Mobile Menu */}
-        {isMobileMenuOpen && (
-          <div className="lg:hidden absolute top-16 left-0 right-0 bg-forest border-t border-white/10">
-            <nav className="container-custom py-4">
-              {filteredNavigation.map((item) => (
-                <div key={item.label}>
-                  <Link
-                    href={item.href}
-                    className={cn(
-                      'block px-4 py-3 font-heading text-white/90 hover:text-white hover:bg-white/10 rounded-lg',
-                      isActive(item.href) && 'text-white bg-white/10'
-                    )}
-                    onClick={() => !item.children && setIsMobileMenuOpen(false)}
-                  >
-                    {item.label}
-                  </Link>
-                  {item.children && (
-                    <div className="pl-4">
-                      {item.children.map((child) => (
-                        <Link
-                          key={child.label}
-                          href={child.href}
-                          className="block px-4 py-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg"
-                          onClick={() => setIsMobileMenuOpen(false)}
-                        >
-                          {child.label}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-              {/* Language Switcher Mobile */}
-              <div className="px-4 py-3 border-t border-white/10">
-                <p className="text-white/60 text-xs mb-2 uppercase tracking-wider">{t('language')}</p>
-                <LanguageSwitcher currentLocale={currentLocale} variant="inline" theme="dark" />
-              </div>
-
-              <div className="px-4 pt-4 space-y-3">
-                <Link href="/billetterie" onClick={() => setIsMobileMenuOpen(false)}>
-                  <Button variant="secondary" className="w-full">
-                    {t('tickets')}
-                  </Button>
+      {/* Menu mobile */}
+      <div
+        id={mobileMenuId}
+        hidden={!isMobileMenuOpen}
+        className="absolute inset-x-0 top-16 h-[calc(100dvh-4rem)] overflow-y-auto border-t border-cream/10 bg-forest lg:hidden"
+      >
+        <nav aria-label={tNav('mainNav')} className="container-custom pb-10 pt-4">
+          <p className="px-1 pb-1 pt-2 font-condensed text-base font-semibold text-mint">{tNav('event')}</p>
+          <ul>
+            {eventItems.map((item) => (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  aria-current={isActive(item.href) ? 'page' : undefined}
+                  className="flex min-h-[48px] items-center border-b border-cream/10 px-1 font-condensed text-2xl font-semibold text-cream aria-[current=page]:text-mint"
+                  onClick={() => closeMobileMenu()}
+                >
+                  {item.label}
                 </Link>
+              </li>
+            ))}
+          </ul>
+          <ul className="mt-5 border-t border-cream/25">
+            {topItems.map((item) => (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  aria-current={isActive(item.href) ? 'page' : undefined}
+                  className="flex min-h-[48px] items-center border-b border-cream/10 px-1 font-condensed text-2xl font-semibold text-cream aria-[current=page]:text-mint"
+                  onClick={() => closeMobileMenu()}
+                >
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
 
-                {session?.user ? (
-                  <>
-                    <div className="flex items-center gap-3 px-4 py-3 bg-white/10 rounded-lg">
-                      {session.user.image ? (
-                        <img src={session.user.image} alt="" className="w-10 h-10 rounded-full" />
+          <div className="mt-6">
+            {user ? (
+              <>
+                <p className="px-1 pb-1 font-condensed text-base font-semibold text-mint">{userLabel}</p>
+                <ul>
+                  {accountItems.map((item) => (
+                    <li key={item.label}>
+                      {item.href ? (
+                        <Link
+                          href={item.href}
+                          className="flex min-h-[44px] items-center px-1 font-condensed text-xl font-medium text-cream/85"
+                          onClick={() => closeMobileMenu()}
+                        >
+                          {item.label}
+                        </Link>
                       ) : (
-                        <div className="w-10 h-10 bg-terracotta rounded-full flex items-center justify-center text-white font-bold">
-                          {(session.user.name || session.user.email || '?').charAt(0).toUpperCase()}
-                        </div>
+                        <button
+                          type="button"
+                          className="flex min-h-[44px] w-full items-center px-1 text-left font-condensed text-xl font-medium text-cream/85"
+                          onClick={() => {
+                            closeMobileMenu()
+                            item.onSelect?.()
+                          }}
+                        >
+                          {item.label}
+                        </button>
                       )}
-                      <div>
-                        <p className="text-white font-medium">{session.user.name || t('user')}</p>
-                        <p className="text-white/60 text-sm truncate">{session.user.email}</p>
-                      </div>
-                    </div>
-
-                    <Link href="/compte" onClick={() => setIsMobileMenuOpen(false)}>
-                      <Button variant="outline" className="w-full border-white text-white hover:bg-white hover:text-forest">
-                        {t('myAccount')}
-                      </Button>
-                    </Link>
-
-                    {['USER', 'PRO'].includes(session.user.role) && (
-                      <Link href="/compte/billets" onClick={() => setIsMobileMenuOpen(false)}>
-                        <Button variant="outline" className="w-full border-white text-white hover:bg-white hover:text-forest">
-                          {t('myTickets')}
-                        </Button>
-                      </Link>
-                    )}
-
-                    {session.user.role === 'PRO' && (
-                      <Link href="/compte/stands" onClick={() => setIsMobileMenuOpen(false)}>
-                        <Button variant="outline" className="w-full border-white text-white hover:bg-white hover:text-forest">
-                          {t('myStands')}
-                        </Button>
-                      </Link>
-                    )}
-
-                    {['SUPER_ADMIN', 'ADMIN', 'CONTRIBUTOR'].includes(session.user.role) && (
-                      <Link href="/admin" onClick={() => setIsMobileMenuOpen(false)}>
-                        <Button variant="outline" className="w-full border-white text-white hover:bg-white hover:text-forest">
-                          {t('admin')}
-                        </Button>
-                      </Link>
-                    )}
-
-                    <Button
-                      variant="ghost"
-                      className="w-full text-red-300 hover:text-red-100 hover:bg-red-500/20"
-                      onClick={() => {
-                        setIsMobileMenuOpen(false)
-                        signOut({ callbackUrl: '/' })
-                      }}
-                    >
-                      {t('logout')}
-                    </Button>
-                  </>
-                ) : (
-                  <div className="flex gap-2">
-                    <Link href="/connexion" className="flex-1" onClick={() => setIsMobileMenuOpen(false)}>
-                      <Button variant="ghost" className="w-full text-white hover:bg-white/10">
-                        {t('login')}
-                      </Button>
-                    </Link>
-                    <Link href="/inscription" className="flex-1" onClick={() => setIsMobileMenuOpen(false)}>
-                      <Button variant="outline" className="w-full border-white text-white hover:bg-white hover:text-forest">
-                        {t('register')}
-                      </Button>
-                    </Link>
-                  </div>
-                )}
-              </div>
-            </nav>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            ) : (
+              <Link
+                href="/connexion"
+                className="flex min-h-[44px] items-center px-1 font-condensed text-xl font-medium text-cream/85 underline decoration-cream/40 underline-offset-[6px]"
+                onClick={() => closeMobileMenu()}
+              >
+                {t('login')}
+              </Link>
+            )}
           </div>
-        )}
+
+          <div className="mt-6 border-t border-cream/10 px-1 pt-5">
+            <p className="mb-2 font-condensed text-base font-semibold text-cream/70">{t('language')}</p>
+            <LanguageSwitcher currentLocale={currentLocale} variant="inline" theme="dark" />
+          </div>
+        </nav>
       </div>
     </header>
   )

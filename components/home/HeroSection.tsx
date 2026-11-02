@@ -1,161 +1,88 @@
 'use client'
 
-import Image from 'next/image'
 import Link from 'next/link'
-import { motion } from 'motion/react'
 import { useTranslations } from 'next-intl'
-import { Button } from '@/components/ui'
+import { ButtonLink } from '@/components/ui/ButtonLink'
 import { useEdition } from '@/components/editions'
+import { shortHoursRange } from '@/lib/home/format'
 import { CountdownTimer } from './CountdownTimer'
 
+/**
+ * Hero de l'accueil : la mascotte entière (pieds visibles) sur bleu nuit, le titre en Modak,
+ * l'annotation « fête ses 5 ans » en Chewy et les infos de l'affiche en Barlow Condensed.
+ * Pas d'animation d'entrée : le titre, la date et le bouton s'affichent tout de suite.
+ */
 export function HeroSection() {
   const t = useTranslations('home.hero')
   const edition = useEdition()
+  const hours = shortHoursRange(edition.hoursLabel)
+
+  const facts = [
+    { label: t('when'), value: edition.dateLabel ? t('dateValue', { date: edition.dateLabel }) : edition.dateDisplay },
+    ...(hours ? [{ label: t('hours'), value: hours }] : []),
+    { label: t('where'), value: edition.venueDisplay },
+  ]
+
   return (
-    <section className="relative min-h-screen overflow-hidden">
-      {/* Fond : la mascotte seule sur bleu nuit (l'affiche entière parasitait le texte) */}
-      <div className="absolute inset-0 z-0 bg-forest" aria-hidden="true">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/images/hero-personnage.webp"
-          alt=""
-          className="absolute bottom-0 right-[-8%] h-[105%] w-auto max-w-none object-contain opacity-25 select-none pointer-events-none"
-        />
-        {/* Dégradé pour garder le texte lisible */}
-        <div className="absolute inset-0 bg-gradient-to-r from-forest via-forest/70 to-forest/20" />
-      </div>
-
-      {/* Contenu principal */}
-      <div className="container-custom relative z-10 pt-20 pb-24 md:pt-28 md:pb-32 min-h-screen flex flex-col justify-center">
-        <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
-          {/* Poster Image - côté gauche (masquée tant que l'affiche n'est pas publiée) */}
-          {edition.posterUrl && (
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, ease: 'easeOut' }}
-            className="relative w-full max-w-sm lg:max-w-md flex-shrink-0"
+    <section className="relative overflow-hidden bg-forest text-cream" aria-labelledby="hero-title">
+      <div className="container-custom relative lg:flex lg:min-h-[min(calc(100vh-72px),860px)] lg:items-center">
+        <div className="relative z-10 pb-10 pt-8 sm:pt-12 lg:max-w-[36rem] lg:py-20 xl:max-w-[46rem]">
+          <h1
+            id="hero-title"
+            className="font-display text-[clamp(4rem,19vw,9rem)] font-normal lg:text-[7.5rem] xl:text-[9rem] leading-[.82] text-cream"
           >
-            {/* Glow derrière le poster */}
-            <div className="absolute inset-0 bg-cream/20 rounded-3xl blur-3xl transform scale-95" />
+            <span className="block">Cann&apos;Agri</span>
+            <span className="block">Expo</span>
+          </h1>
+          <p className="mt-3 inline-block origin-left -rotate-3 font-accent text-[2.25rem] leading-tight text-mint sm:text-[3.25rem]">
+            {t('anniversary')}
+          </p>
 
-            {/* Container du poster */}
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              transition={{ type: 'spring', stiffness: 300 }}
-              className="relative"
-            >
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-cream/30">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={edition.posterUrl}
-                  alt={`Cann'Agri Expo ${edition.year} - Affiche officielle`}
-                  className="w-full h-auto"
-                />
-              </div>
-
-              {/* Badge "Édition {année}" */}
-              <motion.div
-                initial={{ scale: 0, rotate: -20 }}
-                animate={{ scale: 1, rotate: -12 }}
-                transition={{ delay: 0.5, type: 'spring', stiffness: 200 }}
-                className="absolute -top-4 -right-4 md:-top-6 md:-right-6"
+          <dl className="mt-7 grid w-full grid-cols-2 border-y border-cream/15 font-condensed sm:mt-9 sm:flex sm:w-max">
+            {facts.map((fact, i) => (
+              <div
+                key={fact.label}
+                className={
+                  i === 0
+                    ? 'col-span-2 border-b border-cream/15 py-3 sm:border-b-0 sm:py-4 sm:pr-7 lg:pr-5 xl:pr-7'
+                    : 'border-cream/15 py-3 pr-4 sm:border-l sm:py-4 sm:pl-7 sm:pr-7 lg:px-5 xl:px-7 [&:nth-child(3)]:border-l [&:nth-child(3)]:pl-4 sm:[&:nth-child(3)]:pl-7 lg:[&:nth-child(3)]:pl-5 xl:[&:nth-child(3)]:pl-7'
+                }
               >
-                <div className="bg-mint text-forest px-4 py-2 rounded-full font-heading font-bold text-sm md:text-base shadow-lg transform rotate-12">
-                  {t('edition', { year: edition.year })}
-                </div>
-              </motion.div>
-            </motion.div>
-          </motion.div>
-          )}
-
-          {/* Contenu texte - côté droit */}
-          <div className="flex-1 text-center lg:text-left">
-            {/* Titre principal - Style affiche */}
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-heading font-bold text-cream mb-4 leading-none tracking-tight"
-              style={{ fontFamily: 'var(--font-heading), serif' }}
-            >
-              CANN&apos;AGRI
-              <br />
-              <span className="text-mint">EXPO</span>
-            </motion.h1>
-
-            {/* Sous-titre */}
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              className="text-lg md:text-xl text-cream/90 mb-8 max-w-xl mx-auto lg:mx-0"
-            >
-              {t('subtitle')}
-            </motion.p>
-
-            {/* Info événement - Date et Lieu */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="flex flex-wrap justify-center lg:justify-start gap-4 mb-8"
-            >
-              <div className="flex items-center gap-3 px-5 py-3 bg-cream/10 backdrop-blur-md rounded-xl border border-cream/20">
-                <svg className="w-6 h-6 text-mint" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                <span className="font-heading font-bold text-cream text-lg">{edition.dateDisplay}</span>
+                <dt className="text-[0.9375rem] font-medium leading-tight text-cream/70">{fact.label}</dt>
+                <dd className="text-[1.625rem] font-semibold leading-tight text-cream sm:text-[1.875rem] lg:text-[1.5rem] xl:text-[1.875rem]">{fact.value}</dd>
               </div>
-              <div className="flex items-center gap-3 px-5 py-3 bg-cream/10 backdrop-blur-md rounded-xl border border-cream/20">
-                <svg className="w-6 h-6 text-mint" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                <span className="font-heading font-bold text-cream text-lg">{edition.venueDisplay}</span>
-              </div>
-            </motion.div>
+            ))}
+          </dl>
 
-            {/* Countdown intégré */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
-              className="mb-10"
-            >
-              <CountdownTimer variant="hero" />
-            </motion.div>
-
-            {/* CTAs */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.6 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
-            >
-              <Link href="/billetterie">
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button
-                    size="lg"
-                    className="w-full sm:w-auto bg-mint hover:bg-mint-400 text-forest shadow-lg shadow-mint/30 hover:shadow-mint/50 transition-all text-lg px-8"
-                  >
-                    {t('buyTicket')}
-                  </Button>
-                </motion.div>
-              </Link>
-              <Link href="/infos-pratiques">
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="w-full sm:w-auto border-cream text-cream hover:bg-cream hover:text-forest text-lg px-8"
-                  >
-                    {t('practicalInfo')}
-                  </Button>
-                </motion.div>
-              </Link>
-            </motion.div>
+          <div className="mt-7 flex flex-wrap items-center gap-x-7 gap-y-3 sm:mt-9">
+            <ButtonLink href="/billetterie" size="lg" className="w-full sm:w-auto">
+              {t('buyTicket')}
+            </ButtonLink>
+            <Link href="/infos-pratiques" className="link-underline text-cream decoration-cream/40">
+              {t('practicalInfo')}
+            </Link>
           </div>
+
+          <div className="mt-9">
+            <CountdownTimer />
+          </div>
+          <p className="mt-6 font-condensed text-lg font-medium text-cream/70">{t('tagline')}</p>
+        </div>
+
+        {/* La mascotte, entière : sous le texte sur mobile, à droite sur grand écran */}
+        <div className="relative z-0 mx-auto -mt-2 w-[min(78%,20rem)] sm:w-[22rem] lg:absolute lg:bottom-0 lg:right-4 lg:mt-0 lg:w-auto xl:right-10">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/images/hero-personnage-800.webp"
+            srcSet="/images/hero-personnage-480.webp 480w, /images/hero-personnage-800.webp 800w, /images/hero-personnage-1100.webp 1100w"
+            sizes="(min-width: 1024px) 34vw, (min-width: 640px) 352px, 78vw"
+            width={1400}
+            height={2021}
+            alt={t('mascotAlt')}
+            fetchPriority="high"
+            decoding="async"
+            className="block h-auto w-full lg:h-[520px] lg:w-auto xl:h-[min(calc(100vh-120px),800px)] xl:min-h-[600px]"
+          />
         </div>
       </div>
     </section>

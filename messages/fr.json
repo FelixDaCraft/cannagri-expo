@@ -52,7 +52,7 @@
     "event": "L'événement",
     "program": "Programme",
     "exhibitors": "Exposants",
-    "photoGallery": "Galerie Photo",
+    "photoGallery": "Galerie",
     "practicalInfo": "Infos pratiques",
     "pastEditions": "Éditions passées",
     "sponsoring": "Sponsoring",
@@ -60,62 +60,86 @@
     "proSpace": "Espace Pro",
     "becomeExhibitor": "Devenir Exposant",
     "bookStand": "Réserver un Stand",
-    "cgv": "CGV"
+    "cgv": "CGV",
+    "skipToContent": "Aller au contenu",
+    "mainNav": "Navigation principale",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu"
   },
   "home": {
     "hero": {
-      "title": "CANN'AGRI",
-      "titleHighlight": "EXPO",
-      "subtitle": "Le salon de référence du chanvre CBD",
-      "edition": "Édition {year}",
+      "anniversary": "fête ses 5 ans",
+      "when": "Quand",
+      "hours": "Horaires",
+      "where": "Où",
+      "dateValue": "Samedi {date}",
       "buyTicket": "Acheter mon billet",
-      "practicalInfo": "Infos Pratiques",
-      "discover": "Découvrir"
+      "practicalInfo": "Infos pratiques",
+      "tagline": "Le salon professionnel du cannabis CBD",
+      "mascotAlt": "La mascotte de Cann'Agri Expo, une tête de cannabis en chapeau de fête qui brandit un trophée",
+      "countdown": {
+        "label": "Ouverture des portes dans",
+        "summary": "{days, plural, one {# jour} other {# jours}}",
+        "days": "jours",
+        "hours": "heures",
+        "minutes": "min",
+        "seconds": "s"
+      }
     },
     "pillars": {
-      "title": "Au Coeur de la Filière",
-      "subtitle": "Découvrez les acteurs clés de l'industrie du chanvre CBD français et européen réunis pour une journée exceptionnelle.",
+      "title": "Toute la filière sous un toit",
+      "subtitle": "Cultivateurs, fabricants de matériel, intervenants et boutiques : ceux qui font le cannabis CBD en France et en Europe, réunis pour une journée à Nantes.",
+      "items": {
+        "producers": {
+          "title": "Producteurs CBD",
+          "description": "Cultivateurs français et européens, fleurs sur table",
+          "alt": "Fleurs de CBD exposées par un producteur en 2024"
+        },
+        "growing": {
+          "title": "Matériel de culture",
+          "description": "Équipement et démonstrations",
+          "alt": "Démonstration de matériel de culture sur un stand en 2024"
+        },
+        "talks": {
+          "title": "Conférences",
+          "description": "Réglementation et marché",
+          "alt": "Table ronde sur la scène Cann'Agri en 2024"
+        },
+        "lifestyle": {
+          "title": "Lifestyle et food",
+          "description": "Bien-être, alimentation, accessoires",
+          "alt": "Stand d'accessoires en 2024"
+        }
+      },
+      "statsCaption": "La dernière édition en chiffres",
       "stats": {
-        "exhibitors": "Exposants",
-        "visitors": "Visiteurs attendus",
-        "conferences": "Conférences",
-        "uniqueDay": "Journée unique"
+        "exhibitors": "exposants",
+        "visitors": "visiteurs",
+        "conferences": "conférences"
       }
     },
     "tickets": {
-      "badge": "Billetterie",
-      "title": "Réservez vos billets",
-      "subtitle": "Choisissez la formule qui vous convient et rejoignez-nous le {date} à {location}, {city}.",
+      "title": "Prenez votre ticket",
+      "intro": "Deux billets, la même journée. Le Flex coûte {extra} € de plus : ils vont à l'association qui organise le salon.",
+      "unit": "euros",
+      "meta": "Badge visiteur · e-billet par e-mail",
       "standard": {
         "name": "Billet Standard",
-        "description": "Accès au salon toute la journée",
-        "features": {
-          "stands": "Accès aux stands exposants",
-          "conferences": "Accès aux conférences",
-          "badge": "Badge visiteur"
-        },
-        "supportMessage": "On vous en veut pas, merci quand même, c'est déjà bien de payer sa place !"
+        "description": "L'entrée pour toute la journée : stands, conférences et remise des prix."
       },
       "flex": {
         "name": "Billet Flex",
-        "description": "Soutenez l'association",
-        "features": {
-          "stands": "Accès aux stands exposants",
-          "conferences": "Accès aux conférences",
-          "badge": "Badge visiteur"
-        },
-        "supportMessage": "Votre soutien nous permet d'organiser de plus beaux événements et de développer la filière chanvre CBD en France.",
-        "badge": "FULL SUPPORT"
+        "tag": "merci",
+        "description": "La même entrée, avec un coup de pouce à l'association pour les prochaines éditions."
       },
       "quantity": "Quantité",
-      "yourSelection": "Votre sélection",
-      "ticket": "billet",
-      "tickets": "billets",
-      "proceedPayment": "Procéder au paiement",
-      "seeAllOptions": "Voir toutes les options",
-      "securePayment": "Paiement sécurisé",
-      "eTicket": "E-billet par email",
-      "refundable": "Remboursable 48h avant"
+      "quantityOf": "Nombre de {name}",
+      "decrease": "Retirer un {name}",
+      "increase": "Ajouter un {name}",
+      "choose": "Choisir mes billets",
+      "continue": "{count, plural, one {Continuer avec # billet} other {Continuer avec # billets}} · {total} €",
+      "conditions": "Billets nominatifs, non remboursables · Paiement sécurisé ·",
+      "cgv": "CGV"
     },
     "sponsors": {
       "featured": "À la Une",
@@ -145,18 +169,31 @@
       "discoverOffers": "Découvrir nos offres"
     },
     "program": {
-      "title": "Temps Forts & Conférences",
-      "subtitle": "Un programme riche avec des intervenants de qualité pour comprendre les enjeux de la filière chanvre CBD.",
-      "comingSoon": "À venir",
-      "programComingSoonTitle": "Programme à venir",
-      "programComingSoonDescription": "Le programme détaillé de l'édition {year} sera bientôt disponible. Conférences, tables rondes et ateliers seront animés par des experts reconnus de la filière chanvre CBD.",
-      "viewFullProgram": "Voir le programme",
-      "stats": {
-        "conferences": "Conférences",
-        "speakers": "Intervenants",
-        "exhibitors": "Exposants",
-        "award": "Award Show Platinum CBD Cup"
-      }
+      "title": "Le programme",
+      "intro": "Les conférences et tables rondes de {year} sont en préparation. Le programme complet sera publié dès qu'il sera arrêté.",
+      "viewFullProgram": "Voir la page Programme",
+      "morning": "Matin",
+      "evening": "Soir",
+      "allDay": "Journée",
+      "endOfDay": "Fin de journée",
+      "rows": {
+        "opening": {
+          "title": "Ouverture des portes",
+          "detail": "Stands ouverts toute la journée"
+        },
+        "talks": {
+          "title": "Conférences et tables rondes",
+          "detail": "Intervenants annoncés prochainement"
+        },
+        "cup": {
+          "title": "Platinum CBD Cup",
+          "detail": "Remise des prix sur la scène Cann'Agri"
+        },
+        "closing": {
+          "title": "Fermeture"
+        }
+      },
+      "note": "Horaires détaillés à venir"
     },
     "newsletter": {
       "title": "Restez informé",
@@ -165,6 +202,31 @@
       "subscribe": "S'inscrire",
       "success": "Merci pour votre inscription !",
       "error": "Une erreur est survenue"
+    },
+    "menu": {
+      "title": "Au menu de la fête",
+      "items": {
+        "producers": "Stands producteurs",
+        "shops": "Magasins",
+        "growing": "Matériel de culture",
+        "fertilizers": "Engrais",
+        "smoking": "Accessoires fumeurs",
+        "talks": "Conférences",
+        "tattoo": "Tatoueurs",
+        "food": "Food trucks"
+      },
+      "cup": "Et en clôture, la remise des prix de la Platinum CBD Cup",
+      "posterAlt": "Affiche officielle de Cann'Agri Expo {year}, la 5e édition"
+    },
+    "gallery": {
+      "title": "Souvenirs des éditions passées",
+      "titleYear": "Souvenirs de {year}",
+      "viewAll": "Voir toute la galerie"
+    },
+    "pro": {
+      "title": "Exposer ou sponsoriser",
+      "text": "Stands et partenariats {year} : recevez la plaquette avec les offres et les tarifs.",
+      "cta": "Demander la plaquette"
     }
   },
   "exhibitors": {
@@ -689,18 +751,21 @@
     }
   },
   "footer": {
-    "description": "Le salon de référence du chanvre et du cannabis en France",
+    "description": "Salon professionnel du cannabis CBD, organisé à Nantes par une association.",
     "quickLinks": "Liens rapides",
     "contact": "Contact",
     "followUs": "Suivez-nous",
     "legal": {
       "title": "Informations légales",
       "privacy": "Politique de confidentialité",
-      "terms": "Conditions générales",
+      "terms": "Mentions légales",
       "cgv": "CGV",
       "cookies": "Gestion des cookies"
     },
-    "copyright": "© {year} Cann'Agri Expo. Tous droits réservés."
+    "copyright": "© {year} Cann'Agri Expo. Tous droits réservés.",
+    "salon": "Le salon",
+    "visit": "Venir",
+    "contactForm": "Formulaire de contact"
   },
   "errors": {
     "404": {
