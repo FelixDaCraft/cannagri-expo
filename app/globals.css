@@ -152,3 +152,28 @@ html[data-reveal-on] [data-reveal]:not([data-shown]) {
     @apply font-medium text-forest underline decoration-forest/40 underline-offset-4 hover:decoration-mint;
   }
 }
+
+@layer components {
+  /*
+   * Sections de l'accueil : au moins la hauteur de l'écran, contenu centré verticalement.
+   * Si le contenu est plus haut que l'écran, la section s'allonge (rien n'est coupé).
+   */
+  .screen-section {
+    min-height: 100vh;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  /* Hero : exactement le premier écran visible sous la barre du site (64 px, 72 px dès 1024 px) */
+  .screen-hero {
+    min-height: calc(100vh - 64px);
+    min-height: calc(100svh - 64px);
+  }
+  @media (min-width: 1024px) {
+    .screen-hero {
+      min-height: calc(100vh - 72px);
+      min-height: calc(100svh - 72px);
+    }
+  }
+}

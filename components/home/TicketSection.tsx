@@ -36,7 +36,7 @@ export function TicketSection() {
   ]
 
   return (
-    <section id="billets" className="bg-cream py-[4.5rem] text-forest md:py-28" aria-labelledby="billets-title">
+    <section id="billets" className="screen-section bg-cream py-[4.5rem] text-forest md:py-24" aria-labelledby="billets-title">
       <div className="container-custom">
         <Reveal>
           <h2 id="billets-title" className="font-display text-[3.75rem] font-normal leading-[.85] text-forest md:text-[5.5rem]">

@@ -31,7 +31,7 @@ export function PartnersGrid({ sponsors }: PartnersGridProps) {
   if (activeSponsors.length === 0) return null
 
   return (
-    <section className="bg-cream py-[4.5rem] md:py-24" aria-labelledby="partenaires-title">
+    <section className="screen-section bg-cream py-[4.5rem] md:py-24" aria-labelledby="partenaires-title">
       <div className="container-custom">
         {/* Section Header */}
         <Reveal className="text-center mb-12">

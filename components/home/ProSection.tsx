@@ -11,7 +11,7 @@ export function ProSection() {
   const edition = useEdition()
 
   return (
-    <section className="border-t border-forest/10 bg-cream text-forest" aria-labelledby="pro-title">
+    <section className="screen-section border-t border-forest/10 bg-cream text-forest" aria-labelledby="pro-title">
       <Reveal className="container-custom flex flex-col items-start gap-6 py-14 md:flex-row md:items-center md:justify-between md:gap-10 md:py-16">
         <div>
           <h2 id="pro-title" className="font-display text-[3rem] font-normal leading-[.9] text-forest md:text-[4rem]">

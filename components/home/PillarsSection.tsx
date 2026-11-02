@@ -28,7 +28,7 @@ export function PillarsSection() {
   const t = useTranslations('home.pillars')
 
   return (
-    <section className="bg-cream pb-16 pt-[4.5rem] text-forest md:pb-20 md:pt-28" aria-labelledby="piliers-title">
+    <section className="screen-section bg-cream py-[4.5rem] text-forest md:py-24" aria-labelledby="piliers-title">
       <div className="container-custom">
         <Reveal>
           <h2 id="piliers-title" className="font-display text-[3.75rem] font-normal leading-[.85] text-forest md:text-[5.5rem] text-balance">

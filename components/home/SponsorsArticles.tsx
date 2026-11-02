@@ -50,7 +50,7 @@ export function SponsorsArticles({ sponsors }: SponsorsArticlesProps) {
   }
 
   return (
-    <section className="bg-cream py-[4.5rem] md:py-24" aria-labelledby="a-la-une-title">
+    <section className="screen-section bg-cream py-[4.5rem] md:py-24" aria-labelledby="a-la-une-title">
       <div className="container-custom">
         {/* Section Header */}
         <div className="text-center mb-12">

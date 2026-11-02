@@ -14,7 +14,7 @@ export function MenuSection() {
   const poster = optimizedPoster(edition.posterUrl)
 
   return (
-    <section className="bg-forest py-[4.5rem] text-cream md:py-28" aria-labelledby="menu-title">
+    <section className="screen-section bg-forest py-[4.5rem] text-cream md:py-24" aria-labelledby="menu-title">
       <div className="container-custom grid items-center gap-12 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
         <div>
           <Reveal>
