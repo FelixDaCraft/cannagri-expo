@@ -3,6 +3,17 @@ import { prisma } from '@/lib/prisma'
 import { getActiveEdition } from '@/lib/editions'
 import { checkAdminAuth, unauthorizedResponse } from '@/lib/admin-auth'
 import { getVivaWalletOrder } from '@/lib/vivawallet'
+import { PUBLIC_STAND_SELECT } from '@/lib/public-data'
+
+function toPublicStand(stand: Record<string, unknown>) {
+  const sponsor = stand.sponsor as { id: string; name: string; type: string } | null
+  const out: Record<string, unknown> = {}
+  for (const key of Object.keys(PUBLIC_STAND_SELECT)) {
+    if (key !== 'sponsor') out[key] = stand[key]
+  }
+  out.sponsor = sponsor ? { id: sponsor.id, name: sponsor.name, type: sponsor.type } : null
+  return out
+}
 
 // GET /api/stands - List all stands
 export async function GET(request: NextRequest) {
@@ -111,6 +122,10 @@ export async function GET(request: NextRequest) {
       }
     }
 
+    // Visiteurs et exposants : plan seulement (pas de commande, de client ni de compte lié)
+    if (!(await checkAdminAuth())) {
+      return NextResponse.json({ data: stands.map(toPublicStand) })
+    }
     return NextResponse.json({ data: stands })
 
   } catch (error) {

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getActiveEdition } from '@/lib/editions'
+import { PUBLIC_EVENT_SELECT } from '@/lib/public-data'
 
 // GET /api/events - Get all events for public display
 export async function GET() {
@@ -8,6 +9,7 @@ export async function GET() {
     const edition = await getActiveEdition()
     const events = await prisma.event.findMany({
       where: { editionId: edition.id },
+      select: PUBLIC_EVENT_SELECT,
       orderBy: [
         { startAt: 'asc' },
         { displayOrder: 'asc' },

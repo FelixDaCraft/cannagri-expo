@@ -5,7 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useTranslations, useLocale } from 'next-intl'
 import { Card, CardContent, Badge } from '@/components/ui'
-import type { Sponsor } from '@/types'
+import type { PublicSponsor as Sponsor } from '@/lib/public-data'
 
 interface Translations {
   en?: string

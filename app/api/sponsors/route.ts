@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getActiveEdition } from '@/lib/editions'
+import { PUBLIC_SPONSOR_SELECT } from '@/lib/public-data'
 
 // GET /api/sponsors - Get all active sponsors grouped by type
 export async function GET() {
@@ -11,6 +12,8 @@ export async function GET() {
         editionId: edition.id,
         isActive: true,
       },
+      // Liste blanche : jamais les coordonnées du contact (contactName, contactEmail, contactPhone)
+      select: PUBLIC_SPONSOR_SELECT,
       orderBy: [
         { displayOrder: 'asc' },
         { name: 'asc' },

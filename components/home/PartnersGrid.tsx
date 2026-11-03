@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import { Reveal } from '@/components/ui/Reveal'
 import { useTranslations } from 'next-intl'
-import type { Sponsor } from '@/types'
+import type { PublicSponsor as Sponsor } from '@/lib/public-data'
 
 // Tailles des logos selon le type de partenaire
 const sponsorSizes = {

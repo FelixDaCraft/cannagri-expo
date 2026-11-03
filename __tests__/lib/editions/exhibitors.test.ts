@@ -26,7 +26,7 @@ describe('toExhibitors', () => {
       },
     ])
     expect(exhibitor).toMatchObject({
-      id: 'u1', name: 'Chanvre & Co', standNumber: '12', category: 'PRODUCTEURS', categoryLabel: 'Producteurs CBD',
+      id: 's1', name: 'Chanvre & Co', standNumber: '12', category: 'PRODUCTEURS', categoryLabel: 'Producteurs CBD',
       logoUrl: '/l.png', websiteUrl: 'https://chanvre.example',
     })
   })

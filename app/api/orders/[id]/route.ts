@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { checkAdminAuth, unauthorizedResponse } from '@/lib/admin-auth'
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Coordonnées d'un client : administration uniquement
+    if (!(await checkAdminAuth())) return unauthorizedResponse()
     const { id } = await params
 
     const order = await prisma.order.findUnique({

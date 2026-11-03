@@ -109,7 +109,8 @@ export function toExhibitors(stands: ExhibitorStand[]): Exhibitor[] {
     // If stand has an approved PRO account
     if (stand.pro?.isApproved) {
       exposants.push({
-        id: stand.pro.id,
+        // Identifiant du stand, pas celui du compte utilisateur (donnée interne)
+        id: stand.id,
         name: stand.exhibitorName || stand.pro.companyName || 'Exposant',
         description: stand.pro.companyDescription,
         descriptionTranslations: stand.pro.companyDescriptionTranslations as Translations | null,

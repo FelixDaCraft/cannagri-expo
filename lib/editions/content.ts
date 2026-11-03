@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import type { Translations } from '@/lib/translation'
+import { PUBLIC_SPONSOR_SELECT } from '@/lib/public-data'
 
 export interface Speaker {
   id: string
@@ -29,6 +30,8 @@ export async function getEditionEvents(editionId: string) {
 export function getEditionSponsors(editionId: string) {
   return prisma.sponsor.findMany({
     where: { editionId, isActive: true },
+    // Transmis à des composants client (sérialisé dans la page) : liste blanche obligatoire
+    select: PUBLIC_SPONSOR_SELECT,
     orderBy: [{ displayOrder: 'asc' }, { name: 'asc' }],
   })
 }

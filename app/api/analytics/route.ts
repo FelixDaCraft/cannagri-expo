@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import crypto from 'crypto'
+import { checkAdminAuth, unauthorizedResponse } from '@/lib/admin-auth'
 
 // Hash IP for privacy
 function hashIP(ip: string): string {
@@ -53,6 +54,7 @@ export async function POST(request: NextRequest) {
 // GET /api/analytics - Get analytics stats (admin only)
 export async function GET(request: NextRequest) {
   try {
+    if (!(await checkAdminAuth())) return unauthorizedResponse()
     const now = new Date()
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
     const yesterday = new Date(today)
