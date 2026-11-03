@@ -22,7 +22,7 @@ export function ProgramHighlight() {
   ]
 
   return (
-    <section className="screen-section border-t border-forest/10 bg-cream py-[4.5rem] text-forest md:py-24" aria-labelledby="programme-title">
+    <section className="border-t border-forest/10 bg-cream py-[4.5rem] text-forest md:py-24" aria-labelledby="programme-title">
       <div className="container-custom grid items-end gap-10 lg:grid-cols-2 lg:gap-16">
         <Reveal>
           <h2 id="programme-title" className="font-display text-[3.75rem] font-normal leading-[.85] text-forest md:text-[5.5rem]">

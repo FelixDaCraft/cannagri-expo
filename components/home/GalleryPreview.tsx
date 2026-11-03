@@ -22,7 +22,7 @@ export function GalleryPreview({ photos }: { photos: GalleryPreviewPhoto[] }) {
   const title = years.length === 1 ? t('titleYear', { year: years[0] }) : t('title')
 
   return (
-    <section className="screen-section bg-forest py-[4.5rem] text-cream md:py-24" aria-labelledby="galerie-title">
+    <section className="bg-forest py-[4.5rem] text-cream md:py-24" aria-labelledby="galerie-title">
       <div className="container-custom">
         <Reveal className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-end md:gap-8">
           <h2 id="galerie-title" className="font-display text-[3.75rem] font-normal leading-[.85] text-cream md:text-[5.5rem]">
