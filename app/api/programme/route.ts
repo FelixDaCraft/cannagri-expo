@@ -88,6 +88,7 @@ export async function GET() {
 
     return NextResponse.json({
       success: true,
+      edition: { year: edition.year },
       data: conferences,
     })
   } catch (error) {

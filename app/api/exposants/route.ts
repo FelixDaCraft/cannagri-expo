@@ -19,6 +19,7 @@ export async function GET() {
 
     return NextResponse.json({
       success: true,
+      edition: { year: edition.year },
       data: exposants,
       categories: [
         { slug: 'all', name: 'Tous', count: exposants.length },
