@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { checkFullAdminAuth, unauthorizedResponse } from '@/lib/admin-auth'
+import { localizeImageUrl } from '@/lib/external-images'
 import { getAdminEdition } from '@/lib/editions/admin'
 
 // GET /api/admin/sponsors - Get all sponsors (admin only)
@@ -119,12 +120,13 @@ export async function POST(request: NextRequest) {
           name,
           slug,
           type: type || 'BRONZE',
-          logoUrl: logoUrl || null,
+          // Images hébergées ailleurs : copie sur le site (complément n°2)
+          logoUrl: (await localizeImageUrl(logoUrl || null)) || null,
           description: description || null,
           websiteUrl: websiteUrl || null,
           articleTitle: articleTitle || null,
           articleBody: articleBody || null,
-          articleImage: articleImage || null,
+          articleImage: (await localizeImageUrl(articleImage || null)) || null,
           displayOrder: displayOrder || 0,
           isActive: isActive ?? true,
           // Champs exposant

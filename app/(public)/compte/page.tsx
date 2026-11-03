@@ -221,7 +221,7 @@ export default function ComptePage() {
     if (!file) return
 
     // Validate file type
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp']
     if (!allowedTypes.includes(file.type)) {
       setMessage({ type: 'error', text: t('exhibitor.fileTypeError') })
       return
@@ -429,7 +429,7 @@ export default function ComptePage() {
                       <div className="relative">
                         <input
                           type="file"
-                          accept="image/jpeg,image/png,image/webp,image/gif"
+                          accept="image/jpeg,image/png,image/webp"
                           onChange={handleLogoUpload}
                           disabled={uploadingLogo}
                           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"

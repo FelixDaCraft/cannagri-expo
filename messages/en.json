@@ -730,7 +730,7 @@
       "deleteLogo": "Delete logo",
       "uploadLogo": "Choose a file",
       "uploadLogoHint": "or drag and drop your logo",
-      "uploadFormats": "PNG, JPG, WebP or GIF, 2 MB maximum.",
+      "uploadFormats": "PNG, JPG or WebP, 2 MB maximum.",
       "uploading": "Uploading…",
       "uploadSuccess": "Logo saved.",
       "uploadError": "The logo could not be uploaded.",
@@ -742,7 +742,7 @@
       "noWebsite": "No website yet.",
       "completeProfile": "Add a description, a logo and a website to appear on the Exhibitors page.",
       "updateSuccess": "Exhibitor profile updated.",
-      "fileTypeError": "Format not accepted: use JPG, PNG, WebP or GIF.",
+      "fileTypeError": "Format not accepted: use JPG, PNG or WebP.",
       "fileSizeError": "The file is larger than 2 MB."
     },
     "becomeExhibitor": {

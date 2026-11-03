@@ -5,7 +5,7 @@ import path from 'path'
 import { prisma } from '@/lib/prisma'
 import { checkAdminAuth, unauthorizedResponse } from '@/lib/admin-auth'
 import { getAdminEdition, findEditionByYear } from '@/lib/editions/admin'
-import { isGalleryThumbnail } from '@/lib/gallery'
+import { isGalleryPhoto } from '@/lib/gallery'
 
 const UPLOAD_DIR = path.join(process.cwd(), 'public', 'images', 'gallery')
 
@@ -24,9 +24,7 @@ async function syncFilesWithDatabase() {
     // Get all files on disk
     const files = await readdir(UPLOAD_DIR)
     // Les miniatures de la grille ne sont pas des photos à part entière
-    const imageFiles = files.filter(f =>
-      /\.(jpg|jpeg|png|webp)$/i.test(f) && !f.startsWith('.') && !isGalleryThumbnail(f)
-    )
+    const imageFiles = files.filter(isGalleryPhoto)
 
     // Get all media from database
     const dbMedia = await prisma.media.findMany()

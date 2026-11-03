@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { prisma } from '@/lib/prisma'
+import { localizeSpeakers } from '@/lib/external-images'
 import { authOptions } from '@/lib/auth'
 
 // GET /api/admin/events/[id] - Get a specific event
@@ -92,7 +93,7 @@ export async function PATCH(
         ...(startAt !== undefined && { startAt: new Date(startAt) }),
         ...(endAt !== undefined && { endAt: new Date(endAt) }),
         ...(location !== undefined && { location: location || null }),
-        ...(speakers !== undefined && { speakers }),
+        ...(speakers !== undefined && { speakers: await localizeSpeakers(speakers) }),
         ...(isPlatinumCBDCup !== undefined && { isPlatinumCBDCup }),
         ...(isHighlighted !== undefined && { isHighlighted }),
         ...(displayOrder !== undefined && { displayOrder }),

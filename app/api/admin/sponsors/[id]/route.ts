@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { localizeImageUrl } from '@/lib/external-images'
 import { checkFullAdminAuth, unauthorizedResponse } from '@/lib/admin-auth'
 
 // GET /api/admin/sponsors/[id] - Get a specific sponsor
@@ -138,12 +139,12 @@ export async function PATCH(
           ...(name !== undefined && { name }),
           ...(slug !== undefined && { slug }),
           ...(type !== undefined && { type }),
-          ...(logoUrl !== undefined && { logoUrl: logoUrl || null }),
+          ...(logoUrl !== undefined && { logoUrl: (await localizeImageUrl(logoUrl || null)) || null }),
           ...(description !== undefined && { description: description || null }),
           ...(websiteUrl !== undefined && { websiteUrl: websiteUrl || null }),
           ...(articleTitle !== undefined && { articleTitle: articleTitle || null }),
           ...(articleBody !== undefined && { articleBody: articleBody || null }),
-          ...(articleImage !== undefined && { articleImage: articleImage || null }),
+          ...(articleImage !== undefined && { articleImage: (await localizeImageUrl(articleImage || null)) || null }),
           ...(displayOrder !== undefined && { displayOrder }),
           ...(isActive !== undefined && { isActive }),
           // Champs exposant

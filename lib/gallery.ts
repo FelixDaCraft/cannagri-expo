@@ -15,6 +15,11 @@ export function isGalleryThumbnail(file: string): boolean {
   return /-mini\.(jpe?g|png|webp)$/i.test(file)
 }
 
+/** Photo de la galerie (ni miniature, ni copie d'une image externe « ext-… » : logos, intervenants) */
+export function isGalleryPhoto(file: string): boolean {
+  return /\.(jpe?g|png|webp)$/i.test(file) && !file.startsWith('.') && !file.startsWith('ext-') && !isGalleryThumbnail(file)
+}
+
 /**
  * Type MIME d'un fichier de la galerie, ou null si le nom n'est pas un simple
  * fichier image du dossier (protège contre toute sortie du dossier).

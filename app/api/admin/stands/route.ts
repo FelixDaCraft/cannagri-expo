@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { checkAdminAuth, unauthorizedResponse } from '@/lib/admin-auth'
+import { localizeImageUrl } from '@/lib/external-images'
 import { getAdminEdition } from '@/lib/editions/admin'
 
 // Configuration des 36 stands - NUMÉROTATION SENS HORAIRE
@@ -352,7 +353,7 @@ export async function PUT(request: NextRequest) {
       if (electricityPrice !== undefined) updateData.electricityPrice = parseFloat(electricityPrice)
       if (exhibitorName !== undefined) updateData.exhibitorName = exhibitorName || null
       if (exhibitorDescription !== undefined) updateData.exhibitorDescription = exhibitorDescription || null
-      if (exhibitorLogo !== undefined) updateData.exhibitorLogo = exhibitorLogo || null
+      if (exhibitorLogo !== undefined) updateData.exhibitorLogo = (await localizeImageUrl(exhibitorLogo || null)) || null
       if (exhibitorWebsite !== undefined) updateData.exhibitorWebsite = exhibitorWebsite || null
       if (exhibitorCategory !== undefined) updateData.exhibitorCategory = exhibitorCategory || null
       if (proId !== undefined) updateData.proId = proId || null

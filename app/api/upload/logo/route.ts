@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { writeFile, mkdir } from 'fs/promises'
-import { existsSync } from 'fs'
 import path from 'path'
+import { GALLERY_DIR } from '@/lib/gallery'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
@@ -42,10 +42,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate file type
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
-    if (!allowedTypes.includes(file.type)) {
+    // Formats servis par le volume de la galerie (l'extension vient du type, jamais du nom de fichier)
+    const extensions: Record<string, string> = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' }
+    const ext = extensions[file.type]
+    if (!ext) {
       return NextResponse.json(
-        { error: 'Type de fichier non autorisé. Utilisez JPG, PNG, WebP ou GIF.' },
+        { error: 'Type de fichier non autorisé. Utilisez JPG, PNG ou WebP.' },
         { status: 400 }
       )
     }
@@ -59,16 +61,11 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Create uploads directory if it doesn't exist
-    const uploadsDir = path.join(process.cwd(), 'public', 'uploads', 'logos')
-    if (!existsSync(uploadsDir)) {
-      await mkdir(uploadsDir, { recursive: true })
-    }
-
-    // Generate unique filename
-    const ext = file.name.split('.').pop()?.toLowerCase() || 'png'
-    const filename = `${session.user.id}-${Date.now()}.${ext}`
-    const filepath = path.join(uploadsDir, filename)
+    // Volume persistant de la galerie (public/uploads est perdu à chaque déploiement) ;
+    // le préfixe « ext- » tient ces fichiers à l'écart des photos de la galerie
+    await mkdir(GALLERY_DIR, { recursive: true })
+    const filename = `ext-logo-${session.user.id}-${Date.now()}.${ext}`
+    const filepath = path.join(GALLERY_DIR, filename)
 
     // Write file
     const bytes = await file.arrayBuffer()
@@ -76,7 +73,7 @@ export async function POST(request: NextRequest) {
     await writeFile(filepath, buffer)
 
     // Update user with logo URL
-    const logoUrl = `/uploads/logos/${filename}`
+    const logoUrl = `/images/gallery/${filename}`
     await prisma.user.update({
       where: { id: session.user.id },
       data: { companyLogo: logoUrl },

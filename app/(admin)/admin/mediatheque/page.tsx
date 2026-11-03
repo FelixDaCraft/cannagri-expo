@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import { Card, CardContent, Badge, Button, Input, Modal } from '@/components/ui'
+import { LocalizeImagesButton } from '@/components/admin/LocalizeImagesButton'
 
 interface Media {
   id: string
@@ -204,6 +205,9 @@ export default function AdminMediathequePage() {
         <div>
           <h1 className="text-2xl font-heading font-bold text-gray-900">Galerie Photo</h1>
           <p className="text-gray-600">Gérez les photos du salon ({media.length} photos)</p>
+          <div className="mt-3">
+            <LocalizeImagesButton />
+          </div>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={fetchMedia}>

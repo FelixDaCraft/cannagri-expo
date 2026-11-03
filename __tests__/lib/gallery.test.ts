@@ -28,3 +28,14 @@ describe('galleryFileType', () => {
     expect(galleryFileType('script.js')).toBeNull()
   })
 })
+
+describe('isGalleryPhoto', () => {
+  it('garde les photos et écarte miniatures, fichiers cachés et copies d’images externes', () => {
+    const { isGalleryPhoto } = jest.requireActual('@/lib/gallery') as typeof import('@/lib/gallery')
+    expect(isGalleryPhoto('2024_salon.jpg')).toBe(true)
+    expect(isGalleryPhoto('2024_salon-mini.jpg')).toBe(false)
+    expect(isGalleryPhoto('.DS_Store')).toBe(false)
+    expect(isGalleryPhoto('ext-0123456789abcdef01234567.png')).toBe(false)
+    expect(isGalleryPhoto('notes.txt')).toBe(false)
+  })
+})

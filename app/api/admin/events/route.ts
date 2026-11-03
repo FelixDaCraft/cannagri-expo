@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { prisma } from '@/lib/prisma'
 import { authOptions } from '@/lib/auth'
+import { localizeSpeakers } from '@/lib/external-images'
 import { getAdminEdition } from '@/lib/editions/admin'
 
 // GET /api/admin/events - Get all events (admin only)
@@ -87,7 +88,8 @@ export async function POST(request: NextRequest) {
         startAt: new Date(startAt),
         endAt: new Date(endAt),
         location: location || null,
-        speakers: speakers || [],
+        // Photos d'intervenants hébergées ailleurs ou en base64 : copie sur le site
+        speakers: await localizeSpeakers(speakers || []),
         isPlatinumCBDCup: isPlatinumCBDCup || false,
         isHighlighted: isHighlighted || false,
         displayOrder: displayOrder || 0,

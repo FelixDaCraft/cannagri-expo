@@ -3,7 +3,7 @@ import { readdir } from 'fs/promises'
 import { existsSync } from 'fs'
 import path from 'path'
 import { prisma } from '@/lib/prisma'
-import { isGalleryThumbnail } from '@/lib/gallery'
+import { isGalleryPhoto } from '@/lib/gallery'
 
 // Lecture en base à chaque requête (sinon la route serait figée au moment du build)
 export const dynamic = 'force-dynamic'
@@ -45,9 +45,7 @@ export async function GET() {
     }
 
     const files = await readdir(GALLERY_DIR)
-    const imageFiles = files.filter(f =>
-      /\.(jpg|jpeg|png|webp)$/i.test(f) && !f.startsWith('.') && !isGalleryThumbnail(f)
-    )
+    const imageFiles = files.filter(isGalleryPhoto)
 
     const photos = imageFiles.map((file, index) => {
       // Try to extract edition from filename (e.g., IMG20240419... -> 2024)
