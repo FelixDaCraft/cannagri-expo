@@ -97,7 +97,7 @@ export interface EditionView {
 
 const iso = (d: Date | null) => (d ? d.toISOString() : null)
 
-export function toEditionView(edition: Edition): EditionView {
+export function toEditionView(edition: Edition, locale = 'fr'): EditionView {
   return {
     id: edition.id,
     year: edition.year,
@@ -117,9 +117,9 @@ export function toEditionView(edition: Edition): EditionView {
     accessInfo: edition.accessInfo,
     ticketInfo: edition.ticketInfo,
     archiveSummary: edition.archiveSummary,
-    dateLabel: formatEditionDate(edition.startAt),
+    dateLabel: formatEditionDate(edition.startAt, locale),
     hoursLabel: formatEditionHours(edition.startAt, edition.endAt),
-    dateDisplay: formatEditionDate(edition.startAt) ?? 'Date à venir',
+    dateDisplay: formatEditionDate(edition.startAt, locale) ?? 'Date à venir',
     venueDisplay: [edition.venueName, edition.city].filter(Boolean).join(', ') || 'Lieu à venir',
   }
 }

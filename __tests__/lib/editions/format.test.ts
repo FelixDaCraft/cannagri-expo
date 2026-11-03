@@ -113,6 +113,27 @@ describe('toEditionView', () => {
   })
 })
 
+describe('toEditionView selon la langue du visiteur', () => {
+  const edition = {
+    id: 'e1', year: 2027, status: 'ACTIVE' as const,
+    startAt: new Date('2027-04-03T08:00:00Z'), endAt: new Date('2027-04-03T17:30:00Z'),
+    venueName: "L'Agronaute", address: null, city: 'Nantes', posterUrl: null,
+    ticketingOpenAt: null, ticketingCloseAt: null, standardTicketPrice: 15, flexTicketPrice: 25,
+    accessTransport: null, accessParking: null, accessInfo: null, ticketInfo: null, archiveSummary: null,
+    createdAt: new Date(), updatedAt: new Date(),
+  }
+
+  it('écrit la date dans la langue demandée', () => {
+    expect(toEditionView(edition, 'en').dateLabel).toBe('April 3, 2027')
+    expect(toEditionView(edition, 'de').dateLabel).toBe('3. April 2027')
+    expect(toEditionView(edition, 'es').dateDisplay).toBe('3 de abril de 2027')
+  })
+
+  it('reste en français par défaut', () => {
+    expect(toEditionView(edition).dateLabel).toBe('3 avril 2027')
+  })
+})
+
 describe('formatEventTime', () => {
   it("affiche l'heure de Paris d'un créneau du programme", () => {
     expect(formatEventTime(new Date('2026-03-28T09:30:00Z'))).toBe('10h30')
