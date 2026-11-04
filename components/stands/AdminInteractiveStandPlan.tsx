@@ -2,7 +2,21 @@
 
 import { useState, useMemo, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
+import dynamic from 'next/dynamic'
 import { Button } from '@/components/ui'
+
+const StandPlan3D = dynamic(() => import('./StandPlan3D').then((m) => m.StandPlan3D), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-[62vh] min-h-[420px] rounded-2xl bg-[#F4EAD5] flex items-center justify-center">
+      <div className="w-12 h-12 border-4 border-forest/20 border-t-forest rounded-full animate-spin" />
+    </div>
+  ),
+})
+
+// mêmes couleurs que le plan 3D (StandPlan3D.STATUS_COLORS)
+const COULEURS_3D = { FREE: '#5E8F62', RESERVED: '#C9A04A', SOLD: '#B5543C' } as const
+const STATUT_3D = { FREE: 'available', RESERVED: 'reserved', SOLD: 'sold' } as const
 
 // Types matching the API/Prisma Stand model
 export type AdminStandStatus = 'FREE' | 'RESERVED' | 'SOLD'
@@ -191,6 +205,7 @@ export function AdminInteractiveStandPlan({
   const [statusFilter, setStatusFilter] = useState<string>('all')
   const [quickEditMode, setQuickEditMode] = useState(false)
   const [dragMode, setDragMode] = useState(false)
+  const [vue3d, setVue3d] = useState(true)
   const [draggingStand, setDraggingStand] = useState<string | null>(null)
   const [pendingPositions, setPendingPositions] = useState<Map<string, PendingPosition>>(new Map())
   const [dragOffsets, setDragOffsets] = useState<Map<string, { x: number; y: number }>>(new Map())
@@ -356,6 +371,22 @@ export function AdminInteractiveStandPlan({
             <option value="RESERVED">Réservés ({stats.reserved})</option>
             <option value="SOLD">Vendus ({stats.sold})</option>
           </select>
+          <div className="flex rounded-xl border border-gray-200 overflow-hidden shadow-sm text-sm">
+            {([[true, 'Plan 3D'], [false, 'Plan 2D']] as const).map(([v, label]) => (
+              <button
+                key={label}
+                type="button"
+                aria-pressed={vue3d === v}
+                onClick={() => {
+                  setVue3d(v)
+                  if (v) setDragMode(false)
+                }}
+                className={`px-3 py-2 ${vue3d === v ? 'bg-forest text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="flex flex-wrap gap-4 items-center">
@@ -366,7 +397,10 @@ export function AdminInteractiveStandPlan({
               checked={dragMode}
               onChange={(e) => {
                 setDragMode(e.target.checked)
-                if (e.target.checked) setQuickEditMode(false)
+                if (e.target.checked) {
+                  setQuickEditMode(false)
+                  setVue3d(false)          // le déplacement se fait sur le plan 2D
+                }
               }}
               className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
             />
@@ -427,21 +461,33 @@ export function AdminInteractiveStandPlan({
       {/* Legend */}
       <div className="mb-4 flex flex-wrap gap-4 text-sm">
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded-md bg-gradient-to-br from-green-400 to-green-600 shadow-sm" />
+          <div className={`w-4 h-4 rounded-md shadow-sm ${vue3d ? '' : 'bg-gradient-to-br from-green-400 to-green-600'}`} style={vue3d ? { backgroundColor: COULEURS_3D.FREE } : undefined} />
           <span className="text-gray-600">Libre ({stats.free})</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded-md bg-gradient-to-br from-orange-400 to-orange-600 shadow-sm" />
+          <div className={`w-4 h-4 rounded-md shadow-sm ${vue3d ? '' : 'bg-gradient-to-br from-orange-400 to-orange-600'}`} style={vue3d ? { backgroundColor: COULEURS_3D.RESERVED } : undefined} />
           <span className="text-gray-600">Réservé ({stats.reserved})</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded-md bg-gradient-to-br from-red-400 to-red-600 shadow-sm" />
+          <div className={`w-4 h-4 rounded-md shadow-sm ${vue3d ? '' : 'bg-gradient-to-br from-red-400 to-red-600'}`} style={vue3d ? { backgroundColor: COULEURS_3D.SOLD } : undefined} />
           <span className="text-gray-600">Vendu ({stats.sold})</span>
         </div>
       </div>
 
       <div className="flex flex-col xl:flex-row gap-4">
-        {/* Plan Canvas */}
+        {vue3d ? (
+          <div className="flex-1 min-w-0">
+            <StandPlan3D
+              stands={stands.map((st) => ({ id: st.number, status: STATUT_3D[st.status] }))}
+              selectedId={selectedStand?.number ?? null}
+              hiddenIds={stands.filter((st) => statusFilter !== 'all' && st.status !== statusFilter).map((st) => st.number)}
+              onSelect={(n) => {
+                const stand = stands.find((st) => st.number === n)
+                if (stand) handleStandClick(stand)
+              }}
+            />
+          </div>
+        ) : (
         <div className="flex-1 bg-gradient-to-br from-slate-50 via-white to-slate-100 rounded-2xl p-4 overflow-x-auto shadow-inner">
           <div
             ref={planRef}
@@ -558,6 +604,7 @@ export function AdminInteractiveStandPlan({
           </div>
         </div>
 
+        )}
         {/* Stand Details Panel */}
         <AnimatePresence mode="wait">
           {selectedStand ? (
