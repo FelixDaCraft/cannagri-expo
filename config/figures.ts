@@ -4,6 +4,6 @@
  */
 export const OFFICIAL_FIGURES = [
   { key: 'exhibitors', value: '26' },
-  { key: 'visitors', value: '700-800' },
+  { key: 'visitors', value: '600' },
   { key: 'conferences', value: '3' },
 ] as const

@@ -152,7 +152,7 @@ export function PillarsSection({ stats }: PillarsSectionProps) {
         >
           {[
             { number: stats?.standCount || 0, label: t('stats.exhibitors') },
-            { number: '700-800', label: t('stats.visitors') },
+            { number: '600', label: t('stats.visitors') },
             { number: 3, label: t('stats.conferences') },
           ].map((stat, index) => (
             <motion.div
