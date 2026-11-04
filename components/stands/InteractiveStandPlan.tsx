@@ -2,7 +2,30 @@
 
 import { useState, useMemo, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
+import dynamic from 'next/dynamic'
 import { Button } from '@/components/ui'
+
+// three.js n'est chargé que dans le navigateur, et seulement sur la page du plan
+const StandPlan3D = dynamic(() => import('./StandPlan3D').then((m) => m.StandPlan3D), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-[62vh] min-h-[420px] rounded-2xl bg-[#F4EAD5] flex items-center justify-center">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-forest" />
+    </div>
+  ),
+})
+
+// couleurs des statuts du plan 3D (importées sans charger three.js)
+const STATUS_COLORS = { available: '#5E8F62', reserved: '#C9A04A', sold: '#B5543C', blocked: '#9E9E9E' } as const
+
+function webglDisponible() {
+  try {
+    const c = document.createElement('canvas')
+    return !!(c.getContext('webgl2') || c.getContext('webgl'))
+  } catch {
+    return false
+  }
+}
 
 // Types
 interface Stand {
@@ -286,6 +309,8 @@ export function InteractiveStandPlan({
   const [statusFilter, setStatusFilter] = useState<string>('all')
 
   const config = { ...defaultConfig, ...customConfig }
+  const [webgl, setWebgl] = useState(true)
+  useEffect(() => setWebgl(webglDisponible()), [])
 
   // Fetch stands from API
   const fetchStands = useCallback(async () => {
@@ -405,28 +430,31 @@ export function InteractiveStandPlan({
         </div>
       </div>
 
-      {/* Legend */}
+      {/* Legend : mêmes couleurs que le plan 3D (le plan 2D de secours garde les siennes) */}
       <div className="mb-6 flex flex-wrap gap-4 text-sm">
-        <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded-md bg-gradient-to-br from-green-400 to-green-600 shadow-sm" />
-          <span className="text-forest/70">Disponible</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded-md bg-gradient-to-br from-orange-400 to-orange-600 shadow-sm" />
-          <span className="text-forest/70">Reserve</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded-md bg-gradient-to-br from-red-400 to-red-600 shadow-sm" />
-          <span className="text-forest/70">Vendu</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded border-2 border-dashed border-forest/30" />
-          <span className="text-forest/70">Zone commune</span>
-        </div>
+        {([['available', 'Disponible'], ['reserved', 'Réservé'], ['sold', 'Vendu']] as const).map(([k, label]) => (
+          <div key={k} className="flex items-center gap-2">
+            <div className="w-4 h-4 rounded-md shadow-sm" style={{ backgroundColor: webgl ? STATUS_COLORS[k] : statusConfig[k].color }} />
+            <span className="text-forest/70">{label}</span>
+          </div>
+        ))}
       </div>
 
       <div className={`flex flex-col xl:flex-row gap-6 ${!selectedStand ? 'justify-center' : ''}`}>
-        {/* Plan Canvas */}
+        {/* Plan 3D de la salle (repli sur le plan 2D si WebGL est indisponible) */}
+        {webgl ? (
+          <div className={selectedStand ? 'flex-1 min-w-0' : 'w-full'}>
+            <StandPlan3D
+              stands={stands.map((s) => ({ id: s.id, status: s.status }))}
+              selectedId={selectedStand?.id ?? null}
+              hiddenIds={stands.filter((s) => !filteredStands.includes(s)).map((s) => s.id)}
+              onSelect={(id) => {
+                const stand = stands.find((s) => s.id === id)
+                if (stand) handleStandClick(stand)
+              }}
+            />
+          </div>
+        ) : (
         <div className={`bg-gradient-to-br from-slate-50 via-cream/30 to-slate-100 rounded-2xl p-6 overflow-x-auto shadow-inner ${!selectedStand ? 'xl:max-w-4xl mx-auto' : 'flex-1'}`}>
           <div
             className="relative mx-auto"
@@ -520,6 +548,8 @@ export function InteractiveStandPlan({
               ))}
           </div>
         </div>
+
+        )}
 
         {/* Stand Details Panel */}
         <AnimatePresence mode="wait">
