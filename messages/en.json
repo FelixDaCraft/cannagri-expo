@@ -449,7 +449,8 @@
       "error": "Your request could not be sent. Please try again in a moment or write to us directly.",
       "invalid": "Please check the fields: company, name and a valid email address are required.",
       "privacyNotice": "Your details are only used to send you the brochure and get back to you. See our",
-      "privacyPolicy": "privacy policy"
+      "privacyPolicy": "privacy policy",
+      "honeypot": "Do not fill in"
     },
     "alternativeContact": {
       "title": "Prefer to write to us directly?"

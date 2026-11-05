@@ -449,7 +449,8 @@
       "error": "No se ha podido enviar la solicitud. Inténtelo de nuevo en un momento o escríbanos directamente.",
       "invalid": "Revise los campos: la empresa, el nombre y un correo electrónico válido son obligatorios.",
       "privacyNotice": "Sus datos solo sirven para enviarle el dossier y volver a contactarle. Consulte nuestra",
-      "privacyPolicy": "política de privacidad"
+      "privacyPolicy": "política de privacidad",
+      "honeypot": "No rellenar"
     },
     "alternativeContact": {
       "title": "¿Prefiere escribirnos directamente?"

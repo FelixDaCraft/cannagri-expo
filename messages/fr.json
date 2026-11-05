@@ -449,7 +449,8 @@
       "error": "La demande n'a pas pu être envoyée. Réessayez dans un instant ou écrivez-nous directement.",
       "invalid": "Vérifiez les champs : l'entreprise, le nom et une adresse e-mail valide sont nécessaires.",
       "privacyNotice": "Vos coordonnées servent uniquement à vous envoyer la plaquette et à vous recontacter. Voir notre",
-      "privacyPolicy": "politique de confidentialité"
+      "privacyPolicy": "politique de confidentialité",
+      "honeypot": "Ne pas remplir"
     },
     "alternativeContact": {
       "title": "Vous préférez écrire directement ?"

@@ -449,7 +449,8 @@
       "error": "Ihre Anfrage konnte nicht gesendet werden. Versuchen Sie es gleich noch einmal oder schreiben Sie uns direkt.",
       "invalid": "Bitte prüfen Sie die Felder: Unternehmen, Name und eine gültige E-Mail-Adresse sind erforderlich.",
       "privacyNotice": "Ihre Daten werden nur verwendet, um Ihnen die Broschüre zu senden und Sie zu kontaktieren. Siehe unsere",
-      "privacyPolicy": "Datenschutzerklärung"
+      "privacyPolicy": "Datenschutzerklärung",
+      "honeypot": "Nicht ausfüllen"
     },
     "alternativeContact": {
       "title": "Lieber direkt schreiben?"

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, type FormEvent } from 'react'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import { buttonClasses } from '@/components/ui/ButtonLink'
@@ -14,6 +14,12 @@ export function BrochureForm() {
   const [formData, setFormData] = useState(EMPTY)
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [errorKey, setErrorKey] = useState<'error' | 'invalid'>('error')
+  // anti-spam : champ piège et heure d'affichage du formulaire (un humain met plus de 3 s à le remplir)
+  const [honeypot, setHoneypot] = useState('')
+  const startedAt = useRef<number | null>(null)
+  useEffect(() => {
+    startedAt.current = Date.now()
+  }, [])
 
   const update = (field: keyof typeof EMPTY) => (e: React.ChangeEvent<HTMLInputElement>) =>
     setFormData((data) => ({ ...data, [field]: e.target.value }))
@@ -25,7 +31,7 @@ export function BrochureForm() {
       const res = await fetch('/api/sponsor-request', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, website: honeypot, startedAt: startedAt.current ?? undefined }),
       })
       if (res.ok) {
         setStatus('success')
@@ -70,6 +76,12 @@ export function BrochureForm() {
           </label>
           <input id="phone" type="tel" autoComplete="tel" value={formData.phone} onChange={update('phone')} className="field-input" />
         </div>
+      </div>
+
+      {/* Champ piège : invisible et ignoré par les humains, rempli par les robots */}
+      <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
+        <label htmlFor="brochure-website">{t('honeypot')}</label>
+        <input id="brochure-website" type="text" tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
       </div>
 
       {status === 'error' && <p role="alert" className="notice-error">{t(errorKey)}</p>}

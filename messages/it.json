@@ -449,7 +449,8 @@
       "error": "Non è stato possibile inviare la richiesta. Riprovate tra un attimo o scriveteci direttamente.",
       "invalid": "Controllate i campi: azienda, nome e un indirizzo e-mail valido sono obbligatori.",
       "privacyNotice": "I vostri dati servono solo a inviarvi la brochure e a ricontattarvi. Consultate la nostra",
-      "privacyPolicy": "informativa sulla privacy"
+      "privacyPolicy": "informativa sulla privacy",
+      "honeypot": "Non compilare"
     },
     "alternativeContact": {
       "title": "Preferite scriverci direttamente?"
