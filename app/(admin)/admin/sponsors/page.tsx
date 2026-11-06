@@ -128,6 +128,7 @@ export default function SponsorsPage() {
   const [requests, setRequests] = useState<SponsorRequest[]>([])
   const [loadingRequests, setLoadingRequests] = useState(true)
   const [sending, setSending] = useState<string | null>(null)
+  const [deletingRequest, setDeletingRequest] = useState<string | null>(null)
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
 
   // Email modal state
@@ -357,6 +358,27 @@ export default function SponsorsPage() {
   }
 
   // Ouvrir la modal d'édition du mail
+  // Supprime une demande (spam passé à travers le filtre anti-spam)
+  const handleDeleteRequest = async (request: SponsorRequest) => {
+    if (!confirm(`Supprimer la demande de « ${request.companyName} » ? (à utiliser pour les spams)`)) return
+
+    setDeletingRequest(request.id)
+    try {
+      const res = await fetch(`/api/admin/sponsor-requests/${request.id}`, { method: 'DELETE' })
+      if (res.ok || res.status === 404) {
+        setRequests((list) => list.filter((r) => r.id !== request.id))
+        setMessage({ type: 'success', text: 'Demande supprimée' })
+      } else {
+        const data = await res.json().catch(() => ({}))
+        setMessage({ type: 'error', text: data.error || 'Suppression impossible' })
+      }
+    } catch {
+      setMessage({ type: 'error', text: 'Suppression impossible' })
+    } finally {
+      setDeletingRequest(null)
+    }
+  }
+
   const openEmailModal = (request: SponsorRequest) => {
     setSelectedRequest(request)
     // Générer le template par défaut
@@ -802,71 +824,85 @@ L'équipe Cann'Agri Expo`
                           )}
                         </td>
                         <td className="px-4 py-4 whitespace-nowrap text-right">
-                          {request.status === 'PENDING' ? (
-                            <Button
-                              variant="primary"
-                              size="sm"
-                              onClick={() => openEmailModal(request)}
-                              disabled={sending === request.id}
-                            >
-                              {sending === request.id ? (
-                                <span className="flex items-center gap-2">
-                                  <svg
-                                    className="animate-spin h-4 w-4"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                  >
-                                    <circle
-                                      className="opacity-25"
-                                      cx="12"
-                                      cy="12"
-                                      r="10"
-                                      stroke="currentColor"
-                                      strokeWidth="4"
-                                    />
-                                    <path
-                                      className="opacity-75"
-                                      fill="currentColor"
-                                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                                    />
-                                  </svg>
-                                  Envoi...
-                                </span>
-                              ) : (
-                                <span className="flex items-center gap-2">
-                                  <svg
-                                    className="w-4 h-4"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                  >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      strokeWidth={2}
-                                      d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-                                    />
-                                  </svg>
-                                  Envoyer plaquette
-                                </span>
-                              )}
-                            </Button>
-                          ) : (
-                            <span className="text-green-600 flex items-center justify-end gap-1 text-sm">
-                              <svg
-                                className="w-4 h-4"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
+                          <div className="flex items-center justify-end gap-3">
+                            {request.status === 'PENDING' ? (
+                              <Button
+                                variant="primary"
+                                size="sm"
+                                onClick={() => openEmailModal(request)}
+                                disabled={sending === request.id}
                               >
-                                <path
-                                  fillRule="evenodd"
-                                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                  clipRule="evenodd"
-                                />
+                                {sending === request.id ? (
+                                  <span className="flex items-center gap-2">
+                                    <svg
+                                      className="animate-spin h-4 w-4"
+                                      fill="none"
+                                      viewBox="0 0 24 24"
+                                    >
+                                      <circle
+                                        className="opacity-25"
+                                        cx="12"
+                                        cy="12"
+                                        r="10"
+                                        stroke="currentColor"
+                                        strokeWidth="4"
+                                      />
+                                      <path
+                                        className="opacity-75"
+                                        fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                                      />
+                                    </svg>
+                                    Envoi...
+                                  </span>
+                                ) : (
+                                  <span className="flex items-center gap-2">
+                                    <svg
+                                      className="w-4 h-4"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      viewBox="0 0 24 24"
+                                    >
+                                      <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+                                      />
+                                    </svg>
+                                    Envoyer plaquette
+                                  </span>
+                                )}
+                              </Button>
+                            ) : (
+                              <span className="text-green-600 flex items-center justify-end gap-1 text-sm">
+                                <svg
+                                  className="w-4 h-4"
+                                  fill="currentColor"
+                                  viewBox="0 0 20 20"
+                                >
+                                  <path
+                                    fillRule="evenodd"
+                                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                    clipRule="evenodd"
+                                  />
+                                </svg>
+                                Envoyé
+                              </span>
+                            )}
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteRequest(request)}
+                              disabled={deletingRequest === request.id}
+                              title="Supprimer cette demande (spam)"
+                              aria-label={`Supprimer la demande de ${request.companyName}`}
+                              className="p-2 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors disabled:opacity-50"
+                            >
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                               </svg>
-                              Envoyé
-                            </span>
-                          )}
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
