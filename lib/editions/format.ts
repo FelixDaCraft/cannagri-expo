@@ -23,6 +23,20 @@ export function formatEditionDate(startAt: DateInput, locale = 'fr'): string | n
   }).format(date)
 }
 
+/** "Samedi 3 avril 2027" (heure de Paris) */
+export function formatEditionLongDate(startAt: DateInput): string | null {
+  const date = toDate(startAt)
+  if (!date) return null
+  const label = new Intl.DateTimeFormat('fr', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    timeZone: EVENT_TIME_ZONE,
+  }).format(date)
+  return label.charAt(0).toUpperCase() + label.slice(1)
+}
+
 function formatHour(date: Date): string {
   const parts = new Intl.DateTimeFormat('fr', {
     hour: 'numeric',
@@ -125,13 +139,17 @@ export function toEditionView(edition: Edition, locale = 'fr'): EditionView {
 }
 
 /** Informations d'édition imprimées sur un billet ou rappelées dans un e-mail. */
-export type EditionSummary = Pick<EditionView, 'year' | 'dateLabel' | 'venueName' | 'city'>
+export type EditionSummary = Pick<EditionView, 'year' | 'dateLabel' | 'venueName' | 'city'> &
+  Partial<Pick<EditionView, 'hoursLabel' | 'address'>> & { longDateLabel?: string | null }
 
 export function toEditionSummary(edition: Edition): EditionSummary {
   return {
     year: edition.year,
     dateLabel: formatEditionDate(edition.startAt),
+    longDateLabel: formatEditionLongDate(edition.startAt),
+    hoursLabel: formatEditionHours(edition.startAt, edition.endAt),
     venueName: edition.venueName,
+    address: edition.address,
     city: edition.city,
   }
 }
