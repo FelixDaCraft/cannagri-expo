@@ -477,31 +477,6 @@ export async function sendSponsorBrochure(options: SendSponsorBrochureOptions): 
 }
 
 /**
- * Get default sponsoring email template
- */
-export function getDefaultSponsorEmailTemplate(contactName: string, companyName: string): { subject: string; body: string } {
-  return {
-    subject: `${siteConfig.name} - Plaquettes de sponsoring`,
-    body: `Bonjour ${contactName},
-
-Suite à votre demande d'information concernant les opportunités de sponsoring pour ${siteConfig.name}, nous avons le plaisir de vous transmettre nos plaquettes de présentation : le salon Cann'Agri Expo et la Platinum CBD Cup, dont la remise des prix a lieu sur la scène du salon.
-
-${siteConfig.name} est l'événement de référence du secteur, réunissant professionnels, passionnés et acteurs de l'industrie. En devenant partenaire, ${companyName} bénéficiera d'une visibilité exceptionnelle auprès d'un public ciblé et engagé.
-
-Nos plaquettes détaillent les différentes formules de partenariat disponibles :
-- Partenaire Platine : Visibilité maximale et article en page d'accueil
-- Partenaire Or : Forte visibilité en en-tête du site
-- Partenaire Argent : Visibilité ciblée
-- Partenaire Bronze : Présence en bas de page
-
-Nous restons à votre entière disposition pour échanger sur vos objectifs et vous proposer une formule adaptée à vos besoins.
-
-Cordialement,
-L'équipe ${siteConfig.name}`
-  }
-}
-
-/**
  * Newsletter : lien de confirmation (double opt-in) et lien de désinscription
  */
 interface SendNewsletterConfirmationOptions {

@@ -391,22 +391,18 @@ export default function SponsorsPage() {
   // Générer le template par défaut du mail
   const getDefaultEmailTemplate = (contactName: string, companyName: string) => {
     return {
-      subject: `Cann'Agri Expo - Plaquette de sponsoring`,
+      subject: `Cann'Agri Expo 2027 - Nos plaquettes de sponsoring`,
       body: `Bonjour ${contactName},
 
-Suite à votre demande d'information concernant les opportunités de sponsoring pour Cann'Agri Expo, nous avons le plaisir de vous transmettre notre plaquette de présentation.
+Merci pour votre demande. Vous trouverez en pièces jointes nos deux plaquettes partenaires 2027 :
+- Cann'Agri Expo, le salon professionnel du cannabis CBD, le samedi 3 avril 2027 à L'Agronaute (Nantes) : environ 600 visiteurs, quasiment tous professionnels ;
+- la Platinum CBD Cup, notre concours CBD jugé à l'aveugle, dont la remise des prix a lieu sur la scène du salon.
 
-Cann'Agri Expo est l'événement de référence du secteur, réunissant professionnels, passionnés et acteurs de l'industrie. En devenant partenaire, ${companyName} bénéficiera d'une visibilité exceptionnelle auprès d'un public ciblé et engagé.
+Les offres vont du Bronze au Platine. Chaque offre du salon inclut un stand, et les offres salon et Cup se combinent avec un seul interlocuteur et une seule facture.
 
-Notre plaquette détaille les différentes formules de partenariat disponibles :
-- Partenaire Platine : Visibilité maximale et article en page d'accueil
-- Partenaire Or : Forte visibilité en en-tête du site
-- Partenaire Argent : Visibilité ciblée
-- Partenaire Bronze : Présence en bas de page
+Nous restons à votre disposition pour en parler et proposer à ${companyName} la formule la plus adaptée.
 
-Nous restons à votre entière disposition pour échanger sur vos objectifs et vous proposer une formule adaptée à vos besoins.
-
-Cordialement,
+À bientôt,
 L'équipe Cann'Agri Expo`
     }
   }
