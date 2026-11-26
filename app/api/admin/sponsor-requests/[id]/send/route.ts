@@ -3,6 +3,12 @@ import { prisma } from '@/lib/prisma'
 import { checkAdminAuth, unauthorizedResponse } from '@/lib/admin-auth'
 import { sendSponsorBrochure } from '@/lib/email'
 import path from 'path'
+import fs from 'fs'
+
+const BROCHURES = [
+  { file: 'plaquette-sponsoring.pdf', filename: 'plaquette-sponsoring-cannagri-expo-2027.pdf' },
+  { file: 'plaquette-platinum-cup.pdf', filename: 'plaquette-sponsoring-platinum-cbd-cup-2027.pdf' },
+]
 
 // POST /api/admin/sponsor-requests/[id]/send - Send brochure email and mark as sent
 export async function POST(
@@ -49,10 +55,18 @@ export async function POST(
       )
     }
 
-    // Path to the PDF brochure (should be in public folder)
-    const brochurePath = path.join(process.cwd(), 'public', 'docs', 'plaquette-sponsoring.pdf')
+    // Les deux plaquettes 2027 (salon et Platinum CBD Cup), déposées dans public/docs sur le serveur
+    const brochures = BROCHURES.map(b => ({ filename: b.filename, path: path.join(process.cwd(), 'public', 'docs', b.file) }))
+    const manquante = brochures.find(b => !fs.existsSync(b.path))
+    if (manquante) {
+      console.error(`Plaquette introuvable : ${manquante.path}`)
+      return NextResponse.json(
+        { error: `Plaquette introuvable sur le serveur (${path.basename(manquante.path)}) : rien n'a été envoyé.` },
+        { status: 500 }
+      )
+    }
 
-    // Send the email
+    // Un échec d'envoi est signalé et la demande reste « à envoyer »
     try {
       await sendSponsorBrochure({
         to: sponsorRequest.email,
@@ -60,12 +74,15 @@ export async function POST(
         companyName: sponsorRequest.companyName,
         subject,
         body: emailBody,
-        attachmentPath: brochurePath,
+        attachments: brochures,
       })
     } catch (emailError) {
       console.error('Email sending failed:', emailError)
-      // Continue anyway - we'll mark as sent but log the error
-      // In production, you might want to return an error here
+      const detail = emailError instanceof Error ? emailError.message : String(emailError)
+      return NextResponse.json(
+        { error: `L'e-mail n'est pas parti (${detail}). La demande reste à envoyer.` },
+        { status: 502 }
+      )
     }
 
     // Update the request status
@@ -79,7 +96,7 @@ export async function POST(
 
     return NextResponse.json({
       success: true,
-      message: 'Plaquette envoyée avec succès',
+      message: 'Plaquettes envoyées avec succès',
       data: updatedRequest,
     })
   } catch (error) {

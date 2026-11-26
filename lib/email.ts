@@ -402,11 +402,11 @@ interface SendSponsorBrochureOptions {
   companyName: string
   subject: string
   body: string
-  attachmentPath?: string
+  attachments?: Array<{ filename: string; path: string }>
 }
 
 export async function sendSponsorBrochure(options: SendSponsorBrochureOptions): Promise<void> {
-  const { to, contactName, companyName, subject, body, attachmentPath } = options
+  const { to, contactName, companyName, subject, body, attachments = [] } = options
 
   // Convert plain text body to HTML with proper formatting
   const htmlBody = body
@@ -437,7 +437,7 @@ export async function sendSponsorBrochure(options: SendSponsorBrochureOptions): 
             <p style="color: #333333; line-height: 1.6; margin: 0 0 15px 0;">${htmlBody}</p>
 
             <div style="background-color: #C9A04A; color: #1D2B3A; padding: 15px; border-radius: 8px; margin: 30px 0; text-align: center;">
-              <strong>Vous trouverez notre plaquette de sponsoring en pièce jointe.</strong>
+              <strong>Vous trouverez nos deux plaquettes de sponsoring en pièces jointes : Cann'Agri Expo et la Platinum CBD Cup.</strong>
             </div>
 
             <p style="color: #666666; font-size: 14px;">
@@ -460,14 +460,6 @@ export async function sendSponsorBrochure(options: SendSponsorBrochureOptions): 
     </html>
   `
 
-  const attachments: Array<{ filename: string; path: string }> = []
-  if (attachmentPath) {
-    attachments.push({
-      filename: 'plaquette-sponsoring-cannagri-expo.pdf',
-      path: attachmentPath,
-    })
-  }
-
   try {
     await transporter.sendMail({
       from: `"${siteConfig.name}" <${process.env.EMAIL_FROM}>`,
@@ -480,7 +472,7 @@ export async function sendSponsorBrochure(options: SendSponsorBrochureOptions): 
     console.log(`Sponsoring brochure email sent to ${to} (${companyName})`)
   } catch (error) {
     console.error('Error sending sponsoring brochure email:', error)
-    throw new Error('Failed to send sponsoring email')
+    throw new Error(error instanceof Error ? error.message : 'Failed to send sponsoring email')
   }
 }
 
@@ -489,14 +481,14 @@ export async function sendSponsorBrochure(options: SendSponsorBrochureOptions): 
  */
 export function getDefaultSponsorEmailTemplate(contactName: string, companyName: string): { subject: string; body: string } {
   return {
-    subject: `${siteConfig.name} - Plaquette de sponsoring`,
+    subject: `${siteConfig.name} - Plaquettes de sponsoring`,
     body: `Bonjour ${contactName},
 
-Suite à votre demande d'information concernant les opportunités de sponsoring pour ${siteConfig.name}, nous avons le plaisir de vous transmettre notre plaquette de présentation.
+Suite à votre demande d'information concernant les opportunités de sponsoring pour ${siteConfig.name}, nous avons le plaisir de vous transmettre nos plaquettes de présentation : le salon Cann'Agri Expo et la Platinum CBD Cup, dont la remise des prix a lieu sur la scène du salon.
 
 ${siteConfig.name} est l'événement de référence du secteur, réunissant professionnels, passionnés et acteurs de l'industrie. En devenant partenaire, ${companyName} bénéficiera d'une visibilité exceptionnelle auprès d'un public ciblé et engagé.
 
-Notre plaquette détaille les différentes formules de partenariat disponibles :
+Nos plaquettes détaillent les différentes formules de partenariat disponibles :
 - Partenaire Platine : Visibilité maximale et article en page d'accueil
 - Partenaire Or : Forte visibilité en en-tête du site
 - Partenaire Argent : Visibilité ciblée
